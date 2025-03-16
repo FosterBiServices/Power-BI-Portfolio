@@ -1,0 +1,17 @@
+let
+    Source = (InputTable as table) as table =>
+
+let
+  IndexNumber = 
+    let
+        #"Added Index" = Table.AddIndexColumn(#"InputTable", "Index", 0, 1, Int64.Type),
+        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Billable Encounters", type text}}),
+        #"Filtered Rows" = Table.SelectRows(#"Added Index", each ([Billable Encounters] = "NEW PAT")){0}[Index]
+
+    in
+  #"Filtered Rows",
+  RemoveRows = Table.FirstN(InputTable, IndexNumber)
+in
+  RemoveRows
+in
+    Source

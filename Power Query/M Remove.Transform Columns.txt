@@ -1,0 +1,17 @@
+let
+  Source = Sql.Databases(Server),
+  SandboxBIDS = Source{[Name = Database]}[Data],
+  dbo_tblSmyOpsVolIntraday = SandboxBIDS{[Schema = "dbo", Item = "tblSmyOpsVolIntraday"]}[Data],
+  #"Changed Type" = Table.TransformColumnTypes(
+    dbo_tblSmyOpsVolIntraday,
+    {{"CalendarDate", type date}, {"StartTime", type text}}
+  ),
+  #"Removed Columns" = Table.RemoveColumns(#"Changed Type", {"RowID"}),
+  #"Changed Type1" = Table.TransformColumnTypes(
+    #"Removed Columns",
+    {{"FiscalYear", type text}, {"IntervalID", type text}, {"NetworkID", type text}}
+  ),
+  #"Removed Columns1" = Table.RemoveColumns(#"Changed Type1", {"JobID"}),
+  #"Filtered Rows" = Table.SelectRows(#"Removed Columns1", each true)
+in
+  #"Filtered Rows"

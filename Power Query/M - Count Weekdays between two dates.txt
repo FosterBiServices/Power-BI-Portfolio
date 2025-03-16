@@ -1,0 +1,27 @@
+   // Add calculated days in month based on termination and start date
+      addCalculatedDaysInMonth = Table.AddColumn(
+         expandDimDates,
+         "calculatedDaysInMonth",
+         each 
+            if [TerminationDate] <> null 
+                  and Date.From([TerminationDate]) > Date.From(StartDate) 
+                  and Date.From([TerminationDate]) <= Date.From(EndDate) 
+            then 
+                  let
+                     start = Date.From(StartDate),
+                     terminationMinusOne = Date.From([TerminationDate]),
+                     weekdaysBetween = List.Count(
+                        List.RemoveItems(
+                              List.Dates(start, Duration.Days(terminationMinusOne - start) + 1, #duration(1, 0, 0, 0)),
+                              List.Select(
+                                 List.Dates(start, Duration.Days(terminationMinusOne - start) + 1, #duration(1, 0, 0, 0)),
+                                 each Date.DayOfWeek(_, Day.Saturday) = 0 or Date.DayOfWeek(_, Day.Sunday) = 0 
+                              )
+                        )
+                     )
+                  in 
+                     weekdaysBetween
+            else 
+                  [Days in Month],
+         type number
+      ),

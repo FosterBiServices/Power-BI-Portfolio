@@ -1,0 +1,21 @@
+let
+    Source = (InputTable as table) as table =>
+
+let
+  IndexNumber = 
+    let
+		// Add index to table
+        #"Added Index" = Table.AddIndexColumn(#"InputTable", "Index", 0, 1, Int64.Type),
+		// Find Column Name - Change Billable Encounters to match 
+        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Billable Encounters", type text}}),
+		// Find End Row - Change billable encounters to match your column and New Pat to your "lookup value"
+        #"Filtered Rows" = Table.SelectRows(#"Added Index", each ([Billable Encounters] = "NEW PAT")){0}[Index]
+
+    in
+  #"Filtered Rows",
+  // Keep Rows 1 - # found in Filtered rows 
+  RemoveRows = Table.FirstN(InputTable, IndexNumber)
+in
+  RemoveRows
+in
+    Source

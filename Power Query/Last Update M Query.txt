@@ -1,0 +1,29 @@
+let
+  Source = #table(
+    type table [Last Refreshed = datetime],
+    {
+      {
+        DateTimeZone.SwitchZone(
+          DateTimeZone.LocalNow(),
+          - 5,
+          0
+        )
+      }
+    }
+  ),
+  #"Changed Type" = Table.TransformColumnTypes(
+    Source,
+    {{"Last Refreshed", type datetimezone}}
+  ),
+  #"Changed Type with Locale"
+    = Table.TransformColumnTypes(
+    #"Changed Type",
+    {{"Last Refreshed", type datetimezone}},
+    "en-US"
+  )
+in
+  #"Changed Type with Locale"
+
+
+Then create DAX Measure: 
+Last Refresh = CONCATENATE("Data Last Refreshed: ", MAX('Last Refresh'[Last Refreshed] ) )

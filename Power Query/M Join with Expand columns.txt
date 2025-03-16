@@ -1,0 +1,30 @@
+let
+    // Load data from the database for ListServiceSite
+    SiteSource = Sql.Database(ServerName, "Aprima"),
+    ListServiceSite = SiteSource{[Schema="dbo", Item="ListServiceSite"]}[Data][[ServiceSiteUid],[ServiceSiteTypeUid],[Name]],
+    RenamedServiceSiteName = Table.RenameColumns(ListServiceSite, {{"Name", "ServiceSiteName"}}),
+
+    // Load data from the database for ListServiceSiteType
+    TypeSource = Sql.Database(ServerName, "Aprima"),
+    ListServiceSiteType = TypeSource{[Schema="dbo", Item="ListServiceSiteType"]}[Data][[Name],[ServiceSiteTypeUid]],
+    RenameServiceSiteType = Table.RenameColumns(ListServiceSiteType, {{"Name", "ServiceSiteType"}}),
+
+    // Merge the two tables on ServiceSiteTypeUid
+    MergedTable = Table.NestedJoin(
+        RenamedServiceSiteName,        // Left table
+        "ServiceSiteTypeUid",          // Key column in the left table
+        RenameServiceSiteType,         // Right table
+        "ServiceSiteTypeUid",          // Key column in the right table
+        "MergedData",                  // Name of the nested table
+        JoinKind.Inner                 // Join kind (e.g., Inner Join)
+    ),
+
+    // Expand the merged table to include ServiceSiteType
+    ExpandedTable = Table.ExpandTableColumn(
+        MergedTable,
+        "MergedData",
+        {"ServiceSiteType"},           // Columns to include from the right table
+        {"ServiceSiteType"}            // Rename the expanded columns
+    )
+in
+    ExpandedTable

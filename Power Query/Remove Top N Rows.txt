@@ -1,0 +1,24 @@
+let
+    Source = (InputTable as table) as table =>
+
+let
+  IndexNumber = 
+    let
+    // Add Index to Table
+        #"Added Index" = Table.AddIndexColumn(#"InputTable", "Index", 0, 1, Int64.Type), 
+    // Change Column1 in next two steps to match your column name
+        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Column1", type text}}),  
+    // Change Billable Encounters to match term you're looking for   
+        #"Filtered Rows" = Table.SelectRows(#"Added Index", each ([Column1] = "Billable Encounters")){0}[Index] 
+    in
+      #"Filtered Rows",
+  // Skips down to row number found in Filtered Row steps and removes all previous rows
+  RemoveRows = Table.Skip(InputTable, IndexNumber), 
+  // Promotes headers, you can skip this if needed 
+  PromoteHeaders = Table.PromoteHeaders(RemoveRows, [PromoteAllScalars=true]) 
+  // Trims all column names in case of spaces 
+  ,TrimColumnNames = Table.TransformColumnNames(PromoteHeaders, Text.Trim) 
+in
+  TrimColumnNames
+in
+    Source

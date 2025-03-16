@@ -1,0 +1,21 @@
+let
+    Source = PowerPlatform.Dataflows(null),
+    Workspaces = Source{[Id="Workspaces"]}[Data],
+  WS = Workspaces
+    {[workspaceId = WorkspaceId]}
+    [Data],
+  DF = WS
+    {[dataflowId = DataflowId]}
+    [Data],
+    factBillingCharges = DF{[entity="factBillingCharges",version=""]}[Data],
+    AddedProviderDateKey = Table.AddColumn(factBillingCharges, "ProviderDateKey", each Text.Combine({Text.From([ServiceStartDateKey]), Text.From([Provider Key])}, " " )),
+    #"Filtered Rows" = Table.SelectRows(AddedProviderDateKey, each ([PatientId] = "79D66676-1473-4412-8537-1AD79152E03D") and [Service Start Date] = #date(2024,3,20)),
+
+    BufferedInsurance = Table.Buffer(dimPatientPrimaryInsurance),
+    Merge = Table.AddColumn(#"Filtered Rows", "PrimaryInsurance",
+                            (S)=>  Table.SelectRows(BufferedInsurance,
+                                                    (P)=> P[PatientId]= S[PatientId] and S[Service Start Date]>= P[EffectiveDate] and S[Service Start Date]<P[ExpirationDate])
+                           ),
+    #"Expanded PrimaryInsurance" = Table.ExpandTableColumn(Merge, "PrimaryInsurance", {"CurrentInsuranceFlag", "EffectiveDate", "ExpirationDate", "InsuranceName"}, {"CurrentInsuranceFlag", "EffectiveDate", "ExpirationDate", "InsuranceName"})
+in
+    #"Expanded PrimaryInsurance"

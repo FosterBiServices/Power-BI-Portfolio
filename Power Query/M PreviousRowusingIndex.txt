@@ -1,0 +1,19 @@
+// Add Index to grouped rows
+  AddedIndex = Table.TransformColumns(
+    #"Grouped Rows",
+    {{"Fulltable",
+    each Table.AddIndexColumn(_, "Index")}}
+  ),
+    PreviousScore = Table.AddColumn(AddedIndex, "Custom", 
+    each 
+    let
+          AllDataColumn = [Fulltable], // use all data column from grouping step
+          PrevRowValue = 
+            Table.AddColumn(
+                AllDataColumn, "Previous Review Score", 
+                each try AllDataColumn[Review Score] {[Index] + 1} otherwise null // call variable with column name, use + or - depending on expected results
+          )
+    in 
+        PrevRowValue
+  ),
+    Output = Table.Combine( PreviousScore[Custom]), // Combine all columns instead of removing other columns, prevents need for change type on numerous columns

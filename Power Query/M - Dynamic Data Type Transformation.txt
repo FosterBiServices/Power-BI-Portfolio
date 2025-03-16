@@ -1,0 +1,64 @@
+SiteURL
+	"https://liveyourbestlife.sharepoint.com/sites/EnterpriseAnalytics/Shared%20Documents/Power%20BI/Users/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+User 
+	"Steven/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+FileName
+	"Home%20Health/Rollups/Home%20Health%20Rollups.xlsx" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+let
+  // Load the Excel workbook from the specified SharePoint URL
+  Source = Excel.Workbook(Web.Contents(SiteURL & User & FileName), true, true),
+  // Access the specific sheet named "Rollups"
+  pageName = Source{[Item = "Rollups", Kind = "Sheet"]}[Data], 
+  // Function to check if a column resembles a date
+    IsDateColumn = (column as list) as logical => 
+        List.NonNullCount(
+            List.Transform(column, each try Date.From(_) otherwise null)
+        ) > 0,
+
+    // Function to check if a column contains numeric values without leading zeros
+    IsNumericWithoutLeadingZeros = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                let 
+                    value = Number.FromText(_),
+                    textValue = Text.From(value),
+                    isNoLeadingZero = Text.StartsWith(_, textValue)
+                in 
+                    if isNoLeadingZero then value else null
+            otherwise null)
+        ) > 0,
+
+    // Function to check if a column has any value starting with 0
+    HasLeadingZeros = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Text.StartsWith(_, "0") then _ else null
+            otherwise null)
+        ) > 0,
+
+    // Identify columns and their desired types dynamically
+    ColumnTypes = List.Transform(
+        Table.ColumnNames(pageName),
+        (colName) => 
+            let
+                column = Table.Column(pageName, colName)
+            in
+                if IsDateColumn(column) then
+                    {colName, type date}
+                else if HasLeadingZeros(column) then
+                    {colName, type text} // Force text for columns with leading zeros
+                else if IsNumericWithoutLeadingZeros(column) then
+                    {colName, Int64.Type}
+                else
+                    {colName, type text}
+    ),
+
+    // Apply the column types
+    ChangedTypes = Table.TransformColumnTypes(pageName, ColumnTypes)
+  // Remove blank rows and columns
+  Cleanup = fxRemoveBlankRowsandColumns(ChangedTypes),
+  #"Removed columns" = Table.RemoveColumns(Cleanup, {"Column4"}),
+  #"Transform columns" = Table.TransformColumnTypes(#"Removed columns", {{"Branch Group", type text}, {"Area Grouping", type text}, {"Region Grouping", type text}, {"Branch Code", type text}, {"BranchGroup", type text}}),
+  #"Replace errors" = Table.ReplaceErrorValues(#"Transform columns", {{"Branch Group", null}, {"Area Grouping", null}, {"Region Grouping", null}, {"Branch Code", null}, {"BranchGroup", null}})
+in
+  #"Replace errors"

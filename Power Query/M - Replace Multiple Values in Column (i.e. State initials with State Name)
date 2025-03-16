@@ -1,0 +1,7 @@
+    #"Changed Type List" = Table.ToRows(Table.TransformColumnTypes(ReplaceSource,{{"Abbrev", type text}, {"State", type text}})),
+
+
+    
+    Custom1 = Table.TransformColumns(#"Changed Type", {}, each List.ReplaceMatchingItems({_}, #"Changed Type List"){0})
+in
+    Custom1

@@ -1,0 +1,10 @@
+let
+  Source = [ Source = DateTimeZone.FixedLocalNow()],
+    ConvertToTable = Record.ToTable(Source),
+    SplitDateTime = Table.SplitColumn(Table.TransformColumnTypes(ConvertToTable, {{"Value", type text}}, "en-US"), "Value", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.None, true), {"Value.1", "Value.2"}),
+    ChangeTime = Table.TransformColumnTypes(SplitDateTime,{{"Value.1", type datetime}, {"Value.2", type duration}}),
+    #"TImeZoneAbbrev." = Table.AddColumn(ChangeTime, "TimeZone", each if [Value.2] = "-05:00:00" then "EDT" else "EST"),
+    AddLastRefresh = Table.AddColumn(#"TImeZoneAbbrev.", "LastRefresh", each Text.From([Value.1] + [Value.2]) & " (" & [TimeZone] & ")"),
+    #"Removed Other Columns" = Table.SelectColumns(AddLastRefresh,{"LastRefresh"})
+in
+    #"Removed Other Columns"

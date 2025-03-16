@@ -1,0 +1,19 @@
+    AddCurrentMonth = Table.AddColumn(
+        DateFilter,
+        "Month Filter",
+        each if Date.Month([DateValue]) = Date.Month(Date.From(DateTime.LocalNow())) 
+            and Date.Year([DateValue]) = Date.Year(Date.From(DateTime.LocalNow()))
+        then "Current"
+        else [YearMonth]
+        , type text
+    ),
+
+    // Add a column for sorting months numerically based on the year and month
+    AddMonthSort = Table.AddColumn(
+        AddCurrentMonth,
+        "Month Sort",
+        each Date.Year([DateValue]) * 12 + Date.Month([DateValue]) - 1,
+        type number
+    )
+in
+  AddMonthSort

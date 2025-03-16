@@ -1,0 +1,55 @@
+let
+    Source = (Source as table) =>
+
+let
+    // Function to check if a column resembles a date
+    IsDateColumn = (column as list) as logical => 
+        List.NonNullCount(
+            List.Transform(column, each try Date.From(_) otherwise null)
+        ) > 0,
+
+    // Function to check if a column contains numeric values without leading zeros
+    IsNumericWithoutLeadingZeros = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                let 
+                    value = Number.FromText(_),
+                    textValue = Text.From(value),
+                    isNoLeadingZero = Text.StartsWith(_, textValue)
+                in 
+                    if isNoLeadingZero then value else null
+            otherwise null)
+        ) > 0,
+
+    // Function to check if a column has any value starting with 0
+    HasLeadingZeros = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Text.StartsWith(_, "0") then _ else null
+            otherwise null)
+        ) > 0,
+
+    // Identify columns and their desired types dynamically
+    ColumnTypes = List.Transform(
+        Table.ColumnNames(Source),
+        (colName) => 
+            let
+                column = Table.Column(Source, colName)
+            in
+                if IsDateColumn(column) then
+                    {colName, type date}
+                else if HasLeadingZeros(column) then
+                    {colName, type text} // Force text for columns with leading zeros
+                else if IsNumericWithoutLeadingZeros(column) then
+                    {colName, Int64.Type}
+                else
+                    {colName, type text}
+    ),
+
+    // Apply the column types
+    ChangedTypes = Table.TransformColumnTypes(Source, ColumnTypes)
+    
+in
+    ChangedTypes
+in
+    Source

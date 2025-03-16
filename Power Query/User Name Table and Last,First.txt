@@ -1,0 +1,35 @@
+User Name = 
+VAR UPNDOT =
+    SEARCH ( ".", USERPRINCIPALNAME () )
+VAR UPNAT =
+    SEARCH ( "@", USERPRINCIPALNAME () )
+VAR UPNLN =
+    LEN ( USERPRINCIPALNAME () )
+RETURN
+        CONCATENATE (
+            MID ( USERPRINCIPALNAME (), UPNDOT + 1, UPNAT - ( UPNDOT + 1 ) ),
+            CONCATENATE (
+                ", ",
+             LEFT ( USERPRINCIPALNAME (), UPNDOT - 1 )   
+            )
+        )
+		
+
+let
+  Source = Table.FromRows(
+    Json.Document(
+      Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)
+    ),
+    let
+      _t = ((type text) meta [Serialized.Text = true])
+    in
+      type table [User = _t, First = _t, Last = _t]
+  ),
+  #"Changed Type" = Table.TransformColumnTypes(
+    Source,
+    {{"User", type text}, {"First", type text}, {"Last", type text}}
+  ),
+  #"Removed Columns" = Table.RemoveColumns(#"Changed Type", {"Last", "User"}),
+  #"Renamed Columns" = Table.RenameColumns(#"Removed Columns", {{"First", "placeholder"}})
+in
+  #"Renamed Columns"

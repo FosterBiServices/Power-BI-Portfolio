@@ -1,0 +1,21 @@
+let
+  Source = tblSmyOpsVolIntraday,
+  #"Added Conditional Column" = Table.AddColumn(
+    Source,
+    "Current Fiscal Week",
+    each if [Date] > Date.StartOfWeek(Date.From(DateTime.LocalNow()), 0) then "Yes" else "No"
+  ),
+  #"Added Conditional Column2" = Table.AddColumn(
+    #"Added Conditional Column",
+    "Previous Fiscal Week",
+    each
+      if [Date]
+        < Date.StartOfWeek(Date.From(DateTime.LocalNow()), 0) and [Date]
+        >= Date.StartOfWeek(Date.AddDays(Date.From(DateTime.LocalNow()), - 7), 0)
+      then
+        "Yes"
+      else
+        "No"
+  )
+in
+  #"Added Conditional Column2"

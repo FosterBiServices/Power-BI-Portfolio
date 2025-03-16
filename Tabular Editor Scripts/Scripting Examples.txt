@@ -1,0 +1,10 @@
+// Count number of measures in model 
+int __measures = Model.AllMeasures.Count(); 
+
+// Count number of measures selected 
+//int _measures = Selected.measures.Count()
+
+// Return Info Box with # of measure4s
+// info ( "# of measures: " + __measures );
+
+__measures.Output(); 

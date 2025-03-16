@@ -1,0 +1,5 @@
+    #"Filtered Rows" = Table.SelectRows(Source, each [Date] >= Date.StartOfWeek(Date.AddDays(Date.From(DateTime.LocalNow()),-7),1)),
+    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each [Date] <= Date.StartOfWeek(Date.From(DateTime.LocalNow()),0)),
+	
+	
+

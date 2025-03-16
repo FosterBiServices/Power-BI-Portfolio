@@ -1,0 +1,17 @@
+(StartDate as date, EndDate as date, optional Holidays as list) =>
+let
+    // Get list of dates between Start- and EndDate
+    ListOfDates = List.Dates(StartDate,Number.From(EndDate-StartDate),#duration(1,0,0,0)),
+
+    // if the optional Holidays parameter is used: Keep only those dates in the list that don't occur in the list of Holidays;
+    // otherwise continue with previous table
+    DeleteHolidays = if Holidays = null then ListOfDates else List.Difference(ListOfDates, Holidays),
+
+    // Select only the first 5 days of the week 
+    // The 1 in the 2nd parameter of Date.DayOfWeek makes sure that Monday will be taken as first day of the week
+    DeleteWeekends = List.Select(DeleteHolidays, each Date.DayOfWeek(_,1) < 5 ),
+
+    // Count the number of days (items in the list)
+    CountDays = List.Count(DeleteWeekends)
+in
+    CountDays

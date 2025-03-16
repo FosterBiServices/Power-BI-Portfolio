@@ -1,0 +1,51 @@
+Table.AddColumn(#"Filtered Rows", "Associate Name", each  Text.From([Associate_LastName]) & ", " & Text.From([Associate_FirstName]) )
+
+let
+  Source = Sql.Database("cs-db-rpt", "nadcs_dw"), 
+  dbo_Dim_AssociateHierarchy = Source{[Schema = "dbo", Item = "Dim_AssociateHierarchy"]}[Data], 
+  #"Filtered Rows" = Table.SelectRows(
+    dbo_Dim_AssociateHierarchy, 
+    each [Date_ID] >= 9165 and [Date_ID] <= 9171
+  ), 
+  #"Added Custom" = Table.AddColumn(
+    #"Filtered Rows", 
+    "Associate Name", 
+    each Text.From([Associate_LastName]) & ", " & Text.From([Associate_FirstName])
+  ), 
+  #"Added Custom1" = Table.AddColumn(
+    #"Added Custom", 
+    "Team Lead Name", 
+    each Text.From([Manager1_LastName]) & ", " & Text.From([Manager1_FirstName])
+  ), 
+  #"Added Custom2" = Table.AddColumn(
+    #"Added Custom1", 
+    "Team Manager Name", 
+    each Text.From([Manager2_LastName]) & ", " & Text.From([Manager2_FirstName])
+  ), 
+  #"Added Custom3" = Table.AddColumn(
+    #"Added Custom2", 
+    "Asst. CCM Name", 
+    each Text.From([Manager3_LastName]) & ", " & Text.From([Manager3_FirstName])
+  ), 
+  #"Added Custom4" = Table.AddColumn(
+    #"Added Custom3", 
+    "CCM Name", 
+    each Text.From([Manager4_LastName]) & ", " & Text.From([Manager4_FirstName])
+  ), 
+  #"Added Custom5" = Table.AddColumn(
+    #"Added Custom4", 
+    "Director Name", 
+    each Text.From([Manager5_LastName]) & ", " & Text.From([Manager5_FirstName])
+  ), 
+  #"Added Custom6" = Table.AddColumn(
+    #"Added Custom5", 
+    "Jr. VP Name", 
+    each Text.From([Manager6_LastName]) & ", " & Text.From([Manager6_FirstName])
+  ), 
+  #"Added Custom7" = Table.AddColumn(
+    #"Added Custom6", 
+    "VP Name", 
+    each Text.From([Manager7_LastName]) & ", " & Text.From([Manager7_FirstName])
+  )
+in
+  #"Added Custom7"

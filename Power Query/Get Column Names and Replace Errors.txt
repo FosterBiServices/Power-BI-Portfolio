@@ -1,0 +1,11 @@
+GetColumnNames = Table.ColumnNames(Summary_Sheet),
+
+ColNameListToTable = Table.FromList(GetColumnNames, Splitter.SplitByNothing(), null, null, ExtraValues.Ignore),
+
+ReplacementValue = Table.AddColumn(ColNameListToTable, "Replace", each null),
+
+TransposeTable = Table.Transpose(ReplacementValue),
+
+FinalColList = Table.ToColumns(TransposeTable),
+
+#"Replaced Errors" = Table.ReplaceErrorValues(#"Summary_Sheet", FinalColList),

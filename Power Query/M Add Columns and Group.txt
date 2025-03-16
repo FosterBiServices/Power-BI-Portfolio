@@ -1,0 +1,81 @@
+let
+  Source = tblSmyOpsBPOServiceLevel,
+  #"Changed Type" = Table.TransformColumnTypes(
+    Source,
+    {
+      {"CalendarDate", type date},
+      {"FiscalWeekStartDate", type date},
+      {"FiscalWeekEndDate", type date},
+      {"FiscalPeriodStartDate", type date},
+      {"FiscalPeriodEndDate", type date},
+      {"FiscalQuarterStartDate", type date},
+      {"FiscalQuarterEndDate", type date}
+    }
+  ),
+  #"Filtered Rows" = Table.SelectRows(
+    #"Changed Type",
+    each [CalendarDate] < Date.StartOfWeek(Date.From(DateTime.LocalNow()), 0)
+  ),
+  #"Inserted Last Characters" = Table.AddColumn(
+    #"Filtered Rows",
+    "Last Characters",
+    each Text.End([FiscalPeriodNameLong], 2),
+    type text
+  ),
+  #"Added Custom" = Table.AddColumn(
+    #"Inserted Last Characters",
+    "CurrentYear",
+    each Date.Year([CalendarDate])
+  ),
+  #"Added Conditional Column" = Table.AddColumn(
+    #"Added Custom",
+    "Custom",
+    each
+      if [Last Characters] = "01" then
+        [CurrentYear] - 1
+      else if [Last Characters] <> "01" then
+        [FiscalYear]
+      else
+        0
+  ),
+  #"Renamed Columns" = Table.RenameColumns(#"Added Conditional Column", {{"Custom", "FY"}}),
+  #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns", each [FiscalYear] = [FY]),
+  #"Removed Columns" = Table.RemoveColumns(
+    #"Filtered Rows1",
+    {"Last Characters", "CurrentYear", "FY"}
+  ),
+  #"Grouped Rows" = Table.Group(
+    #"Removed Columns",
+    {
+      "CalendarDate",
+      "FiscalQuarterName",
+      "QuarterID",
+      "FiscalPeriodNameLong",
+      "PeriodID",
+      "FiscalWeekEndDate",
+      "WeekID",
+      "BusinessGroup",
+      "BusinessUnit",
+      "ForecastingChannelJoin"
+    },
+    {
+      {"Acceptable Met", each List.Sum([SLAcceptableMet]), type number},
+      {"Acceptable Applicable", each List.Sum([SLAcceptableApplicable]), type number},
+      {"Cutoff Acceptable Met", each List.Sum([CutoffAcceptableMet]), type number},
+      {"Cutoff Acceptable Applicable", each List.Sum([CutoffAcceptableApplicable]), type number},
+      {"Late Drop", each List.Sum([LateDrop]), type number},
+      {"Processing Acceptable Met", each List.Sum([ProcessingAcceptableMet]), type number},
+      {
+        "Processing Acceptable Applicable",
+        each List.Sum([ProcessingAcceptableApplicable]),
+        type number
+      },
+      {"Total Handle Time", each List.Sum([TotalHandleTime]), type number},
+      {"Total Offered", each List.Sum([TotalOffered]), type number},
+      {"Total Completed", each List.Sum([TotalCompleted]), type number},
+      {"Not Completed", each List.Sum([NotCompleted]), type number},
+      {"Forecasted", each List.Max([Forecasted]), type number}
+    }
+  )
+in
+  #"Grouped Rows"

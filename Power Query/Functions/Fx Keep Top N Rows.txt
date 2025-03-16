@@ -1,0 +1,20 @@
+let
+	// InputTable is variable to allow these steps to be applied to any table that you want to apply these steps too
+    Source = (InputTable as table) as table =>
+
+let
+  IndexNumber = 
+    let
+        #"Added Index" = Table.AddIndexColumn(#"InputTable", "Index", 0, 1, Int64.Type),
+		// Change to term you are looking for
+        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Billable Encounters", type text}}),
+		// Remove if you do not need to apply a filter 
+        #"Filtered Rows" = Table.SelectRows(#"Added Index", each ([Billable Encounters] = "NEW PAT")){0}[Index]
+
+    in
+  #"Filtered Rows",
+  RemoveRows = Table.FirstN(InputTable, IndexNumber)
+in
+  RemoveRows
+in
+    Source

@@ -1,0 +1,2 @@
+Selected.Measures.FormatString = "$#,#.##; ($#,#.##)";
+

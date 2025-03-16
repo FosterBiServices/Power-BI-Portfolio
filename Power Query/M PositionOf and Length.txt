@@ -1,0 +1,27 @@
+let
+  Source = luDaysWorked,
+  KeptColumns = Table.SelectColumns(Source, {"Provider Name", "Display Name", "Date", "SourceFile"}),
+  Validation = Table.AddColumn(
+    KeptColumns,
+    "Valid Flag",
+    each
+      if [Display Name]
+        = Text.End(
+          Text.Upper(Text.Start([Provider Name], Text.PositionOf([Provider Name], ","))),
+          Text.Length(
+            Text.Upper(Text.Start([Provider Name], Text.PositionOf([Provider Name], ",")))
+          )
+            - 1
+            - Text.PositionOf(
+              Text.Upper(Text.Start([Provider Name], Text.PositionOf([Provider Name], ","))),
+              "-"
+            )
+        )
+      then
+        "Valid"
+      else
+        "Invalid"
+  ),
+  #"Filtered Rows" = Table.SelectRows(Validation, each ([Valid Flag] = "Invalid"))
+in
+  #"Filtered Rows"

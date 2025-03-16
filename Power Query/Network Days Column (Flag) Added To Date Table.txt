@@ -1,0 +1,20 @@
+(NetworkTable as table) =>
+let
+    // Filter rows where ServiceHoliday = true (assuming holiday flag is integer)
+    HolidaysList = Table.SelectRows(NetworkTable, each [ServiceHoliday] = 1)[DateValue],
+    
+    // Add a column to check if each date is a network day
+    AddNetworkDayFlag = Table.AddColumn(
+        NetworkTable,
+        "IsNetworkDay",
+        each 
+            let
+                CurrentDate = [DateValue], // "Date" column
+                IsHoliday = List.Contains(HolidaysList, CurrentDate),
+                IsWeekend = Date.DayOfWeek(CurrentDate, Day.Monday) >= 5
+            in
+                if IsHoliday or IsWeekend then 0 else 1,
+        Int64.Type
+    )
+in
+    AddNetworkDayFlag

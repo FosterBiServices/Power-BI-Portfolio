@@ -1,0 +1,67 @@
+let
+  Source = Sql.Database("cs-db-prod", "GARD"),
+  Navigation = Source{[Schema = "dbo", Item = "vwDimDate"]}[Data],
+  #"Removed Other Columns" = Table.SelectColumns(Navigation, {"DateID", "CalendarDate", "FiscalYear", "PeriodID", "QuarterID", "FiscalPeriodNameLong", "FiscalWeekStartDate", "FiscalWeekEndDate", "Rolling13Periods", "IsPreviousWeek", "IsCurrentWeek", "IsPreviousFiscalPeriod", "IsCurrentFiscalPeriod", "FiscalPeriodStartDate", "FiscalPeriodEndDate", "IsCurrentFiscalQuarter", "IsPreviousFiscalQuarter", "FiscalQuarterStartDate", "FiscalQuarterEndDate", "IsPreviousFiscalYear", "IsCurrentFiscalYear"}),
+  #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns", {{"CalendarDate", type date}, {"FiscalWeekEndDate", type date}, {"FiscalWeekStartDate", type date}, {"FiscalPeriodStartDate", type date}, {"FiscalPeriodEndDate", type date}, {"FiscalQuarterStartDate", type date}, {"FiscalQuarterEndDate", type date}}),
+  #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"CalendarDate", "Date"}, {"FiscalPeriodNameLong", "Fiscal Period"}, {"FiscalWeekEndDate", "Fiscal Week End Date"}, {"IsCurrentFiscalPeriod", "Current Period"}, {"IsCurrentWeek", "Current Week"}, {"IsPreviousFiscalPeriod", "Previous Period"}, {"IsPreviousWeek", "Previous Week"}, {"IsCurrentFiscalQuarter", "Current Quarter"}, {"IsPreviousFiscalQuarter", "Previous Quarter"}, {"IsCurrentFiscalYear", "Current Year"}, {"IsPreviousFiscalYear", "Previous Year"}, {"FiscalYear", "Fiscal Year"}, {"Rolling13Periods", "Rolling 13 Periods"}}),
+  #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each [Date] < Date.From(DateTime.LocalNow())),
+  #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each [Date] >= Date.AddDays(Date.From(DateTime.LocalNow()),-730))
+in
+  #"Filtered Rows1"
+  
+
+
+let
+    Source = vwDimDate, 
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"DateID", "CalendarDate", "FiscalYear", "PeriodID", "FiscalPeriodNameLong", "FiscalWeekEndDate", "IsPreviousWeek", "IsCurrentWeek", "IsPreviousFiscalPeriod", "IsCurrentFiscalPeriod", "IsPreviousFiscalQuarter", "IsCurrentFiscalQuarter", "IsPreviousFiscalYear", "IsCurrentFiscalYear"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"CalendarDate", type date}, {"FiscalWeekEndDate", type date}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"CalendarDate", "Date"}, {"FiscalPeriodNameLong", "Fiscal Period"}, {"FiscalWeekEndDate", "Fiscal Week End Date"}, {"IsCurrentFiscalPeriod", "Current Period"}, {"IsCurrentWeek", "Current Week"}, {"IsPreviousFiscalPeriod", "Previous Period"}, {"IsPreviousWeek", "Previous Week"}, {"IsCurrentFiscalYear", "Current Year"}, {"IsPreviousFiscalYear", "Previous Year"}, {"FiscalYear", "Fiscal Year"}, {"Rolling13Periods", "Rolling 13 Periods"}}),
+    #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns", each [Date] < Date.From(DateTime.LocalNow())),
+    #"Filtered Rows" = Table.SelectRows(#"Filtered Rows1", each [CurrentFiscalYearFlag] = true or [PreviousFiscalYearFlag] = true)
+in
+    #"Filtered Rows"
+	
+	
+	
+let
+    Source = Sql.Database("cs-db-rpt", "Gard"),
+    dbo_vwDimDate = Source{[Schema="dbo",Item="vwDimDate"]}[Data],
+    #"Removed Other Columns" = Table.SelectColumns(dbo_vwDimDate,{"DateID", "CalendarDate", "FiscalYear", "PeriodID", "FiscalPeriodNameLong", "FiscalWeekEndDate", "CurrentPeriodFlag", "PreviousPeriodFlag", "PreviousFiscalYearFlag", "CurrentFiscalYearFlag", "Rolling13Periods", "IsPreviousWeek", "IsCurrentWeek", "IsPreviousFiscalPeriod", "IsCurrentFiscalPeriod", "IsPreviousFiscalYear", "IsCurrentFiscalYear"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"CalendarDate", type date}, {"FiscalWeekEndDate", type date}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"CalendarDate", "Date"}, {"FiscalPeriodNameLong", "Fiscal Period"}, {"FiscalWeekEndDate", "Fiscal Week End Date"}, {"IsCurrentFiscalPeriod", "Current Period"}, {"IsCurrentWeek", "Current Week"}, {"IsPreviousFiscalPeriod", "Previous Period"}, {"IsPreviousWeek", "Previous Week"}, {"IsCurrentFiscalYear", "Current Year"}, {"IsPreviousFiscalYear", "Previous Year"}, {"FiscalYear", "Fiscal Year"}, {"Rolling13Periods", "Rolling 13 Periods"}}),
+    #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns", each [Date] < Date.From(DateTime.LocalNow())),
+    #"Filtered Rows" = Table.SelectRows(#"Filtered Rows1", each [CurrentFiscalYearFlag] = true or [PreviousFiscalYearFlag] = true)
+in
+    #"Filtered Rows"
+	
+let
+    Source = #"SQL/cs-db-prod;GARD",
+    dbo_vwDimDate = Source{[Schema="dbo",Item="vwDimDate"]}[Data],
+    #"Removed Other Columns" = Table.SelectColumns(dbo_vwDimDate,{"DateID", "CalendarDate", "FiscalYear", "PeriodID", "FiscalPeriodNameLong", "FiscalWeekEndDate", "IsPreviousWeek", "IsCurrentWeek", "IsPreviousFiscalPeriod", "IsCurrentFiscalPeriod", "IsPreviousFiscalQuarter", "IsCurrentFiscalQuarter", "IsPreviousFiscalYear", "IsCurrentFiscalYear"}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"CalendarDate", type date}, {"FiscalWeekEndDate", type date}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"CalendarDate", "Date"}, {"FiscalPeriodNameLong", "Fiscal Period"}, {"FiscalWeekEndDate", "Fiscal Week End Date"}, {"IsCurrentFiscalPeriod", "Current Period"}, {"IsCurrentWeek", "Current Week"}, {"IsPreviousFiscalPeriod", "Previous Period"}, {"IsPreviousWeek", "Previous Week"}, {"IsCurrentFiscalYear", "Current Year"}, {"IsPreviousFiscalYear", "Previous Year"}, {"FiscalYear", "Fiscal Year"}}),
+    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each [Date] <= Date.From(DateTime.LocalNow())),
+    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each [Date] >= Date.AddDays(Date.From(DateTime.LocalNow()),-730))
+in
+    #"Filtered Rows1"
+	
+	
+
+let
+    Source = Sql.Database("cs-db-prod", "GARD"),
+    dbo_vwDimDate = Source{[Schema="dbo",Item="vwDimDate"]}[Data], 
+    #"Filtered Rows" = Table.SelectRows(dbo_vwDimDate, each [FiscalYear] >= Date.Year(Date.AddYears(Date.From(DateTime.LocalNow()),-4))), 
+     #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows", each [FiscalYear] <= Date.Year(Date.AddYears(Date.From(DateTime.LocalNow()),1)))    
+in
+    #"Filtered Rows1"
+	
+	
+	
+let
+    Source = Date, 
+    #"Filtered Rows" = Table.SelectRows(Source, each [FiscalYear] >= List.Min(#"cpc CSCPC"[Fiscal Year])),
+    #"Filtered Rows1" = Table.SelectRows(#"Filtered Rows" , each [FiscalYear] <= List.Max(#"cpc CSCPC"[Fiscal Year])),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows1",{{"FiscalQuarterName", "Fiscal Quarter"}, {"FiscalPeriod", "Fiscal Period"}, {"FiscalYear", "Fiscal Year"}})
+in
+    #"Renamed Columns"
+	

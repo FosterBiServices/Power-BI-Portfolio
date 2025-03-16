@@ -1,0 +1,10 @@
+let
+    Source = (InputTable as table) as table =>
+
+    let 
+        PromotedHeaders = Table.PromoteHeaders(#"InputTable", [PromoteAllScalars = true]),
+        TrimColumnNames = Table.TransformColumnNames(PromotedHeaders, Text.Trim)
+    in
+        TrimColumnNames
+in 
+    Source

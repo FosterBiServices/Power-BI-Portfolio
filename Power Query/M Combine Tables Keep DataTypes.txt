@@ -1,0 +1,31 @@
+  SortbyLocationCreatedDate = Table.Buffer(
+    Table.Sort(
+      #"Filtered Rows",
+      {
+        {"Location", Order.Ascending},
+        {"Created Date", Order.Descending}
+      }
+    )
+  ),
+  #"Grouped Rows" = Table.Group(SortbyLocationCreatedDate, {"Location"}, {{"Fulltable", each _, type table [Review Score=nullable number, Review Status=nullable text, Person Entering Review=nullable text, Reviewer Name=nullable text, Review Name=nullable text, Rev type by name=nullable text, LocationName=nullable text, Location=nullable text, Time of Review=nullable text, Reviewed Date=nullable datetime, RecordID=nullable number, Modified By=nullable text, Modified Date=nullable datetime, Created Date=nullable date, Created By=nullable text, AnyNoAnswerFlag=nullable text, Created DateTime=nullable datetime, Score Bucket=nullable text, Score Bucket Sort=nullable text, Created Month=nullable date, RankPerMoLast=nullable number, RankPerMoFirst=nullable number, LocationMonthID=nullable text, NotEnteredByReviewer=nullable number, FirstOrLast=nullable text, Review Type=nullable text, ReviewTypeSort=nullable number]}}),
+  AddedIndex = Table.TransformColumns(
+    #"Grouped Rows",
+    {{"Fulltable",
+    each Table.AddIndexColumn(_, "Index")}}
+  ),
+    PreviousScore = Table.AddColumn(AddedIndex, "Custom", 
+    each 
+    let
+          AllDataColumn = [Fulltable], 
+          PrevRowValue = 
+            Table.AddColumn(
+                AllDataColumn, "Previous Review Score", 
+                each try AllDataColumn[Review Score] {[Index] + 1} otherwise null
+          )
+    in 
+        PrevRowValue
+  ),
+    Output = Table.Combine( PreviousScore[Custom]) // References Custom Column only to expand column while keeping data types,
+    
+in
+    #"Changed Type"

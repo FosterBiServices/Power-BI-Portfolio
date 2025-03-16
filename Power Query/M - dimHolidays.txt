@@ -1,0 +1,205 @@
+let
+
+  // Step 1: Reference dimDates table and filter for the holidays we need
+  Source = 
+      let
+      // Step 1: Get yesterday's date
+      Yesterday = Date.AddDays(DateTime.LocalNow(), -1),
+
+      // Step 2: Extract the year from yesterday's date
+      CurrentYear = Date.Year(Yesterday),
+
+      // Step 3: Generate a list of years from (CurrentYear - 2) to (CurrentYear + 5)
+      YearList = List.Numbers(CurrentYear - 2, 3),  // 8 because we include the current year
+
+      // Step 4: Convert the list into a table
+      YearTable = Table.FromList(YearList, Splitter.SplitByNothing(), {"Year Number"}),
+
+      // Step 5: Generate a list of dates for each year
+      AddDates = Table.AddColumn(YearTable, "DateValue", each List.Dates(
+          #date([Year Number], 1, 1),   // Start from January 1st of the year
+          Number.From(Date.From(#date([Year Number], 12, 31)) - Date.From(#date([Year Number], 1, 1))) + 1, 
+          #duration(1, 0, 0, 0)  // Add one day at a time
+      )),
+
+      // Step 6: Expand the list of dates
+      ExpandedDates = Table.ExpandListColumn(AddDates, "DateValue")
+in
+  ExpandedDates, 
+  Holidays =
+    let
+
+      // Step 1: Reference dimDates table
+      Source = Source[[DateValue],[Year Number]],
+      // Step 2: Calculate New Year’s Day
+      AddNewYearDay = Table.AddColumn(Source, "NewYearDayDate", each #date([Year Number], 1, 1)),
+      // Step 3: Calculate Independence Day
+      AddIndependenceDay = Table.AddColumn(
+        AddNewYearDay,
+        "IndependenceDayDate",
+        each #date([Year Number], 7, 4)
+      ),
+      // Step 4: Calculate Christmas Day
+      AddChristmasDay = Table.AddColumn(
+        AddIndependenceDay,
+        "ChristmasDayDate",
+        each #date([Year Number], 12, 25)
+      ),
+      // Step 5: Calculate Memorial Day (last Monday of May)
+      AddMemorialDay = Table.AddColumn(
+        AddChristmasDay,
+        "MemorialDayDate",
+        each
+          let
+            YearValue = [Year Number],
+            MemorialDayDate = List.Max(
+              List.Select(
+                Source[DateValue],
+                (d) =>
+                  Date.Year(d)
+                    = YearValue
+                    and Date.Month(d) = 5
+                    and Date.DayOfWeek(d, Day.Monday) = 0
+              )
+            )
+          in
+            MemorialDayDate
+      ),
+      // Step 6: Calculate Labor Day (first Monday of September)
+      AddLaborDay = Table.AddColumn(
+        AddMemorialDay,
+        "LaborDayDate",
+        each
+          let
+            YearValue = [Year Number],
+            LaborDayDate = List.Min(
+              List.Select(
+                Source[DateValue],
+                (d) =>
+                  Date.Year(d)
+                    = YearValue
+                    and Date.Month(d) = 9
+                    and Date.DayOfWeek(d, Day.Monday) = 0
+              )
+            )
+          in
+            LaborDayDate
+      ),
+      // Step 7: Calculate Thanksgiving Day (Fourth Thursday of November)
+      AddThanksgivingDay = Table.AddColumn(
+        AddLaborDay,
+        "ThanksgivingDayDate",
+        each
+          let
+            YearValue = [Year Number],
+            ThursdaysInNovember = List.Select(
+              Source[DateValue],
+              (d) =>
+                Date.Year(d) = YearValue and
+                Date.Month(d) = 11 and
+                Date.DayOfWeek(d) = Day.Thursday
+            ),
+            ThanksgivingDayDate = List.Sort(ThursdaysInNovember){3} // Get the 4th Thursday (zero-based index)
+          in
+            ThanksgivingDayDate
+      ),
+      // Step 8: Create a table for all holidays
+      HolidayDays = Table.FromRecords(
+        List.Transform(
+          AddThanksgivingDay[Year Number],
+          each [
+            Year = _,
+            Holiday = "Memorial Day",
+            DateValue = AddThanksgivingDay
+              {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+              [MemorialDayDate]
+          ]
+        )
+          & List.Transform(
+            AddThanksgivingDay[Year Number],
+            each [
+              Year = _,
+              Holiday = "Labor Day",
+              DateValue = AddThanksgivingDay
+                {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+                [LaborDayDate]
+            ]
+          )
+          & List.Transform(
+            AddThanksgivingDay[Year Number],
+            each [
+              Year = _,
+              Holiday = "New Year Day",
+              DateValue = AddThanksgivingDay
+                {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+                [NewYearDayDate]
+            ]
+          )
+          & List.Transform(
+            AddThanksgivingDay[Year Number],
+            each [
+              Year = _,
+              Holiday = "Independence Day",
+              DateValue = AddThanksgivingDay
+                {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+                [IndependenceDayDate]
+            ]
+          )
+          & List.Transform(
+            AddThanksgivingDay[Year Number],
+            each [
+              Year = _,
+              Holiday = "Christmas Day",
+              DateValue = AddThanksgivingDay
+                {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+                [ChristmasDayDate]
+            ]
+          )
+          & List.Transform(
+            AddThanksgivingDay[Year Number],
+            each [
+              Year = _,
+              Holiday = "Thanksgiving Day",
+              DateValue = AddThanksgivingDay
+                {List.PositionOf(AddThanksgivingDay[Year Number], _)}
+                [ThanksgivingDayDate]
+            ]
+          )
+      ),
+      // Step 9: Remove rows where DateValue is null
+      CleanedTable = Table.SelectRows(HolidayDays, each ([DateValue] <> null)),
+      // Step 10: Remove duplicates to ensure distinct values
+      DistinctTable = Table.Distinct(CleanedTable),
+      // Step 11: Return final table with Memorial Day, Labor Day, and Thanksgiving
+      FinalTable = Table.SelectColumns(DistinctTable, {"Year", "Holiday", "DateValue"}),
+      // Step 12: Rename columns to match columns from dimDates
+      renamedColumns = Table.RenameColumns(
+        FinalTable,
+        {{"Year", "YearNumber"}, {"Holiday", "ServiceHolidayName"}}
+      ),
+      // Step 13: Add ServiceHoliday Flag
+      addServiceHoliday = Table.AddColumn(renamedColumns, "ServiceHoliday", each 1)
+    in
+      addServiceHoliday,
+  // Step 14: Change column types
+  changeColumnTypes = Table.TransformColumnTypes(
+    Holidays,
+    {
+      {"ServiceHolidayName", type text},
+      {"DateValue", type date},
+      {"YearNumber", Int64.Type},
+      {"ServiceHoliday", Int64.Type}
+    }
+  ),
+  // Step 15: Adjust DateValue if it falls on a weekend
+  adjustedDates = Table.TransformColumns(
+    changeColumnTypes,
+    {"DateValue", each if Date.DayOfWeek(_, Day.Monday) = 5 then Date.AddDays(_, 2) // If Saturday, add 2 days
+                   else if Date.DayOfWeek(_, Day.Monday) = 6 then Date.AddDays(_, 1) // If Sunday, add 1 day
+                   else _,
+                   type date}
+  ),
+  // Remove any future dates
+  filteredRows = Table.SelectRows(adjustedDates, each Date.From([DateValue]) < Date.From(DateTime.LocalNow()))
+in 
+  filteredRows

@@ -1,0 +1,67 @@
+let
+    // Get the maximum admit date from the factAdmit table
+    maxAdmitDate = List.Max(factAdmit[AdmitDate]),
+
+    // Get the minimum referral date from the factReferral table
+    minReferralDate = List.Min(factReferral[ReferralDate]),
+
+    // Connect to Power Platform dataflows
+    connectToPowerPlatformDataflows = PowerPlatform.Dataflows(null),
+
+    // Retrieve the list of available workspaces
+    retrieveAvailableWorkspaces = connectToPowerPlatformDataflows{[Id = "Workspaces"]}[Data],
+
+    // Access the specified workspace by workspace ID
+    accessSelectedWorkspace = retrieveAvailableWorkspaces{[workspaceId = #"WorkspaceID"]}[Data],
+
+    // Access the specified dataflow within the selected workspace by dataflow ID
+    accessSelectedDataflow = accessSelectedWorkspace{[dataflowId = #"DataflowID"]}[Data],
+
+    // Load the "dimDates" entity data from the selected dataflow
+    loadDimDatesTable = accessSelectedDataflow{[entity = "dimDates", version = ""]}[Data],
+
+    // Filter the dimDates table for rows within the date range of minReferralDate and maxAdmitDate
+    filterDimDatesTableByDateRange = Table.SelectRows(
+        loadDimDatesTable,
+        each Date.From([DateValue]) <= Date.From(maxAdmitDate) and
+             Date.From([DateValue]) >= Date.From(minReferralDate)
+    ),
+
+    // Get the maximum date from the filtered dimDate table
+    maxDateInDimDate = List.Max(filterDimDatesTableByDateRange[DateValue]),
+
+    // Extract the year and month from the maxDateInDimDate
+    maxYear = Date.Year(maxDateInDimDate),
+    maxMonth = Date.Month(maxDateInDimDate),
+
+    // Add a column indicating the last date with data
+    addLastDateWithDataColumn = Table.AddColumn(
+        filterDimDatesTableByDateRange,
+        "LastDateWithData",
+        each if Date.From([DateValue]) = Date.From(maxAdmitDate) then "LastDateWithData" else null,
+        type text
+    ),
+
+    // Add the "MonthsAgo" column to calculate the difference in months for all dates in the dimDate table
+    addMonthsPriorColumn = Table.AddColumn(
+        addLastDateWithDataColumn,
+        "MonthsPrior",
+        each 
+            let
+                currentYear = Date.Year([DateValue]),
+                currentMonth = Date.Month([DateValue]),
+                monthsDifference = (maxYear - currentYear) * 12 + (maxMonth - currentMonth)
+            in
+                monthsDifference
+            , Int64.Type
+    ), 
+    
+    // Add the "DaysPrior" column to calculate the difference in days from maxDateInDimDate
+    addDaysPriorColumn = Table.AddColumn(
+        addMonthsPriorColumn,
+        "DaysPrior",
+        each Duration.Days(Date.From(maxDateInDimDate) - Date.From([DateValue])),
+        Int64.Type
+    )
+in 
+	addDaysPriorColumn

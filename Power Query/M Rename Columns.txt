@@ -1,0 +1,27 @@
+let
+  Source = tblSmyOpsVolIntraday,
+  #"Renamed Columns" = Table.RenameColumns(
+    Source,
+    {
+      {"AcceptableMet", "Acceptable Met"},
+      {"AcceptableApplicable", "Acceptable Applicable"},
+      {"TotalHandleTime", "Total Handle Time"},
+      {"TotalOffered", "Total Offered"},
+      {"TotalCompleted", "Total Completed"},
+      {"NotCompleted", "Not Completed"},
+      {"FiscalYear", "Fiscal Year"},
+      {"FiscalPeriodNameLong", "Fiscal Period"},
+      {"FiscalQuarterName", "Fiscal Quarter"},
+      {"FiscalWeekOfPeriodName", "Fiscal Week"},
+      {"QueueGroup", "Queue Group"},
+      {"QueueType", "Queue Type"},
+      {"TaskName", "Task Name"},
+      {"BaseSystem", "Base System"},
+      {"ServiceLevelGroup", "Service Level Group"},
+      {"BusinessUnit", "Business Unit"},
+      {"CalendarDate", "Date"},
+      {"PeriodID", "Period"}
+    }
+  )
+in
+  #"Renamed Columns"

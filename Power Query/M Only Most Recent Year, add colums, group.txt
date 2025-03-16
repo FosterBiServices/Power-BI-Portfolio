@@ -1,0 +1,109 @@
+let
+  Source = tblSmyOpsBPO,
+  #"Added Conditional Column" = Table.SelectRows(
+    Source,
+    each ([FiscalYear] = List.Max(Source[FiscalYear]))
+  ),
+  #"Removed Columns" = Table.RemoveColumns(
+    #"Added Conditional Column",
+    {
+      "RowID",
+      "ReportCenter",
+      "AssociateName",
+      "ManagerName",
+      "MCOECountMOD",
+      "MCOECountCONT",
+      "MCOECountOPP",
+      "MCOECountEXP",
+      "MCOEDenominator",
+      "PercentNumerator",
+      "PercentDenominator",
+      "PercentCount",
+      "FiscalWeekStartDate",
+      "FiscalWeekEndDate",
+      "FiscalPeriodStartDate",
+      "FiscalPeriodEndDate",
+      "FiscalQuarterStartDate",
+      "FiscalQuarterEndDate",
+      "DateID",
+      "NetworkID",
+      "ReportCenter_ID",
+      "Reporting_ID",
+      "AssociateHierarchy_ID",
+      "Manager1_ID",
+      "Manager2_ID",
+      "Manager3_ID",
+      "Manager4_ID",
+      "Manager5_ID",
+      "Manager6_ID",
+      "Manager7_ID",
+      "JobID"
+    }
+  ),
+  #"Grouped Rows" = Table.Group(
+    #"Removed Columns",
+    {"CalendarDate", "FiscalQuarterName", "BusinessUnit"},
+    {
+      {"Prod Time", each List.Sum([ProdTime]), type number},
+      {"Weighted Contacts", each List.Sum([WeightedContacts]), type number},
+      {"NSM Numerator", each List.Sum([NSMPerecntNumerator]), type number},
+      {"NSM Denominator", each List.Sum([NSMPercentDenominator]), type number},
+      {"NSM Count", each List.Sum([NSMPercentCount]), type number}
+    }
+  ),
+  #"Replaced Value" = Table.ReplaceValue(
+    #"Grouped Rows",
+    null,
+    0,
+    Replacer.ReplaceValue,
+    {"Prod Time"}
+  ),
+  #"Added Conditional Column1" = Table.AddColumn(
+    #"Replaced Value",
+    "FTEDateDenominator",
+    each if [Prod Time] > 0 then 1 else 0
+  ),
+  #"Grouped Rows1" = Table.Group(
+    #"Added Conditional Column1",
+    {"FiscalQuarterName", "BusinessUnit"},
+    {
+      {"Prod Time", each List.Sum([Prod Time]), type number},
+      {"Weighted Contacts", each List.Sum([Weighted Contacts]), type number},
+      {"NSM Numerator", each List.Sum([NSM Numerator]), type number},
+      {"NSM Denominator", each List.Sum([NSM Denominator]), type number},
+      {"NSM Count", each List.Sum([NSM Count]), type number},
+      {"FTE Date Denominator", each List.Sum([FTEDateDenominator]), type number}
+    }
+  ),
+  #"Added Custom" = Table.AddColumn(
+    #"Grouped Rows1",
+    "QA - NSM",
+    each [NSM Numerator] / [NSM Denominator]
+  ),
+  #"Renamed Columns" = Table.RenameColumns(#"Added Custom", {{"NSM Count", "QA Eval - NSM"}}),
+  #"Added Custom1" = Table.AddColumn(
+    #"Renamed Columns",
+    "WCPH",
+    each [Weighted Contacts] / ([Prod Time] / 3600)
+  ),
+  #"Added Custom2" = Table.AddColumn(
+    #"Added Custom1",
+    "FTE",
+    each (([Prod Time] / 3600) / 7.5) / [FTE Date Denominator]
+  ),
+  #"Removed Columns1" = Table.RemoveColumns(
+    #"Added Custom2",
+    {"Prod Time", "Weighted Contacts", "NSM Numerator", "NSM Denominator", "FTE Date Denominator"}
+  ),
+  #"Changed Type" = Table.TransformColumnTypes(
+    #"Removed Columns1",
+    {
+      {"QA - NSM", Percentage.Type},
+      {"QA Eval - NSM", Int64.Type},
+      {"WCPH", type number},
+      {"FTE", type number}
+    }
+  ),
+  #"Renamed Columns1" = Table.RenameColumns(#"Changed Type", {{"FiscalQuarterName", "Time"}})
+in
+  #"Renamed Columns1"
