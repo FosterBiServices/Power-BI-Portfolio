@@ -1,0 +1,19 @@
+Sub CenterMe(Shp As Shape, OverCells As Range)
+     
+    With OverCells
+        Shp.Left = .Left + ((.Width - Shp.Width) / 2)
+        Shp.Top = .Top + ((.Height - Shp.Height) / 2)
+    End With
+
+End Sub
+
+Sub Test()
+CenterMe ActiveSheet.Shapes(1), Range("C3:D6")
+CenterMe ActiveSheet.Shapes(2), Range("C8:D8")
+CenterMe ActiveSheet.Shapes(3), Range("C9:D9")
+CenterMe ActiveSheet.Shapes(4), Range("C10:D10")
+CenterMe ActiveSheet.Shapes(5), Range("C11:D11")
+CenterMe ActiveSheet.Shapes(6), Range("C13:D13")
+CenterMe ActiveSheet.Shapes(7), Range("C14:D14")
+
+End Sub

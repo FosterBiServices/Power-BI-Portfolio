@@ -1,0 +1,11 @@
+Sub Shares()
+
+Application.DisplayAlerts = False
+
+If ActiveWorkbook.MultiUserEditing Then
+    ActiveWorkbook.ExclusiveAccess
+ElseIf Not ActiveWorkbook.MultiUserEditing Then
+    ' do nothing
+End If
+
+End Sub

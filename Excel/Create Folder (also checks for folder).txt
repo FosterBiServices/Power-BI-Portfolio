@@ -1,0 +1,24 @@
+If Wave = "Wave One" Then
+    If FileFolderExists(onboard & yr & " Onboarding Docs") Then
+        MsgBox "Folder already exists, nothing created"
+        Exit Sub
+    Else
+        MkDir (onboard & yr & " Onboarding Docs")
+        MkDir (onboard & yr & " Onboarding Docs\Mock Calls " & Wave)
+        MkDir (onboard & yr & " Onboarding Docs\Live Calls " & Wave)
+        
+    End If
+
+
+
+
+Public Function FileFolderExists(strFullPath As String) As Boolean
+
+
+    On Error GoTo EarlyExit
+    If Not Dir(strFullPath, vbDirectory) = vbNullString Then FileFolderExists = True
+ 
+EarlyExit:
+    On Error GoTo 0
+End Function
+    

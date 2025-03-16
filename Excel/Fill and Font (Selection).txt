@@ -1,0 +1,4 @@
+Range(RD & ":" & RD).Select
+Selection.Interior.Color = RGB(153, 0, 0)
+Selection.Font.Color = RGB(255, 255, 255)
+Range("BE" & RD).Value = Environ("username")

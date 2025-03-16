@@ -1,0 +1,16 @@
+Cells(2, 26).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+
+______ 
+
+ColNum = Cells(2, 26).Column
+
+
+____ 
+
+ColNum = Cells(2, 26).Column
+RowNum = Cells(2, 26).Row
+
+Cells(RowNum, ColNum).Select
+
+
+MsgBox "Cells(" & RowNum & "," & ColNum & ")"

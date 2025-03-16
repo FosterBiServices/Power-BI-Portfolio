@@ -1,0 +1,2 @@
+    Columns("T:T").Select
+    Selection.CheckSpelling SpellLang:=1033

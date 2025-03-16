@@ -1,0 +1,37 @@
+Option Explicit
+'Function to get screen resolution
+Private Declare Function GetSystemMetrics32 Lib "user32" Alias "GetSystemMetrics" (ByVal nIndex As Long) As Long
+
+'Functions to get DPI
+Private Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
+Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As Long, ByVal nIndex As Long) As Long
+Private Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hDC As Long) As Long
+Private Const LOGPIXELSX = 88  'Pixels/inch in X
+Private Const POINTS_PER_INCH As Long = 72 'A point is defined as 1/72 inches
+
+'Return DPI
+Public Function PointsPerPixel() As Double
+ Dim hDC As Long
+ Dim lDotsPerInch As Long
+
+ hDC = GetDC(0)
+ lDotsPerInch = GetDeviceCaps(hDC, LOGPIXELSX)
+ PointsPerPixel = POINTS_PER_INCH / lDotsPerInch
+ ReleaseDC 0, hDC
+End Function
+
+Private Sub UserForm_Initialize()
+
+
+Dim w As Long, h As Long
+    w = GetSystemMetrics32(0) ' Screen Resolution width in points
+    h = GetSystemMetrics32(1) ' Screen Resolution height in points
+    With Me
+        .StartUpPosition = 1
+        .Width = w * PointsPerPixel * 0.5  'Userform width= Width in Resolution * DPI * 85%
+        .Height = h * PointsPerPixel * 0.5  'Userform height= Height in Resolution * DPI * 85%
+    End With
+     
+End Sub
+
+

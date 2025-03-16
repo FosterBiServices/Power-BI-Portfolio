@@ -1,0 +1,46 @@
+
+Option Explicit
+ 
+Private Declare Function FindWindow Lib "user32" _
+Alias "FindWindowA" ( _
+ByVal lpClassName As String, _
+ByVal lpWindowName As String) As Long
+ 
+Private Declare Function GetWindowLong Lib "user32" _
+Alias "GetWindowLongA" ( _
+ByVal hwnd As Long, _
+ByVal nIndex As Long) As Long
+ 
+Private Declare Function SetWindowLong Lib "user32" _
+Alias "SetWindowLongA" (ByVal hwnd As Long, _
+ByVal nIndex As Long, _
+ByVal dwNewLong As Long) As Long
+ 
+Private Declare Function DrawMenuBar Lib "user32" ( _
+ByVal hwnd As Long) As Long
+ 
+Sub RemoveCaption(objForm As Object)
+     
+    Dim lStyle          As Long
+    Dim hMenu           As Long
+    Dim mhWndForm       As Long
+     
+    If Val(Application.Version) < 9 Then
+        mhWndForm = FindWindow("ThunderXFrame", objForm.Caption) 'XL97
+    Else
+        mhWndForm = FindWindow("ThunderDFrame", objForm.Caption) 'XL2000+
+    End If
+    lStyle = GetWindowLong(mhWndForm, -16)
+    lStyle = lStyle And Not &HC00000
+    SetWindowLong mhWndForm, -16, lStyle
+    DrawMenuBar mhWndForm
+     
+End Sub
+ 
+Sub ShowForm()
+     
+    UserForm1.Show False
+     
+End Sub
+
+

@@ -1,0 +1,87 @@
+Sub AttachActiveSheetPDF()
+Application.ScreenUpdating = False
+If MsgBox("Are you sure you want to Email a PDF?", vbYesNo) = vbNo Then
+Exit Sub
+Else
+If MsgBox("Do you wish to add any specific comments about Phone, Email or Chat?", vbYesNo) = vbYes Then
+UserForm1.Show
+Else
+Sheets("Report").Visible = True
+Sheets("Report").Select
+
+Unload UserForm1
+End If
+End If
+
+
+  Dim IsCreated As Boolean
+  Dim i As Long
+  Dim PdfFile As String, Title As String
+  Dim OutlApp As Object
+ 
+  ' Not sure for what the Title is
+  Title = Range("A1")
+  Sheets("Report").Select
+  
+ 
+  ' Define PDF filename
+  PdfFile = ActiveWorkbook.FullName
+  i = InStrRev(PdfFile, ".")
+  If i > 1 Then PdfFile = Left(PdfFile, i - 1)
+  PdfFile = PdfFile & "_" & ActiveSheet.Name & ".pdf"
+ 
+  ' Export activesheet as PDF
+  With ActiveSheet
+    .ExportAsFixedFormat Type:=xlTypePDF, Filename:=PdfFile, Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
+  End With
+ 
+  ' Use already open Outlook if possible
+  On Error Resume Next
+  Set OutlApp = GetObject(, "Outlook.Application")
+  If Err Then
+    Set OutlApp = CreateObject("Outlook.Application")
+    IsCreated = True
+  End If
+  OutlApp.Visible = True
+  On Error GoTo 0
+ 
+  ' Prepare e-mail with PDF attachment
+  With OutlApp.CreateItem(0)
+   
+    ' Prepare e-mail
+    .Subject = "Sitel Period Report"
+    .To = "" '<-- Put email of the recipient here
+    .CC = "" ' <-- Put email of 'copy to' recipient here
+    .Body = "Hi," & vbLf & vbLf _
+          & "The report is attached in PDF format." & vbLf & vbLf _
+          & "Regards," & vbLf _
+        
+    .Attachments.Add PdfFile
+   
+    ' Try to send
+    On Error Resume Next
+    .Display
+    Application.Visible = True
+    If Err Then
+      MsgBox "E-mail was not sent", vbExclamation
+    Else
+      MsgBox "E-mail Ready!", vbInformation
+    End If
+    On Error GoTo 0
+   
+  End With
+ 
+  ' Delete PDF file
+  Kill PdfFile
+ ActiveSheet.Shapes("Textbox 79").TextFrame.Characters.Text = ""
+ 
+  ' Quit Outlook if it was created by this code
+  If IsCreated Then OutlApp.Quit
+ 
+  ' Release the memory of object variable
+  Set OutlApp = Nothing
+ Sheets("Home").Activate
+
+ 
+End Sub
+

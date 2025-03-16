@@ -1,0 +1,5 @@
+Sheets("dart data").Activate ' activate sheet
+Cells(8, colnumber1).Select ' select cell based on row number and column number)
+howmanymerged1 = ActiveCell.MergeArea.Columns.Count ' Get count of how many cells are merged in current select (based on above))
+Sheets("dart tables").Activate ' active sheet
+Range("N21").Value = howmanymerged1 ' add number of merged cells 

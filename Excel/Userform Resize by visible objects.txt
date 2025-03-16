@@ -1,0 +1,19 @@
+' resize the userform based on current size, did this so it can expand when more selections made later
+
+Dim h, w
+Dim c As Control
+
+    h = 0: w = 0
+    For Each c In Me.Controls
+        If c.Visible Then
+            If c.Top + c.Height > h Then h = c.Top + c.Height
+            If c.Left + c.Width > w Then w = c.Left + c.Width
+        End If
+    Next c
+
+    If h > 0 And w > 0 Then
+        With Me
+            .Width = w + 40
+            .Height = h + 40
+        End With
+    End If

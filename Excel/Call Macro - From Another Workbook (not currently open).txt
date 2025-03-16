@@ -1,0 +1,3 @@
+Set wbToClose = Workbooks.Open("\\FLOKYFILE1\BPO_Audit\Dashboards\Sitel Audit Dash.xlsm")
+Application.Run ("'Sitel Audit Dash.xlsm'!mailthisbadboy")
+wbToClose.Close

@@ -1,0 +1,58 @@
+Sub BtnSwitch_Click()
+
+ActiveSheet.Shapes.Range(Array("onoffswitch")).Visible = Not ActiveSheet.Shapes.Range(Array("onoffswitch")).Visible
+
+If ActiveSheet.Shapes.Range(Array("onoffswitch")).Visible Then
+    moveBy = -0.75
+    With ActiveSheet.Shapes.Range(Array("Btn")).Fill
+        .ForeColor.RGB = RGB(255, 0, 0)
+    ActiveSheet.Shapes("TextBox 70").Visible = True
+    ActiveSheet.Shapes("TextBox 69").Visible = False
+End With
+
+
+Call MacroStop
+
+
+Else
+    moveBy = 0.75
+    With ActiveSheet.Shapes.Range(Array("Btn")).Fill
+        .ForeColor.RGB = RGB(157, 187, 59)
+    ActiveSheet.Shapes("TextBox 70").Visible = False
+    ActiveSheet.Shapes("TextBox 69").Visible = True
+End With
+
+Call MacroStart
+
+End If
+
+With ActiveSheet.Shapes.Range(Array("BtnToggle"))
+    For X = 1 To 50
+        .IncrementLeft moveBy
+        DoEvents
+    Next X
+End With
+
+End Sub
+
+__________________________
+
+
+Public StopMacro As Boolean
+
+Sub MacroStop()
+
+StopMacro = True
+
+
+End Sub
+
+______________________________
+
+Public StartMacro As Boolean
+
+Sub MacroStart()
+
+StopMacro = False
+
+End Sub

@@ -1,0 +1,22 @@
+If TextBox1.Value = "" Then
+                MsgBox "The updated time value field cannot be blank.", vbCritical
+                Sheets("Entry").Select
+        Exit Sub
+            ElseIf TextBox2.Value = "" Then
+                MsgBox "The vendor name field cannot be blank.", vbCritical
+                Sheets("Entry").Select
+        Exit Sub
+            ElseIf TextBox3.Value = "" Then
+                MsgBox "The vendor ID cannot be blank.", vbCritical
+                Sheets("Entry").Select
+        Exit Sub
+            ElseIf TextBox4.Value = "" Then
+                MsgBox "If there is no Vendor ID West please use NA.", vbCritical
+                Sheets("Entry").Select
+        Exit Sub
+            ElseIf ComboBox1.Value = "" Then
+                MsgBox "The vendor status field cannot be blank.", vbCritical
+                Sheets("Entry").Select
+        Exit Sub
+
+End If
