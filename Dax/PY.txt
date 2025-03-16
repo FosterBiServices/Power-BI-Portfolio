@@ -1,0 +1,17 @@
+Total Days PY = VAR SelectedYear =
+     MAX( 'dimDates'[Year Number] )
+VAR PriorYearStart =
+     DATE( SelectedYear - 1, 1, 1 )
+VAR PriorYearEnd =
+     DATE( SelectedYear - 1, 12, 31 )
+RETURN
+     CALCULATE
+     (
+          DISTINCTCOUNTNOBLANK
+          (
+               'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+          ),
+          'dimDates'[DateValue] >= PriorYearStart
+               && 'dimDates'[DateValue] <= PriorYearEnd,
+          ALL( 'dimDates' )  -- Ensures the filter on the month does not interfere
+     )

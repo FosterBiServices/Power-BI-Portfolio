@@ -1,0 +1,30 @@
+SIA In-Home Time (hours) = VAR AdmissionEpisodeTable =
+     SUMMARIZE
+     (
+          'VisitsLast7Days',
+          'VisitsLast7Days'[AdmissionEpisodeId],
+          'dimDates'[DateValue],
+          "AvgInHomeTime",
+               SUM
+               (
+                    'VisitsLast7Days'[InHomeTimeHours]
+               )
+     )
+VAR Result =
+     SUMX
+     (
+          SUMMARIZE
+          (
+               AdmissionEpisodeTable,
+               'VisitsLast7Days'[AdmissionEpisodeId],
+               "TotalInHomeTime",
+                    AVERAGEX
+                    (
+                         AdmissionEpisodeTable,
+                         [AvgInHomeTime]
+                    )
+          ),
+          [TotalInHomeTime]
+     )
+RETURN
+     Result

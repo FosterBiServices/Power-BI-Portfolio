@@ -1,0 +1,166 @@
+No APPT by Year End = // Calculate the end date of the current year
+VAR __EndofYear =
+     DATE( YEAR( TODAY( ) ), 12, 31 )
+
+// Get the maximum date from the dimDates table where TodayFlag is "Today"
+VAR __MaxDate =
+     CALCULATE
+     (
+          MAX( 'dimDates'[DateValue] ),
+          ALL( 'dimDates' ),
+          'dimDates'[TodayFlag] = "Today"
+     )
+
+// Calculate the number of days from the max date to the end of the year
+VAR __NumberofDays =
+     DATEDIFF( __MaxDate, __EndofYear, DAY )
+
+// Create a date filter that includes dates from __MaxDate to (__MaxDate + __NumberofDays)
+VAR __DateFilter =
+     FILTER
+     (
+          ALL( 'dimDates' ),
+          AND
+          (
+               'dimDates'[DateValue] >= __MaxDate,
+               'dimDates'[DateValue]
+                    <= __MaxDate + __NumberofDays
+          )
+     )
+
+// Get the maximum last day of the month from dimDates where TodayFlag is "Today"
+VAR __MaxMonth =
+     CALCULATE
+     (
+          MAX( 'dimDates'[MonthLastDay] ),
+          ALL( 'dimDates' ),
+          'dimDates'[TodayFlag] = "Today"
+     )
+
+// Get the list of patients for specific quality measures and conditions
+VAR __PatientList =
+     SELECTCOLUMNS
+     (
+          FILTER
+          (
+               SUMMARIZE
+               (
+                    'factQualityMeasures',
+                    'factQualityMeasures'[InNumerator],
+                    'factQualityMeasures'[InDenominator],
+                    'factQualityMeasures'[InNumeratorExclusion],
+                    'factQualityMeasures'[InExclusion],
+                    'dimPatient'[PatientId],
+                    'dimMonth'[MonthLastDay],
+                    'dimQMRuleConfiguration'[Quality Measure]
+               ),
+               'factQualityMeasures'[InNumerator] = 0
+                    && 'factQualityMeasures'[InNumeratorExclusion]
+                    = 0
+                    && 'factQualityMeasures'[InDenominator] = 1
+                    && 'factQualityMeasures'[InExclusion] = 0
+                    && 'dimMonth'[MonthLastDay] = __MaxMonth
+                    && 'dimQMRuleConfiguration'[Quality Measure] IN
+                         {
+                              "BP Control",
+                              "Depression Screening"
+                         }
+          ),
+          "'dimPatient'[PatientId]", 'dimPatient'[PatientId]
+     )
+
+// Get the list of patients specifically for A1c Control quality measure
+VAR __A1CPatientList =
+     SELECTCOLUMNS
+     (
+          FILTER
+          (
+               SUMMARIZE
+               (
+                    'factQualityMeasures',
+                    'factQualityMeasures'[InNumerator],
+                    'factQualityMeasures'[InDenominator],
+                    'factQualityMeasures'[InNumeratorExclusion],
+                    'factQualityMeasures'[InExclusion],
+                    'dimPatient'[PatientId],
+                    'dimMonth'[MonthLastDay],
+                    'dimQMRuleConfiguration'[Quality Measure]
+               ),
+               'factQualityMeasures'[InNumerator] = 1
+                    && 'factQualityMeasures'[InNumeratorExclusion]
+                    = 0
+                    && 'factQualityMeasures'[InDenominator] = 1
+                    && 'factQualityMeasures'[InExclusion] = 0
+                    && 'dimMonth'[MonthLastDay] = __MaxMonth
+                    && 'dimQMRuleConfiguration'[Quality Measure]
+                    = "A1c Control"
+          ),
+          "'dimPatient'[PatientId]", 'dimPatient'[PatientId]
+     )
+
+// Combine both patient lists, ensuring no blanks
+VAR __GAPPatientList =
+     FILTER
+     (
+          DISTINCT
+          (
+               UNION( __PatientList, __A1CPatientList )
+          ),
+          'dimPatient'[PatientId] <> BLANK( )
+     )
+
+// Get the list of patients with upcoming appointments before the year end
+VAR __ApptPatientList =
+     VAR __UpcomingAppts =
+          FILTER
+          (
+               KEEPFILTERS
+               (
+                    VALUES
+                    (
+                         'Appointment'[Appointment Start Date]
+                    )
+               ),
+               AND
+               (
+                    'Appointment'[Appointment Start Date]
+                         >= __MaxDate,
+                    'Appointment'[Appointment Start Date]
+                         <= __EndofYear
+               )
+          )
+     RETURN
+          CALCULATETABLE
+          (
+               DISTINCT( 'Appointment'[PatientId] ),
+               KEEPFILTERS( __UpcomingAppts ),
+               ( 'Appointment'[Appointment Status] IN
+                    {
+                         "Being Seen",
+                         "Checked In",
+                         "Scheduled",
+                         "Rescheduled"
+                    } )
+          )
+
+// Get the final list of patients who do not have an appointment by year end
+VAR __FinalPatientList =
+     EXCEPT
+     (
+          __GAPPatientList,
+          __ApptPatientList
+     )
+
+
+// Calculate the distinct count of patients from the final patient list within the date filter
+VAR __Result =
+     CALCULATE
+     (
+          DISTINCTCOUNT( 'dimPatient'[PatientId] ),
+          __FinalPatientList,
+          __DateFilter
+     )
+
+// Return the final result
+RETURN
+     __Result

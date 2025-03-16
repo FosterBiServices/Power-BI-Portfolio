@@ -1,0 +1,95 @@
+Divergent Color = VAR __CurrentValue =
+     [% Live DC with LOS > 179 days]
+VAR __Result =
+     IF
+     (
+          ISBLANK( __CurrentValue ),
+          BLANK( ),  -- No color applied
+          VAR __MIN =
+               IF
+               (
+                    NOT ISFILTERED( 'dimBranch'[BranchCode] ),  -- Check if no branch is selected
+                    MINX
+                    (
+                         CALCULATETABLE
+                         (
+                              VALUES( 'dimDates'[Year Month] ),
+                              ALLSELECTED( 'dimDates'[Year Month] )
+                         ),
+                         [% Live DC with LOS > 179 days]
+                    ),
+                    MINX
+                    (
+                         CALCULATETABLE
+                         (
+                              VALUES( 'dimBranch'[BranchCode] ),
+                              ALLSELECTED( 'dimBranch'[BranchCode] )
+                         ),
+                         MINX
+                         (
+                              CALCULATETABLE
+                              (
+                                   VALUES( 'dimDates'[Year Month] ),
+                                   ALLSELECTED( 'dimDates'[Year Month] )
+                              ),
+                              [% Live DC with LOS > 179 days]
+                         )
+                    )
+               )
+          VAR __MAX =
+               IF
+               (
+                    NOT ISFILTERED( 'dimBranch'[BranchCode] ),  -- Check if no branch is selected
+                    MAXX
+                    (
+                         CALCULATETABLE
+                         (
+                              VALUES( 'dimDates'[Year Month] ),
+                              ALLSELECTED( 'dimDates'[Year Month] )
+                         ),
+                         [% Live DC with LOS > 179 days]
+                    ),
+                    MAXX
+                    (
+                         CALCULATETABLE
+                         (
+                              VALUES( 'dimBranch'[BranchCode] ),
+                              ALLSELECTED( 'dimBranch'[BranchCode] )
+                         ),
+                         MAXX
+                         (
+                              CALCULATETABLE
+                              (
+                                   VALUES( 'dimDates'[Year Month] ),
+                                   ALLSELECTED( 'dimDates'[Year Month] )
+                              ),
+                              [% Live DC with LOS > 179 days]
+                         )
+                    )
+               )
+          VAR RangeValue = __MAX - __MIN
+          VAR NormalizedValue =
+               IF
+               (
+                    RangeValue = 0,
+                    0.5,
+                    ( __CurrentValue - __MIN ) / RangeValue
+               )
+          RETURN
+               SWITCH
+               (
+                    TRUE( ),
+                    NormalizedValue <= 0.10, "#BCE4D8",
+                    NormalizedValue <= 0.20, "#7EC1CA",
+                    NormalizedValue <= 0.30, "#3D98B3",
+                    NormalizedValue <= 0.40, "#3689AA",
+                    NormalizedValue <= 0.50, "#95acc2",
+                    NormalizedValue <= 0.60, "#809bb5",
+                    NormalizedValue <= 0.70, "#6b8aa9",
+                    NormalizedValue <= 0.80, "#567a9d",
+                    NormalizedValue <= 0.90, "#416991",
+                    "#2c5985"
+               )
+     )
+RETURN
+     __Result

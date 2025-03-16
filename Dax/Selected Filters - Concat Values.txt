@@ -1,0 +1,33 @@
+Month Filter Card = VAR MaxFilters = 1
+RETURN
+     IF
+     (
+          ISFILTERED( 'dimDates'[Month Filter] ),
+          VAR ___f =
+               FILTERS( 'dimDates'[Month Filter] )
+          VAR ___r = COUNTROWS( ___f )
+          VAR ___t =
+               TOPN
+               (
+                    MaxFilters,
+                    ___f,
+                    'dimDates'[Month Filter]
+               )
+          VAR ___d =
+               CONCATENATEX
+               (
+                    ___t,
+                    'dimDates'[Month Filter],
+                    ", "
+               )
+          VAR ___x =
+               "Selected Month = " & ___d
+                    & IF
+                    (
+                         ___r > MaxFilters,
+                         ", ... [" & ___r & " items selected]"
+                    )
+                    & " "
+          RETURN
+               ___x & UNICHAR( 13 ) & UNICHAR( 10 )
+     )

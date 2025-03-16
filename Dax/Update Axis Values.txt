@@ -1,0 +1,39 @@
+MTD Axis = 
+IF( 
+   SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "MTD",
+CALCULATE
+(
+     MAXX
+     (
+          VALUES
+          (
+               'factBillingCharges'[CPT Code Distribution]
+          ),
+          [CPT Code Distribution Value]
+     ),
+     REMOVEFILTERS
+     (
+          'factBillingCharges'[CPT Code Distribution]
+     )
+)
+     * 1.05, 
+IF ( 
+    SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "YTD",  
+CALCULATE
+(
+     MAXX
+     (
+          VALUES
+          (
+               'factBillingCharges'[CPT Code Distribution]
+          ),
+          [CPT Code Distribution Value YTD]
+     ),
+     REMOVEFILTERS
+     (
+          'factBillingCharges'[CPT Code Distribution]
+     )
+)
+     * 1.05 ))

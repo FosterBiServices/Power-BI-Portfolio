@@ -1,0 +1,75 @@
+Days Expected Adjusted = VAR SelectedMonth =
+     SELECTEDVALUE
+     (
+          'dimDates'[MonthsPrior],
+          0
+     )
+VAR EndDate =
+     CALCULATE
+     (
+          MAX( 'dimDates'[DateValue] ),
+          ALL( 'dimDates' ),
+          'dimDates'[MonthsPrior] = SelectedMonth
+     )
+VAR StartDate =
+     DATE
+     (
+          YEAR( EndDate ),
+          MONTH( EndDate ),
+          1
+     )
+
+-- Row-Level Calculation for Each Provider
+VAR ProviderCalculation =
+     SUMX
+     (
+          VALUES
+          (
+               'dimProvider'[Billing Provider]
+          ),
+          VAR __PercentFTE =
+               CALCULATE
+               (
+                    SUMX
+                    (
+                         'ProviderTargets',
+                         'ProviderTargets'[Expected FTE]
+                    ),
+                    KEEPFILTERS
+                    (
+                         'dimDates'[DateValue] >= StartDate
+                              && 'dimDates'[DateValue] <= EndDate
+                    )
+               )
+          VAR __Goal =
+               CALCULATE
+               (
+                    SUM( 'ProviderTargets'[ExpectedDays] ),
+                    KEEPFILTERS
+                    (
+                         'dimDates'[DateValue] >= StartDate
+                              && 'dimDates'[DateValue] <= EndDate
+                    )
+               )
+          VAR __DaysWorkedGoal =
+               CALCULATE
+               (
+                    [Days Worked Goal],
+                    KEEPFILTERS
+                    (
+                         'dimDates'[DateValue] >= StartDate
+                              && 'dimDates'[DateValue] <= EndDate
+                    )
+               )
+          RETURN
+               IF
+               (
+                    __PercentFTE == 0,
+                    __DaysWorkedGoal,
+                    __Goal
+               )
+     )
+
+-- Return Total
+RETURN
+     ProviderCalculation
