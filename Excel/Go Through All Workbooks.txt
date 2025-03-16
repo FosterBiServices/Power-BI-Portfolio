@@ -1,0 +1,31 @@
+Sub GoThroughOpenWorkbooks()
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+
+Dim wb As Workbook
+For Each wb In Application.Workbooks
+
+
+If wb.Name <> ThisWorkbook.Name Then 'goes to first open workbook with different name
+
+wb.Worksheets(1).Activate 'activates first workbook and specific worksheet
+    Rows("1:1").Select ' selects rows
+    Selection.Copy ' copies rows
+    ThisWorkbook.Activate ' activate workbook with code
+    Sheet1.Select 'selects sheet
+    nr = ActiveSheet.UsedRange.Rows.Count + 1
+    Range("A" & nr).Select ' selects range
+        On Error Resume Next ' if this doesn't paste it goes to next line of code, can change to take to certain location if needed
+            Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+            xlNone, SkipBlanks:=False, Transpose:=False
+
+wb.Close ' close workbook
+
+ElseIf wb.Name = ThisWorkbook.Name Then
+    ' do nothing
+End If
+
+Next wb ' goes to next workbook
+
+End Sub

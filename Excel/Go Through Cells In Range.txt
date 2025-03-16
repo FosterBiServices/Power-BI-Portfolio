@@ -1,0 +1,50 @@
+    Dim cell As Range
+    Dim Rng As Range
+    
+Sheets("Data Set").Select
+    Entries = Application.WorksheetFunction.CountA(Range("A:A"))
+        Range("F2:F" & Entries).Select
+            Set Rng = Selection
+
+                For Each cell In Rng
+                    n = cell.Value
+                    num = IsNumeric(n)
+                If num = False Then
+                    r = cell.Row
+                        TextBox1.Value = Cells(cell.Row, 3).Value
+                    Sheets("Data Validation").Cells(1, 106).Value = TextBox11.Value
+                    Sheets("Data Validation").Cells(1, 105).Value = Entries
+                    End If
+                Next cell
+
+
+---------
+
+ Dim Rng As Range
+ Dim cell As Range
+ 
+ Set Rng = Selection
+ 
+ For Each cell In Rng
+            If cell.Value > 0 Then
+                Range(Cells(cell.Row, 1), Cells(cell.Row, 38)).Select
+                Selection.Interior.Color = RGB(240, 40, 40)
+                    Dim d As Integer
+                        d = d + 1
+                            
+            ElseIf cell.Value = 0 Then
+                Range(Cells(cell.Row, 1), Cells(cell.Row, 38)).Select
+                Selection.Interior.Color = RGB(64, 64, 64)
+            End If
+        Next
+
+______________________
+
+
+    For Each cell In Columns("DA").Cells.SpecialCells(xlCellTypeConstants)
+    
+           If cell.Value Like "?*@?*.?*" And _
+           Cells(cell.row, 21).Value = "" And _
+           Cells(cell.row, 17).Value = "A" Or _
+           Cells(cell.row, 17).Value = "B" Or _
+           Cells(cell.row, 17).Value = "C" Then

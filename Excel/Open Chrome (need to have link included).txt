@@ -1,0 +1,1 @@
+Shell ("C:\Program Files (x86)\Google\Chrome\Application\chrome.exe -url https://docs.google.com/spreadsheets/d/1lea_Tjt0wi1PzPdMNPzB7j_1NeHJEQoEUjm_0DxcQA8/edit#gid=1046453034")

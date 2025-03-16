@@ -1,0 +1,12 @@
+ Set Rng = Selection
+ 
+ For Each cell In Rng
+ 
+    cell.Value = WorksheetFunction.Proper(cell.Value)
+    
+ Next cell
+
+--------
+
+    cell.Value = WorksheetFunction.Proper(cell.Value)
+    cell.Value = WorksheetFunction.Trim(cell.Value)

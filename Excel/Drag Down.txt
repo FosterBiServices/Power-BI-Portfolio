@@ -1,0 +1,15 @@
+    Range("P5:Q7").Select
+      Selection.AutoFill Destination:=Range("P5:Q100") Type:=xlFillDefault ' can change from default 
+
+
+xlFillDays
+xlFillFormats
+xlFillSeries
+xlFillWeekdays
+xlGrowthTrend
+xlFillCopy
+xlFillDefault
+xlFillMonths
+xlFillValues
+xlFillYears
+xlLinearTrend

@@ -1,0 +1,11 @@
+Dim vendorID As Range
+On Error Resume Next
+    Set vendorID = Range("F:F").Find(what:=I)
+On Error GoTo 0
+If vendorID Is Nothing Then
+    MsgBox "Vendor ID not located"
+        Exit Sub
+Else
+Range("F:F").Find(what:=I).Activate
+
+End If

@@ -1,0 +1,1 @@
+If Err Then MsgBox "CSP term was not recorded. Please enter manually.": Err.Clear

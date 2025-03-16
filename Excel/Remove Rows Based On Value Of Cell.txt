@@ -1,0 +1,31 @@
+Sub RemoveUnusedSourceColumns()
+'
+' Macro1 Macro
+'
+Application.ScreenUpdating = False
+
+Sheet1.Select
+
+range("A1").Select
+
+If 1 = 1 Then
+
+LastRowResults = Sheet1.range("B1").End(xlDown).Row
+
+DelA = 2
+
+    For Counter = 2 To LastRowResults
+            If range("A" & DelA).value = "" Then
+                range("A" & DelA & ":F" & DelA).Select
+                       Selection.Delete shift:=xlUp
+            ElseIf range("A" & DelA).value <> "" Then
+                DelA = DelA + 1
+            End If
+        Next Counter
+    End If
+   
+Sheets("Home").Select
+
+MsgBox "All unused source columns have been removed."
+
+End Sub

@@ -1,0 +1,5 @@
+' test if clipboard is empty; go to end of code if it is
+
+If Application.ClipboardFormats(1) = -1 Then
+
+GoTo endsub

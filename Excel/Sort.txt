@@ -1,0 +1,15 @@
+    Range("A2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    ActiveWorkbook.Worksheets("Data Validation").sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Data Validation").sort.SortFields.Add Key:=Range( _
+        "A2"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortTextAsNumbers
+    With ActiveWorkbook.Worksheets("Data Validation").sort
+        .SetRange Selection
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+
+    End With

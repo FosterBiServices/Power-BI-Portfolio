@@ -1,0 +1,25 @@
+Sub MailThisWorkbook()
+
+   Dim OutApp As Object
+    Dim OutMail As Object
+
+    Set OutApp = CreateObject("Outlook.Application")
+    Set OutMail = OutApp.CreateItem(0)
+
+    On Error Resume Next
+    With OutMail
+        .To = ""
+        .CC = ""
+        .BCC = ""
+        .Subject = ""
+        .Body = ""
+        .Attachments.Add ("W:\Dashboards\Sitel Audit Dash.xlsm")
+  
+        .Display
+    End With
+    On Error GoTo 0
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+End Sub
