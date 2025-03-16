@@ -1,0 +1,27 @@
+Total Days MTD = CALCULATE
+(
+     DISTINCTCOUNTNOBLANK
+     (
+          'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+     ),
+     DATESMTD( 'dimDates'[DateValue] )
+)
+
+*****************************************
+
+Total Days MTD = 
+VAR LatestDate =
+     MAX( 'dimDates'[DateValue] )  -- Finds the latest available date (e.g., 03/04/2025)
+VAR MonthStart =
+     DATE( YEAR(LatestDate),MONTH(LatestDate), 1 )
+RETURN
+     CALCULATE
+     (
+          DISTINCTCOUNTNOBLANK
+          (
+               'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+          ),
+          'dimDates'[DateValue] >= MonthStart
+               && 'dimDates'[DateValue] <= LatestDate,
+          ALL( 'dimDates' ) -- Ensures the filters are reset to only focus on prior month logic
+     )
