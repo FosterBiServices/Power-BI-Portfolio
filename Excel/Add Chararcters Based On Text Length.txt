@@ -1,0 +1,9 @@
+Private Sub Evaldate_Change()
+    If Evaldate.TextLength = 2 Or Evaldate.TextLength = 5 Then
+    Evaldate.Text = Evaldate.Text + "/"
+    
+End If
+    If Evaldate.TextLength = 13 Then
+    Evaldate.Text = Evaldate.Text + ":"
+    End If
+End Sub

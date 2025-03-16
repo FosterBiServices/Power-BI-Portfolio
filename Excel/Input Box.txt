@@ -1,0 +1,8 @@
+Dim agentinput As Variant
+
+If Agent.Text = "*Add New" Then
+agentinput = InputBox("Associate's name?")
+
+Else
+Exit Sub
+End If

@@ -1,0 +1,24 @@
+Private Sub UserForm_Initialize()
+
+Application.ScreenUpdating = False
+
+With UserForm10
+  .StartUpPosition = 0
+  .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
+  .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
+End With
+
+ Dim wkb As Workbook
+
+    For Each wkb In Workbooks
+        If Windows(wkb.Name).Visible Then _
+          ComboBox1.AddItem wkb.Name
+    Next
+With ComboBox1
+     .Height = Application.Min(Me.Height - 32, (Int(Len(.Text) / Int(.Width / 4.7)) + 1) * 18)
+End With
+
+TextBox1.Font.Size = 16
+
+
+End Sub

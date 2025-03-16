@@ -1,0 +1,288 @@
+Sub CEfeedback()
+'
+'
+'
+    Application.ScreenUpdating = False
+Sheets("CE Feedback").Select
+Range("A2:G2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    
+    Selection.ClearContents
+    
+   Sheets("Score Variance CE").Select
+    lastrow = Application.WorksheetFunction.CountA(Range("B:B")) + 1
+    numColumns = 2
+    numrows = Sheets("CE Feedback").Range("I1").Value
+    If numrows = 0 Then
+    MsgBox "No audits performed today."
+    Sheets("Home").Select
+    Exit Sub
+    End If
+    Onumrows = Sheets("CE Feedback").Range("I1").Value - 1
+    Cells(lastrow, 2).Select
+    ActiveCell.Offset(-Onumrows, 0).Select
+    Selection.Resize(numrows, numColumns + 1).Select
+    Selection.Copy
+    Sheets("CE Feedback").Select
+    Range("A2").Select
+        Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+    Sheets("Score Variance CE").Select
+    Cells(lastrow, 5).Select
+    ActiveCell.Offset(-Onumrows, 0).Select
+    Selection.Resize(numrows, numColumns + 1).Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CE Feedback").Select
+    Range("D2").Select
+    Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+    Sheets("Score Variance CE").Select
+    Cells(lastrow, 35).Select
+    ActiveCell.Offset(-Onumrows, 0).Select
+    Selection.Resize(numrows, numColumns - 1).Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CE Feedback").Select
+    Range("G2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("A1:G11").Select
+    Application.CutCopyMode = False
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+       
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+       
+    End With
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+      
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+      
+    End With
+
+'Range("A1:G1").Select
+ '   ActiveSheet.Range("$A$1:$I$58").AutoFilter Field:=6, Criteria1:=">14%", _
+  '      Operator:=xlAnd
+    Range("L1:L50").ClearContents
+    Columns("C:C").Select
+    Selection.Copy
+    Range("K1").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("K:K").Select
+    Application.CutCopyMode = False
+    ActiveSheet.Range("$K$1:$K$100").removeduplicates Columns:=1, Header:=xlNo
+    Range("K1").Select
+    Selection.Delete Shift:=xlUp
+    howmanyemails = Application.WorksheetFunction.CountA(Range("K:K"))
+    Range("L1").Formula = "=INDEX('Data Validation'!$A:$B,MATCH(K1,'Data Validation'!A:A,0),2)"
+    If howmanyemails > 1 Then
+    Range("L1").Select
+    Selection.AutoFill Destination:=Range("L1:L" & howmanyemails), Type:=xlFillDefault
+    End If
+
+endrow = Application.WorksheetFunction.CountA(Range("A:A"))
+
+Dim rng As Range
+    Dim OutApp As Object
+    Dim OutMail As Object
+    Dim StrBody As String
+    Dim StrBody2 As String
+    Dim Sourcewb As Workbook
+    Dim Destwb As Workbook
+    Dim CERec As String
+        
+    howmanymail = Application.WorksheetFunction.CountA(Range("L:L"))
+    If howmanymail = 1 Then
+    CERec = Range("L1").Value
+    End If
+     If howmanymail > 1 Then
+        For Each cell In Columns("L").Cells.SpecialCells(xlCellTypeVisible)
+        If cell.Value Like "*@*" Then
+            CERec = CERec & ";" & cell.Value
+        End If
+    Next
+    End If
+    
+    
+    StrBody = "Hello Everyone," & "<br>" & _
+              "" & "<br>" & _
+              "Below are the Gap Audits from today." & "<br>" & _
+              "" & "<br>" & _
+              "Please see us with any questions or concerns." & "<br>" & _
+              "" & "<br>" & _
+              "Thank you." & "<br><br>"
+    StrBody2 = ""
+
+    Set rng = Nothing
+    On Error Resume Next
+    
+    Set rng = Selection.SpecialCells(xlCellTypeVisible)
+    Set rng = Sheets("CE Feedback").Range("A1:G" & endrow).SpecialCells(xlCellTypeVisible)
+    On Error GoTo 0
+
+    If rng Is Nothing Then
+        MsgBox "The selection is not a range or the sheet is protected" & _
+               vbNewLine & "please correct and try again.", vbOKOnly
+        Exit Sub
+    End If
+
+    
+    Set Sourcewb = ActiveWorkbook
+
+    
+    Sheets("CE Feedback").Copy
+    Set Destwb = ActiveWorkbook
+
+    
+    With Destwb
+        If Val(Application.Version) < 12 Then
+            
+            FileExtStr = ".xls": FileFormatNum = -4143
+        Else
+            
+            Select Case Sourcewb.FileFormat
+            Case 51: FileExtStr = ".xlsx": FileFormatNum = 51
+            Case 52:
+                If .HasVBProject Then
+                    FileExtStr = ".xlsm": FileFormatNum = 52
+                Else
+                    FileExtStr = ".xlsx": FileFormatNum = 51
+                End If
+            Case 56: FileExtStr = ".xls": FileFormatNum = 56
+            Case Else: FileExtStr = ".xlsb": FileFormatNum = 50
+            End Select
+        End If
+    End With
+
+
+    TempFilePath = Environ$("temp") & "\"
+    TempFileName = Sourcewb.Name & " " & Format(Now, "mm-dd-yy")
+
+    Set OutApp = CreateObject("Outlook.Application")
+    Set OutMail = OutApp.CreateItem(0)
+
+    With Destwb
+        .SaveAs TempFilePath & TempFileName & FileExtStr, FileFormat:=FileFormatNum
+        On Error Resume Next
+
+
+
+    On Error Resume Next
+    With OutMail
+        .To = ""
+        .CC = CERec
+        .BCC = ""
+        .Subject = ""
+        .HTMLBody = StrBody & RangetoHTML(rng) & "<br><br>" & _
+                    StrBody2
+        ' .Attachments.Add Destwb.FullName
+        .Display
+    End With
+    On Error GoTo 0
+        .Close savechanges:=False
+    End With
+Kill TempFilePath & TempFileName & FileExtStr
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+
+Windows("SITEL Audit Form - Combine.xlsm").Activate
+' Windows("SITEL Audit Form - Master.xlsm").Activate
+    Sheets("Home").Select
+    ThisWorkbook.Save
+    
+
+End Sub
+
+
+Function RangetoHTML2(rng As Range)
+
+    Dim fso As Object
+    Dim ts As Object
+    Dim TempFile As String
+    Dim TempWB As Workbook
+
+    TempFile = Environ$("temp") & "\" & Format(Now, "dd-mm-yy h-mm-ss") & ".htm"
+
+    rng.Copy
+    Set TempWB = Workbooks.Add(1)
+    With TempWB.Sheets(1)
+        .Cells(1).PasteSpecial Paste:=8
+        .Cells(1).PasteSpecial xlPasteValues, , False, False
+        .Cells(1).PasteSpecial xlPasteFormats, , False, False
+        .Cells(1).Select
+        Application.CutCopyMode = False
+        On Error Resume Next
+        .DrawingObjects.Visible = True
+        .DrawingObjects.Delete
+        On Error GoTo 0
+    End With
+
+
+    With TempWB.PublishObjects.Add( _
+         SourceType:=xlSourceRange, _
+         Filename:=TempFile, _
+         Sheet:=TempWB.Sheets(1).Name, _
+         Source:=TempWB.Sheets(1).UsedRange.Address, _
+         HtmlType:=xlHtmlStatic)
+        .Publish (True)
+    End With
+
+
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set ts = fso.GetFile(TempFile).OpenAsTextStream(1, -2)
+    RangetoHTML2 = ts.readall
+    ts.Close
+    RangetoHTML2 = Replace(RangetoHTML2, "align=center x:publishsource=", _
+                          "align=left x:publishsource=")
+
+
+    TempWB.Close savechanges:=False
+
+
+    Kill TempFile
+
+    Set ts = Nothing
+    Set fso = Nothing
+    Set TempWB = Nothing
+End Function

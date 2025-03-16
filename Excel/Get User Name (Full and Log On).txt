@@ -1,0 +1,12 @@
+Application.ScreenUpdating = False
+    Set WSHnet = CreateObject("WScript.Network")
+    UserName = WSHnet.UserName
+    UserDomain = WSHnet.UserDomain
+    Set objUser = GetObject("WinNT://" & UserDomain & "/" & UserName & ",user")
+    UserFullName = objUser.FullName
+Label26.Caption = UserFullName
+UserForm.Label25.Caption = Sheet4.Range("H2").Value
+Label28.Caption = Now
+
+
+environ("Username")

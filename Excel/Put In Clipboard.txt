@@ -1,0 +1,4 @@
+With New MSForms.DataObject
+    .SetText SessionIDTextBox.Text
+    .PutInClipboard
+End With

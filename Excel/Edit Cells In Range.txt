@@ -1,0 +1,10 @@
+      Dim x As Integer
+      NumRows = Sheet1.UsedRange.Rows.Count
+         If NumRows = 1 Then
+            Exit Sub
+         End If
+      Range("A2").Select
+      For x = 1 To NumRows
+         ActiveCell.Value = Date
+         ActiveCell.Offset(1, 0).Select
+      Next

@@ -1,0 +1,12 @@
+Sub addname()
+ActiveWorkbook.Names.Add _
+    Name:="table", _
+    RefersTo:="=OFFSET('Lead List'!$A$4,,,COUNTA('Lead List'!$A:$A)-1,14)"
+End Sub
+
+--------
+
+
+ActiveWorkbook.Names.Add _
+Name:="LiveID", _
+RefersTo:=Sheets("Live Calls").Range("A2:A" & livecall)

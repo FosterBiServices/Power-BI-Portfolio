@@ -1,0 +1,7 @@
+Dim Wb As Workbook
+
+For Each Wb In Application.Workbooks
+    If Wb.FullName Like wbfullname = False Then
+    Wb.Close
+    End If
+Next Wb

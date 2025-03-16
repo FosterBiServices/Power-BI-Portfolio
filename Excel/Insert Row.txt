@@ -1,0 +1,2 @@
+        Range("A" & TR, "J" & TR).Select
+        Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove

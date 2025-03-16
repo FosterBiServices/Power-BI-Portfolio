@@ -1,0 +1,4 @@
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$M$6059").AutoFilter Field:=3, Criteria1:= _
+        "=*staples*", Operator:=xlAnd
+    Selection.AutoFilter

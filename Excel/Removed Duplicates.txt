@@ -1,0 +1,3 @@
+    Columns("V:W").Select
+    ActiveSheet.Range("$V$1:$W$60").RemoveDuplicates Columns:=Array(1, 2), Header _
+        :=xlYes

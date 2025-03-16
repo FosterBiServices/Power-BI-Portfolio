@@ -1,0 +1,6 @@
+FSave:
+    Dim FS As Integer
+            FS = Int((5 - 1 + 1) * Rnd + 2)
+            Application.Wait Now + TimeValue("00:00:" & CStr(FS))
+    On Error GoTo FSave
+        ThisWorkbook.Save

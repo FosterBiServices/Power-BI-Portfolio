@@ -1,0 +1,4 @@
+UserForm.Image6.ControlTipText = "Click to Submit"
+UserForm.Image7.ControlTipText = "Click to Cancel"
+UserForm.Image4.ControlTipText = "Click to Clear Values"
+UserForm.Image5.ControlTipText = "Click to View CAUSE"

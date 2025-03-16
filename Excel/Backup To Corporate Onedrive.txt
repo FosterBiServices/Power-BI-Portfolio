@@ -1,0 +1,24 @@
+Sub OneDrive()
+
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+Thisworkbook.activate
+
+' Save to OneDrive
+    ChDir "W:\"
+    Workbooks.Open Filename:="W:\Sitel Raw Data.xlsm"
+    ChDir "C:\Users\fosst001\OneDrive - Corporate"
+    ActiveWorkbook.SaveAs Filename:= _
+        "C:\Users\fosst001\OneDrive - Corporate\Sitel Raw Data", FileFormat _
+        :=xlOpenXMLWorkbookMacroEnabled, CreateBackup:=False
+     ActiveWindow.Close
+
+MsgBox "Saved to OneDrive."
+
+'This will auto save at a certain time if file is open 
+Application.OnTime VBA.Now + TimeValue("8:00:00"), "VBA_Timer_Event"
+
+
+
+End Sub

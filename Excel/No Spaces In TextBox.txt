@@ -1,0 +1,9 @@
+Dim ch As String
+
+    ch = Chr$(KeyAscii)
+        If Not ( _
+                (ch >= "a" And ch <= "z") Or _
+                (ch >= "A" And ch <= "Z") Or _
+                (ch >= "0" And ch <= "9")) Then
+            KeyAscii = 0
+        End If

@@ -1,0 +1,59 @@
+    ActiveSheet.Range("$A$1:$AC$1").AutoFilter Field:=18, Operator:= _
+        xlFilterValues, Criteria2:=Array(2, Date)
+
+_______
+
+
+    ActiveSheet.Range("$A$1:$N$500").AutoFilter Field:=7, Criteria1:= _
+        tr1
+
+___________
+
+On Error GoTo endsub
+
+    ActiveSheet.Range("$A$1:$U$500").AutoFilter Field:=17, Criteria1:="<>"
+ 
+On Error GoTo endsub
+ 
+    ActiveSheet.Range("$A$1:$U$500").AutoFilter Field:=21, Criteria1:="="
+
+    ActiveSheet.Range("$A$1:$N$500").AutoFilter Field:=11, Criteria1:="="
+
+
+
+    Range("A1").Select
+
+    ActiveSheet.AutoFilter.Range.Offset(1, 0).Rows.SpecialCells(xlCellTypeVisible).Select
+
+
+__________
+
+
+
+    Sheet1.UsedRange.Select
+    
+    Sheet1.UsedRange.AutoFilter Field:=4, Criteria1:="="
+
+    Range("A1").Select
+
+    ActiveSheet.AutoFilter.Range.Offset(1, 0).Rows.SpecialCells(xlCellTypeVisible).Select
+    
+    Selection.Copy
+        
+    Sheet3.Select
+    
+    Range("A1").Select
+    
+    ActiveSheet.Paste
+    
+    MsgBox Sheet3.UsedRange.Rows.Count
+    
+    n = Sheet3.UsedRange.Rows.Count + 1
+    
+    Cells(n, 1).Value = "Next Row"
+    
+    Sheet1.Select
+    
+    Sheet1.UsedRange.AutoFilter
+    
+    Range("A1").Select

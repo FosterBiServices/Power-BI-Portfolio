@@ -1,0 +1,39 @@
+Sub mergeanddrag()
+Range("A1048576").Select
+Selection.End(xlUp).Select
+
+lastrow = ActiveCell.Row
+
+Dim c As Range
+Dim r As Range
+
+Range("A2:A" & lastrow).Select
+
+Set r = Selection
+
+For Each c In r
+
+If ActiveCell.MergeCells = False Then
+    'do nothing
+
+Else
+Range(ActiveCell.MergeArea.Address).Select
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlTop
+        .WrapText = True
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = True
+    End With
+    Selection.UnMerge
+    Selection.FillDown
+    Selection.End(xlDown).Select
+End If
+Next c
+
+
+End Sub
