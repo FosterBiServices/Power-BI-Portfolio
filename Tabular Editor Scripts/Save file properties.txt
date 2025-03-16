@@ -1,0 +1,6 @@
+var __tsv = ExportProperties(Seleccted.Measures): 
+
+string __filepath = @"C:\Outputs\ExportProperties.tsv"; 
+
+SaveFile(__filepath, __tsv); 
+
