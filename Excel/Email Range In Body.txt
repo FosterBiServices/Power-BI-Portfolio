@@ -1,0 +1,175 @@
+  Dim Rng As Range
+    Dim OutApp As Object
+    Dim OutMail As Object
+    Dim StrBody As String
+    Dim StrBody2 As String
+    Dim Sourcewb As Workbook
+    Dim Destwb As Workbook
+    
+    
+    
+    StrBody = "Hello Everyone," & "<br>" & _
+              "" & "<br>" & _
+              "Below are the Independent Audits running and daily totals. Attached is the feedback from today's audits." & "<br>" & _
+              "" & "<br>" & _
+              "Please see us with any questions or concerns." & "<br>" & _
+              "" & "<br>" & _
+              "Thank you." & "<br><br>"
+    StrBody2 = "Vendor Operations Leads" & "<br>" & _
+               "Staples Customer Service"
+
+    Set Rng = Nothing
+    On Error Resume Next
+    'Only the visible cells in the selection
+    Set Rng = Selection.SpecialCells(xlCellTypeVisible)
+    'You can also use a fixed range if you want
+    Set Rng = Sheets("Mail").Range("A1:J" & endrow).SpecialCells(xlCellTypeVisible)
+    On Error GoTo 0
+
+    If Rng Is Nothing Then
+        MsgBox "The selection is not a range or the sheet is protected" & _
+               vbNewLine & "please correct and try again.", vbOKOnly
+        Exit Sub
+    End If
+
+    
+    Set Sourcewb = ActiveWorkbook
+
+    'Copy the ActiveSheet to a new workbook
+    Sheets("Feedback").Copy
+    Set Destwb = ActiveWorkbook
+
+    'Determine the Excel version and file extension/format
+    With Destwb
+        If Val(Application.Version) < 12 Then
+            'You use Excel 97-2003
+            FileExtStr = ".xls": FileFormatNum = -4143
+        Else
+            'You use Excel 2007-2016
+            Select Case Sourcewb.FileFormat
+            Case 51: FileExtStr = ".xlsx": FileFormatNum = 51
+            Case 52:
+                If .HasVBProject Then
+                    FileExtStr = ".xlsm": FileFormatNum = 52
+                Else
+                    FileExtStr = ".xlsx": FileFormatNum = 51
+                End If
+            Case 56: FileExtStr = ".xls": FileFormatNum = 56
+            Case Else: FileExtStr = ".xlsb": FileFormatNum = 50
+            End Select
+        End If
+    End With
+
+    '    'Change all cells in the worksheet to values if you want
+    '    With Destwb.Sheets(1).UsedRange
+    '        .Cells.Copy
+    '        .Cells.PasteSpecial xlPasteValues
+    '        .Cells(1).Select
+    '    End With
+    '    Application.CutCopyMode = False
+
+    'Save the new workbook/Mail it/Delete it
+    TempFilePath = Environ$("temp") & "\"
+    TempFileName = Left(Sourcewb.Name, 25) & " " & Format(Now, "mm-dd-yy")
+
+    Set OutApp = CreateObject("Outlook.Application")
+    Set OutMail = OutApp.CreateItem(0)
+
+    With Destwb
+        .SaveAs TempFilePath & TempFileName & FileExtStr, FileFormat:=FileFormatNum
+        On Error Resume Next
+
+'    Set OutApp = CreateObject("Outlook.Application")
+ '   Set OutMail = OutApp.CreateItem(0)
+
+    On Error Resume Next
+    With OutMail
+        .To = "sheila.otte@staples.com; jennifer.randolph@staples.com; ferdinand.bayona@sitel.com; damien.mackeigan@staples.com; Allen.Jose@Staples.com; Vanesa.Gagula@Staples.com; Hazel.Santos@Staples.com; Andy.Dantes@Staples.com; Caroline.Baking@Staples.com; Katherine.Quesada@Staples.com; Roi.Ramos@Staples.com"
+        .CC = "ben.merrill@staples.com; trevor.russell@staples.com; steven.foster@staples.com"
+        .BCC = ""
+        .Subject = "Independent Audit Update - Chat"
+        .HTMLBody = StrBody & RangetoHTML(Rng) & "<br><br>" & _
+                    StrBody2
+        .Attachments.Add Destwb.FullName
+        .Display   'or use .Display
+    End With
+    On Error GoTo 0
+        .Close savechanges:=False
+    End With
+Kill TempFilePath & TempFileName & FileExtStr
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+ThisWorkbook.Activate
+
+    Sheets("Feedback").Select
+    Sheets("Feedback").Delete
+        Sheets("Mail").Select
+    Sheets("Mail").Delete
+
+    Sheets("Audits").Select
+    Arow = Application.WorksheetFunction.CountA(Range("A:A")) + 1
+    Cells(Arow, 1).Select
+    
+
+End Sub
+
+
+Function RangetoHTML(Rng As Range)
+' Changed by Ron de Bruin 28-Oct-2006
+' Working in Office 2000-2016
+    Dim fso As Object
+    Dim ts As Object
+    Dim TempFile As String
+    Dim TempWB As Workbook
+
+    TempFile = Environ$("temp") & "\" & Format(Now, "dd-mm-yy h-mm-ss") & ".htm"
+
+    'Copy the range and create a new workbook to past the data in
+    Rng.Copy
+    Set TempWB = Workbooks.Add(1)
+    With TempWB.Sheets(1)
+        .Cells(1).PasteSpecial Paste:=8
+        .Cells(1).PasteSpecial xlPasteValues, , False, False
+        .Cells(1).PasteSpecial xlPasteFormats, , False, False
+        .Cells(1).Select
+        Application.CutCopyMode = False
+        On Error Resume Next
+        .DrawingObjects.Visible = True
+        .DrawingObjects.Delete
+        On Error GoTo 0
+    End With
+
+    'Publish the sheet to a htm file
+    With TempWB.PublishObjects.Add( _
+         SourceType:=xlSourceRange, _
+         Filename:=TempFile, _
+         Sheet:=TempWB.Sheets(1).Name, _
+         Source:=TempWB.Sheets(1).UsedRange.Address, _
+         HtmlType:=xlHtmlStatic)
+        .Publish (True)
+    End With
+
+    'Read all data from the htm file into RangetoHTML
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set ts = fso.GetFile(TempFile).OpenAsTextStream(1, -2)
+    RangetoHTML = ts.readall
+    ts.Close
+    RangetoHTML = Replace(RangetoHTML, "align=center x:publishsource=", _
+                          "align=left x:publishsource=")
+
+    'Close TempWB
+    TempWB.Close savechanges:=False
+
+    'Delete the htm file we used in this function
+    Kill TempFile
+
+    Set ts = Nothing
+    Set fso = Nothing
+    Set TempWB = Nothing
+End Function

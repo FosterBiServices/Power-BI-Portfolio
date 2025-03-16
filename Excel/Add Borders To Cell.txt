@@ -1,0 +1,9 @@
+If Cells(emptyRow, 9).Value <> Cells(emptyRow, 14).Value Then
+  Cells(emptyRow, 9).Borders(xlEdgeLeft).LineStyle = xlContinuous
+  Cells(emptyRow, 9).Borders(xlEdgeLeft).Color = RGB(255, 0, 0)
+  Cells(emptyRow, 9).Borders(xlEdgeRight).LineStyle = xlContinuous
+  Cells(emptyRow, 9).Borders(xlEdgeRight).Color = RGB(255, 0, 0)
+  Cells(emptyRow, 9).Borders(xlEdgeBottom).LineStyle = xlContinuous
+  Cells(emptyRow, 9).Borders(xlEdgeBottom).Color = RGB(255, 0, 0)
+  Cells(emptyRow, 9).Borders(xlEdgeTop).LineStyle = xlContinuous
+  Cells(emptyRow, 9).Borders(xlEdgeTop).Color = RGB(255, 0, 0)

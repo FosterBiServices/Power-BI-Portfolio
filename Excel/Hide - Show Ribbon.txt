@@ -1,0 +1,15 @@
+Private Sub Workbook_Deactivate()
+
+    Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"",True)"
+    Application.DisplayFormulaBar = True
+    Application.DisplayStatusBar = True
+    ActiveWindow.DisplayWorkbookTabs = True
+
+End Sub
+
+
+
+   Application.ExecuteExcel4Macro "SHOW.TOOLBAR(""Ribbon"",False)"
+   Application.DisplayFormulaBar = False
+   Application.DisplayStatusBar = Not Application.DisplayStatusBar
+   ActiveWindow.DisplayWorkbookTabs = False

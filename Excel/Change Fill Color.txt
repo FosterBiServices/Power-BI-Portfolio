@@ -1,0 +1,14 @@
+Sub Rectangle52_Click()
+
+Sheet1.Cells.Interior.Color = RGB(48, 90, 143) ' changes cells interior color of all cells
+
+' change the colorIndex of fonts 
+
+ActiveSheet.Shapes("Rectangle 46").TextFrame.Characters.Font.ColorIndex = 2 
+ActiveSheet.Shapes("Rectangle 46").TextFrame.Characters.Font.ColorIndex = 2
+ActiveSheet.Shapes("Rectangle 12").TextFrame.Characters.Font.ColorIndex = 2
+ActiveSheet.Shapes("Rectangle 13").TextFrame.Characters.Font.ColorIndex = 2
+ActiveSheet.Shapes("Rectangle 14").TextFrame.Characters.Font.ColorIndex = 2
+ActiveSheet.Shapes("Rectangle 18").TextFrame.Characters.Font.ColorIndex = 2
+
+End Sub

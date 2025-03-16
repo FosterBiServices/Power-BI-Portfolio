@@ -1,0 +1,8 @@
+For I = 1 To Worksheets.Count ' sheet1 to last sheet
+    If Worksheets(I).Name = "Duplicates" Then 
+        Worksheets("Duplicates").Delete ' if sheet with name exist, delete it
+    End If
+Next I
+
+Sheets.Add After:=Sheets(Sheets.Count)
+    ActiveSheet.Name = "Duplicates"  ' add sheet and name it

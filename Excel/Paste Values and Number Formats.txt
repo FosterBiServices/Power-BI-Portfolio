@@ -1,0 +1,13 @@
+    Range("A1").Select
+	On Error Resume Next ' if this doesn't paste it goes to next line of code, can change to take to certain location if needed 
+        	Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        	xlNone, SkipBlanks:=False, Transpose:=False
+
+
+
+_____________________
+
+
+Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+If Err Then MsgBox "Nothing was pasted in the Roster Sheet": Err.Clear

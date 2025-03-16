@@ -1,0 +1,29 @@
+    Range("P5:Q7").Select
+      Selection.AutoFill Destination:=Range("P5:Q100"), Type:=xlFillDefault ' can change from default 
+
+
+xlFillDays
+xlFillFormats
+xlFillSeries
+xlFillWeekdays
+xlGrowthTrend
+xlFillCopy
+xlFillDefault
+xlFillMonths
+xlFillValues
+xlFillYears
+xlLinearTrend
+
+
+-- For SPP Info 
+
+Sub addformulas()
+
+Range("E2").Select
+
+Range("E2").FormulaArray = "=IFERROR(INDEX('Associate Info'!$A$1:$G$16792,MATCH(A2&B2&C2, 'Associate Info'!$B$1:$B$16792&'Associate Info'!$C$1:$C$16792&'Associate Info'!$D$1:$D$16792,0),7),"""")"
+
+Range("E2").Select
+    Selection.AutoFill Destination:=Range("E2:E" & ActiveSheet.UsedRange.Rows.Count), Type:=xlFillDefault
+    
+End Sub

@@ -1,0 +1,2 @@
+Sheets("Full Roster").Select
+ActiveCell.Resize(1, 11).Select

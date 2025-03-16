@@ -1,0 +1,12 @@
+If MsgBox("Do you want to mark this entry as completed?", vbYesNo) = vbNo Then
+    Sheets("Data Set").Cells(r, 60).Value = ""
+        MsgBox "The in use flag has been removed from this row."
+        
+    Exit Sub
+    
+        ElseIf vbYes Then
+        
+            Sheets("Data Set").Cells(r, 59).Value = Environ("username")
+            Sheets("Data Set").Cells(r, 60).Value = ""
+            
+        End If

@@ -1,0 +1,13 @@
+Function ConcatRange(inputRange As Range, Optional delimiter As String) As String
+    Dim oneCell As Range
+    With inputRange
+        If Not (Application.Intersect(.Parent.UsedRange, .Cells) Is Nothing) Then
+            For Each oneCell In Application.Intersect(.Parent.UsedRange, .Cells)
+                If oneCell.Text <> vbNullString Then
+                    ConcatRange = ConcatRange & delimiter & oneCell.Text
+                End If
+            Next oneCell
+            ConcatRange = Mid(ConcatRange, Len(delimiter) + 1)
+        End If
+    End With
+End Function
