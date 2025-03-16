@@ -1,26 +1,26 @@
 Avg Weekend Nursing In-Home Time (hours) =
-				VAR __WeekendData =
-				     FILTER
-				     (
-				          'InHomeTime',
-				          WEEKDAY
-				          (
-				               RELATED( 'dimDates'[DateValue] ),
-				               2
-				          ) IN { 6, 7 }  -- 6 = Saturday, 7 = Sunday
-				               && ( 'InHomeTime'[JobCode] IN { "SN", "MSW", "MSWI" }
-				               || ( 'InHomeTime'[JobCode] = "RN"
-				               && NOT 'InHomeTime'[JobDescriptionCode] = "LPN" ) )
-				               && 'InHomeTime'[ScheduledVisitStatus] = "C"
-				               && 'InHomeTime'[VisitBillableFlag] = "Y"
-				               && 'InHomeTime'[InPersonVisit] = 1
-				               && 'InHomeTime'[RHCVisitFlag] = 1
-				     )
-				VAR __AvgWeekendHours =
-				     AVERAGEX
-				     (
-				          __WeekendData,
-				          'InHomeTime'[InHomeTimeHours]
-				     )
-				RETURN
-				     __AvgWeekendHours
+VAR __WeekendData =
+		FILTER
+		(
+			'InHomeTime',
+			WEEKDAY
+			(
+				RELATED( 'dimDates'[DateValue] ),
+				2
+			) IN { 6, 7 }  -- 6 = Saturday, 7 = Sunday
+				&& ( 'InHomeTime'[JobCode] IN { "SN", "MSW", "MSWI" }
+				|| ( 'InHomeTime'[JobCode] = "RN"
+				&& NOT 'InHomeTime'[JobDescriptionCode] = "LPN" ) )
+				&& 'InHomeTime'[ScheduledVisitStatus] = "C"
+				&& 'InHomeTime'[VisitBillableFlag] = "Y"
+				&& 'InHomeTime'[InPersonVisit] = 1
+				&& 'InHomeTime'[RHCVisitFlag] = 1
+		)
+VAR __AvgWeekendHours =
+		AVERAGEX
+		(
+			__WeekendData,
+			'InHomeTime'[InHomeTimeHours]
+		)
+RETURN
+		__AvgWeekendHours
