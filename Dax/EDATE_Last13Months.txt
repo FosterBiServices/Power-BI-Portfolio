@@ -1,0 +1,10 @@
+Patients with LOS > 365 = CALCULATE
+(
+     DISTINCTCOUNT
+     (
+          'factEpisode'[PatientKey]
+     ),
+     'factEpisode'[Length of Stay] > 365,
+     'factEpisode'[EndOfEpisodeDate]
+          >= EDATE( TODAY( ), -13 )  -- Filters for the last 13 months
+)

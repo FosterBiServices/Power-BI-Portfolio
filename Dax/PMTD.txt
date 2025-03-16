@@ -1,0 +1,25 @@
+Total Days PMTD = VAR LatestDate =
+     MAX( 'dimDates'[DateValue] )  -- Finds the latest available date (e.g., 03/04/2025)
+VAR LatestDay = DAY( LatestDate )  -- Extracts the day (e.g., 4)
+VAR PriorMonthStart =
+     EOMONTH( LatestDate, -2 ) + 1  -- First day of the previous month (e.g., 02/01/2025)
+VAR PriorMonthEnd =
+     DATE
+     (
+          YEAR( LatestDate ),
+          MONTH( LatestDate ) - 1,
+          LatestDay
+     )  -- Matches previous month up to LatestDay (e.g., 02/04/2025)
+
+
+RETURN
+     CALCULATE
+     (
+          DISTINCTCOUNTNOBLANK
+          (
+               'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+          ),
+          'dimDates'[DateValue] >= PriorMonthStart
+               && 'dimDates'[DateValue] <= PriorMonthEnd,
+          ALL( 'dimDates' ) -- Ensures the filters are reset to only focus on prior month logic
+     )

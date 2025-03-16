@@ -1,0 +1,114 @@
+Prime Days Waffle = 
+/* SETUP */
+VAR _daysInMonth = MAX(dimDate[MonthDays]) // Total days in the current month
+VAR _completedDays = MAX(dimDate[MonthDayNumber]) // Completed days
+VAR _monthFirstDay = MAX(dimDate[MonthFirstDay])
+VAR _firstDayOfWeek = CALCULATE(MAX(dimDate[WeekDayNumber]), dimDate[DateValue] = _monthFirstDay) // Weekday of the 1st day of the month (1=Sunday, 7=Saturday)
+VAR _val = DIVIDE(_completedDays, _daysInMonth) * 100 // Percent completed
+
+VAR _completedPrimeDays = SUM(dimDate[PrimeDayValue])
+VAR _primeDaysInMonth = MAX(dimDate[PrimeDaysInMonth])
+VAR _primeVal = DIVIDE(_completedPrimeDays, _primeDaysInMonth) * 100 // Percent completed
+/* VISUAL SETUP */
+VAR _space = 5 // Space between cubes
+VAR _width = 550 // Total width of the SVG
+VAR _height = 200 // Height of the SVG
+VAR _padding = 15 // Padding between border and SVG
+VAR _doublePadding = _padding * 2
+VAR _usableHeight = _height - _doublePadding
+VAR _usableWidth = _width - 130 // Reserve smaller space for the text
+
+/* GRID CALCULATION */
+VAR _columns = 7 // Number of days in a week
+VAR _rows = ROUNDUP(DIVIDE(_daysInMonth + _firstDayOfWeek - 1, _columns), 0) // Total rows needed
+VAR _cubeSize = MIN(
+    DIVIDE(_usableHeight, _rows + 1),
+    DIVIDE(_usableWidth, _columns + 1)
+) // Size of each cube
+
+/* COLORS */
+VAR _nonfilledCubeColor = "#cccccc" // Non-filled cube color
+VAR _positive = "#386AA5" // Positive color
+VAR _neutral = "#9C6500" // Neutral color
+VAR _negative = "#386AA5" // Negative color
+VAR _filledCubeColor = 
+    SWITCH(
+        TRUE(),
+        _val >= 95, _positive,
+        _val > 85, _neutral,
+        _negative
+    )
+VAR _shortfallColor = "#898E8F" // Color for text
+
+/* SVG DECLARATIONS */
+VAR _svgDeclaration = "data:image/svg+xml;utf8,"
+VAR _svgHeader = "<svg xmlns='http://www.w3.org/2000/svg' height='" & _height & "' width='" & _width & "'>"
+
+/* Vertical Gradient for Negative Value */
+VAR _gradient = "
+    <defs>
+        <linearGradient id='negativeGradient' x1='0%' y1='0%' x2='0%' y2='100%'>
+            <stop offset='0%' style='stop-color:#386AA5; stop-opacity:.8' />
+            <stop offset='85%' style='stop-color:#CCCCCC; stop-opacity:1' />
+        </linearGradient>
+    </defs>"
+
+
+
+/* SVG End */
+VAR _svgEnd = "</svg>"
+
+/* GENERATE CUBES */
+VAR _generateSeries = 
+    SELECTCOLUMNS(
+        GENERATESERIES(1, _daysInMonth, 1), 
+        "DayNumber", [Value]
+    )
+
+VAR _cubes = 
+    CONCATENATEX(
+        _generateSeries,
+        VAR _dayNumber = [DayNumber]
+        VAR _index = _dayNumber + _firstDayOfWeek - 2 // Offset index for the first day
+        VAR _row = INT(DIVIDE(_index, _columns)) // Row position
+        VAR _column = MOD(_index, _columns) // Column position
+        VAR _x = (_column * (_cubeSize + _space)) + _padding
+        VAR _y = (_row * (_cubeSize + _space)) + _padding
+        VAR _currentDate = _monthFirstDay + (_dayNumber - 1) // Calculate the current date for the day
+        VAR _primeDayValue = LOOKUPVALUE(dimDate[PrimeDayValue], dimDate[DateValue], _currentDate) // Lookup PrimeDayValue for the current date
+        VAR _color = 
+            IF(
+                _dayNumber <= _completedDays, 
+                SWITCH(
+                    TRUE(),
+                    _primeDayValue = 1, _positive, // Positive color for PrimeDayValue = 1
+                    _negative // Negative color for other values
+                ),
+                _nonfilledCubeColor // Non-filled color for days that are not completed
+            )
+        VAR _fill = 
+            IF(
+                _dayNumber <= _completedDays && _primeDayValue <> 1, 
+                "url(#negativeGradient)", // Use gradient for negative value
+                _color // Use plain color for others
+            )
+        RETURN 
+            "<rect x='" & _x & "' y='" & _y & "' width='" & _cubeSize & "' height='" & _cubeSize & "' fill='" & _fill & "' />"
+    )
+
+/* TEXT */
+VAR _remainingDays = _primeDaysInMonth - _completedPrimeDays
+VAR _textXPosition = (_columns * (_cubeSize + _space)) + _padding + 15 // Reduced spacing to 15px
+VAR _percentageText = 
+    "<text x='" & _textXPosition & "' y='" & (_padding * 2) & "' fill='" & _filledCubeColor & "' font-family='Segoe UI' font-size='18' text-anchor='start'>" & FORMAT(_primeVal, "0.0") & "% Completed</text>"
+VAR _completedText = 
+    "<text x='" & _textXPosition & "' y='" & ((_padding * 2) + 20) & "' fill='" & _shortfallColor & "' font-family='Segoe UI' font-size='16' text-anchor='start'>Completed Prime Days: " & FORMAT(_completedPrimeDays, "#,0.0") & "</text>"
+VAR _totalText = 
+    "<text x='" & _textXPosition & "' y='" & ((_padding * 2) + 40) & "' fill='" & _shortfallColor & "' font-family='Segoe UI' font-size='16' text-anchor='start'>Total Prime Days: " & FORMAT(_primeDaysInMonth, "#,0.0") & "</text>"
+VAR _remainingText = 
+    "<text x='" & _textXPosition & "' y='" & ((_padding * 2) + 60) & "' fill='" & _shortfallColor & "' font-family='Segoe UI' font-size='16' text-anchor='start'>Remaining Prime Days: " & FORMAT(_remainingDays, "#,0.0") & "</text>"
+
+/* FINAL SVG */
+VAR _result = 
+    _svgDeclaration & _svgHeader & _gradient & _cubes & _percentageText & _completedText & _totalText & _remainingText & _svgEnd
+RETURN _result
