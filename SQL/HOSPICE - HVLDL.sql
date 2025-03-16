@@ -1,21 +1,21 @@
 WITH LOS
 AS (
 	SELECT episodeKey, episodeId, PatientKey, PatientId, LocationHierarchyKey, SourceSystem
-	FROM dbo.factEpisode WITH (NOLOCK)
+	FROM dbo.myfacttable WITH (NOLOCK)
 	WHERE dischargeDateKey <> - 1
 		AND IsDeleted = 0
 		AND DATEDIFF(DAY, StartofCareDate, DischargeDate) + 1 >= 3
 	), DateOfDeath
 AS (
 	SELECT CeddEpiId AS EpisodeId, CeddDateofDeath AS DateOfDeath, SourceSystem, dd.DateKey
-	FROM ClientEpisodeDateofDeath dod WITH (NOLOCK)
+	FROM myfacttabledod dod WITH (NOLOCK)
 	JOIN dimDates dd WITH (NOLOCK)
 		ON dod.CeddDateofDeath = dd.DateValue
 	), LOC
 AS (
 	SELECT DISTINCT l.EpisodeKey, l.PatientKey, l.LocationHierarchyKey, l.BranchKey, l.EpisodeId, l.
 		SourceSystem, d.DateOfDeath, d.DateKey, l.EpisodeLevelOfCareDate
-	FROM factClientCareLevels l WITH (NOLOCK)
+	FROM myfacttablel l WITH (NOLOCK)
 	JOIN DateOfDeath d
 		ON l.SourceSystem = d.SourceSystem
 			AND L.EpisodeId = d.EpisodeId
@@ -42,11 +42,11 @@ AS (
 			ELSE 0
 			END AS HVLDLEligible
 	FROM HVLDL h
-	LEFT JOIN vw_dimClientEpisodeVisitWithWorkerId v WITH (NOLOCK)
+	LEFT JOIN vw_myfacttable v WITH (NOLOCK)
 		ON v.EpisodeId = h.EpisodeId
 			AND v.SourceSystem = h.SourceSystem
 			AND v.VisitDate = h.EpisodeLevelOfCareDate
-	LEFT JOIN ServiceCodes s WITH (NOLOCK)
+	LEFT JOIN mydimtables s WITH (NOLOCK)
 		ON v.VisitServiceCode = s.sccode
 			AND v.SourceSystem = s.SourceSystem
 	WHERE s.ScJdCode IN (
@@ -67,21 +67,21 @@ AS (
 			)
 		AND EXISTS (
 			SELECT 1
-			FROM dbo.dimEpisode d WITH (NOLOCK)
+			FROM dbo.mydimtablee d WITH (NOLOCK)
 			WHERE d.EpisodeId = v.EpisodeId
 				AND d.SourceSystem = v.SourceSystem
 				AND d.ServiceLine = 'Hospice'
 			)
 		AND EXISTS (
 			SELECT 1
-			FROM dbo.dimDates d WITH (NOLOCK)
+			FROM dbo.mydatetable d WITH (NOLOCK)
 			WHERE d.DateValue = h.DateOfDeath
 				AND d.DateValue BETWEEN DATEFROMPARTS(YEAR(GETDATE()) - 2, 1, 1)
 					AND CAST(GETDATE() - 1 AS DATE)
 			)
 		AND EXISTS (
 			SELECT 1
-			FROM dbo.dimBranch d WITH (NOLOCK)
+			FROM dbo.mydimtabled d WITH (NOLOCK)
 			WHERE d.BranchCode = v.ClientEpisodeVisitBranchCode
 				AND d.SourceSystem = v.SourceSystem
 			)

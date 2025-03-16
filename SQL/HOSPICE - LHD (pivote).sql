@@ -387,7 +387,7 @@ AS (
 			,[EarningsCodeDescription]
 			,[CreatedDateTime]
 			,[ModifiedDateTime]
-		FROM [dbo].[dimJobEarningCode]
+		FROM [dbo].[mydimtableec]
 		) EarningType
 	)
 	,Hours_CTE
@@ -407,11 +407,11 @@ AS (
 		,[EarningCode]
 		,[CheckNumber]
 		,SUM([Hours]) Hours
-	FROM [dbo].[factCheckHoursEarnings](NOLOCK) fche
-	JOIN [dbo].[dimJobEarningCode](NOLOCK) ec ON fche.EarningCodeKey = ec.Id
-	JOIN dbo.dimemployeepaygroup(NOLOCK) deg ON fche.PayGroupKey = deg.Id
-	JOIN [dbo].[DimEmployee](NOLOCK) de ON fche.EmployeeKey = de.id
-	JOIN dimLocationHierarchy(NOLOCK) lh ON de.ReportingLocation = lh.Location
+	FROM [dbo].[myfacttablefche](NOLOCK) fche
+	JOIN [dbo].[mydimtableec](NOLOCK) ec ON fche.EarningCodeKey = ec.Id
+	JOIN dbo.mydimtabledeg(NOLOCK) deg ON fche.PayGroupKey = deg.Id
+	JOIN [dbo].[mydimtablede](NOLOCK) de ON fche.EmployeeKey = de.id
+	JOIN mydimtablelh(NOLOCK) lh ON de.ReportingLocation = lh.Location
 	LEFT JOIN HoursCode_CTE c ON fche.EarningCodekey = c.id
 	WHERE 1 = 1
 		AND checkdate BETWEEN '2025-01-01'
@@ -843,11 +843,11 @@ AS (
 		,[EarningCode]
 		,[CheckNumber]
 		,SUM([Earnings]) Earnings
-	FROM [dbo].[factCheckHoursEarnings](NOLOCK) fche
-	JOIN [dbo].[dimJobEarningCode](NOLOCK) ec ON fche.EarningCodeKey = ec.Id
-	JOIN dbo.dimemployeepaygroup(NOLOCK) deg ON fche.PayGroupKey = deg.Id
-	JOIN [dbo].[DimEmployee](NOLOCK) de ON fche.EmployeeKey = de.id
-	JOIN dimLocationHierarchy(NOLOCK) lh ON de.ReportingLocation = lh.Location
+	FROM [dbo].[myfacttablefche](NOLOCK) fche
+	JOIN [dbo].[mydimtableec](NOLOCK) ec ON fche.EarningCodeKey = ec.Id
+	JOIN dbo.mydimtabledeg(NOLOCK) deg ON fche.PayGroupKey = deg.Id
+	JOIN [dbo].[mydimtablede](NOLOCK) de ON fche.EmployeeKey = de.id
+	JOIN mydimtablelh(NOLOCK) lh ON de.ReportingLocation = lh.Location
 	LEFT JOIN EarningsCode_CTE c ON fche.EarningCodekey = c.id
 	WHERE 1 = 1
 		AND checkdate BETWEEN '2025-01-01'
