@@ -11,19 +11,19 @@ WITH LOC
 		COALESCE(MAX(l.DischargeDate), CAST(GETDATE() as date)) as Dischargedate,
         DATEDIFF(DAY, MIN(l.StartOfCareDate), GETDATE()) AS LOS, 
 		l.SourceSystem
-    FROM factClientCareLevels l WITH (NOLOCK) 
-    JOIN dimDates d WITH (NOLOCK) 
+    FROM myfacttable l WITH (NOLOCK) 
+    JOIN mydatetable d WITH (NOLOCK) 
         ON l.EpisodeLevelOfCareDateKey = d.Id
-    JOIN dimLevelOfCareType c WITH (NOLOCK) 
+    JOIN mydimtablec c WITH (NOLOCK) 
         ON l.BillableLevelOfCareTypeKey = c.Id
-    LEFT JOIN vw_dimClientEpisodeVisitWithWorkerId v WITH (NOLOCK) 
+    LEFT JOIN vw_myfacttable v WITH (NOLOCK) 
         ON v.EpisodeId = l.EpisodeId 
         AND v.SourceSystem = l.SourceSystem 
         AND v.VisitDate = l.EpisodeLevelOfCareDate
-    LEFT JOIN dimWorker w WITH (NOLOCK) 
+    LEFT JOIN mydimtablew w WITH (NOLOCK) 
         ON v.VisitAgentWorkerId = w.WorkerId 
         AND v.SourceSystem = w.SourceSystem
-    LEFT JOIN ServiceCodes s WITH (NOLOCK) 
+    LEFT JOIN mydimtables s WITH (NOLOCK) 
         ON v.VisitServiceCode = s.sccode 
         AND v.SourceSystem = s.SourceSystem
     GROUP BY l.PatientKey,
@@ -49,14 +49,14 @@ Visits AS (
 		v.SourceSystem,
 		LAG(v.VisitDate) OVER (PARTITION BY v.PatientId, v.SourceSystem ORDER BY v.VisitDate) AS PreviousVisitDate,
 		DATEDIFF(DAY, LAG(v.VisitDate) OVER (PARTITION BY v.PatientId, e.StartofCareDate, v.SourceSystem ORDER BY v.VisitDate), v.VisitDate) as DaysSinceLastVisit
-    FROM vw_dimClientEpisodeVisitWithWorkerId v WITH (NOLOCK)
-	JOIN dimEpisode e WITH (NOLOCK)
+    FROM vw_myfacttable v WITH (NOLOCK)
+	JOIN mydimtablee e WITH (NOLOCK)
 		ON v.EpisodeId = e.EpisodeId
 		and v.SourceSystem = e.SourceSystem
-    LEFT JOIN dimWorker w WITH (NOLOCK) 
+    LEFT JOIN mydimtablew w WITH (NOLOCK) 
         ON v.VisitAgentWorkerId = w.WorkerId 
         AND v.SourceSystem = w.SourceSystem
-    LEFT JOIN ServiceCodes s WITH (NOLOCK) 
+    LEFT JOIN mydimtables s WITH (NOLOCK) 
         ON v.VisitServiceCode = s.sccode 
         AND v.SourceSystem = s.SourceSystem
     WHERE 
