@@ -1,0 +1,93 @@
+Top 3 CPT Codes = 
+VAR TotalByCPT = 
+    SUMMARIZE(
+        ALLSELECTED('factBillingCharges'), 
+        'factBillingCharges'[CPT Code Distribution], 
+        "TotalAmount", [Code Distribution Value Toggle]
+    )
+VAR RankedCPT = 
+    ADDCOLUMNS(
+        TotalByCPT, 
+        "Rank", RANKX(TotalByCPT, [TotalAmount], , DESC, DENSE)
+    )
+VAR CurrentCPT = MAX('factBillingCharges'[CPT Code Distribution])
+VAR RankForCurrentCPT = 
+    MAXX(
+        FILTER(RankedCPT, [CPT Code Distribution] = CurrentCPT), 
+        [Rank]
+    )
+RETURN
+IF(RankForCurrentCPT <= 3, 1, 0)
+
+***************************************************************
+
+Top 3 Providers by CPT = 
+VAR RankByProvider = 
+    RANKX(
+        ALLSELECTED('dimProvider'[Billing Provider]), 
+        CALCULATE([Code Distribution Value Toggle]), 
+        , 
+        DESC, 
+        DENSE
+    )
+RETURN
+IF(RankByProvider <= 3, 1, 0)
+
+***************************************************************
+Code Rank YTD = VAR __Result =
+     [CPT Code Distribution Value YTD]
+RETURN
+     IF
+     (
+          ISBLANK( __Result ),
+          BLANK( ),
+          RANKX
+          (
+               ALL
+               (
+                    'factBillingCharges'[CPT Code Distribution]
+               ),
+               [CPT Code Distribution Value YTD]
+                    - DIVIDE( [Alphabetical Rank], 1000000 )
+          )
+     )
+	 
+	 
+Alphabetical Rank = VAR __CurrentCode =
+     SELECTEDVALUE
+     (
+          'factBillingCharges'[CPT Code Distribution]
+     )
+VAR __Result =
+     COUNTROWS
+     (
+          FILTER
+          (
+               ALLSELECTED
+               (
+                    'factBillingCharges'[CPT Code Distribution]
+               ),
+               'factBillingCharges'[CPT Code Distribution]
+                    <= __CurrentCode
+          )
+     )
+RETURN
+     __Result
+	 
+Code Rank = VAR __Result =
+     [CPT Code Distribution Value]
+RETURN
+     IF
+     (
+          ISBLANK( __Result ),
+          BLANK( ),
+          RANKX
+          (
+               ALL
+               (
+                    'factBillingCharges'[CPT Code Distribution]
+               ),
+               [CPT Code Distribution Value]
+                    - DIVIDE( [Alphabetical Rank], 1000000 )
+          )
+     )

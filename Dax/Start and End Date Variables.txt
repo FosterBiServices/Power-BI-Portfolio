@@ -1,0 +1,20 @@
+VAR SelectedMonth =
+     SELECTEDVALUE
+     (
+          'dimDates'[MonthsPrior],
+          0
+     )
+VAR EndDate =
+     CALCULATE
+     (
+          MAX( 'dimDates'[DateValue] ),
+          ALL( 'dimDates' ),
+          'dimDates'[MonthsPrior] = SelectedMonth
+     )
+VAR StartDate =
+     DATE
+     (
+          YEAR( EndDate ),
+          MONTH( EndDate ),
+          1
+     )

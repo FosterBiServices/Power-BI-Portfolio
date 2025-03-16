@@ -1,0 +1,17 @@
+Total Days PYTD = CALCULATE
+(
+     DISTINCTCOUNTNOBLANK
+     (
+          'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+     ),
+     ALL( 'dimDates' ),
+     DATESYTD
+     (
+          DATEADD
+          (
+               'dimDates'[DateValue],
+               -1,
+               YEAR
+          )
+     )
+)

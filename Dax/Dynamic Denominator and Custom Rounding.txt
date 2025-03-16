@@ -1,0 +1,116 @@
+FTE = VAR __EndofMonth =
+     IF
+     (
+          SELECTEDVALUE
+          (
+               'dimDates'[Month Filter]
+          )
+               = "Current",
+          CALCULATE
+          (
+               MAX( 'dimDates'[DateValue] ),
+               ALL( 'dimDates' ),
+               'dimDates'[TodayFlag] = "Today"
+          ),
+          ENDOFMONTH( 'dimDates'[DateValue] )
+     )
+VAR __StartofMonth =
+     STARTOFMONTH( 'dimDates'[DateValue] )
+
+-- Calculate total days up to the current date if the month is current
+VAR __DaysInMonth = [Days in Month]
+
+-- Dynamic denominator based on the month filter
+VAR __DynamicDenominator =
+     IF
+     (
+          SELECTEDVALUE
+          (
+               'dimDates'[Month Filter]
+          )
+               = "Current",
+          IF
+          (
+               __DaysInMonth * 8 > 173.3,
+               173.3,
+               __DaysInMonth * 8
+          ),
+          173.3 -- Default for other months
+     )
+
+-- Core FTE calculation
+VAR __FTE =
+     SUMX
+     (
+          'dimProvider',
+          IF
+          (
+               [Days Worked Goal] > 0
+                    && [Total Worked Hours] > 0,
+               MROUND
+               (
+                    IF
+                    (
+                         DIVIDE
+                         (
+                              [Total Worked Hours],
+                              __DynamicDenominator
+                         )
+                              > 1,
+                         1,
+                         DIVIDE
+                         (
+                              [Total Worked Hours],
+                              __DynamicDenominator
+                         )
+                    ),
+                    0.2
+               )
+          )
+     )
+
+-- Custom rounding logic
+VAR __RoundingLevels =
+     {
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.75,
+          0.8,
+          0.9,
+          1
+     }
+VAR __NearestLevel =
+     SUMX
+     (
+          'dimProvider',
+          IF
+          (
+               [Total Worked Hours] > 0,
+               MAXX
+               (
+                    FILTER
+                    (
+                         ADDCOLUMNS
+                         (
+                              __RoundingLevels,
+                              "@Difference", ABS( [Value] - __FTE )
+                         ),
+                         [@Difference]
+                              = MINX
+                              (
+                                   __RoundingLevels,
+                                   ABS( [Value] - __FTE )
+                              )
+                    ),
+                    [Value]
+               ),
+               BLANK( )
+          )
+     )
+RETURN
+     __NearestLevel

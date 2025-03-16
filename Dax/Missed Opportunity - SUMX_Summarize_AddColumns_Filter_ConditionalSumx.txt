@@ -1,0 +1,68 @@
+Missed Opportunity = VAR MaxMonth =
+     MAX( 'dimDates'[Month Filter] ) // Get the maximum selected month
+VAR __Variance =
+     SUMX
+     (
+          GROUPBY
+          (
+               FILTER
+               (
+                    ADDCOLUMNS
+                    (
+                         SUMMARIZE
+                         (
+                              'dimProvider',
+                              'dimProvider'[ProviderId],
+                              'dimProvider'[WRVUTarget]
+                         ),
+                         "WRVUsvar", [WRVUs],
+                         "AvgWRVUsperDay",
+                              CALCULATE
+                              (
+                                   [Avg WRVUs per Day],
+                                   'dimDates'[Month Filter] = MaxMonth // Ensure the calculation is based on MaxMonth
+                              )
+                    ),
+                    [WRVUsvar] > 0
+               ),
+               'dimProvider'[ProviderId],
+               'dimProvider'[WRVUTarget],
+               [AvgWRVUsperDay]
+          ),
+          [AvgWRVUsperDay]
+               - IF
+               (
+                    'dimProvider'[WRVUTarget] == 0,
+                    [AvgWRVUsperDay],
+                    'dimProvider'[WRVUTarget]
+               )
+     )
+RETURN
+     CALCULATE
+     (
+          SUMX
+          (
+               'dimProvider',
+               VAR ProviderLOB = 'dimProvider'[LOB] // Extract LOB from dimProvider
+               RETURN
+                    SWITCH
+                    (
+                         TRUE( ),
+                         // When LOB is "AL" and __Variance is less than -0.2
+                         ProviderLOB = "AL" && __Variance < -0.2,
+                              __Variance * [Days Expected] * 40.91,
+                         // When LOB is "SNF"
+                         ProviderLOB = "SNF" && __Variance < -0.2,
+                              __Variance * [Days Expected] * 38.21,
+                         // Default value if no condition is met
+                         BLANK( )
+                    )
+          ),
+          REMOVEFILTERS
+          (
+               'factBillingCharges'[Orientee Filter]
+          ),
+          'factBillingCharges'[Orientee Filter]
+               = "Stable",
+          'dimDates'[Month Filter] = MaxMonth // Apply the month filter
+     )

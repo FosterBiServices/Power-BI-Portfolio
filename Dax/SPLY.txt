@@ -1,0 +1,29 @@
+Total Days SPLY = VAR LatestDate =
+     MAX( 'dimDates'[DateValue] )  -- Finds the latest available date (e.g., 03/04/2025)
+VAR LatestDay = DAY( LatestDate )  -- Extracts the day (e.g., 4)
+VAR PriorYearStart =
+     DATE
+     (
+          YEAR( LatestDate ) - 1,
+          MONTH( LatestDate ),
+          1
+     )  -- First day of the prior year (e.g., 01/01/2024)
+VAR PriorYearEnd =
+     DATE
+     (
+          YEAR( LatestDate ) - 1,
+          MONTH( LatestDate ),
+          LatestDay
+     )  -- Same day of the prior year (e.g., 02/04/2024)
+
+RETURN
+     CALCULATE
+     (
+          DISTINCTCOUNTNOBLANK
+          (
+               'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+          ),
+          'dimDates'[DateValue] >= PriorYearStart
+               && 'dimDates'[DateValue] <= PriorYearEnd,
+          ALL( 'dimDates' )  -- Ensures filters are reset to apply correct prior year logic
+     )

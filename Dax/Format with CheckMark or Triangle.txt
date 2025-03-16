@@ -1,0 +1,25 @@
+WRVU Change = VAR __CM = [WRVUs % Attained]
+VAR __PM =
+     CALCULATE
+     (
+          [WRVUs % Attained],
+          DATEADD
+          (
+               DATESMTD( 'dimDates'[DateValue] ),
+               -1,
+               MONTH
+          )
+     )
+VAR __Result = __CM - __PM
+RETURN
+     IF
+     (
+          __Result > 0,
+          "✔ " & FORMAT( __Result, "#.##%" ),
+          IF
+          (
+               __Result == 0,
+               "",
+               "🔻 " & FORMAT( __Result, "#.##%" )
+          )
+     )

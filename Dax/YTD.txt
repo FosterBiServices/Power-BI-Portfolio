@@ -1,0 +1,42 @@
+Total Days YTD = CALCULATE
+(
+     DISTINCTCOUNTNOBLANK
+     (
+          'VisitsPerPatient'[ClientEpisodeLevelOfCareId]
+     ),
+     ALL( 'dimDates' ),
+     DATESYTD( 'dimDates'[DateValue] )
+)
+
+************************************************
+
+CPT Code Distribution Value YTD = 
+VAR SelectedMonth = SELECTEDVALUE('dimDates'[Month Filter])
+VAR TodayDate =
+    CALCULATE(
+        MAX('dimDates'[DateValue]),
+        ALL('dimDates'),
+        'dimDates'[TodayFlag] = "Today"
+    )
+VAR EndDate =
+    IF(
+        SelectedMonth = "Current",
+        TodayDate,
+        EOMONTH(MAX('dimDates'[DateValue]), 0)
+    )
+VAR StartDate = DATE(YEAR(EndDate), 1, 1)
+
+-- Filtered Variables
+
+VAR __Result =
+    CALCULATE(
+        [CPT Code Distribution Value],
+        'dimDates'[DateValue] >= StartDate &&
+        'dimDates'[DateValue] <= EndDate
+    ) 
+
+
+-- Debugging Outputs for Testing
+RETURN
+    __Result
+ 

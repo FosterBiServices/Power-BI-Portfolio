@@ -1,0 +1,23 @@
+Trend = 
+VAR __Result = 
+    CALCULATE(
+        SELECTEDMEASURE(),
+        ALL( 'dimDates' ),
+        'dimDates'[Month Filter]
+            = SELECTEDVALUE( 'Dynamic Slicer'[Month] )
+    )
+  
+RETURN
+    IF(
+        NOT ISINSCOPE( 'Dynamic Slicer'[Month] ),
+        BLANK()
+        ,
+        IF
+        (
+            SELECTEDVALUE( 'Dynamic Slicer'[Month Sort] )
+            <= MAX( 'dimDates'[Month Sort] )
+            && SELECTEDVALUE( 'Dynamic Slicer'[Month Sort] )
+            >= MAX( 'dimDates'[Month Sort] ) - 3,
+            __Result
+        )
+    )
