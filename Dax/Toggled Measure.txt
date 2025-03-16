@@ -1,0 +1,35 @@
+Code Distribution Value Toggle = IF
+(
+     SELECTEDVALUE( 'Toggle'[Value], "All" )
+          = "F2F"
+    && 
+         SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "MTD",
+     [F2F CPT Code Distribution Value],
+IF
+(
+     SELECTEDVALUE( 'Toggle'[Value], "All" )
+          = "All"
+    && 
+         SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "MTD",
+    [CPT Code Distribution Value],
+IF
+(
+     SELECTEDVALUE( 'Toggle'[Value], "All" )
+          = "F2F"
+    && 
+         SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "YTD",
+    [F2F CPT Code Distribution Value YTD],
+IF
+(
+     SELECTEDVALUE( 'Toggle'[Value], "All" )
+          = "All"
+    && 
+         SELECTEDVALUE( 'Time Selection'[Value], "MTD" )
+          = "YTD",
+    [CPT Code Distribution Value YTD]
+)
+)
+))

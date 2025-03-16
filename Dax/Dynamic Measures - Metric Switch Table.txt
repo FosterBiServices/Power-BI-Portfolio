@@ -1,0 +1,137 @@
+Matrix Value = VAR __SelectedMeasure =
+     SWITCH
+     (
+          MAX( 'Metric Switch Table'[Metric Id] ),
+          1,
+               FORMAT( [Days Expected Trend], "#,#" ),
+          2,
+               FORMAT( [Persons Served Trend], "#,#" ),
+          3, FORMAT( [WRVUs Trend], "#,#" ),
+          4, FORMAT( [WRVUs/Day Trend], "#,#.0" ),
+          5, FORMAT( [F2F Visits Trend], "#,#" ),
+          6, FORMAT( [Visits/Day Trend], "#,#.0" )
+     )
+VAR __CMSelectedMeasure =
+     SWITCH
+     (
+          MAX( 'Metric Switch Table'[Metric Id] ),
+          1, FORMAT( [Days Expected], "#,#" ),
+          2, FORMAT( [Persons Served], "#,#" ),
+          3, FORMAT( [WRVUs], "#,#" ),
+          4, FORMAT( [WRVUs/Day], "#,#.0" ),
+          5, FORMAT( [F2F Visits], "#,#" ),
+          6, FORMAT( [Visits/Day], "#,#.0" )
+     )
+VAR __SelectedTargetMeasure =
+     SWITCH
+     (
+          MAX( 'Metric Switch Table'[Metric Id] ),
+          1,
+               FORMAT
+               (
+                    [Days Expected Target],
+                    "#,#"
+               ),
+          //2, [Persons Served YTD],
+          3, FORMAT( [WRVU Goal], "#,#" ),
+          4,
+               FORMAT
+               (
+                    DIVIDE
+                    (
+                         [WRVU Goal],
+                         [Days Expected]
+                    ),
+                    "#,#.0"
+               ),
+          5,
+               FORMAT( [Visit Goal], "#,#" ),
+          6,
+               FORMAT
+               (
+                    DIVIDE
+                    (
+                         [Visit Goal],
+                         [Days Expected]
+                    ),
+                    "#,#.0"
+               )
+     )
+VAR _Targets =
+     VAR __CurrentValue =
+          __SelectedTargetMeasure
+     VAR __MTD = __CMSelectedMeasure
+     VAR __ChangeCalc =
+          VAR Curr = __SelectedMeasure
+          VAR Prev = __MTD
+          RETURN
+               IF
+               (
+                    Curr && Prev,
+                    DIVIDE( Prev, Curr ) - 1
+               )
+     VAR Icon =
+          SWITCH
+          (
+               TRUE( ),
+               __ChangeCalc < 0, "⛔",
+               __ChangeCalc > 0, "✅",
+               __ChangeCalc = 0, "🎯",
+               __ChangeCalc = BLANK( ), ""
+          )
+     VAR Suffix =
+          SWITCH
+          (
+               TRUE( ),
+               ABS( __ChangeCalc ) < 0.1, "‏‏‎‏‏‎ ‎ ‎",
+               ABS( __ChangeCalc ) >= 0.1, "",
+               __ChangeCalc = BLANK( ), ""
+          )
+     RETURN
+          IF
+          (
+               MAX( 'Metric Switch Table'[Metric Id] )
+                    <> 2,
+               FORMAT( __CurrentValue, "#,##" ) & " | "
+                    & Icon
+                    & " "
+                    & Suffix
+                    & FORMAT
+                    (
+                         IF
+                         (
+                              NOT ISBLANK( __ChangeCalc ),
+                              ABS( __ChangeCalc ),
+                              "N/A"
+                         ),
+                         "0%"
+                    )
+          )
+VAR __Result =
+     CALCULATE
+     (
+          __SelectedMeasure,
+          ALL( 'dimDates' ),
+          'dimDates'[Month Filter]
+               = SELECTEDVALUE( 'Dynamic Slicer'[Month] )
+     )
+RETURN
+     IF
+     (
+          NOT ISINSCOPE( 'Dynamic Slicer'[Month] ),
+          _Targets,
+          IF
+          (
+               SELECTEDVALUE
+               (
+                    'Dynamic Slicer'[Month Sort]
+               )
+                    <= MAX( 'dimDates'[Month Sort] )
+                    && SELECTEDVALUE
+               (
+                    'Dynamic Slicer'[Month Sort]
+               )
+                    >= MAX( 'dimDates'[Month Sort] ) - 3,
+               __Result
+          )
+     )

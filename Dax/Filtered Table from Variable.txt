@@ -1,0 +1,17 @@
+Days (SIA) = VAR FilteredVisits =
+     FILTER
+     (
+          'VisitsLast7Days',
+          'VisitsLast7Days'[DaysFromDischarge] >= 0
+               && 'VisitsLast7Days'[DaysFromDischarge] <= 7
+               && 'VisitsLast7Days'[SIAFlag] = "SIA"
+     )
+RETURN
+     CALCULATE
+     (
+          DISTINCTCOUNT
+          (
+               'VisitsLast7Days'[DateKey]
+          ),
+          FilteredVisits
+     )

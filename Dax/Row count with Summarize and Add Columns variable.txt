@@ -1,0 +1,29 @@
+Visits Near Death Denom = VAR PatientTable =
+     ADDCOLUMNS
+     (
+          SUMMARIZE
+          (
+               'VisitsLast7Days',
+               'VisitsLast7Days'[PatientKey]
+          ),
+          "@VisitCount",
+               CALCULATE
+               (
+                    COUNT
+                    (
+                         'VisitsLast7Days'[ClientEpisodeVisitId]
+                    ),
+                    'VisitsLast7Days'[VNDFlag] = "VND",
+                    'VisitsLast7Days'[DaysFromDischarge] >= 0,
+                    'VisitsLast7Days'[DaysFromDischarge] <= 2
+               )
+     )
+RETURN
+     COUNTROWS
+     (
+          FILTER
+          (
+               PatientTable,
+               [@VisitCount] >= 1
+          )
+     )

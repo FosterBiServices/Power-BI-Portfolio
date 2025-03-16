@@ -1,0 +1,44 @@
+Days In Month Adjusted = VAR SelectedMonth =
+     SELECTEDVALUE
+     (
+          'dimDates'[MonthsPrior],
+          0
+     )
+VAR EndDate =
+     CALCULATE
+     (
+          MAX( 'dimDates'[DateValue] ),
+          ALL( 'dimDates' ),
+          'dimDates'[MonthsPrior] = SelectedMonth
+     )
+VAR StartDate =
+     DATE
+     (
+          YEAR( EndDate ),
+          MONTH( EndDate ),
+          1
+     )
+VAR AllDays =
+     ADDCOLUMNS
+     (
+          CALENDAR( StartDate, EndDate ),
+          "Weekday", WEEKDAY( [Date], 2 ) -- 2 means Monday = 1, Sunday = 7
+     )
+VAR WorkingDays =
+     FILTER( AllDays, [Weekday] < 6 ) -- Excludes Saturdays (6) and Sundays (7)
+
+VAR HolidaysInMonth =
+     COUNTROWS
+     (
+          FILTER
+          (
+               'dimHolidays',
+               'dimHolidays'[DateValue] >= StartDate
+                    && 'dimHolidays'[DateValue] <= EndDate
+          )
+     )
+VAR NetworkDays =
+     COUNTROWS( WorkingDays )
+          - HolidaysInMonth
+RETURN
+     NetworkDays

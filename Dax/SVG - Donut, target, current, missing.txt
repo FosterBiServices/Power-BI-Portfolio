@@ -1,0 +1,194 @@
+AL Progress = -- For illustrative and educational purposes.
+-- You'll need to adjust these SVG measures for use in your own solutions.
+/* SETUP */
+VAR _total = [AL Target]
+VAR _value =
+     COALESCE
+     (
+          CALCULATE
+          (
+               [Patients with Physician Visits],
+               'TargetList'[LOB] = "AL"
+          ),
+          0
+     )// Current value
+VAR _width = 365  // Width size of the SVG
+VAR _height = 280.27  // Height size of the SVG
+VAR _CanvasSize = MIN( _height, _width )  // Canvas size
+VAR _padding = 10  // Padding between the circle and the canvas
+VAR _targetText =
+     IF
+     (
+          _value >= _total,
+          "Over:",
+          "Missing:"
+     )
+
+/* COLOR DEFINITION */
+VAR _positive = "#006100"  // Positive color
+VAR _neutral = "#9C6500"  // Neutral color
+VAR _negative = "#9C0006"  // Negative color
+/* PRE CALCULATION */
+VAR _halfSize = _CanvasSize / 2  // Half of the canvas size
+VAR _r = _halfSize - _padding * 1.5  // Radius of the circle
+VAR _round = 2 * PI( ) * _r  // Circumference of the circle
+VAR _perc = COALESCE( _value / _total, 0 )  // Percentage of the current value
+VAR _ratio = _round - _round * _perc  // Ratio of the current value
+VAR _clr =
+     SWITCH
+     (
+          TRUE( ),
+          _perc >= 0.90, _positive,  // Positive color
+          _perc >= 0.80, _neutral,  // Neutral color
+          _negative  // Negative color
+     )
+
+/* STYLE DECLARATIONS */
+VAR _styles =
+     "
+  <style>
+    text {
+        font-family: Segoe UI;
+    }
+    .backgroundCircle {
+        transform: rotate(-90deg) translate(-"
+          & ( _height + _width ) / 2
+          & "px, "
+          & ( _width - _height ) / 2
+          & "px);
+    }
+    .backgroundCircle {
+        fill: transparent;
+        stroke-width: "
+          & _padding
+          & ";
+    }
+    .background {
+        stroke: #e0e0e0;
+    }
+    .filling {
+        stroke: "
+          & _clr
+          & ";
+        stroke-linecap: round;
+        stroke-dasharray: "
+          & _round
+          & ";
+        stroke-dashoffset: "
+          & _ratio
+          & ";
+    }
+    .titleText {
+        fill: #FFFFFF;
+        font-size: 150%;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        font-weight: bold;
+    }
+    .mainText {
+        fill: "
+          & _clr
+          & ";
+        font-size: 325%;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        font-weight: bold;
+    }
+    .subTexts {
+        fill: #FFFFFF;
+        font-size: 150%;
+        dominant-baseline: middle;
+    }
+    .leftPositioned {
+        text-anchor: end;
+    }
+    .rightPositioned {
+        text-anchor: start;
+    }
+    .bolden {
+        font-weight: bold;
+    }
+  </style>
+"
+
+/* SVG DECLARATIONS */
+VAR _svgDeclaration =
+     "data:image/svg+xml;utf8,"
+VAR _svgHeader =
+     "<svg xmlns='http://www.w3.org/2000/svg' height='"
+          & _height
+          & "' width='"
+          & _width
+          & "'>"
+VAR _svgEnd = "</svg>"
+
+/* SVG CONTENT */
+VAR _sv =
+     "
+  <g class='titleText'>
+    <text x='20%' y='05%' class='mainTitle'>AL</text>
+  </g>
+  <g class='backgroundCircle'>
+    <circle r='"
+          & _r
+          & "' cx='50%' cy='50%' class='background' />
+    <circle r='"
+          & _r
+          & "' cx='50%' cy='50%' class='filling' />
+  </g>
+
+  <g class='mainText'>
+    <text x='50%' y='37.5%'>"
+          & FORMAT( _perc, "0.0%" )
+          & "</text>
+  </g>
+  <g class='subTexts'>
+    <g class='leftPositioned'>
+      <text x='53%' y='50.5%'>Target:</text>
+      <text x='53%' y='60%'>Current:</text>
+      <text x='53%' y='69.5%' class='bolden'>"
+          & _targetText
+          & "</text>
+    </g>
+    <g class='rightPositioned'>
+      <text x='55%' y='50.5%'>"
+          & FORMAT( _total, "#,#" )
+          & "</text>
+      <text x='55%' y='60%'>"
+          & FORMAT
+          (
+               COALESCE( ROUND( _value, 1 ), "#,#" ),
+               0
+          )
+          & "</text>
+      <text x='55%' y='69.5%' class='bolden'>"
+          & FORMAT
+          (
+               COALESCE
+               (
+                    ROUND( ABS( _total - _value ), 1 ),
+                    0
+               ),
+               "#,#"
+          )
+          & "</text>
+    </g>
+  </g>
+"
+
+
+
+
+
+
+
+
+
+
+/* RESULT */
+VAR _result =
+     _svgDeclaration & _svgHeader & _styles
+          & _sv
+          & _svgEnd
+RETURN
+     _result

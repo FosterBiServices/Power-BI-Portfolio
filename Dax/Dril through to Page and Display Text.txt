@@ -1,0 +1,44 @@
+Drill Through Monthly Page = VAR __SelectedValue =
+     SELECTCOLUMNS
+     (
+          SUMMARIZE
+          (
+               'Measure Selection',
+               'Measure Selection'[Measure Selection],
+               'Measure Selection'[Measure Selection Fields]
+          ),
+          'Measure Selection'[Measure Selection]
+     )
+VAR __SingleDate =
+     HASONEVALUE( 'dimDates'[DateValue] )
+RETURN
+     IF
+     (
+          COUNTROWS( __SelectedValue ) = 1
+               && NOT __SingleDate,
+          "Monthly " & __SelectedValue & " Data"
+     )
+	 
+	
+Drill Through Daily Text = VAR __SelectedValue =
+     SELECTCOLUMNS
+     (
+          SUMMARIZE
+          (
+               'Measure Selection',
+               'Measure Selection'[Measure Selection],
+               'Measure Selection'[Measure Selection Fields]
+          ),
+          'Measure Selection'[Measure Selection]
+     )
+RETURN
+     IF
+     (
+          COUNTROWS( __SelectedValue ) = 1,
+          "Drill to Daily " & __SelectedValue
+               & " Data"
+     )	
+Measure Selection = {
+    ("Visits", NAMEOF('__Measures'[F2F Visits]), 1),
+    ("WRVUs", NAMEOF('__Measures'[WRVUs]), 0)
+}
