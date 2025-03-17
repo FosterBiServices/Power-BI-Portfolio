@@ -1,0 +1,9 @@
+Onboarding FTE Concat = VAR __Spacing = "‏‏‎ ‎"
+VAR __Len =
+    LEN ( FORMAT ( [Onboarding FTE Detail], "#%" ) )
+VAR __SpacedNeeded =
+    IF ( __Len >= 4, -2, IF ( __Len >= 3, 0, IF ( __Len = 1, 4, 2 ) ) )
+        + IF ( __Len = 0, 10, 5 )
+RETURN
+    FORMAT ( [Onboarding FTE], "#,##.0" ) & REPT ( __Spacing, __SpacedNeeded )
+        & FORMAT ( [Onboarding FTE Detail], "#%" )

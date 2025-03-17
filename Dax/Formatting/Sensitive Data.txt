@@ -1,0 +1,2 @@
+SensitiveMeasure =
+IF(HASPERMISSION("ViewSensitiveData"), SUM([Sales]), "REDACTED")

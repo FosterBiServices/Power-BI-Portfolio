@@ -1,0 +1,142 @@
+createOrReplace
+
+	table 'Daily Sorting - WRVUs'
+		lineageTag: 0271b148-9e00-4d68-b9c7-2396c4e5c8ab
+
+		calculationGroup
+			precedence: 6
+
+			calculationItem Tenure = ```
+					
+					IF(
+					    ISFILTERED( 'Detail - WRVUs'[Ordinal] ),
+					    SELECTEDMEASURE(),
+					    IF ( SELECTEDMEASURENAME() IN { "Last Refresh", "Selected LOB" },
+					        SELECTEDMEASURE(), 
+					        CALCULATE(
+					            [Tenure.], DATESMTD( 'dimDates'[DateValue] )
+					        )
+					    )
+					)
+					```
+
+			calculationItem 'WRVUs Target' = ```
+					
+					IF(
+					    ISFILTERED( 'Detail - WRVUs'[Ordinal] ),
+					    SELECTEDMEASURE(),
+					    IF ( SELECTEDMEASURENAME() IN { "Last Refresh", "Selected LOB" },
+					        SELECTEDMEASURE(), 
+					        CALCULATE(
+					            [Expected WRVUs], DATESMTD( 'dimDates'[DateValue] )
+					        )
+					    )
+					)
+					```
+
+			calculationItem WRVUs = ```
+					
+					IF(
+					    ISFILTERED( 'Detail - WRVUs'[Ordinal] ),
+					    SELECTEDMEASURE(),
+					    IF ( SELECTEDMEASURENAME() IN { "Last Refresh", "Selected LOB" },
+					        SELECTEDMEASURE(), 
+					        CALCULATE(
+					            SELECTEDMEASURE(), DATESMTD( 'dimDates'[DateValue] )
+					        )
+					    )
+					)
+					```
+
+			calculationItem WRVUs/Day = ```
+					
+					IF(
+					    ISFILTERED( 'Detail - WRVUs'[Ordinal] ),
+					    SELECTEDMEASURE(),
+					    IF ( SELECTEDMEASURENAME() IN { "Last Refresh", "Selected LOB" },
+					        SELECTEDMEASURE(), 
+					        CALCULATE(
+					            [Avg WRVUs per Day], DATESMTD( 'dimDates'[DateValue] )
+					        )
+					    )
+					)
+					```
+
+			calculationItem Variance = ```
+					
+					VAR __Result = VAR __CurrentMonth =
+					    SELECTEDVALUE ( dimDates[Month Filter] )
+					VAR __CMWRVU =
+					    CALCULATE (
+					        [WRVUs],
+					        ALL ( dimDates ),
+					        dimDates[Month Filter] = __CurrentMonth
+					    )
+					VAR __CMDaysWorked =
+					    CALCULATE (
+					        [Days Expected],
+					        ALL ( dimDates ),
+					        dimDates[Month Filter] = __CurrentMonth
+					    )
+					VAR __ExpectedWRVUs =
+					    IF (
+					        __CMDaysWorked,
+					        SELECTEDVALUE ( 'dimProvider'[WRVUTarget] )
+					    )
+					RETURN
+					    IF (
+					        NOT (
+					            ISINSCOPE ( 'dimDates'[DateValue] )
+					        )
+					            && NOT (
+					                ISINSCOPE ( 'dimDates'[Day Name] )
+					            ),
+					        IF (
+					            __ExpectedWRVUs == 0,
+					            0,
+					            IF (
+					                __ExpectedWRVUs > 0,
+					                DIVIDE (
+					                    __CMWRVU,
+					                    __CMDaysWorked
+					                ) - __ExpectedWRVUs
+					            )
+					        )
+					    )
+					    
+					RETURN 
+					
+					IF(
+					    ISFILTERED( 'Detail - WRVUs'[Ordinal] ),
+					    SELECTEDMEASURE(),
+					    IF ( SELECTEDMEASURENAME() IN { "Last Refresh", "Selected LOB" },
+					        SELECTEDMEASURE(), 
+					        CALCULATE(
+					            __Result, DATESMTD( 'dimDates'[DateValue] )
+					        )
+					    )
+					)
+					```
+
+		column 'Sort Item'
+			dataType: string
+			displayFolder: TableColumns
+			lineageTag: ac434d34-c73a-4f9f-97cd-cddadeceea47
+			summarizeBy: none
+			sourceColumn: Name
+			sortByColumn: Ordinal
+
+			annotation SummarizationSetBy = Automatic
+
+		column Ordinal
+			dataType: int64
+			isHidden
+			displayFolder: TableColumns
+			lineageTag: 842fe891-505d-4d33-ac70-e128ff0bb16a
+			summarizeBy: none
+			sourceColumn: Ordinal
+
+			annotation SummarizationSetBy = Automatic
+
+		annotation TabularEditor_TableGroup = Sorting Calculation Groups
+

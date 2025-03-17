@@ -1,0 +1,39 @@
+let
+    Source = (InputTable as table) as table => 
+
+    let
+        // Add an Index column starting at 0 with an increment of 1
+        #"Added Index" = Table.AddIndexColumn(InputTable, "Index", 0, 1, Int64.Type),
+
+        // Ensure Column1 is treated as text (helps prevent type mismatches)
+        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Column1", type text}}),
+
+        // Find the row where Column1 = "Weekly Encounter Total"
+        FilteredRows = Table.SelectRows(#"Added Index", each ([Column1] = "Weekly Encounter Total")),
+
+        // Check if the filtered table is empty (i.e., the value does not exist)
+        IndexNumber = if Table.RowCount(FilteredRows) > 0 then 
+                        FilteredRows{0}[Index] // Extract the index if found
+                      else 
+                        null,  // Return null if not found
+
+        // If IndexNumber is null, return an error message instead of proceeding
+        Result = if IndexNumber <> null then
+                    let
+                        // Remove all rows before the found index
+                        RemoveRows = Table.Skip(InputTable, IndexNumber), 
+
+                        // Promote the first row to headers
+                        PromoteHeaders = Table.PromoteHeaders(RemoveRows, [PromoteAllScalars=true]),
+
+                        // Trim spaces from column names for consistency
+                        TrimColumnNames = Table.TransformColumnNames(PromoteHeaders, Text.Trim)
+                    in
+                        TrimColumnNames
+                 else
+                    // Return a single-row table with an error message
+                    #table({"Error"}, {{"'Weekly Encounter Total' not found in Column1"}})
+    in
+        Result
+in
+    Source

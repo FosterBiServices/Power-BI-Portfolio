@@ -1,0 +1,1 @@
+Dynamic Slicer = DISTINCT(SELECTCOLUMNS('dimDates',"Month",'dimDates'[Month Filter], "Month Sort", dimDates[Month Sort]))
