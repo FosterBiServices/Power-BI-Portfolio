@@ -1,0 +1,24 @@
+Other Visits = 
+IF
+(
+    NOT ( ISINSCOPE( 'dimDates'[DateValue] ) )
+        && NOT ( ISINSCOPE( 'dimDates'[Day Name] ) )
+        && SELECTEDMEASURE( ) > 0,
+    [Other Visits]
+)
+
+**************************************************
+
+F2F Visits = 
+    SELECTEDMEASURE()
+	
+**************************************************
+
+Days Billed = 
+IF
+(
+    NOT ( ISINSCOPE( 'dimDates'[DateValue] ) )
+        && NOT ( ISINSCOPE( 'dimDates'[Day Name] ) )
+        && SELECTEDMEASURE( ) > 0,
+    [Provider Service Days]
+)

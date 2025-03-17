@@ -1,0 +1,149 @@
+createOrReplace
+
+	table Trends
+		lineageTag: eac9512b-ce1f-4ed2-9c59-a0ee2f8e5a0b
+
+		calculationGroup
+			precedence: 2
+
+			calculationItem Tenure = ```
+					
+					IF
+					(
+					    NOT ( ISINSCOPE( 'Dynamic Slicer'[Month] ) )     
+					        && SELECTEDMEASURE( ) > 0,
+					    [Tenure.]
+					)
+					```
+
+				formatStringDefinition = "#,##.#"
+
+			calculationItem 'Expected Visits' =
+					
+					IF
+					(
+					    NOT ISINSCOPE( 'Dynamic Slicer'[Month] )
+					        && SELECTEDMEASURE( ) > 0,
+					    [Daily Expected Visits]
+					)
+
+				formatStringDefinition = "#,##.#"
+
+			calculationItem 'Days Expected' =
+					
+					IF
+					(
+					    NOT ISINSCOPE( 'Dynamic Slicer'[Month] )
+					        && SELECTEDMEASURE( ) > 0,
+					    CALCULATE( [Days Expected] )
+					)
+
+				formatStringDefinition = "#,##"
+
+			calculationItem 'Days Billed' =
+					
+					IF
+					(
+					    NOT ISINSCOPE( 'Dynamic Slicer'[Month] )
+					        && SELECTEDMEASURE( ) > 0,
+					    CALCULATE( [Provider Service Days] )
+					)
+
+				formatStringDefinition = "#,##"
+
+			calculationItem Visits/Day = SELECTEDMEASURE( )
+
+				formatStringDefinition = "#,#0.#;(#,#0.#)"
+
+			calculationItem 'M/M Variance' =
+					
+					VAR __CurrentMonth = SELECTEDVALUE( 'dimDates'[Month Filter] )
+					VAR __CMVisits =
+					    CALCULATE
+					    (
+					        [F2F Visits],
+					        ALL( 'dimDates' ),
+					        'dimDates'[Month Filter] = __CurrentMonth
+					    )
+					VAR __CMDaysWorked =
+					    CALCULATE
+					    (
+					        [Days Expected],
+					        ALL( 'dimDates' ),
+					        'dimDates'[Month Filter] = __CurrentMonth
+					    )
+					VAR __ExpectedVisits =
+					    IF
+					    (
+					        __CMDaysWorked,
+					        SELECTEDVALUE( 'dimProvider'[Expected Visits] )
+					    )
+					RETURN
+					    IF
+					    (
+					        NOT ISINSCOPE( 'Dynamic Slicer'[Month] )
+					           ,
+					        IF
+					        (
+					            __ExpectedVisits == 0,
+					            0,
+					            IF
+					            (
+					                __ExpectedVisits > 0,
+					                DIVIDE( __CMVisits, __CMDaysWorked ) - __ExpectedVisits
+					            )
+					        )
+					    )
+
+				formatStringDefinition = "#,0.#;(#,0.#)"
+
+			calculationItem 'Missed Opportunity' = ```
+					
+					
+					IF(
+					    NOT ( ISINSCOPE( 'Dynamic Slicer'[Month] ) ) && 
+					    SELECTEDMEASURE() > 0, 
+					    CALCULATE( [Missed Opportunity] )
+					)
+					
+					```
+
+				formatStringDefinition = "$#,##;($#,##)"
+
+		measure 'M/M Formatting' =
+				IF
+				(
+				     SELECTEDVALUE( 'Trends'[Name] ) IN { "Missed Opportunity" },
+				     CALCULATE
+				     (
+				          SELECTEDMEASURE( ),
+				          'Trends'[Name] IN { "Missed Opportunity" }
+				     ),
+				     BLANK( )
+				)
+			displayFolder: KPIs
+			lineageTag: accd4a92-fd74-4b9f-a673-72fb436673dd
+
+			annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+		column Name
+			dataType: string
+			displayFolder: TableColumns
+			lineageTag: d92f818a-283c-4ec0-8661-efacd0f0cd94
+			summarizeBy: none
+			sourceColumn: Name
+			sortByColumn: Ordinal
+
+			annotation SummarizationSetBy = Automatic
+
+		column Ordinal
+			dataType: int64
+			displayFolder: TableColumns
+			lineageTag: 97301199-6b4a-4291-b569-f63618f37091
+			summarizeBy: none
+			sourceColumn: Ordinal
+
+			annotation SummarizationSetBy = Automatic
+
+		annotation TabularEditor_TableGroup = Calculation Groups
+
