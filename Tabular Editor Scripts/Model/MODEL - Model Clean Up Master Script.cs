@@ -21,9 +21,16 @@ foreach(var t in Model.Tables)
     }
 }
 // Format Dates as ShortDate 
-foreach(var c in Model.AllColumns.Where(a => a.DataType == DataType.DateTime)) {
-	c.FormatString = "m/d/yyyy";
+// Format DateTime columns as ShortDate, but skip those ending in "Time"
+
+foreach(var c in Model.AllColumns.Where(a => 
+    a.DataType == DataType.DateTime && 
+    !a.Name.EndsWith("Time", StringComparison.OrdinalIgnoreCase)
+))
+{
+    c.FormatString = "m/d/yyyy";
 }
+
 
 // Format All Measures 
 
@@ -61,5 +68,16 @@ foreach (var t in Model.Tables)
         calcColumn.DisplayFolder = "TableCalculatedColumns";
     }
 }
+
+// Format DateTime fields that end in "Time" using 12-hour format with AM/PM
+foreach(var c in Model.AllColumns.Where(a =>
+    a.DataType == DataType.DateTime &&
+    a.Name.EndsWith("Time", StringComparison.OrdinalIgnoreCase)
+))
+{
+    c.FormatString = "HH:mm:ss"; // For 12-hour format
+    // Or: c.FormatString = "HH:mm:ss"; // For 24-hour format
+}
+
 
 };
