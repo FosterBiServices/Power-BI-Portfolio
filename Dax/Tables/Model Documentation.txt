@@ -1,0 +1,56 @@
+Model Documentation = 
+
+-------------------------------------------- Calculated Table: 'Model Documentation'------------------------------------------
+    VAR _columns =
+        SELECTCOLUMNS(
+            FILTER(
+                INFO.VIEW.COLUMNS( ),
+                [Table] <> "Model Documentation" && NOT ( [IsHidden] )
+            ),
+            "Type", "Column",
+            "Name", [Name],
+            "Description", [Description],
+            "Location", [Table],
+            "Folder", [DisplayFolder],
+            "Expression", [Expression]
+        )
+    VAR _measures =
+        SELECTCOLUMNS(
+            FILTER(
+                INFO.VIEW.MEASURES( ),
+                [Table] <> "Model Documentation" && NOT ( [IsHidden] )
+            ),
+            "Type", "Measure",
+            "Name", [Name],
+            "Description", [Description],
+            "Location", [Table],
+            "Folder", [DisplayFolder],
+            "Expression", [Expression]
+        )
+    VAR _tables =
+        SELECTCOLUMNS(
+            FILTER(
+                INFO.VIEW.TABLES( ),
+                [Name] <> "Model Documentation" && [Name] <> "Calculations"
+                    && NOT ( [IsHidden] )
+            ),
+            "Type", "Table",
+            "Name", [Name],
+            "Description", [Description],
+            "Location", BLANK( ),
+            "Folder", BLANK( ),
+            "Expression", [Expression]
+        )
+    VAR _relationships =
+        SELECTCOLUMNS(
+            INFO.VIEW.RELATIONSHIPS( ),
+            "Type", "Relationship",
+            "Name", [Relationship],
+            "Description", BLANK( ),
+            "Location", BLANK( ),
+            "Folder", BLANK( ),
+            "Expression", [Relationship]
+        )
+    RETURN
+        UNION( _columns, _measures, _tables, _relationships )
+
