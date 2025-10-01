@@ -1,0 +1,17 @@
+DEFINE
+	// This function evaluates a Prior Year, in the same period, result based on the selected measure
+    FUNCTION SamePeriodPriorYear = (
+			CalcValue : ANYREF EXPR,
+        	dateTable : ANYREF EXPR,
+        	dateColumn : ANYREF EXPR,
+        	offsetValue : VAL
+    ) =>
+		VAR CurrentYear =  MAX(dateColumn)
+        
+		VAR Result =
+        	CALCULATE(
+        		CalcValue,
+        		SAMEPERIODLASTYEAR(dateColumn)
+			)
+			RETURN
+				Result

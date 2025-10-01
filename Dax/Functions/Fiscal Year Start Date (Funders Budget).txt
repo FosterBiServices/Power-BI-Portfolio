@@ -1,0 +1,38 @@
+DEFINE
+    FUNCTION FiscalStart = () =>
+	  
+
+VAR AllEntities =
+    VALUES
+    (
+        'Master Data'[SAP Code: Cost Center / Profit Center Roll-up]
+    )
+RETURN
+    SUMX
+    (
+        AllEntities,
+        VAR CurrentEntity =
+            'Master Data'[SAP Code: Cost Center / Profit Center Roll-up]
+        VAR FiscalYearStartDate =
+            CALCULATE
+            (
+                MAX ( NonEquusFundersBudgetsFY2026[Fiscal Year Start] ),
+                FILTER
+                (
+                    ALL ( NonEquusFundersBudgetsFY2026 ),
+                    NonEquusFundersBudgetsFY2026[Profit Center Code]
+                        = CurrentEntity
+                )
+            )
+        VAR CurrentYear = YEAR ( TODAY ( ) )
+        VAR CurrentMonth = MONTH ( TODAY ( ) )
+        VAR FinalFiscalYearStartDate =
+            IF
+            (
+                ISBLANK ( FiscalYearStartDate ),
+                DATE ( CurrentYear - IF ( CurrentMonth <= 6, 1, 0 ), 7, 1 ),
+                FiscalYearStartDate
+            )
+        RETURN
+            FinalFiscalYearStartDate
+    )
