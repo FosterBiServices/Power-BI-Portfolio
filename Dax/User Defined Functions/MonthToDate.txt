@@ -1,61 +1,64 @@
-DEFINE
-	// This function evaluates a Month to date value based on the selected measure
-	// Use positive values for offset, current year will use 0, previous year will use 1, etc.
-	// vizType controls the totals, if you enter "single" then the totals will be only the period requested (based on offset value) 
-		// otherwise it will be the sum of all values. This assumes you have Year or YearMonth in your model and the vizual.  
-    FUNCTION MonthToDate = (
-			CalcValue : ANYREF EXPR,
-        	dateTable : ANYREF EXPR,
-        	dateColumn : ANYREF EXPR,
-        	offsetValue : VAL, 
-			vizType: STRING
-    ) =>
-		VAR FilteredDates = 
-			FILTER( 
-				dateTable, 
-				dateColumn < TODAY()
-			)
-		VAR LatestDate =
-			CALCULATE(
-				MAX( dateColumn ), 
-				FilteredDates
-			)
-		VAR LatestDay = DAY( LatestDate )  
-		VAR IsEndOfMonth = LatestDate = EOMONTH(LatestDate, 0)
-		
-		VAR TargetDate = 
-			EOMONTH(LatestDate, -offsetValue) 
-		VAR TargetMonth = 
-			MONTH(TargetDate) 
-		VAR TargetYear = 
-			YEAR(TargetDate) 
-		
-		VAR MonthStart = DATE(TargetYear, TargetMonth, 1)
-        VAR MonthEnd = EDATE(LatestDate, -offsetValue)  
+createOrReplace
 
-VAR Result =
-
-	IF ( 
-		ISBLANK(CalcValue), 
-		BLANK(), 
-			CALCULATE
+	function MonthToDate = ```
 			(
-				CalcValue,
-				ALL( dateTable ),
-				dateColumn >= MonthStart
-					&& dateColumn <= MonthEnd
+						CalcValue : ANYREF EXPR,
+			        	dateTable : ANYREF EXPR,
+			        	dateColumn : ANYREF EXPR,
+			        	offsetValue : VAL, 
+						vizType: STRING
+			    ) =>
+					VAR FilteredDates = 
+						FILTER( 
+							dateTable, 
+							dateColumn < TODAY()
+						)
+					VAR LatestDate =
+						CALCULATE(
+							MAX( dateColumn ), 
+							FilteredDates
+						)
+					VAR LatestDay = DAY( LatestDate )  
+					VAR IsEndOfMonth = LatestDate = EOMONTH(LatestDate, 0)
+					
+					VAR TargetDate = 
+						EOMONTH(LatestDate, -offsetValue) 
+					VAR TargetMonth = 
+						MONTH(TargetDate) 
+					VAR TargetYear = 
+						YEAR(TargetDate) 
+					
+					VAR MonthStart = DATE(TargetYear, TargetMonth, 1)
+			        VAR MonthEnd = EDATE(LatestDate, -offsetValue)  
+			
+			VAR Result =
+			
+				IF ( 
+					ISBLANK(CalcValue), 
+					BLANK(), 
+						CALCULATE
+						(
+							CalcValue,
+							ALL( dateTable ),
+							dateColumn >= MonthStart
+								&& dateColumn <= MonthEnd
+						)
+				)
+			VAR Output = 
+			IF ( 
+				vizType = "single", 
+				Result, 
+				IF ( 
+			        ISINSCOPE( dimDates[Year] ) || ISINSCOPE( dimDates[YearMonth] ), 
+			        Result, 
+			        CalcValue
+			    )
 			)
-	)
-VAR Output = 
-IF ( 
-	vizType = "single", 
-	Result, 
-	IF ( 
-        ISINSCOPE( dimDates[Year] ) || ISINSCOPE( dimDates[YearMonth] ), 
-        Result, 
-        CalcValue
-    )
-)
+			
+			RETURN 
+				Output
+			```
+    annotation PackageId = FosterBIServices.MonthToDate
 
-RETURN 
-	Output 
+    annotation PackageVersion = 0.1.0-beta
+

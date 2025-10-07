@@ -1,43 +1,48 @@
-DEFINE
-	// This function evaluates a Year to Date value based on the selected measure
-	// Use positive values for offset, current year will use 0, previous year will use 1, etc.  
-    FUNCTION YearToDate = (
-			CalcValue : ANYREF EXPR,
-        	dateTable : ANYREF EXPR,
-        	dateColumn : ANYREF EXPR,
-        	offsetValue : VAL
-    ) =>
+createOrReplace
 
-		VAR LatestDate =
-				MAX( dateColumn )  
-		VAR LatestDay = DAY( LatestDate )  
-VAR PriorYearStart =
-     DATE
-     (
-          YEAR( LatestDate ) - offsetValue,
-          1,
-          1
-     ) 
-VAR PriorYearEnd =
-     DATE
-     (
-          YEAR( LatestDate ) - offsetValue,
-          MONTH( LatestDate ),
-          LatestDay
-     )  
-
-VAR Result =
-	IF ( 
-		ISBLANK(CalcValue), 
-		BLANK(), 
-			CALCULATE
+	function YearToDate = ```
 			(
-				CalcValue,
-				ALL( dateTable ),
-				dateColumn >= PriorYearStart
-					&& dateColumn <= PriorYearEnd
-			)
-	)
+						CalcValue : ANYREF EXPR,
+			        	dateTable : ANYREF EXPR,
+			        	dateColumn : ANYREF EXPR,
+			        	offsetValue : VAL
+			    ) =>
+			
+					VAR LatestDate =
+							MAX( dateColumn )  
+					VAR LatestDay = DAY( LatestDate )  
+			VAR PriorYearStart =
+			     DATE
+			     (
+			          YEAR( LatestDate ) - offsetValue,
+			          1,
+			          1
+			     ) 
+			VAR PriorYearEnd =
+			     DATE
+			     (
+			          YEAR( LatestDate ) - offsetValue,
+			          MONTH( LatestDate ),
+			          LatestDay
+			     )  
+			
+			VAR Result =
+				IF ( 
+					ISBLANK(CalcValue), 
+					BLANK(), 
+						CALCULATE
+						(
+							CalcValue,
+							ALL( dateTable ),
+							dateColumn >= PriorYearStart
+								&& dateColumn <= PriorYearEnd
+						)
+				)
+			
+			RETURN 
+				Result
+			```
+    annotation PackageId = FosterBIServices.YearToDate
 
-RETURN 
-	Result 
+    annotation PackageVersion = 0.1.0-beta
+
