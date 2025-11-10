@@ -1,0 +1,50 @@
+Budget Projection Image = 
+VAR Rollups =
+    FILTER (
+        VALUES ( 'Master Data'[SAP Code: Cost Center / Profit Center Roll-up] ),
+        'Master Data'[SAP Code: Cost Center / Profit Center Roll-up] IN VALUES ( FunderBudgets[Profit Center Code] )
+    )
+
+VAR RollupDateTable =
+    ADDCOLUMNS (
+        Rollups,
+        "EndDate", CALCULATE (
+            MAX ( FunderBudgets[Fiscal Year End] ),
+            FILTER (
+                ALL ( FunderBudgets ),
+                FunderBudgets[Profit Center Code] = 'Master Data'[SAP Code: Cost Center / Profit Center Roll-up]
+            )
+        ),
+        "BudgetEndDate", CALCULATE (
+            MAX ( FunderBudgets[Budget Year End] ),
+            FILTER (
+                ALL ( FunderBudgets ),
+                FunderBudgets[Profit Center Code] = 'Master Data'[SAP Code: Cost Center / Profit Center Roll-up]
+            )
+        )
+    )
+
+VAR ProjectionGroups = FILTER (RollupDateTable, [BudgetEndDate] <> [EndDate])
+VAR ProjectionCount = COUNTROWS (ProjectionGroups)
+
+VAR svgHeader = "data:image/svg+xml;utf8," &
+    "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 128 156'>"
+
+VAR bellPath =
+    "<path fill-rule='evenodd' clip-rule='evenodd' d='M13.8094 49.875C13.8094 36.6473 19.0641 23.9614 28.4175 14.608C37.7708 5.25467 50.4567 0 63.6844 0C76.9121 0 89.598 5.25467 98.9514 14.608C108.305 23.9614 113.559 36.6473 113.559 49.875V76.6935L126.541 102.657C127.139 103.852 127.421 105.18 127.361 106.515C127.301 107.849 126.901 109.147 126.198 110.283C125.496 111.42 124.514 112.358 123.347 113.008C122.18 113.659 120.866 114 119.53 114H91.2867C89.7018 120.115 86.1312 125.531 81.1354 129.397C76.1396 133.263 70.0014 135.36 63.6844 135.36C57.3674 135.36 51.2292 133.263 46.2334 129.397C41.2376 125.531 37.667 120.115 36.0822 114H7.83866C6.50257 114 5.1886 113.659 4.02156 113.008C2.85453 112.358 1.87317 111.42 1.17069 110.283C0.46822 109.147 0.0679562 107.849 0.00791793 106.515C-0.0521203 105.18 0.230061 103.852 0.82766 102.657L13.8094 76.6935V49.875ZM51.3439 114C52.5947 116.166 54.3935 117.965 56.5597 119.215C58.7259 120.466 61.1831 121.124 63.6844 121.124C66.1857 121.124 68.6429 120.466 70.8091 119.215C72.9753 117.965 74.7742 116.166 76.0249 114H51.3439ZM63.6844 14.25C54.2361 14.25 45.1747 18.0033 38.4937 24.6843C31.8127 31.3653 28.0594 40.4267 28.0594 49.875V76.6935C28.0593 78.9046 27.5446 81.0854 26.556 83.0632L18.2198 99.75H109.156L100.82 83.0632C99.8289 81.086 99.3118 78.9052 99.3094 76.6935V49.875C99.3094 40.4267 95.5561 31.3653 88.8751 24.6843C82.1941 18.0033 73.1327 14.25 63.6844 14.25Z' fill='#808080'/>"
+
+VAR badge =
+    IF (
+        ProjectionCount > 0,
+        "<circle cx='100' cy='40' r='40' fill='red' />" &  // Larger badge
+        "<text x='100' y='54' font-size='56' text-anchor='middle' fill='white' font-weight='bold'>" & ProjectionCount & "</text>",
+        ""
+    )
+
+VAR svgEnd = "</svg>"
+
+RETURN
+    IF (
+        ProjectionCount > 0,
+        svgHeader & bellPath & badge & svgEnd
+    )

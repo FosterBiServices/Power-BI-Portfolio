@@ -1,0 +1,144 @@
+Card with Columns and Target = 
+/* SETUP */
+VAR _spaceBetweenColumns = 15 // Space between columns in pixels
+VAR _maxSizeOfColumn = 400 // Max width of a column in pixels
+VAR _columnRounding = 5 // Rounding of column corners
+VAR _width = 413.33 // SVG width in pixels
+VAR _height = 290 
+VAR _textBlockHeight = _height *0.30
+
+VAR _initialTbl =
+    ADDCOLUMNS (
+        SELECTCOLUMNS (
+            SUMMARIZE ( 'dimdate', 'dimdate'[Month Year], 'dimdate'[YearMonthSort] ),
+            "@xAxisPeriod", 'dimdate'[Month Year],
+            "@xAxisPeriodSort", 'dimdate'[YearMonthSort]
+        ),
+        "@val", [Balance Expenses],
+        "@target", [Balance Expenses Budget Financials],
+        "@var", [Balance Expenses Variance]
+    )
+/* TEXT DECLARTIONS */
+
+VAR _firstLineInitialText = "Expenses"
+VAR _firstLineEndText = [Balance Expenses Last Completed Month Formatted]
+VAR _secondLineInitialText = [Balance Expenses Formatted]
+VAR _secondLineEndText = [Balance Expenses FYTD Formatted]
+VAR _thirdLineMiddleText = " of "
+VAR _thirdLineEndText = "months beat budget" 
+
+/* COLORS */
+VAR _activePartsColor = "#658E95"
+VAR _darkGrey = "#808080"
+VAR _lightGrey = "c6c6c6"
+VAR _lightBlue = "#b2c5d9"
+VAR _darkBlue = "#004081"
+
+/* SVG DECLARATIONS */
+VAR _svgDeclaration = "data:image/svg+xml;utf8,"
+VAR _svgHeader = "<svg xmlns='http://www.w3.org/2000/svg' width='" & _width & "' height='" & _height & "'>"
+VAR _svgEnd = "</svg>"
+
+/* CSS */
+VAR _style = "<style>
+    text{ font-family:Segoe UI; }
+    .columns{ opacity:1; outline:none; }
+    .txtGroup{ dominant-baseline:middle; text-anchor:start; }
+    .bolder{ font-weight:bold; }
+</style>"
+
+/* CALCULATIONS */
+VAR _preparedTbl =
+    ADDCOLUMNS (
+        _initialTbl,
+        "@rowNum", ROWNUMBER ( _initialTbl, ORDERBY ( [@xAxisPeriodSort], ASC ) )
+    )
+VAR _maxValue = MAXX ( _preparedTbl, [@val] )
+VAR _maxTarget = MAXX ( _preparedTbl, [@target] )
+VAR _maxResultedValue = IF( _maxValue >= _maxTarget, _maxValue, _maxTarget )
+VAR _rowCounter = COUNTROWS ( _preparedTbl )
+
+VAR _resultSizeOfColumns =
+    VAR _cal = ROUND ( DIVIDE ( _width - ( ( _rowCounter + 1 ) * _spaceBetweenColumns ), _rowCounter ), 1 )
+    RETURN IF ( _cal > _maxSizeOfColumn, _maxSizeOfColumn, _cal )
+
+/* COLUMNS */
+VAR _columns =
+    CONCATENATEX (
+        _preparedTbl,
+        VAR _colorOfColumn = IF ( [@var] >= 0, "#FF1C0E", "#26FF07" )
+        VAR _columnHeight = ROUND ( DIVIDE ( [@val], _maxResultedValue ) * (_height * 0.6), 1 )
+        VAR _xPos = ( ( [@rowNum] - 1 ) * _resultSizeOfColumns ) + ( _spaceBetweenColumns * [@rowNum] )
+        VAR _yPos = _textBlockHeight  + (_height * 0.60) - _columnHeight
+        RETURN
+            "<rect class='columns' x='" & _xPos & "' y='" & _yPos & "' width='" & _resultSizeOfColumns & "' height='" & _columnHeight & "' fill='" & _colorOfColumn & "' rx='" & _columnRounding & "' />"
+    )
+
+/* TARGET LINE */
+VAR _targetLine =
+    CONCATENATEX (
+        _preparedTbl,
+        VAR _colorOfLine = IF ( [@var] >= 0, "#FFFFFF", "#333333" )
+        VAR _x1 = ( ( [@rowNum] - 1 ) * _resultSizeOfColumns ) + ( _spaceBetweenColumns * [@rowNum] )
+        VAR _x2 = _x1 + _resultSizeOfColumns
+        VAR _y = _textBlockHeight  + (_height * 0.60) - (DIVIDE([@target], _maxResultedValue) * (_height * 0.6))
+        RETURN
+            "<line x1='" & _x1 & "' x2='" & _x2 & "' y1='" & _y & "' y2='" & _y &
+            "' stroke='" & _colorOfLine & "' stroke-width='3' stroke-dasharray='6 4' />"
+    )
+
+
+/* X-AXIS LABELS */
+VAR _xAxisLabels =
+    CONCATENATEX (
+        _preparedTbl,
+        VAR _xPos =
+            ( ( [@rowNum] - 1 ) * _resultSizeOfColumns ) +
+            ( _spaceBetweenColumns * [@rowNum] ) +
+            ( _resultSizeOfColumns / 2 )
+        VAR _monthLabel = LEFT([@xAxisPeriod], 3)
+        VAR _yearLabel = RIGHT([@xAxisPeriod], 4)
+        VAR _monthYPos = _textBlockHeight + _height * 0.65
+        VAR _yearYPos = _textBlockHeight + _height * 0.70
+        RETURN
+            "<text x='" & _xPos & "' y='" & _monthYPos & "' font-size='11' text-anchor='middle' fill='" & _darkGrey & "'>" & _monthLabel & "</text>" &
+            "<text x='" & _xPos & "' y='" & _yearYPos & "' font-size='10' text-anchor='middle' fill='" & _darkGrey & "'>" & _yearLabel & "</text>"
+    )
+VAR _initialText =
+    "<g class='txtGroup'>" 
+        & "<text y='4%' x='4%' font-size='150%' text-anchor='left' fill='" 
+            & _darkBlue 
+                & "'><tspan class='bolder'> " 
+                    & _firstLineInitialText 
+                        & "</tspan></text>" 
+        & "<text y='3%' x='99%' font-size='100%' text-anchor='end' fill='" 
+            & _lightBlue 
+                & "'><tspan class='bolder'> " 
+                    & _firstLineEndText 
+                        & "</tspan></text>" 
+        & "<text y='16.5%' x='4%' font-size='150%' text-anchor='left'  fill='" 
+            & _darkBlue 
+                & "'><tspan class='bolder'> " 
+                    & _secondLineInitialText 
+                        & "</tspan></text>"
+        & "<text y='10%' x='99%' font-size='100%' text-anchor='end' fill='" 
+            & _lightBlue 
+                & "'><tspan class='bolder'> " 
+                    & _secondLineEndText 
+                        & "</tspan></text>" 
+        & "<text y='17%' x='99%' font-size='60%' text-anchor='end'  fill='" 
+            & _lightGrey 
+                & "'><tspan> " 
+                    & COALESCE( COUNTROWS ( FILTER ( _preparedTbl, [@target]  >= [@val] ) ), 0 )  
+                        & "</tspan> " 
+                            & _thirdLineMiddleText 
+                                & "<tspan>" 
+                                    & _rowCounter 
+                                        & "</tspan> " 
+                                            & _thirdLineEndText 
+                                                & "</text>
+    </g>"
+
+/* FINAL SVG */
+VAR SVGImageURL = _svgDeclaration & _svgHeader & _style & _initialText & _columns & _xAxisLabels & _targetLine & _svgEnd
+RETURN SVGImageURL
