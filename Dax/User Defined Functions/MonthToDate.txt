@@ -1,6 +1,6 @@
 createOrReplace
 
-	function MonthToDate = ```
+	function MonthToDate = 
 			(
 						CalcValue : ANYREF EXPR,
 			        	dateTable : ANYREF EXPR,
@@ -57,7 +57,7 @@ createOrReplace
 			
 			RETURN 
 				Output
-			```
+			
     annotation PackageId = FosterBIServices.MonthToDate
 
     annotation PackageVersion = 0.1.0-beta

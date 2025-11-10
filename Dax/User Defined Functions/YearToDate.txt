@@ -1,6 +1,6 @@
 createOrReplace
 
-	function YearToDate = ```
+	function YearToDate = 
 			(
 						CalcValue : ANYREF EXPR,
 			        	dateTable : ANYREF EXPR,
@@ -41,7 +41,7 @@ createOrReplace
 			
 			RETURN 
 				Result
-			```
+			
     annotation PackageId = FosterBIServices.YearToDate
 
     annotation PackageVersion = 0.1.0-beta
