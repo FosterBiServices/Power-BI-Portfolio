@@ -1,0 +1,23 @@
+
+colsToFix = {
+    "Numerator (PY18)", "Denominator (PY18)", "Actual (PY18)",
+    "Numerator (PY19)", "Denominator (PY19)", "Actual (PY19)",
+    "Numerator (PY20)", "Denominator (PY20)", "Actual (PY20)",
+    "Numerator (PY21)", "Denominator (PY21)", "Actual (PY21)",
+    "Numerator (PY22)", "Denominator (PY22)", "Actual (PY22)",
+    "Numerator (PY23)", "Denominator (PY23)", "Actual (PY23)",
+    "Numerator (PY24)", "Denominator (PY24)", "Actual (PY24)"
+},
+
+// Keep only those columns that actually exist in the table
+existingCols = List.Intersect({colsToFix, Table.ColumnNames(#"Removed Columns")}),
+
+// Build the transformation list dynamically
+transformList = List.Transform(
+    existingCols,
+    each { _, (val) => if val = "" then null else Number.From(val), type number }
+),
+
+// Apply transformations safely
+#"Transform columns" =
+    Table.TransformColumns(#"Removed Columns", transformList)

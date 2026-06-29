@@ -1,0 +1,89 @@
+    /*****************************************
+    * REUSABLE SAFE HELPERS
+    *****************************************/
+    SafeDuplicate =
+        (tbl as table, col as text, newCol as text) as table =>
+            if Table.HasColumns(tbl, col) then
+                Table.DuplicateColumn(tbl, col, newCol)
+            else
+                tbl,
+
+    SafeRemove =
+        (tbl as table, cols as list) as table =>
+            Table.RemoveColumns(tbl, cols, MissingField.Ignore),
+
+    SafeMapReplace =
+        (tbl as table, col as text, map as record) as table =>
+            if Table.HasColumns(tbl, col) then
+                Table.TransformColumns(
+                    tbl,
+                    { { col, each Record.FieldOrDefault(map, _, _), type text } }
+                )
+            else
+                tbl,
+
+
+    /*****************************************
+    * DUPLICATION & MERGE (SAFE)
+    *****************************************/
+    AfterDuplication =
+        SafeDuplicate(
+            SafeDuplicate(
+                StandardizedBusinessLine,
+                "RD Formula",
+                "RD Formula - Copy"
+            ),
+            "Business Line",
+            "Business Line - Copy"
+        ),
+
+    ColumnsToMerge =
+        List.Intersect({
+            {"RD Formula - Copy", "Business Line - Copy"},
+            Table.ColumnNames(AfterDuplication)
+        }),
+
+    MergedColumns =
+        if List.Count(ColumnsToMerge) > 0 then
+            Table.CombineColumns(
+                AfterDuplication,
+                ColumnsToMerge,
+                Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),
+                "Merged Column"
+            )
+        else
+            AfterDuplication,
+			
+    /*****************************************
+    * REMOVE VOLATILE / REPORTING COLUMNS
+    *****************************************/
+    CleanedColumns =
+        SafeRemove(
+            AddedLoB,
+            {
+                "# of Contract Parents",
+                "# of Projects",
+                "# of Active Projects",
+                "# of Active Employees (Projects)",
+                "Business Manager",
+                "State",
+                "Date Created",
+                "Record Owner",
+                "Related Business Line (Parent ID)",
+                "Parent Description (Short)",
+                "Related RD (Parent ID)",
+                "Record ID#"
+            }
+        ),
+
+    /*****************************************
+    * TYPE RD CORRECTIONS (DATA‑DRIVEN)
+    *****************************************/
+    TypeRDMap =
+        [
+            #"Mark Douglass,Job Corps" = "Mark Douglass,Career Centers",
+            #"Kenneth McCoy,Career Centers" = "Kenneth McCoy,Agilec"
+        ],
+
+    StandardizedTypeRD =
+        SafeMapReplace(CleanedColumns, "TypeRD", TypeRDMap),
