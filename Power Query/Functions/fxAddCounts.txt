@@ -1,0 +1,64 @@
+// fnAddCounts
+let
+    Source = (
+    SourceTable as table
+)
+as table =>
+let
+    NumberColumns =
+        List.Select(
+            Table.ColumnNames(SourceTable),
+            each
+                Text.Contains(_, ".") and
+                (try Number.From(Text.BeforeDelimiter(_, ".")) otherwise null) <> null
+                    and _ <> "20.  QA1  Completed"
+                    and _ <> "18.  QA1 Completed"
+                    and _ <> "21.  QA2 Completed"
+        ),
+
+    AddCounts =
+        Table.AddColumn(
+            SourceTable,
+            "Counts",
+            each
+                let
+                    Values =
+                        Record.ToList(
+                            Record.SelectFields(_, NumberColumns)
+                        )
+                in
+                    [
+                        CountOfZeros = List.Count(List.Select(Values, each _ = 0)),
+                        CountOfOnes = List.Count(List.Select(Values, each _ = 1)),
+                        CountOfTwos = List.Count(List.Select(Values, each _ = 2)),
+                        Eligible = List.Count(List.Select(Values, each _ = 0 or _ = 1))
+                    ],
+            type record
+        ),
+
+        ExpandCounts =
+            Table.ExpandRecordColumn(
+                AddCounts,
+                "Counts",
+                {
+                    "CountOfZeros",
+                    "CountOfOnes",
+                    "CountOfTwos",
+                    "Eligible"
+                }
+            ), 
+        SetTypes =
+        Table.TransformColumnTypes(
+            ExpandCounts,
+            {
+                {"CountOfZeros", Int64.Type},
+                {"CountOfOnes", Int64.Type},
+                {"CountOfTwos", Int64.Type},
+                {"Eligible", Int64.Type}
+            }
+        )
+        
+    in
+        SetTypes
+in
+    Source

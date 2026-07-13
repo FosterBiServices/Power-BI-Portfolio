@@ -1,0 +1,19 @@
+    ScoreValidation = Table.AddColumn(
+      Source,
+        "Reason Invalid",
+          each
+            let
+              Value = Text.Trim(Text.From([Response]))
+            in
+              if Value = "" then
+                "Valid"
+              else if List.Contains(
+                {"0", "1", "2"},
+                Value
+              ) then
+                "Valid"
+              else
+                "Invalid Value",
+        type text
+    ),
+    #"Filtered Rows" = Table.SelectRows(ScoreValidation, each ([Reason Invalid] <> "Valid")),
