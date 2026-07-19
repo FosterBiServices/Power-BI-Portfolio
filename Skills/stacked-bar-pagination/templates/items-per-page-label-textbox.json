@@ -1,0 +1,47 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "<ITEMS_LABEL_ID>",
+  "position": {
+    "x": <LABEL_POS_X>,
+    "y": <LABEL_POS_Y>,
+    "z": <LABEL_POS_Z>,
+    "height": <LABEL_POS_HEIGHT>,
+    "width": <LABEL_POS_WIDTH>,
+    "tabOrder": <LABEL_TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  { "value": "<ITEMS_LABEL_TEXT_LINE1>", "textStyle": { "fontSize": "<ITEMS_LABEL_FONT_SIZE>" } },
+                  { "value": " ", "textStyle": { "fontSize": "<ITEMS_LABEL_FONT_SIZE>", "color": "<ITEMS_LABEL_SPACER_COLOR_HEX>" } },
+                  { "value": "<ITEMS_LABEL_TEXT_LINE2>", "textStyle": { "fontSize": "<ITEMS_LABEL_FONT_SIZE>" } }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": { "expr": { "Literal": { "Value": "true" } } },
+            "color": { "solid": { "color": { "expr": { "ThemeDataColor": { "ColorId": <LABEL_BACKGROUND_COLOR_THEME_ID>, "Percent": <LABEL_BACKGROUND_COLOR_PERCENT> } } } } }
+          }
+        }
+      ],
+      "title": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "<ITEMS_GROUP_ID>"
+}

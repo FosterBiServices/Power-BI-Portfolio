@@ -1,0 +1,31 @@
+table '<PAGES_TABLE>'
+
+	measure '<PAGES_VALUE_MEASURE>' = SELECTEDVALUE('<PAGES_TABLE>'[<PAGES_COLUMN>], <PAGES_DEFAULT>)
+		formatString: 0
+
+	measure '<PAGE_FILTER_MEASURE>' = ```
+
+			VAR __FilteredItems = FILTER( ALLSELECTED( '<RANK_TABLE>'[<RANK_COLUMN>] ), [<VALUE_MEASURE>] > 0 )
+			var __ItemTotal =
+			    CALCULATE(
+			        DISTINCTCOUNT( '<RANK_TABLE>'[<RANK_COLUMN>] )
+			        , __FilteredItems
+			    )
+			var __ShowItems = [<ITEMS_VALUE_MEASURE>]
+			var __Pages = ROUNDUP ( DIVIDE( __ItemTotal, __ShowItems ) , 0)
+			var __PageFilter = IF ( SELECTEDVALUE( '<PAGES_TABLE>'[<PAGES_COLUMN>] ) <= __Pages, 1, 0 )
+			RETURN
+			__PageFilter
+			```
+		formatString: 0
+
+	column '<PAGES_COLUMN>'
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition '<PAGES_TABLE>' = calculated
+		mode: import
+		source = GENERATESERIES(1, <PAGES_SERIES_MAX>, 1)

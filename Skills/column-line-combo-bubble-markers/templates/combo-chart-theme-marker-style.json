@@ -1,0 +1,11 @@
+{
+  "lineClusteredColumnComboChart": {
+    "*": {
+      "lineStyles": [
+        {
+          "markerSize": <MARKER_SIZE>
+        }
+      ]
+    }
+  }
+}

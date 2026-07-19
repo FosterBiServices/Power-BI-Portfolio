@@ -1,0 +1,221 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "<VISUAL_ID>",
+  "position": {
+    "x": <POS_X>,
+    "y": <POS_Y>,
+    "z": <POS_Z>,
+    "height": <POS_HEIGHT>,
+    "width": <POS_WIDTH>,
+    "tabOrder": <TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "<VISUAL_TYPE>",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": { "SourceRef": { "Entity": "<CATEGORY_TABLE>" } },
+                  "Property": "<CATEGORY_COLUMN>"
+                }
+              },
+              "queryRef": "<CATEGORY_TABLE>.<CATEGORY_COLUMN>",
+              "nativeQueryRef": "<CATEGORY_COLUMN>",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+                  "Property": "<SPACER_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE>.<SPACER_MEASURE_NAME>",
+              "nativeQueryRef": "<SPACER_MEASURE_NAME>"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+                  "Property": "<VALUE_MEASURE>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE>.<VALUE_MEASURE>",
+              "nativeQueryRef": "<VALUE_MEASURE>"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+                "Property": "<VALUE_MEASURE>"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "show": { "expr": { "Literal": { "Value": "true" } } },
+            "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } },
+            "show": { "expr": { "Literal": { "Value": "false" } } }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "showGradientLegend": { "expr": { "Literal": { "Value": "false" } } },
+            "show": { "expr": { "Literal": { "Value": "false" } } }
+          }
+        }
+      ],
+      "totals": [
+        {
+          "properties": {
+            "show": { "expr": { "Literal": { "Value": "false" } } },
+            "enableBackground": { "expr": { "Literal": { "Value": "false" } } }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": { "ColorId": <BAR_COLOR_THEME_ID>, "Percent": <BAR_COLOR_PERCENT> }
+                  }
+                }
+              }
+            }
+          },
+          "selector": { "metadata": "<MEASURES_TABLE>.<SPACER_MEASURE_NAME>" }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": { "expr": { "Literal": { "Value": "true" } } },
+            "labelDisplayUnits": { "expr": { "Literal": { "Value": "<LABEL_DISPLAY_UNITS>" } } },
+            "labelPrecision": { "expr": { "Literal": { "Value": "<LABEL_PRECISION>" } } }
+          }
+        },
+        {
+          "properties": {
+            "dynamicLabelValue": {
+              "expr": {
+                "Measure": {
+                  "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+                  "Property": "<PERCENT_MEASURE_NAME>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [ { "dataViewWildcard": { "matchingOption": 1 } } ],
+            "metadata": "<MEASURES_TABLE>.<SPACER_MEASURE_NAME>",
+            "highlightMatching": 1
+          }
+        },
+        {
+          "properties": {
+            "showSeries": { "expr": { "Literal": { "Value": "true" } } },
+            "labelPosition": { "expr": { "Literal": { "Value": "'Auto'" } } },
+            "enableTitleDataLabel": { "expr": { "Literal": { "Value": "false" } } },
+            "enableDetailDataLabel": { "expr": { "Literal": { "Value": "false" } } },
+            "enableBackground": { "expr": { "Literal": { "Value": "false" } } },
+            "backgroundTransparency": { "expr": { "Literal": { "Value": "0D" } } },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": { "ThemeDataColor": { "ColorId": <SPACER_LABEL_COLOR_THEME_ID>, "Percent": <SPACER_LABEL_COLOR_PERCENT> } }
+                }
+              }
+            },
+            "fontSize": { "expr": { "Literal": { "Value": "<SPACER_LABEL_FONT_SIZE>" } } }
+          },
+          "selector": { "metadata": "<MEASURES_TABLE>.<SPACER_MEASURE_NAME>" }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": { "expr": { "Literal": { "Value": "'<TITLE_TEXT>'" } } },
+            "background": { "solid": { "color": { "expr": { "Literal": { "Value": "null" } } } } },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": { "ThemeDataColor": { "ColorId": <TITLE_FONT_COLOR_THEME_ID>, "Percent": <TITLE_FONT_COLOR_PERCENT> } }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "<FILTER_ID_CATEGORY>",
+        "field": {
+          "Column": {
+            "Expression": { "SourceRef": { "Entity": "<CATEGORY_TABLE>" } },
+            "Property": "<CATEGORY_COLUMN>"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "<FILTER_ID_SPACER>",
+        "field": {
+          "Measure": {
+            "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+            "Property": "<SPACER_MEASURE_NAME>"
+          }
+        },
+        "type": "Advanced",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "<FILTER_ID_VALUE>",
+        "field": {
+          "Measure": {
+            "Expression": { "SourceRef": { "Entity": "<MEASURES_TABLE>" } },
+            "Property": "<VALUE_MEASURE>"
+          }
+        },
+        "type": "Advanced",
+        "isHiddenInViewMode": true
+      }
+    ]
+  }
+}

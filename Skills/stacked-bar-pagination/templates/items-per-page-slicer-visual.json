@@ -1,0 +1,105 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "<ITEMS_SLICER_ID>",
+  "position": {
+    "x": <ITEMS_SLICER_POS_X>,
+    "y": <ITEMS_SLICER_POS_Y>,
+    "z": <ITEMS_SLICER_POS_Z>,
+    "height": <ITEMS_SLICER_POS_HEIGHT>,
+    "width": <ITEMS_SLICER_POS_WIDTH>,
+    "tabOrder": <ITEMS_SLICER_TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "<ITEMS_TABLE>" } }, "Property": "<ITEMS_COLUMN>" } },
+              "queryRef": "<ITEMS_TABLE>.<ITEMS_COLUMN>",
+              "nativeQueryRef": "<ITEMS_COLUMN>",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          { "field": { "Column": { "Expression": { "SourceRef": { "Entity": "<ITEMS_TABLE>" } }, "Property": "<ITEMS_COLUMN>" } }, "direction": "Ascending" }
+        ]
+      }
+    },
+    "objects": {
+      "data": [
+        { "properties": { "mode": { "expr": { "Literal": { "Value": "'Single'" } } } } }
+      ],
+      "slider": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } }, "color": { "solid": { "color": { "expr": { "ThemeDataColor": { "ColorId": <ITEMS_SLICER_SLIDER_COLOR_THEME_ID>, "Percent": 0 } } } } } } }
+      ],
+      "numericInputStyle": [
+        {
+          "properties": {
+            "fontColor": { "solid": { "color": { "expr": { "ThemeDataColor": { "ColorId": <ITEMS_SLICER_INPUT_FONT_COLOR_THEME_ID>, "Percent": 0 } } } } },
+            "bold": { "expr": { "Literal": { "Value": "true" } } },
+            "background": { "solid": { "color": { "expr": { "ThemeDataColor": { "ColorId": <ITEMS_SLICER_INPUT_BG_COLOR_THEME_ID>, "Percent": <ITEMS_SLICER_INPUT_BG_COLOR_PERCENT> } } } } },
+            "textSize": { "expr": { "Literal": { "Value": "<ITEMS_SLICER_TEXT_SIZE>" } } }
+          }
+        }
+      ],
+      "header": [
+        { "properties": { "outlineStyle": { "expr": { "Literal": { "Value": "0D" } } }, "show": { "expr": { "Literal": { "Value": "false" } } } } }
+      ],
+      "pendingChangesIcon": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }
+      ],
+      "general": [
+        {
+          "properties": {
+            "responsive": { "expr": { "Literal": { "Value": "false" } } },
+            "orientation": { "expr": { "Literal": { "Value": "0D" } } },
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [ { "Name": "#", "Entity": "<ITEMS_TABLE>", "Type": 0 } ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "Comparison": {
+                        "ComparisonKind": 0,
+                        "Left": { "Column": { "Expression": { "SourceRef": { "Source": "#" } }, "Property": "<ITEMS_COLUMN>" } },
+                        "Right": { "Literal": { "Value": "<ITEMS_DEFAULT>D" } }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "selection": [
+        { "properties": { "strictSingleSelect": { "expr": { "Literal": { "Value": "true" } } } } }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        { "properties": { "text": { "expr": { "Literal": { "Value": "'<ITEMS_SLICER_TITLE>'" } } } } }
+      ],
+      "background": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "<ITEMS_GROUP_ID>",
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "<FILTER_ID_ITEMS_COLUMN>",
+        "field": { "Column": { "Expression": { "SourceRef": { "Entity": "<ITEMS_TABLE>" } }, "Property": "<ITEMS_COLUMN>" } },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

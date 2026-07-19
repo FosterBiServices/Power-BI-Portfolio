@@ -1,0 +1,16 @@
+	measure '<SPACER_MEASURE_NAME>' = ```
+
+			var __Spacing =
+			CALCULATE(
+			    MAXX ( <CATEGORY_TABLE>, [<VALUE_MEASURE>] )
+			    , ALLSELECTED( <CATEGORY_TABLE>[<CATEGORY_COLUMN>] )
+			)
+			RETURN
+			IF ( ISBLANK([<VALUE_MEASURE>]), BLANK(),
+			__Spacing * <SPACER_RATIO>
+			)
+			```
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '<PERCENT_MEASURE_NAME>' = DIVIDE ( [<VALUE_MEASURE>], CALCULATE ( [<VALUE_MEASURE>], ALLSELECTED ( <CATEGORY_TABLE>[<CATEGORY_COLUMN>] ) ) )
+		formatString: <PERCENT_FORMAT_STRING>

@@ -1,0 +1,231 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.8.0/schema.json",
+  "name": "<SLICER_VISUAL_ID>",
+  "position": {
+    "x": <SLICER_POS_X>,
+    "y": <SLICER_POS_Y>,
+    "z": <SLICER_POS_Z>,
+    "height": <SLICER_HEIGHT>,
+    "width": <SLICER_WIDTH>,
+    "tabOrder": <SLICER_TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<SLICER_TABLE_NAME>"
+                    }
+                  },
+                  "Property": "<DATE_COLUMN_NAME>"
+                }
+              },
+              "queryRef": "<SLICER_TABLE_NAME>.<DATE_COLUMN_NAME>",
+              "nativeQueryRef": "<DATE_COLUMN_NAME>",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "<SLICER_TABLE_NAME>"
+                  }
+                },
+                "Property": "<DATE_COLUMN_NAME>"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "startDate": {
+              "expr": {
+                "Literal": {
+                  "Value": "<DEFAULT_WINDOW_START_LITERAL>"
+                }
+              }
+            },
+            "endDate": {
+              "expr": {
+                "Literal": {
+                  "Value": "<DEFAULT_WINDOW_END_LITERAL>"
+                }
+              }
+            },
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "d",
+                    "Entity": "<SLICER_TABLE_NAME>",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "And": {
+                        "Left": {
+                          "Comparison": {
+                            "ComparisonKind": 2,
+                            "Left": {
+                              "Column": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "d"
+                                  }
+                                },
+                                "Property": "<DATE_COLUMN_NAME>"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "<FILTER_WINDOW_START_LITERAL>"
+                              }
+                            }
+                          }
+                        },
+                        "Right": {
+                          "Comparison": {
+                            "ComparisonKind": 3,
+                            "Left": {
+                              "Column": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "d"
+                                  }
+                                },
+                                "Property": "<DATE_COLUMN_NAME>"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "<FILTER_WINDOW_END_EXCLUSIVE_LITERAL>"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "responsive": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "date": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<SLICER_DATE_TEXT_SIZE>"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "<SLICER_FILTER_ID>",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "<SLICER_TABLE_NAME>"
+              }
+            },
+            "Property": "<DATE_COLUMN_NAME>"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

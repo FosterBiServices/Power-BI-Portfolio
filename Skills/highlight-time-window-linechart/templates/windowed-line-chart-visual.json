@@ -1,0 +1,447 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.8.0/schema.json",
+  "name": "<CHART_VISUAL_ID>",
+  "position": {
+    "x": <CHART_POS_X>,
+    "y": <CHART_POS_Y>,
+    "z": <CHART_POS_Z>,
+    "height": <CHART_HEIGHT>,
+    "width": <CHART_WIDTH>,
+    "tabOrder": <CHART_TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<CATEGORY_TABLE_NAME>"
+                    }
+                  },
+                  "Property": "<CATEGORY_COLUMN_NAME>"
+                }
+              },
+              "queryRef": "<CATEGORY_TABLE_NAME>.<CATEGORY_COLUMN_NAME>",
+              "nativeQueryRef": "<CATEGORY_COLUMN_NAME>",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE_NAME>"
+                    }
+                  },
+                  "Property": "<WINDOW_START_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE_NAME>.<WINDOW_START_MEASURE_NAME>",
+              "nativeQueryRef": "<WINDOW_START_MEASURE_NAME>"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE_NAME>"
+                    }
+                  },
+                  "Property": "<WINDOW_END_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE_NAME>.<WINDOW_END_MEASURE_NAME>",
+              "nativeQueryRef": "<WINDOW_END_MEASURE_NAME>"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE_NAME>"
+                    }
+                  },
+                  "Property": "<BASE_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE_NAME>.<BASE_MEASURE_NAME>",
+              "nativeQueryRef": "<BASE_MEASURE_NAME>"
+            },
+            {
+              "field": {
+                "NativeVisualCalculation": {
+                  "Language": "dax",
+                  "Expression": "\r\nIF (\r\n    [<CATEGORY_COLUMN_NAME>] >= [<WINDOW_START_MEASURE_NAME>]\r\n        && [<CATEGORY_COLUMN_NAME>] <= [<WINDOW_END_MEASURE_NAME>],\r\n    [<BASE_MEASURE_NAME>]\r\n)",
+                  "Name": "<WINDOWED_CALC_NAME>"
+                }
+              },
+              "queryRef": "select",
+              "nativeQueryRef": "<WINDOWED_CALC_NAME>"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "<CATEGORY_TABLE_NAME>"
+                  }
+                },
+                "Property": "<CATEGORY_COLUMN_NAME>"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "xAxisReferenceLine": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "displayName": {
+              "expr": {
+                "Literal": {
+                  "Value": "<REF_LINE_END_LABEL>"
+                }
+              }
+            },
+            "value": {
+              "expr": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "<SLICER_TABLE_NAME>"
+                        }
+                      },
+                      "Property": "<DATE_COLUMN_NAME>"
+                    }
+                  },
+                  "Function": 4
+                }
+              }
+            },
+            "shadeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "shadeRegion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'before'"
+                }
+              }
+            },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'back'"
+                }
+              }
+            },
+            "shadeTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "<SHADE_TRANSPARENCY_END>"
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "<REF_LINE_WIDTH>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "<REF_LINE_END_SELECTOR_ID>"
+          }
+        },
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "displayName": {
+              "expr": {
+                "Literal": {
+                  "Value": "<REF_LINE_START_LABEL>"
+                }
+              }
+            },
+            "value": {
+              "expr": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "<SLICER_TABLE_NAME>"
+                        }
+                      },
+                      "Property": "<DATE_COLUMN_NAME>"
+                    }
+                  },
+                  "Function": 3
+                }
+              }
+            },
+            "shadeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "shadeRegion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'before'"
+                }
+              }
+            },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'back'"
+                }
+              }
+            },
+            "shadeColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <SHADE_COLOR_THEME_ID>,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "shadeTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "<SHADE_TRANSPARENCY_START>"
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "<REF_LINE_WIDTH>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "<REF_LINE_START_SELECTOR_ID>"
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "markerColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <ACCENT_COLOR_THEME_ID>,
+                      "Percent": <ACCENT_COLOR_PERCENT>
+                    }
+                  }
+                }
+              }
+            },
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<WINDOWED_MARKER_SIZE>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "select"
+          }
+        },
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<DEFAULT_MARKER_SIZE>"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE_NAME>.<BASE_MEASURE_NAME>"
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <ACCENT_COLOR_THEME_ID>,
+                      "Percent": <ACCENT_COLOR_PERCENT>
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_FONT_SIZE>"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "showSeries": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE_NAME>.<BASE_MEASURE_NAME>"
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<CATEGORY_AXIS_FONT_SIZE>"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "<CHART_TITLE>"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
