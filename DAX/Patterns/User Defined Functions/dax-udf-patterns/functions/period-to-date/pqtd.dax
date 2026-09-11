@@ -1,0 +1,25 @@
+/// Evaluates an expression through the corresponding elapsed point in the prior quarter.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorQuarterToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _CurrentStartMonth = INT((MONTH(_LatestDate) - 1) / 3) * 3 + 1
+VAR _CurrentStart = DATE(YEAR(_LatestDate), _CurrentStartMonth, 1)
+VAR _ElapsedDays = _LatestDate - _CurrentStart
+VAR _StartDate = EDATE(_CurrentStart, -3)
+VAR _PeriodEnd = _CurrentStart - 1
+VAR _EndDate = MIN(_StartDate + _ElapsedDays, _PeriodEnd)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result

@@ -1,0 +1,88 @@
+// Pattern: CARD_COLUMNS_TARGET | Card with Columns and Target
+// Purpose: Returns an SVG KPI card with columns, a target line, period labels, and summary text.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _space = 5
+VAR _maximumColumnWidth = 400
+VAR _rounding = 5
+VAR _width = 413.33
+VAR _height = 290
+VAR _textHeight = _height * 0.30
+VAR _data =
+  ADDCOLUMNS(
+    SUMMARIZE(
+      <DATE_TABLE>,
+      <DATE_TABLE>[&PERIOD_FIELD&],
+      <DATE_TABLE>[&PERIOD_SORT_FIELD&]
+    ),
+    "@Value", [#VALUE_MEASURE#],
+    "@Target", [#TARGET_MEASURE#],
+    "@Variance", [#VARIANCE_MEASURE#]
+  )
+VAR _prepared =
+  ADDCOLUMNS(
+    _data,
+    "@Row",
+      ROWNUMBER(
+        _data,
+        ORDERBY(<DATE_TABLE>[&PERIOD_SORT_FIELD&], ASC)
+      )
+  )
+VAR _maximumValue = MAXX(_prepared, [@Value])
+VAR _maximumTarget = MAXX(_prepared, [@Target])
+VAR _scaleMaximum = MAX(_maximumValue, _maximumTarget)
+VAR _count = COUNTROWS(_prepared)
+VAR _columnWidth =
+  MIN(
+    _maximumColumnWidth,
+    ROUND(DIVIDE(_width - ((_count + 1) * _space), _count), 1)
+  )
+VAR _columns =
+  CONCATENATEX(
+    _prepared,
+    VAR _color = IF([@Variance] >= 0, "#FF1C0E", "#26FF07")
+    VAR _barHeight = ROUND(DIVIDE([@Value], _scaleMaximum, 0) * (_height * 0.60), 1)
+    VAR _x = (([@Row] - 1) * _columnWidth) + (_space * [@Row])
+    VAR _y = _textHeight + (_height * 0.60) - _barHeight
+    RETURN
+      "<rect x='" & _x & "' y='" & _y & "' width='" & _columnWidth
+        & "' height='" & _barHeight & "' fill='" & _color
+        & "' rx='" & _rounding & "'/>"
+  )
+VAR _targetPoints =
+  CONCATENATEX(
+    _prepared,
+    VAR _x = (([@Row] - 1) * _columnWidth) + (_space * [@Row]) + (_columnWidth / 2)
+    VAR _y = _textHeight + (_height * 0.60) - DIVIDE([@Target], _scaleMaximum, 0) * (_height * 0.60)
+    RETURN FORMAT(_x, "0") & "," & FORMAT(_y, "0"),
+    " ",
+    <DATE_TABLE>[&PERIOD_SORT_FIELD&], ASC
+  )
+VAR _line =
+  "<polyline points='" & _targetPoints
+    & "' stroke='#333333' stroke-width='4' fill='none' stroke-linejoin='round'"
+    & " stroke-linecap='round' stroke-dasharray='8,8'/>"
+VAR _labels =
+  CONCATENATEX(
+    _prepared,
+    VAR _x = (([@Row] - 1) * _columnWidth) + (_space * [@Row]) + (_columnWidth / 2)
+    RETURN
+      "<text x='" & _x & "' y='95%' font-size='10' text-anchor='middle' fill='#808080'>"
+        & <DATE_TABLE>[&PERIOD_FIELD&] & "</text>"
+  )
+VAR _summary =
+  "<text x='4%' y='8%' font-family='Segoe UI' font-size='18' font-weight='600' fill='#333333'>"
+    & "<TITLE_TEXT>" & "</text>"
+    & "<text x='99%' y='8%' text-anchor='end' font-family='Segoe UI' font-size='12' fill='#808080'>"
+    & [#SUMMARY_MEASURE#] & "</text>"
+RETURN
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='"
+    & _width & "' height='" & _height & "'>"
+    & _summary & _columns & _line & _labels & "</svg>"

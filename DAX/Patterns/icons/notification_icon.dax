@@ -1,0 +1,56 @@
+// Pattern: NOTIFICATION_ICON | Notification Icon
+// Purpose: Returns an SVG notification bell with a badge showing the number of actionable groups.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _groups =
+  FILTER(
+    VALUES(<GROUP_TABLE>[&GROUP_FIELD&]),
+    <GROUP_TABLE>[&GROUP_FIELD&]
+      IN VALUES(<STATUS_TABLE>[&STATUS_GROUP_FIELD&])
+  )
+VAR _status =
+  ADDCOLUMNS(
+    _groups,
+    "@EndDate",
+      CALCULATE(
+        MAX(<STATUS_TABLE>[&END_DATE_FIELD&]),
+        FILTER(
+          ALL(<STATUS_TABLE>),
+          <STATUS_TABLE>[&STATUS_GROUP_FIELD&]
+            = <GROUP_TABLE>[&GROUP_FIELD&]
+        )
+      ),
+    "@ComparisonDate",
+      CALCULATE(
+        MAX(<STATUS_TABLE>[&COMPARISON_DATE_FIELD&]),
+        FILTER(
+          ALL(<STATUS_TABLE>),
+          <STATUS_TABLE>[&STATUS_GROUP_FIELD&]
+            = <GROUP_TABLE>[&GROUP_FIELD&]
+        )
+      )
+  )
+VAR _count = COUNTROWS(FILTER(_status, [@ComparisonDate] <> [@EndDate]))
+VAR _bell =
+  "<path fill-rule='evenodd' clip-rule='evenodd' d='M13.8094 49.875C13.8094 22.33 36.1394 0 63.6844 0C91.2294 0 113.559 22.33 113.559 49.875V76.6935L126.541 102.657C128.93 107.435 125.456 114 119.53 114H91.2867C88.079 126.37 76.859 135.36 63.6844 135.36C50.5098 135.36 39.2898 126.37 36.0822 114H7.83866C1.912 114 -1.562 107.435 0.82766 102.657L13.8094 76.6935V49.875ZM18.2198 99.75H109.156L100.82 83.0632C99.829 81.086 99.3094 78.9052 99.3094 76.6935V49.875C99.3094 30.198 83.361 14.25 63.6844 14.25C44.0078 14.25 28.0594 30.198 28.0594 49.875V76.6935C28.0594 78.9046 27.5446 81.0854 26.556 83.0632L18.2198 99.75Z' fill='#808080'/>"
+VAR _badge =
+  IF(
+    _count > 0,
+    "<circle cx='100' cy='40' r='28' fill='#C00000'/>"
+      & "<text x='100' y='50' font-size='32' text-anchor='middle' fill='white' font-weight='bold'>"
+      & _count & "</text>",
+    ""
+  )
+RETURN
+  IF(
+    _count > 0,
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 128 156'>"
+      & _bell & _badge & "</svg>"
+  )

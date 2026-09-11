@@ -1,0 +1,28 @@
+table '<ITEMS_TABLE>'
+
+	measure '<ITEMS_VALUE_MEASURE>' = SELECTEDVALUE('<ITEMS_TABLE>'[<ITEMS_COLUMN>], <ITEMS_DEFAULT>)
+		formatString: 0
+
+	measure '<ITEM_FILTER_MEASURE>' = ```
+
+			var __Result = [<VALUE_MEASURE>]
+			var __Pages = [<PAGES_VALUE_MEASURE>]
+			var __Items = [<ITEMS_VALUE_MEASURE>]
+			VAR __ItemRank = [<RANK_MEASURE>]
+			VAR __FilteredItems = FILTER( ALLSELECTED( '<RANK_TABLE>'[<RANK_COLUMN>] ), __ItemRank > (__Pages - 1) * __Items && __ItemRank <= (__Pages) * __Items )
+			VAR __ItemsShow = IF ( ISBLANK(__Result), 0, IF ( SELECTEDVALUE( '<RANK_TABLE>'[<RANK_COLUMN>] ) IN __FilteredItems, 1, 0 ) )
+			RETURN
+			__ItemsShow
+			```
+		formatString: 0
+
+	column '<ITEMS_COLUMN>'
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition '<ITEMS_TABLE>' = calculated
+		mode: import
+		source = GENERATESERIES(1, <ITEMS_SERIES_MAX>, 1)

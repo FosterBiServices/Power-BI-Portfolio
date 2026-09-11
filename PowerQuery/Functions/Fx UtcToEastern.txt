@@ -1,0 +1,53 @@
+// fxUtcToEastern (fixed)
+// Converts a UTC timestamp to US Eastern, applying US DST rules (2007+):
+//   DST starts: 2nd Sunday in March @ 02:00 local  (== 07:00 UTC before the jump)
+//   DST ends:   1st Sunday in November @ 02:00 local (== 06:00 UTC before the fall back)
+// Returns datetime (no zone) by default. Pass KeepZone = true to return datetimezone.
+(DateTimeValue as any, optional KeepZone as nullable logical) as any =>
+let
+    // Normalize the input to a UTC datetimezone value.
+    UtcZoned =
+        if Value.Is(DateTimeValue, type datetimezone) then
+            DateTimeZone.ToUtc(DateTimeZone.From(DateTimeValue))
+        else if DateTimeValue = null then
+            null
+        else
+            // Treat naive values as UTC by *attaching* +00:00 (no clock change).
+            DateTime.AddZone(DateTime.From(DateTimeValue), 0),
+
+    Result =
+        if UtcZoned = null then
+            null
+        else
+            let
+                y = Date.Year(DateTime.Date(UtcZoned)),
+
+                // Helper: "first Sunday ON OR AFTER" a given date
+                firstSundayOnOrAfter = (d as date) as date => Date.StartOfWeek(d, Day.Sunday),
+
+                // --- DST Start: 2nd Sunday in March, 02:00 local (07:00 UTC pre-shift) ---
+                march1 = #date(y, 3, 1),
+                firstSundayMar = firstSundayOnOrAfter(march1),     // If Mar 1 is Sunday -> Mar 1
+                secondSundayMar = firstSundayMar + #duration(7,0,0,0),
+                dstStartUtc = DateTime.AddZone(#datetime(y, 3, Date.Day(secondSundayMar), 7, 0, 0), 0),
+
+                // --- DST End: 1st Sunday in November, 02:00 local (06:00 UTC pre-shift) ---
+                nov1 = #date(y, 11, 1),
+                firstSundayNov = firstSundayOnOrAfter(nov1),       // If Nov 1 is Sunday -> Nov 1
+                dstEndUtc = DateTime.AddZone(#datetime(y, 11, Date.Day(firstSundayNov), 6, 0, 0), 0),
+
+                // Is the UTC instant within the DST interval?
+                isDst = (UtcZoned >= dstStartUtc) and (UtcZoned < dstEndUtc),
+
+                // Eastern offset hours
+                offsetHours = if isDst then -4 else -5,
+
+                // Apply offset while preserving the instant
+                EasternZoned = DateTimeZone.SwitchZone(UtcZoned, offsetHours, 0),
+
+                Keep = if KeepZone = null then false else KeepZone,
+                Output = if Keep then EasternZoned else DateTimeZone.RemoveZone(EasternZoned)
+            in
+                Output
+in
+    Result

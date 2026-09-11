@@ -1,0 +1,58 @@
+let
+  // Data Source
+    Source = Excel.Workbook(Web.Contents("Classified"), true, true),
+  // Step
+    cleaneddata = Source{[Item = "Cleaned", Kind = "Sheet"]}[Data], 
+ TypePairs = {
+    {"CCOMPANY", type text},
+    {"CFISCPER", Int64.Type	},
+    {"CFISCYEAR", Int64.Type},
+    {"CFISCYEARPER", type text},
+    {"CGLACCT", type text},
+    {"CPROFITCTR", type	text},
+    {"KCENDING_BALANCE_CURRCOMP", type number},
+    {"KCPERIOD_BALANCE_CURRCOMP", type number}
+  }, 
+  ExistingCols = Table.ColumnNames(
+    cleaneddata
+  ), 
+  // Keep type rules only for columns that actually exist
+  TypePairsExistingOnly = List.Select(
+    TypePairs, 
+    each List.Contains(
+      ExistingCols, 
+      _{0}
+    )
+  ), 
+  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+  ExplicitTypeMap = Record.FromList(
+    List.Transform(
+      TypePairsExistingOnly, 
+      each _{1}
+    ), 
+    List.Transform(
+      TypePairsExistingOnly, 
+      each _{0}
+    )
+  ), 
+  // - If we specified a type in ExplicitTypeMap, use it.
+  // - Otherwise default to type text.
+  AllTypePairs = List.Transform(
+    ExistingCols, 
+    (c) => {
+      c, 
+      Record.FieldOrDefault(
+        ExplicitTypeMap, 
+        c, 
+        type text
+      )
+    }
+  ), 
+  // Apply types in one go
+  ChangeTypes
+    = Table.TransformColumnTypes(
+    cleaneddata, 
+    AllTypePairs
+  )
+in
+  ChangeTypes

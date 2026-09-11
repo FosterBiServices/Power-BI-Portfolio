@@ -1,0 +1,73 @@
+### This is not working properly, please do not implement. 
+
+let
+    DynamicTypeInference = (Source as table) =>
+
+let
+    // Helper: Check if column contains date-like values
+    IsDateColumn = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Text.Contains(Text.From(_), "-") or Text.Contains(Text.From(_), "/") then Date.From(_) else null
+            otherwise null)
+        ) > 0,
+
+    // Helper: Check if column contains decimal numbers
+    IsDecimalColumn = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Value.Is(_, type number) and Text.Contains(Text.From(_), ".") then _ else null
+            otherwise null)
+        ) = List.NonNullCount(column),
+
+    // Helper: Check if column contains integers
+    IsIntegerColumn = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Value.Is(_, type number) and not Text.Contains(Text.From(_), ".") then _ else null
+            otherwise null)
+        ) = List.NonNullCount(column),
+
+    // Helper: Check for leading zeros
+    HasLeadingZeros = (column as list) as logical =>
+        List.NonNullCount(
+            List.Transform(column, each try 
+                if Text.StartsWith(Text.From(_), "0") then _ else null
+            otherwise null)
+        ) > 0,
+
+    // Build transformation rules dynamically
+    ColumnTransformations = List.Transform(
+        Table.ColumnNames(Source),
+        (colName) =>
+            let
+                column = Table.Column(Source, colName)
+            in
+                if HasLeadingZeros(column) then
+                    {colName, each _, type text}
+                else if IsDateColumn(column) then
+                    {colName, each _, type date}
+                else if IsDecimalColumn(column) then
+                    {colName, each _, type number}
+                else if IsIntegerColumn(column) then
+                    {colName, each _, Int64.Type}
+                else
+                    {colName, each Text.From(_), type text}
+    ),
+
+    // Apply transformations
+    Converted = List.Accumulate(
+        ColumnTransformations,
+        Source,
+        (state, current) =>
+            Table.TransformColumns(
+                state,
+                {{current{0}, current{1}, current{2}}}
+            )
+    )
+
+in
+    Converted
+
+in
+    DynamicTypeInference

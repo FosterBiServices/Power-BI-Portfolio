@@ -1,0 +1,11 @@
+(SourceTable as table) as list =>
+    List.Select(
+        Table.ColumnNames(SourceTable),
+        each
+            Text.Contains(_, ".")
+            and
+            (try Number.From(Text.BeforeDelimiter(_, ".")) otherwise null) <> null
+            and _ <> "20.  QA1  Completed"
+            and _ <> "18.  QA1 Completed"
+            and _ <> "21.  QA2 Completed"
+    )

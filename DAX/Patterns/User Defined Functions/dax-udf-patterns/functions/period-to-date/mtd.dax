@@ -1,0 +1,20 @@
+/// Evaluates an expression from the first day of the current month through the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION MonthToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate), MONTH(_LatestDate), 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _LatestDate
+  )
+RETURN
+  _Result

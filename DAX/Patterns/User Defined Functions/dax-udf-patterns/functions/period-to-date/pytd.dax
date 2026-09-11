@@ -1,0 +1,22 @@
+/// Evaluates an expression through the corresponding elapsed point in the prior year.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYearToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate) - 1, 1, 1)
+VAR _CandidateEnd = DATE(YEAR(_LatestDate) - 1, MONTH(_LatestDate), DAY(_LatestDate))
+VAR _EndDate = MIN(_CandidateEnd, DATE(YEAR(_LatestDate) - 1, 12, 31))
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result

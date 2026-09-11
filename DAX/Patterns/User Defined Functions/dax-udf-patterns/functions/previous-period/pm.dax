@@ -1,0 +1,17 @@
+/// Evaluates an expression in the current date context shifted back one month.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorMonth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    DATEADD(dateColumn, -1, MONTH)
+  )
+RETURN
+  _Result

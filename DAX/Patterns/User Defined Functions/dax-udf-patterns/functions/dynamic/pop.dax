@@ -1,0 +1,28 @@
+/// Returns growth versus the previous month, quarter, or year according to hierarchy scope.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @param {ANYREF EXPR} yearColumn - Year hierarchy column.
+/// @param {ANYREF EXPR} quarterColumn - Quarter hierarchy column.
+/// @param {ANYREF EXPR} monthColumn - Month hierarchy column.
+/// @returns A decimal growth ratio.
+FUNCTION PeriodOverPeriod = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR,
+    yearColumn : ANYREF EXPR,
+    quarterColumn : ANYREF EXPR,
+    monthColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = CalcValue
+VAR _PriorValue =
+  SWITCH(
+    TRUE(),
+    ISINSCOPE(monthColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, MONTH)),
+    ISINSCOPE(quarterColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, QUARTER)),
+    ISINSCOPE(yearColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, YEAR)),
+    BLANK()
+  )
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result

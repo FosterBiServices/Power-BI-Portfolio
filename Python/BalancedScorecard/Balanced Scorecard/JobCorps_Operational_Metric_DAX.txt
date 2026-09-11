@@ -1,0 +1,251 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+JobCorps Operational Metric Layout =
+DATATABLE(
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {1, "Average APM Rank", "_rank"},
+    {2, "Average APM Rating", "_rating"},
+    {3, "OBS", "_obs"},
+    {4, "Ordinary Separation %", "_seperation"},
+    {5, "90-Day Retention", "_retention"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = " "
+
+/* ============================================================
+   TIME PLACEHOLDERS
+   ============================================================ */
+
+VAR _year = [Current Fiscal Year]
+
+VAR _month3 = [Month Year Prior 2]
+
+VAR _month2 = [Month Year Prior 1]
+
+VAR _month1 = [Month Year Current]
+
+VAR _displayMonth3 = [Month Display Prior 2]
+
+VAR _displayMonth2 = [Month Display Prior 1]
+
+VAR _displayMonth1 = [Month Display Current]
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE PLACEHOLDERS
+   ============================================================ */
+
+VAR __rankYtd = BLANK() // Average APM Rank YTD
+VAR __rankMonth3 = BLANK() // Average APM Rank
+VAR __rankMonth2 = BLANK() // Average APM Rank
+VAR __rankMonth = BLANK() // Average APM Rank
+
+VAR __ratingYtd = BLANK() // Average APM Rating YTD
+VAR __ratingMonth3 = BLANK() // Average APM Rating
+VAR __ratingMonth2 = BLANK() // Average APM Rating
+VAR __ratingMonth = BLANK() // Average APM Rating
+
+VAR __obsYtd = BLANK() // OBS YTD
+VAR __obsMonth3 = BLANK() // OBS
+VAR __obsMonth2 = BLANK() // OBS
+VAR __obsMonth = BLANK() // OBS
+
+VAR __seperationYtd = BLANK() // Ordinary Separation % YTD
+VAR __seperationMonth3 = BLANK() // Ordinary Separation %
+VAR __seperationMonth2 = BLANK() // Ordinary Separation %
+VAR __seperationMonth = BLANK() // Ordinary Separation %
+
+VAR __retentionYtd = BLANK() // 90-Day Retention YTD
+VAR __retentionMonth3 = BLANK() // 90-Day Retention
+VAR __retentionMonth2 = BLANK() // 90-Day Retention
+VAR __retentionMonth = BLANK() // 90-Day Retention
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE STATUS
+   ============================================================ */
+
+VAR __rankStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__rankMonth), BLANK(),
+        __rankMonth >= 100, "red",
+        __rankMonth >= 25, "amber",
+        "green"
+    )
+
+VAR __ratingStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__ratingMonth), BLANK(),
+        __ratingMonth >= 0.15, "red",
+        __ratingMonth >= 0.1, "amber",
+        "green"
+    )
+
+VAR __obsStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__obsMonth), BLANK(),
+        __obsMonth >= 0.2, "red",
+        __obsMonth >= 0.15, "amber",
+        "green"
+    )
+
+VAR __seperationStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__seperationMonth), BLANK(),
+        __seperationMonth >= 0.25, "red",
+        __seperationMonth >= 0.2, "amber",
+        "green"
+    )
+
+VAR __retentionStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__retentionMonth), BLANK(),
+        __retentionMonth >= 0.3, "red",
+        __retentionMonth >= 0.25, "amber",
+        "green"
+    )
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _operationalRows =
+    CONCATENATEX(
+        'JobCorps Operational Metric Layout',
+        VAR _metricKey = [MetricKey]
+
+    VAR _status =
+        SWITCH(
+            _metricKey,
+            "_rank", __rankStatus,
+            "_rating", __ratingStatus,
+            "_obs", __obsStatus,
+            "_seperation", __seperationStatus,
+            "_retention", __retentionStatus
+        )
+
+    VAR _ytd =
+        SWITCH(
+            _metricKey,
+            "_rank", __rankYtd,
+            "_rating", __ratingYtd,
+            "_obs", __obsYtd,
+            "_seperation", __seperationYtd,
+            "_retention", __retentionYtd
+        )
+
+    VAR _monthPrior2 =
+        SWITCH(
+            _metricKey,
+            "_rank", __rankMonth3,
+            "_rating", __ratingMonth3,
+            "_obs", __obsMonth3,
+            "_seperation", __seperationMonth3,
+            "_retention", __retentionMonth3
+        )
+
+    VAR _monthPrior1 =
+        SWITCH(
+            _metricKey,
+            "_rank", __rankMonth2,
+            "_rating", __ratingMonth2,
+            "_obs", __obsMonth2,
+            "_seperation", __seperationMonth2,
+            "_retention", __retentionMonth2
+        )
+
+    VAR _currentMonth =
+        SWITCH(
+            _metricKey,
+            "_rank", __rankMonth,
+            "_rating", __ratingMonth,
+            "_obs", __obsMonth,
+            "_seperation", __seperationMonth,
+            "_retention", __retentionMonth
+        )
+
+    VAR _formatString =
+        SWITCH(
+            _metricKey,
+            "_rank", "#,##0",
+            "_rating", "#,##0.0",
+            "_obs", "0.0%",
+            "_seperation", "0.0%",
+            "_retention", "0.0%"
+        )
+
+        RETURN
+            "<tr>" &
+            "<td class=label>" & [MetricName] & "</td>" &
+            "<td class='status'>" &
+                "<span class='dot " &
+                    COALESCE(_status, "") &
+                "'></span>" &
+            "</td>" &
+            "<td class='number'>" &
+                IF(
+                    ISBLANK(_ytd),
+                    "",
+                    FORMAT(_ytd, _formatString)
+                ) &
+            "</td>" &
+            "</tr>",
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT(_year,2),"##") & " YTD</th>
+            <th>" & _displayMonth3 & "</th>
+            <th>" & _displayMonth2 & "</th>
+            <th>" & _displayMonth1 & "</th>
+            <th>" & _trending & "</th>
+          </tr>" &
+
+    _operationalRows &
+
+    "
+        </table>
+      </td>
+      <td class='right commentbackground'>
+        <div class='commentsheader'></div>
+        <div class='commentary'></div>
+      </td>
+    </tr>
+    "

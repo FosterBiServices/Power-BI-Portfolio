@@ -1,0 +1,23 @@
+// Pattern: PQC | Previous quarter complete
+// Purpose: Evaluates the complete quarter immediately before the quarter containing the last visible date.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> PQC =
+VAR _AnchorDate = MAX(<DATE_TABLE>[&DATE_FIELD&])
+VAR _CurrentStart = DATE(YEAR(_AnchorDate), INT((MONTH(_AnchorDate) - 1) / 3) * 3 + 1, 1)
+VAR _StartDate = EDATE(_CurrentStart, -3)
+VAR _EndDate = _CurrentStart - 1
+VAR _Result =
+  CALCULATE(
+    [#VALUE_MEASURE#],
+    REMOVEFILTERS(<DATE_TABLE>),
+    DATESBETWEEN(<DATE_TABLE>[&DATE_FIELD&], _StartDate, _EndDate)
+  )
+RETURN
+  _Result

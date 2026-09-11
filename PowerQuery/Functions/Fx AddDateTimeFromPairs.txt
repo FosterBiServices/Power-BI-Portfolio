@@ -1,0 +1,135 @@
+let
+  fxAddDateTimeFromPairs =
+    (
+      InputTable as table,
+      Pairs      as list,                 // e.g., { {"opened_at","Opened at"}, {"resolved_at","Resolved at"} }
+      optional Options as nullable record // [ KeepOriginalColumns = true, Overwrite = true, Culture = null ]
+    )
+    as table =>
+    let
+      // ----- Options -----
+      opts         = if Options = null then [] else Options,
+      KeepOriginal = Record.FieldOrDefault(opts, "KeepOriginalColumns", true),
+      Overwrite    = Record.FieldOrDefault(opts, "Overwrite", true),
+      Culture      = Record.FieldOrDefault(opts, "Culture", null),
+
+      // ----- Helpers -----
+      FeatureNames = (p as text) as list =>
+        {
+          p & " date",
+          p & " time",
+          p & " datekey"
+        },
+
+      // Parse text with DateTime.FromText; ptherwise try DateTime.From
+      ToDateTime = (v as any, optional culture as nullable text) as nullable datetime =>
+        let
+          result =
+            if v = null then
+              null
+            else if Value.Is(v, type datetime) then
+              v
+            else if Value.Is(v, type datetimezone) then
+              DateTimeZone.RemoveZone(v)
+            else if Value.Is(v, type date) then
+              DateTime.From(v)
+            else if Value.Is(v, type time) then
+              // Anchor time-only to Excel epoch day
+              #datetime(1899, 12, 30, Time.Hour(v), Time.Minute(v), Time.Second(v))
+            else if Value.Is(v, type text) then
+              let
+                parsed =
+                  try
+                    if culture = null
+                    then DateTime.FromText(v)
+                    else DateTime.FromText(v, culture)
+                  otherwise null
+              in
+                parsed
+            else
+              let
+                parsed =
+                  try
+                    if culture = null
+                    then DateTime.From(v)
+                    else DateTime.From(v, culture)
+                  otherwise null
+              in
+                parsed
+        in
+          result,
+
+      EnsureWritable = (tbl as table, outName as text) as table =>
+        let cols = Table.ColumnNames(tbl)
+        in  if Overwrite and List.Contains(cols, outName)
+            then Table.RemoveColumns(tbl, outName)
+            else tbl,
+
+      // ----- Validate inputs -----
+      _allCols = Table.ColumnNames(InputTable),
+      _srcCols = List.Transform(Pairs, each _{0}),
+      _missing = List.Difference(_srcCols, _allCols),
+      _check   = if List.Count(_missing) > 0
+                 then error ("These columns were not found: " & Text.Combine(_missing, ", "))
+                 else null,
+
+      // ----- Starting table -----
+      Start =
+        if KeepOriginal
+        then InputTable
+        else Table.RemoveColumns(InputTable, _srcCols),
+
+      // ----- Add derived columns for each pair -----
+      Result =
+        List.Accumulate(
+          Pairs,
+          Start,
+          (state as table, current as list) =>
+            let
+              colName  = current{0},
+              prefix   = current{1},
+              outNames = FeatureNames(prefix),
+
+              S0 = EnsureWritable(state, outNames{0}),
+              WithDate =
+                Table.AddColumn(
+                  S0,
+                  outNames{0},
+                  (r as record) =>
+                    let dt = ToDateTime(Record.Field(r, colName), Culture)
+                    in if dt = null then null else Date.From(dt),
+                  type date
+                ),
+
+              S1 = EnsureWritable(WithDate, outNames{1}),
+              WithTime =
+                Table.AddColumn(
+                  S1,
+                  outNames{1},
+                  (r as record) =>
+                    let dt = ToDateTime(Record.Field(r, colName), Culture)
+                    in if dt = null then null else Time.From(dt),
+                  type time
+                ),
+
+              S2 = EnsureWritable(WithTime, outNames{2}),
+              WithDateKey =
+                Table.AddColumn(
+                  S2,
+                  outNames{2},
+                  (r as record) =>
+                    let
+                      dt = ToDateTime(Record.Field(r, colName), Culture),
+                      d  = if dt = null then null else Date.From(dt)
+                    in
+                      if d = null then null
+                      else Number.FromText(Date.ToText(d, "yyyyMMdd")),
+                  Int64.Type
+                )
+            in
+              WithDateKey
+        )
+    in
+      Result
+in
+  fxAddDateTimeFromPairs

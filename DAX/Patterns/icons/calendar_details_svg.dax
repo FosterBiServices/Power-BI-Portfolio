@@ -1,0 +1,79 @@
+// Pattern: CALENDAR_DETAILS_SVG | Calendar with Details SVG
+// Purpose: Returns an SVG calendar grid with completed, qualifying, and remaining-day details.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _days = MAX(<DATE_TABLE>[&DAYS_IN_PERIOD_FIELD&])
+VAR _completed = MAX(<DATE_TABLE>[&DAY_NUMBER_FIELD&])
+VAR _firstDate = MAX(<DATE_TABLE>[&PERIOD_FIRST_DATE_FIELD&])
+VAR _firstWeekday =
+  CALCULATE(
+    MAX(<DATE_TABLE>[&WEEKDAY_NUMBER_FIELD&]),
+    <DATE_TABLE>[&DATE_FIELD&] = _firstDate
+  )
+VAR _qualifyingCompleted = SUM(<DATE_TABLE>[&QUALIFYING_DAY_FIELD&])
+VAR _qualifyingTotal = MAX(<DATE_TABLE>[&QUALIFYING_DAYS_IN_PERIOD_FIELD&])
+VAR _percentage = DIVIDE(_qualifyingCompleted, _qualifyingTotal, 0)
+VAR _space = 5
+VAR _width = 550
+VAR _height = 200
+VAR _padding = 15
+VAR _columns = 7
+VAR _rows = ROUNDUP(DIVIDE(_days + _firstWeekday - 1, _columns), 0)
+VAR _cube =
+  MIN(
+    DIVIDE(_height - (_padding * 2), _rows + 1),
+    DIVIDE(_width - 130, _columns + 1)
+  )
+VAR _gradient =
+  "<defs><linearGradient id='pending' x1='0%' y1='0%' x2='0%' y2='100%'>"
+    & "<stop offset='0%' stop-color='#386AA5' stop-opacity='.8'/>"
+    & "<stop offset='85%' stop-color='#CCCCCC'/></linearGradient></defs>"
+VAR _series = SELECTCOLUMNS(GENERATESERIES(1, _days, 1), "Day", [Value])
+VAR _cubes =
+  CONCATENATEX(
+    _series,
+    VAR _day = [Day]
+    VAR _index = _day + _firstWeekday - 2
+    VAR _row = INT(DIVIDE(_index, _columns))
+    VAR _column = MOD(_index, _columns)
+    VAR _x = (_column * (_cube + _space)) + _padding
+    VAR _y = (_row * (_cube + _space)) + _padding
+    VAR _date = _firstDate + (_day - 1)
+    VAR _qualifies =
+      LOOKUPVALUE(
+        <DATE_TABLE>[&QUALIFYING_DAY_FIELD&],
+        <DATE_TABLE>[&DATE_FIELD&], _date
+      )
+    VAR _fill =
+      SWITCH(
+        TRUE(),
+        _day > _completed, "#CCCCCC",
+        _qualifies = 1, "#386AA5",
+        "url(#pending)"
+      )
+    RETURN
+      "<rect x='" & _x & "' y='" & _y & "' width='" & _cube
+        & "' height='" & _cube & "' fill='" & _fill & "'/>"
+  )
+VAR _remaining = _qualifyingTotal - _qualifyingCompleted
+VAR _textX = (_columns * (_cube + _space)) + _padding + 15
+VAR _details =
+  "<text x='" & _textX & "' y='30' fill='#386AA5' font-family='Segoe UI' font-size='18'>"
+    & FORMAT(_percentage, "0.0%") & " Completed</text>"
+    & "<text x='" & _textX & "' y='50' fill='#898E8F' font-family='Segoe UI' font-size='16'>Completed: "
+    & FORMAT(_qualifyingCompleted, "#,0.0") & "</text>"
+    & "<text x='" & _textX & "' y='70' fill='#898E8F' font-family='Segoe UI' font-size='16'>Total: "
+    & FORMAT(_qualifyingTotal, "#,0.0") & "</text>"
+    & "<text x='" & _textX & "' y='90' fill='#898E8F' font-family='Segoe UI' font-size='16'>Remaining: "
+    & FORMAT(_remaining, "#,0.0") & "</text>"
+RETURN
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='"
+    & _height & "' width='" & _width & "'>"
+    & _gradient & _cubes & _details & "</svg>"

@@ -1,0 +1,25 @@
+// Converts one or more UTC columns in a table to US Eastern, applying DST.
+// Parameters:
+//   tbl: table
+//   columns: list of text (column names to convert)
+//   optional KeepZone: logical (default false). If true → converts to datetimezone; else datetime.
+(tbl as table, columns as list, optional KeepZone as nullable logical) as table =>
+let
+    keep = if KeepZone = null then false else KeepZone,
+
+    // Build transform operations for each requested column
+    ops =
+        List.Transform(
+            columns,
+            (c) => 
+                { 
+                    c, 
+                    each fxUtcToEastern(_, keep), 
+                    if keep then type datetimezone else type datetime 
+                }
+        ),
+
+    // Apply transformations; ignore missing columns gracefully if you prefer MissingField.Ignore
+    Converted = Table.TransformColumns(tbl, ops, null, MissingField.Error)
+in
+    Converted

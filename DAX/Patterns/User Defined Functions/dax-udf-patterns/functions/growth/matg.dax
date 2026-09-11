@@ -1,0 +1,19 @@
+/// Returns growth between the current moving annual total and the comparable prior-year window.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION MovingAnnualTotalGrowth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentEnd = MAX(dateColumn)
+VAR _CurrentStart = EDATE(_CurrentEnd, -12) + 1
+VAR _PriorEnd = EDATE(_CurrentEnd, -12)
+VAR _PriorStart = EDATE(_PriorEnd, -12) + 1
+VAR _CurrentValue = CALCULATE(CalcValue, ALL(dateTable), dateColumn >= _CurrentStart && dateColumn <= _CurrentEnd)
+VAR _PriorValue = CALCULATE(CalcValue, ALL(dateTable), dateColumn >= _PriorStart && dateColumn <= _PriorEnd)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result

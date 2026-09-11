@@ -1,0 +1,20 @@
+// Pattern: MOM | Month-over-month
+// Purpose: Calculates percentage change versus the comparable context one month earlier.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> MOM =
+VAR _CurrentValue = [#VALUE_MEASURE#]
+VAR _PreviousValue =
+  CALCULATE(
+    [#VALUE_MEASURE#],
+    DATEADD(<DATE_TABLE>[&DATE_FIELD&], -1, MONTH)
+  )
+VAR _Result = DIVIDE(_CurrentValue - _PreviousValue, _PreviousValue)
+RETURN
+  _Result

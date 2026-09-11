@@ -1,0 +1,117 @@
+// Pattern: DIVERGENT_COLOR | Divergent Color
+// Purpose: Returns a color based on the selected-range position of the current measure value.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _current =
+    [#VALUE_MEASURE#]
+
+VAR _minimum =
+    IF(
+        NOT ISFILTERED(
+            <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+        ),
+        MINX(
+            CALCULATETABLE(
+                VALUES(
+                    <DATE_TABLE>[&PERIOD_FIELD&]
+                ),
+                ALLSELECTED(
+                    <DATE_TABLE>[&PERIOD_FIELD&]
+                )
+            ),
+            [#VALUE_MEASURE#]
+        ),
+        MINX(
+            CALCULATETABLE(
+                VALUES(
+                    <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+                ),
+                ALLSELECTED(
+                    <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+                )
+            ),
+            MINX(
+                CALCULATETABLE(
+                    VALUES(
+                        <DATE_TABLE>[&PERIOD_FIELD&]
+                    ),
+                    ALLSELECTED(
+                        <DATE_TABLE>[&PERIOD_FIELD&]
+                    )
+                ),
+                [#VALUE_MEASURE#]
+            )
+        )
+    )
+
+VAR _maximum =
+    IF(
+        NOT ISFILTERED(
+            <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+        ),
+        MAXX(
+            CALCULATETABLE(
+                VALUES(
+                    <DATE_TABLE>[&PERIOD_FIELD&]
+                ),
+                ALLSELECTED(
+                    <DATE_TABLE>[&PERIOD_FIELD&]
+                )
+            ),
+            [#VALUE_MEASURE#]
+        ),
+        MAXX(
+            CALCULATETABLE(
+                VALUES(
+                    <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+                ),
+                ALLSELECTED(
+                    <CATEGORY_TABLE>[&CATEGORY_FIELD&]
+                )
+            ),
+            MAXX(
+                CALCULATETABLE(
+                    VALUES(
+                        <DATE_TABLE>[&PERIOD_FIELD&]
+                    ),
+                    ALLSELECTED(
+                        <DATE_TABLE>[&PERIOD_FIELD&]
+                    )
+                ),
+                [#VALUE_MEASURE#]
+            )
+        )
+    )
+
+VAR _normalized =
+    DIVIDE(
+        _current - _minimum,
+        _maximum - _minimum,
+        0.5
+    )
+
+VAR _result =
+    SWITCH(
+        TRUE(),
+        ISBLANK(_current), BLANK(),
+        _normalized <= 0.10, "#BCE4D8",
+        _normalized <= 0.20, "#7EC1CA",
+        _normalized <= 0.30, "#3D98B3",
+        _normalized <= 0.40, "#3689AA",
+        _normalized <= 0.50, "#95ACC2",
+        _normalized <= 0.60, "#809BB5",
+        _normalized <= 0.70, "#6B8AA9",
+        _normalized <= 0.80, "#567A9D",
+        _normalized <= 0.90, "#416991",
+        "#2C5985"
+    )
+
+RETURN
+    _result

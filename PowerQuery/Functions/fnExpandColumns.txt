@@ -1,0 +1,34 @@
+let
+    Source = (SourceTable as table, PersonColumns as list) as table =>
+let
+  ConvertLists =
+    Table.TransformColumns(
+      SourceTable,
+      List.Transform(
+        PersonColumns,
+        each {
+          _,
+          each try _{0} otherwise null
+        }
+      )
+    ),
+
+  ExpandColumns =
+    List.Accumulate(
+      PersonColumns,
+      ConvertLists,
+      (State, CurrentColumn) =>
+        Table.ExpandRecordColumn(
+          State,
+          CurrentColumn,
+          {"title", "email"},
+          {
+            CurrentColumn & " Name",
+            CurrentColumn & " Email"
+          }
+        )
+    )
+in
+  ExpandColumns
+in
+    Source

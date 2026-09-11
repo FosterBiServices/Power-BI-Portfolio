@@ -1,0 +1,62 @@
+	measure '<PERCENT_MEASURE_NAME>' = ```
+
+			var _Numerator = [<VALUE_MEASURE>]
+			var _Denominator = CALCULATE([<VALUE_MEASURE>], REMOVEFILTERS(<CATEGORY_TABLE>[<CATEGORY_COLUMN>]))
+			RETURN
+			    DIVIDE(
+			        _Numerator,
+			        _Denominator
+			    )
+			```
+		formatString: <PERCENT_FORMAT_STRING>
+
+	measure '<LABEL_MEASURE_NAME>' = ```
+
+			var _MaxValue =
+			MAXX(
+			    ALLSELECTED( <CATEGORY_TABLE>[<CATEGORY_KEY_COLUMN>], <CATEGORY_TABLE>[<CATEGORY_COLUMN>]),
+			        [<VALUE_MEASURE>]
+			    )
+			RETURN
+			    IF ( [<VALUE_MEASURE>],
+			        _MaxValue * <LABEL_HEIGHT_MULTIPLIER>
+			    )
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '<MARKER_MEASURE_NAME>' = ```
+
+			var _MaxValue =
+			MAXX(
+			    ALLSELECTED( <CATEGORY_TABLE>[<CATEGORY_KEY_COLUMN>], <CATEGORY_TABLE>[<CATEGORY_COLUMN>]),
+			        [<VALUE_MEASURE>]
+			    )
+			RETURN
+			    IF ( [<VALUE_MEASURE>],
+			        _MaxValue * <MARKER_HEIGHT_MULTIPLIER>
+			    )
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '<AXIS_MAX_MEASURE_NAME>' = ```
+
+			var _MaxValue =
+			MAXX(
+			    ALLSELECTED( <CATEGORY_TABLE>[<CATEGORY_KEY_COLUMN>], <CATEGORY_TABLE>[<CATEGORY_COLUMN>]),
+			        [<VALUE_MEASURE>]
+			    )
+			RETURN
+			        _MaxValue * <AXIS_HEADROOM_MULTIPLIER>
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '<SUBTITLE_MEASURE_NAME>' = ```
+
+			var _value = CALCULATE([<VALUE_MEASURE>], REMOVEFILTERS(<CATEGORY_TABLE>[<CATEGORY_KEY_COLUMN>], <CATEGORY_TABLE>[<CATEGORY_COLUMN>]))
+			var _Header = "<SUBTITLE_PREFIX_TEXT>"
+			RETURN
+			_Header & FORMAT(_value,"<SUBTITLE_VALUE_FORMAT>")
+			```

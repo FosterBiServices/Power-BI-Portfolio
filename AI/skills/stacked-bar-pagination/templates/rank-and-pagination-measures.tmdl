@@ -1,0 +1,62 @@
+	measure '<ALPHA_RANK_MEASURE>' = ```
+
+			var _current = SELECTEDVALUE( '<RANK_TABLE>'[<RANK_COLUMN>] )
+			var __Result =
+			    COUNTROWS(
+			        FILTER(
+			            ALL ( '<RANK_TABLE>'[<RANK_COLUMN>] )
+			            , '<RANK_TABLE>'[<RANK_COLUMN>] <= _current
+			        )
+			    )
+			RETURN
+			    __Result
+			```
+		formatString: 0
+
+	measure '<RANK_MEASURE>' = ```
+
+			var __Result = [<VALUE_MEASURE>]
+			RETURN
+			IF ( ISBLANK( __Result ), BLANK(),
+			  RANKX( ALL ( '<RANK_TABLE>'[<RANK_KEY_COLUMN>], '<RANK_TABLE>'[<RANK_COLUMN>]), [<VALUE_MEASURE>] ) ) - DIVIDE( [<ALPHA_RANK_MEASURE>], 1000000)
+			```
+		formatString: 0
+
+	measure '<RANK_LABEL_MEASURE>' = ```
+
+			var __Result = [<VALUE_MEASURE>]
+			RETURN
+			IF ( ISBLANK( __Result ), BLANK(),
+			"#" & FORMAT(
+			  (RANKX( ALL ( '<RANK_TABLE>'[<RANK_KEY_COLUMN>], '<RANK_TABLE>'[<RANK_COLUMN>]), [<VALUE_MEASURE>] ) )
+			    - DIVIDE( [<ALPHA_RANK_MEASURE>], 1000000),"#,#0"))
+			```
+
+	measure '<AXIS_MAX_MEASURE>' = ```
+
+			CALCULATE ( MAXX ( '<RANK_TABLE>', [<VALUE_MEASURE>] ), REMOVEFILTERS ( '<RANK_TABLE>' ) ) * <AXIS_MAX_HEADROOM>
+			```
+		formatString: 0
+
+	measure '<SPACER_MEASURE>' = ```
+
+			IF ( ISBLANK([<VALUE_MEASURE>]), BLANK(),
+			-1 * <SPACER_FRACTION> * [<AXIS_MAX_MEASURE>]
+			)
+			```
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '<SUBTITLE_MEASURE>' = ```
+
+			var _value = CALCULATE([<VALUE_MEASURE>], REMOVEFILTERS('<RANK_TABLE>'[<RANK_KEY_COLUMN>], '<RANK_TABLE>'[<RANK_COLUMN>]))
+			var _Header = "<SUBTITLE_ALL_LABEL>"
+			var _shown = [<VALUE_MEASURE>]
+			RETURN
+			"<SUBTITLE_SHOWN_LABEL>" & FORMAT(_shown,"$#,#") & " | " & _Header & FORMAT(_value,"$#,#")
+			```
+
+	measure '<AXIS_MIN_MEASURE>' = ```
+
+			-1 * <AXIS_MIN_FRACTION> * [<AXIS_MAX_MEASURE>]
+			```
+		formatString: 0

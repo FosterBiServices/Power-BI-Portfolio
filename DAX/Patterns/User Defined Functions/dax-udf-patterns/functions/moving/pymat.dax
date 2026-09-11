@@ -1,0 +1,21 @@
+/// Evaluates the comparable 12-month window ending one year before the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYearMovingAnnualTotal = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentEnd = MAX(dateColumn)
+VAR _EndDate = EDATE(_CurrentEnd, -12)
+VAR _StartDate = EDATE(_EndDate, -12) + 1
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result

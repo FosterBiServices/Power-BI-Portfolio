@@ -1,0 +1,15 @@
+/// Returns growth between the current period-to-date and the complete immediately preceding period.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION QuarterToDateOverPriorQuarter = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = QuarterToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorQuarterComplete(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result

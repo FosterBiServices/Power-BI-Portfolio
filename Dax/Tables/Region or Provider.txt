@@ -1,4 +1,0 @@
-Region / Provider = {
-    ("Region", NAMEOF('dimProvider'[Region]), 0),
-    ("Billing Provider", NAMEOF('dimProvider'[Quality Provider]), 1)
-}

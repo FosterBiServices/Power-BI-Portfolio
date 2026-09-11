@@ -1,0 +1,59 @@
+// Pattern: DONUT_TARGET_PROGRESS_SVG | Donut Target Progress SVG
+// Purpose: Returns an SVG donut showing target, current value, and the amount over or under target.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _target = [#TARGET_MEASURE#]
+VAR _value = COALESCE([#VALUE_MEASURE#], 0)
+VAR _width = 365
+VAR _height = 280.27
+VAR _canvas = MIN(_height, _width)
+VAR _padding = 10
+VAR _label = IF(_value >= _target, "Over:", "Missing:")
+VAR _positive = "#006100"
+VAR _neutral = "#9C6500"
+VAR _negative = "#9C0006"
+VAR _half = _canvas / 2
+VAR _radius = _half - _padding * 1.5
+VAR _circumference = 2 * PI() * _radius
+VAR _percentage = DIVIDE(_value, _target, 0)
+VAR _offset = _circumference - _circumference * MIN(_percentage, 1)
+VAR _color =
+  SWITCH(
+    TRUE(),
+    _percentage >= 0.90, _positive,
+    _percentage >= 0.80, _neutral,
+    _negative
+  )
+VAR _style =
+  "<style>text{font-family:Segoe UI}.circle{fill:transparent;stroke-width:"
+    & _padding & ";transform:rotate(-90deg);transform-origin:50% 50%}"
+    & ".background{stroke:#E0E0E0}.filling{stroke:" & _color
+    & ";stroke-linecap:round;stroke-dasharray:" & _circumference
+    & ";stroke-dashoffset:" & _offset & "}</style>"
+VAR _content =
+  "<circle r='" & _radius & "' cx='50%' cy='50%' class='circle background'/>"
+    & "<circle r='" & _radius & "' cx='50%' cy='50%' class='circle filling'/>"
+    & "<text x='50%' y='38%' text-anchor='middle' font-size='42' font-weight='bold' fill='"
+    & _color & "'>" & FORMAT(_percentage, "0.0%") & "</text>"
+    & "<text x='48%' y='52%' text-anchor='end' font-size='18'>Target:</text>"
+    & "<text x='52%' y='52%' font-size='18'>" & FORMAT(_target, "#,#") & "</text>"
+    & "<text x='48%' y='62%' text-anchor='end' font-size='18'>Current:</text>"
+    & "<text x='52%' y='62%' font-size='18'>" & FORMAT(_value, "#,#") & "</text>"
+    & "<text x='48%' y='72%' text-anchor='end' font-size='18' font-weight='bold'>"
+    & _label & "</text>"
+    & "<text x='52%' y='72%' font-size='18' font-weight='bold'>"
+    & FORMAT(ABS(_target - _value), "#,#") & "</text>"
+RETURN
+  IF(
+    NOT ISBLANK(_target),
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='"
+      & _height & "' width='" & _width & "'>"
+      & _style & _content & "</svg>"
+  )

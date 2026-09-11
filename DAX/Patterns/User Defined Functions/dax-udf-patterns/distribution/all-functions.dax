@@ -1,0 +1,550 @@
+DEFINE
+
+/// Evaluates an expression from the first day of the current year through the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION YearToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate), 1, 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _LatestDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression from the first day of the current quarter through the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION QuarterToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartMonth = INT((MONTH(_LatestDate) - 1) / 3) * 3 + 1
+VAR _StartDate = DATE(YEAR(_LatestDate), _StartMonth, 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _LatestDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression from the first day of the current month through the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION MonthToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate), MONTH(_LatestDate), 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _LatestDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression for the 12-month window ending on the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION MovingAnnualTotal = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _EndDate = MAX(dateColumn)
+VAR _StartDate = EDATE(_EndDate, -12) + 1
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression in the current date context shifted back one year.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYear = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    DATEADD(dateColumn, -1, YEAR)
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression in the current date context shifted back one quarter.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorQuarter = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    DATEADD(dateColumn, -1, QUARTER)
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression in the current date context shifted back one month.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorMonth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    DATEADD(dateColumn, -1, MONTH)
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression for the complete calendar year before the current year.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYearComplete = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate) - 1, 1, 1)
+VAR _EndDate = DATE(YEAR(_LatestDate) - 1, 12, 31)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression for the complete quarter before the current quarter.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorQuarterComplete = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _CurrentStartMonth = INT((MONTH(_LatestDate) - 1) / 3) * 3 + 1
+VAR _CurrentStart = DATE(YEAR(_LatestDate), _CurrentStartMonth, 1)
+VAR _StartDate = EDATE(_CurrentStart, -3)
+VAR _EndDate = _CurrentStart - 1
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression for the complete month before the current month.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorMonthComplete = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _EndDate = EOMONTH(_LatestDate, -1)
+VAR _StartDate = DATE(YEAR(_EndDate), MONTH(_EndDate), 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Selects the previous month, quarter, or year according to hierarchy scope.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @param {ANYREF EXPR} yearColumn - Year hierarchy column.
+/// @param {ANYREF EXPR} quarterColumn - Quarter hierarchy column.
+/// @param {ANYREF EXPR} monthColumn - Month hierarchy column.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorPeriod = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR,
+    yearColumn : ANYREF EXPR,
+    quarterColumn : ANYREF EXPR,
+    monthColumn : ANYREF EXPR
+) =>
+VAR _Result =
+  SWITCH(
+    TRUE(),
+    ISINSCOPE(monthColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, MONTH)),
+    ISINSCOPE(quarterColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, QUARTER)),
+    ISINSCOPE(yearColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, YEAR)),
+    BLANK()
+  )
+RETURN
+  _Result
+
+
+/// Evaluates the comparable 12-month window ending one year before the latest visible date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYearMovingAnnualTotal = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentEnd = MAX(dateColumn)
+VAR _EndDate = EDATE(_CurrentEnd, -12)
+VAR _StartDate = EDATE(_EndDate, -12) + 1
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Returns growth versus the comparable date context one year earlier.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION YearOverYear = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = CalcValue
+VAR _PriorValue = CALCULATE(CalcValue, DATEADD(dateColumn, -1, YEAR))
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth versus the comparable date context one quarter earlier.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION QuarterOverQuarter = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = CalcValue
+VAR _PriorValue = CALCULATE(CalcValue, DATEADD(dateColumn, -1, QUARTER))
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth versus the comparable date context one month earlier.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION MonthOverMonth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = CalcValue
+VAR _PriorValue = CALCULATE(CalcValue, DATEADD(dateColumn, -1, MONTH))
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between the current moving annual total and the comparable prior-year window.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION MovingAnnualTotalGrowth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentEnd = MAX(dateColumn)
+VAR _CurrentStart = EDATE(_CurrentEnd, -12) + 1
+VAR _PriorEnd = EDATE(_CurrentEnd, -12)
+VAR _PriorStart = EDATE(_PriorEnd, -12) + 1
+VAR _CurrentValue = CALCULATE(CalcValue, ALL(dateTable), dateColumn >= _CurrentStart && dateColumn <= _CurrentEnd)
+VAR _PriorValue = CALCULATE(CalcValue, ALL(dateTable), dateColumn >= _PriorStart && dateColumn <= _PriorEnd)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth versus the previous month, quarter, or year according to hierarchy scope.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @param {ANYREF EXPR} yearColumn - Year hierarchy column.
+/// @param {ANYREF EXPR} quarterColumn - Quarter hierarchy column.
+/// @param {ANYREF EXPR} monthColumn - Month hierarchy column.
+/// @returns A decimal growth ratio.
+FUNCTION PeriodOverPeriod = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR,
+    yearColumn : ANYREF EXPR,
+    quarterColumn : ANYREF EXPR,
+    monthColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = CalcValue
+VAR _PriorValue =
+  SWITCH(
+    TRUE(),
+    ISINSCOPE(monthColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, MONTH)),
+    ISINSCOPE(quarterColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, QUARTER)),
+    ISINSCOPE(yearColumn), CALCULATE(CalcValue, DATEADD(dateColumn, -1, YEAR)),
+    BLANK()
+  )
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Evaluates an expression through the corresponding elapsed point in the prior year.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorYearToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _StartDate = DATE(YEAR(_LatestDate) - 1, 1, 1)
+VAR _CandidateEnd = DATE(YEAR(_LatestDate) - 1, MONTH(_LatestDate), DAY(_LatestDate))
+VAR _EndDate = MIN(_CandidateEnd, DATE(YEAR(_LatestDate) - 1, 12, 31))
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression through the corresponding elapsed point in the prior quarter.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorQuarterToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _CurrentStartMonth = INT((MONTH(_LatestDate) - 1) / 3) * 3 + 1
+VAR _CurrentStart = DATE(YEAR(_LatestDate), _CurrentStartMonth, 1)
+VAR _ElapsedDays = _LatestDate - _CurrentStart
+VAR _StartDate = EDATE(_CurrentStart, -3)
+VAR _PeriodEnd = _CurrentStart - 1
+VAR _EndDate = MIN(_StartDate + _ElapsedDays, _PeriodEnd)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Evaluates an expression through the corresponding elapsed point in the prior month.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorMonthToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _CurrentStart = DATE(YEAR(_LatestDate), MONTH(_LatestDate), 1)
+VAR _ElapsedDays = _LatestDate - _CurrentStart
+VAR _StartDate = EDATE(_CurrentStart, -1)
+VAR _PeriodEnd = _CurrentStart - 1
+VAR _EndDate = MIN(_StartDate + _ElapsedDays, _PeriodEnd)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result
+
+
+/// Returns growth between current period-to-date and the corresponding prior period-to-date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION YearOverYearToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = YearToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorYearToDate(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between current period-to-date and the corresponding prior period-to-date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION QuarterOverQuarterToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = QuarterToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorQuarterToDate(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between current period-to-date and the corresponding prior period-to-date.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION MonthOverMonthToDate = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = MonthToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorMonthToDate(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between the current period-to-date and the complete immediately preceding period.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION YearToDateOverPriorYear = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = YearToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorYearComplete(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between the current period-to-date and the complete immediately preceding period.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION QuarterToDateOverPriorQuarter = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = QuarterToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorQuarterComplete(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
+
+/// Returns growth between the current period-to-date and the complete immediately preceding period.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns A decimal growth ratio.
+FUNCTION MonthToDateOverPriorMonth = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _CurrentValue = MonthToDate(CalcValue, dateTable, dateColumn)
+VAR _PriorValue = PriorMonthComplete(CalcValue, dateTable, dateColumn)
+VAR _Result = DIVIDE(_CurrentValue - _PriorValue, _PriorValue)
+RETURN
+  _Result
+
