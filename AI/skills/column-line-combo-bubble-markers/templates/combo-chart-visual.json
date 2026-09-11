@@ -1,0 +1,555 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "<VISUAL_ID>",
+  "position": {
+    "x": <POS_X>,
+    "y": <POS_Y>,
+    "z": <POS_Z>,
+    "height": <POS_HEIGHT>,
+    "width": <POS_WIDTH>,
+    "tabOrder": <TAB_ORDER>
+  },
+  "visual": {
+    "visualType": "lineClusteredColumnComboChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<CATEGORY_TABLE>"
+                    }
+                  },
+                  "Property": "<CATEGORY_COLUMN>"
+                }
+              },
+              "queryRef": "<CATEGORY_TABLE>.<CATEGORY_COLUMN>",
+              "nativeQueryRef": "<CATEGORY_COLUMN>",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<VALUE_MEASURE>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE>.<VALUE_MEASURE>",
+              "nativeQueryRef": "<VALUE_MEASURE>"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<MARKER_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE>.<MARKER_MEASURE_NAME>",
+              "nativeQueryRef": "<MARKER_MEASURE_NAME>"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<LABEL_MEASURE_NAME>"
+                }
+              },
+              "queryRef": "<MEASURES_TABLE>.<LABEL_MEASURE_NAME>",
+              "nativeQueryRef": "<LABEL_MEASURE_NAME>"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "<MEASURES_TABLE>"
+                  }
+                },
+                "Property": "<VALUE_MEASURE>"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "error": [
+        {
+          "properties": {
+            "enabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "barColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <BAR_COLOR_THEME_ID>,
+                      "Percent": <BAR_COLOR_PERCENT>
+                    }
+                  }
+                }
+              }
+            },
+            "tooltipShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<VALUE_MEASURE>"
+          }
+        },
+        {
+          "properties": {
+            "errorRange": {
+              "kind": "ErrorRange",
+              "explicit": {
+                "isRelative": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "false"
+                    }
+                  }
+                },
+                "upperBound": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "<MEASURES_TABLE>"
+                        }
+                      },
+                      "Property": "<MARKER_MEASURE_NAME>"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "<MEASURES_TABLE>.<VALUE_MEASURE>",
+            "highlightMatching": 1
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "markerColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <MARKER_COLOR_THEME_ID>,
+                      "Percent": <MARKER_COLOR_PERCENT>
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<LABEL_MEASURE_NAME>"
+          }
+        },
+        {
+          "properties": {
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "markerColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <MARKER_COLOR_THEME_ID>,
+                      "Percent": <MARKER_COLOR_PERCENT>
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<MARKER_MEASURE_NAME>"
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "end": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<AXIS_MAX_MEASURE_NAME>"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "secRoundRange": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "secShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "labelPosition": {
+              "expr": {
+                "Literal": {
+                  "Value": "'OutsideEnd'"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <VALUE_LABEL_FONT_THEME_ID>,
+                      "Percent": <VALUE_LABEL_FONT_PERCENT>
+                    }
+                  }
+                }
+              }
+            },
+            "backgroundColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": <VALUE_LABEL_BACKGROUND_THEME_ID>,
+                      "Percent": <VALUE_LABEL_BACKGROUND_PERCENT>
+                    }
+                  }
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_DISPLAY_UNITS>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<VALUE_MEASURE>"
+          }
+        },
+        {
+          "properties": {
+            "showSeries": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "enableValueDataLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "enableBackground": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_DISPLAY_UNITS>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<MARKER_MEASURE_NAME>"
+          }
+        },
+        {
+          "properties": {
+            "enableBackground": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "enableDetailDataLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_DISPLAY_UNITS>"
+                }
+              }
+            },
+            "labelPosition": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Above'"
+                }
+              }
+            },
+            "showSeries": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_PRECISION>"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "<LABEL_FONT_SIZE>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "<MEASURES_TABLE>.<LABEL_MEASURE_NAME>"
+          }
+        },
+        {
+          "properties": {
+            "dynamicLabelValue": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<PERCENT_MEASURE_NAME>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "<MEASURES_TABLE>.<LABEL_MEASURE_NAME>",
+            "highlightMatching": 1
+          }
+        },
+        {
+          "properties": {
+            "dynamicLabelValue": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<PERCENT_MEASURE_NAME>"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "<MEASURES_TABLE>.<MARKER_MEASURE_NAME>",
+            "highlightMatching": 1
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'<TITLE_TEXT>'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "<MEASURES_TABLE>"
+                    }
+                  },
+                  "Property": "<SUBTITLE_MEASURE_NAME>"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

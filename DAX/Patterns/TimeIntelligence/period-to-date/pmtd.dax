@@ -1,0 +1,16 @@
+// Pattern: PMTD | Previous month-to-date
+// Purpose: Evaluates the prior month through the corresponding elapsed position in the current period.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> PMTD =
+VAR _CurrentDates = DATESMTD(<DATE_TABLE>[&DATE_FIELD&])
+VAR _PreviousDates = DATEADD(_CurrentDates, -1, MONTH)
+VAR _Result = CALCULATE([#VALUE_MEASURE#], _PreviousDates)
+RETURN
+  _Result

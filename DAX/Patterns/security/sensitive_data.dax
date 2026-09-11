@@ -1,0 +1,25 @@
+// Pattern: SENSITIVE_DATA | Sensitive Data
+// Purpose: Returns data only when the required permission exists.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _allowed =
+    HASPERMISSION(
+        "<PERMISSION_NAME>"
+    )
+
+VAR _result =
+    IF(
+        _allowed,
+        [#VALUE_MEASURE#],
+        "REDACTED"
+    )
+
+RETURN
+    _result

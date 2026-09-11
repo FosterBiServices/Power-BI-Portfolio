@@ -1,0 +1,27 @@
+// Pattern: MEASURE_SELECTION | Measure Selection
+// Purpose: Field parameter for switching between published measures.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#PARAMETER_NAME#> =
+{
+    (
+        "<LABEL_1>",
+        NAMEOF(
+            <MEASURE_TABLE>[#MEASURE_1#]
+        ),
+        0
+    ),
+    (
+        "<LABEL_2>",
+        NAMEOF(
+            <MEASURE_TABLE>[#MEASURE_2#]
+        ),
+        1
+    )
+}

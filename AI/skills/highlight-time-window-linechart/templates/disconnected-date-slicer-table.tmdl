@@ -1,0 +1,21 @@
+table '<SLICER_TABLE_NAME>'
+	lineageTag: <SLICER_TABLE_LINEAGE_TAG>
+
+	column <DATE_COLUMN_NAME>
+		formatString: <SLICER_DATE_FORMAT>
+		lineageTag: <SLICER_COLUMN_LINEAGE_TAG>
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: <SOURCE_DATE_TABLE>[<DATE_COLUMN_NAME>]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '<SLICER_TABLE_NAME>' = calculated
+		mode: import
+		source = ```
+
+				VALUES( <SOURCE_DATE_TABLE>[<DATE_COLUMN_NAME>] )
+
+				```
+
+	annotation PBI_Id = <SLICER_TABLE_PBI_ID>

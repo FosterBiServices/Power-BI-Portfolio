@@ -1,0 +1,338 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+WeCare Operational Metric Layout =
+DATATABLE(
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {1, "Clinical Assessment Completions", "_completions"},
+    {2, "SSI/SSDI Applications Submitted", "_submitted"},
+    {3, "VRS Initiations", "_var"},
+    {4, "Day 1 Placements (% Target)", "_placements"},
+    {5, "30-Day Employment Retention (% Target)", "_employment"},
+    {6, "90-Day Employment Retention (% Target)", "_retention"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = "YoY Trend"
+
+/* ============================================================
+   TIME PLACEHOLDERS
+   ============================================================ */
+
+VAR _year = [Current Fiscal Year]
+
+VAR _priorYear = [Prior Fiscal YTD]
+
+VAR _currentmonthsort = [Current Month Sort]
+
+VAR _month3 = [Month Year Prior 2]
+
+VAR _month2 = [Month Year Prior 1]
+
+VAR _month1 = [Month Year Current]
+
+VAR _displayMonth3 = [Month Display Prior 2]
+
+VAR _displayMonth2 = [Month Display Prior 1]
+
+VAR _displayMonth1 = [Month Display Current]
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE PLACEHOLDERS
+   ============================================================ */
+
+VAR __completionsMonth3 = CALCULATE([Clinical Assessment Completions], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __completionsMonth2 = CALCULATE([Clinical Assessment Completions], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __completionsMonth1 = CALCULATE([Clinical Assessment Completions], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __completionsYtd = CALCULATE([Clinical Assessment Completions], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __completionsPytd = CALCULATE([Clinical Assessment Completions], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __completionsVar = __completionsYtd - __completionsPytd
+VAR __completionsVariancePct = DIVIDE(__completionsVar, __completionsPytd)
+VAR __completionsTrend = SWITCH(TRUE(), ISBLANK(__completionsVar), BLANK(), __completionsVar > 0, "up", __completionsVar < 0, "down", BLANK())
+
+VAR __submittedMonth3 = CALCULATE([Scorecard Total SSI Initial and Supplemental Applications], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __submittedMonth2 = CALCULATE([Scorecard Total SSI Initial and Supplemental Applications], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __submittedMonth1 = CALCULATE([Scorecard Total SSI Initial and Supplemental Applications], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __submittedYtd = CALCULATE([Scorecard Total SSI Initial and Supplemental Applications], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __submittedPytd = CALCULATE([Scorecard Total SSI Initial and Supplemental Applications], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __submittedVar = __submittedYtd - __submittedPytd
+VAR __submittedVariancePct = DIVIDE(__submittedVar, __submittedPytd)
+VAR __submittedTrend = SWITCH(TRUE(), ISBLANK(__submittedVar), BLANK(), __submittedVar > 0, "up", __submittedVar < 0, "down", BLANK())
+
+VAR __varMonth3 = CALCULATE([Scorecard Total VRS Initiation Appointments], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __varMonth2 = CALCULATE([Scorecard Total VRS Initiation Appointments], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __varMonth1 = CALCULATE([Scorecard Total VRS Initiation Appointments], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __varYtd = CALCULATE([Scorecard Total VRS Initiation Appointments], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __varPytd = CALCULATE([Scorecard Total VRS Initiation Appointments], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __varVar = __varYtd - __varPytd
+VAR __varVariancePct = DIVIDE(__varVar, __varPytd)
+VAR __varTrend = SWITCH(TRUE(), ISBLANK(__varVar), BLANK(), __varVar > 0, "up", __varVar < 0, "down", BLANK())
+
+VAR __placementsMonth3 = CALCULATE([Day 1 Placements], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __placementsMonth2 = CALCULATE([Day 1 Placements], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __placementsMonth1 = CALCULATE([Day 1 Placements], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __placementsYtd = CALCULATE([Day 1 Placements], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __placementsTarget = CALCULATE([Day 1 Placements Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __placementsDisplay = FORMAT(__placementsYtd, "#,##") & IF(ISBLANK(DIVIDE(__placementsYtd, __placementsTarget)), "", " (" & FORMAT(DIVIDE(__placementsYtd, __placementsTarget), "0%") & ")")
+VAR __placementsPytd = CALCULATE([Day 1 Placements], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __placementsVar = __placementsYtd - __placementsPytd
+VAR __placementsVariancePct = DIVIDE(__placementsVar, __placementsPytd)
+VAR __placementsTrend = SWITCH(TRUE(), ISBLANK(__placementsVar), BLANK(), __placementsVar > 0, "up", __placementsVar < 0, "down", BLANK())
+
+VAR __employmentMonth3 = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __employmentMonth2 = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __employmentMonth1 = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __employmentYtd = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __employmentTarget = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __employmentDisplay = FORMAT(__employmentYtd, "#,##") & IF(ISBLANK(DIVIDE(__employmentYtd, __employmentTarget)), "", " (" & FORMAT(DIVIDE(__employmentYtd, __employmentTarget), "0%") & ")")
+VAR __employmentPytd = CALCULATE([30-Day Employment Retention], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __employmentVar = __employmentYtd - __employmentPytd
+VAR __employmentVariancePct = DIVIDE(__employmentVar, __employmentPytd)
+VAR __employmentTrend = SWITCH(TRUE(), ISBLANK(__employmentVar), BLANK(), __employmentVar > 0, "up", __employmentVar < 0, "down", BLANK())
+
+VAR __retentionMonth3 = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __retentionMonth2 = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __retentionMonth1 = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __retentionYtd = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __retentionTarget = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __retentionDisplay = FORMAT(__retentionYtd, "#,##") & IF(ISBLANK(DIVIDE(__retentionYtd, __retentionTarget)), "", " (" & FORMAT(DIVIDE(__retentionYtd, __retentionTarget), "0%") & ")")
+VAR __retentionPytd = CALCULATE([90-Day Employment Retention Target], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __retentionVar = __retentionYtd - __retentionPytd
+VAR __retentionVariancePct = DIVIDE(__retentionVar, __retentionPytd)
+VAR __retentionTrend = SWITCH(TRUE(), ISBLANK(__retentionVar), BLANK(), __retentionVar > 0, "up", __retentionVar < 0, "down", BLANK())
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE STATUS
+   ============================================================ */
+
+VAR __completionsStatus = BLANK()
+
+VAR __submittedStatus = BLANK()
+
+VAR __varStatus = BLANK()
+
+VAR __placementsStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__placementsMonth1), BLANK(),
+        __placementsMonth1 >= 10, "red",
+        __placementsMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __employmentStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__employmentMonth1), BLANK(),
+        __employmentMonth1 >= 10, "red",
+        __employmentMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __retentionStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__retentionMonth1), BLANK(),
+        __retentionMonth1 >= 10, "red",
+        __retentionMonth1 >= 5, "amber",
+        "green"
+    )
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _operationalRows =
+    CONCATENATEX(
+        'WeCare Operational Metric Layout',
+        VAR _metricKey = [MetricKey]
+
+    VAR _status =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsStatus,
+            "_submitted", __submittedStatus,
+            "_var", __varStatus,
+            "_placements", __placementsStatus,
+            "_employment", __employmentStatus,
+            "_retention", __retentionStatus
+        )
+
+    VAR _ytd =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsYtd,
+            "_submitted", __submittedYtd,
+            "_var", __varYtd,
+            "_placements", __placementsDisplay,
+            "_employment", __employmentDisplay,
+            "_retention", __retentionDisplay
+        )
+
+    VAR _monthPrior2 =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsMonth3,
+            "_submitted", __submittedMonth3,
+            "_var", __varMonth3,
+            "_placements", __placementsMonth3,
+            "_employment", __employmentMonth3,
+            "_retention", __retentionMonth3
+        )
+
+    VAR _monthPrior1 =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsMonth2,
+            "_submitted", __submittedMonth2,
+            "_var", __varMonth2,
+            "_placements", __placementsMonth2,
+            "_employment", __employmentMonth2,
+            "_retention", __retentionMonth2
+        )
+
+    VAR _currentMonth =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsMonth1,
+            "_submitted", __submittedMonth1,
+            "_var", __varMonth1,
+            "_placements", __placementsMonth1,
+            "_employment", __employmentMonth1,
+            "_retention", __retentionMonth1
+        )
+
+    VAR _trendIcon =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsTrend,
+            "_submitted", __submittedTrend,
+            "_var", __varTrend,
+            "_placements", __placementsTrend,
+            "_employment", __employmentTrend,
+            "_retention", __retentionTrend
+        )
+
+    VAR _pyVAR =
+        SWITCH(
+            _metricKey,
+            "_completions", __completionsVariancePct,
+            "_submitted", __submittedVariancePct,
+            "_var", __varVariancePct,
+            "_placements", __placementsVariancePct,
+            "_employment", __employmentVariancePct,
+            "_retention", __retentionVariancePct
+        )
+
+        VAR _trendHtml =
+            SWITCH(
+                TRUE(),
+                ISBLANK(_pyVAR), "",
+                _trendIcon = "up",
+                    "<span class='trend up'>▲ "
+                        & FORMAT(_pyVAR, "0.0%")
+                        & "</span>",
+                _trendIcon = "down",
+                    "<span class='trend down'>▼ "
+                        & FORMAT(ABS(_pyVAR), "0.0%")
+                        & "</span>",
+                FORMAT(_pyVAR, "0.0%")
+            )
+
+    VAR _formatString =
+        SWITCH(
+            _metricKey,
+            "_completions", "#,##0",
+            "_submitted", "#,##0",
+            "_var", "#,##0",
+            "_placements", "#,##0",
+            "_employment", "#,##0",
+            "_retention", "#,##0"
+        )
+
+        VAR _ytdHtml =
+            IF(
+                ISBLANK(_ytd),
+                "",
+                    FORMAT(_ytd, _formatString)
+            )
+        VAR _monthPrior2Html =
+            IF(
+                ISBLANK(_monthPrior2),
+                "",
+                    FORMAT(_monthPrior2, _formatString)
+            )
+        VAR _monthPrior1Html =
+            IF(
+                ISBLANK(_monthPrior1),
+                "",
+                    FORMAT(_monthPrior1, _formatString)
+            )
+        VAR _currentMonthHtml =
+            IF(
+                ISBLANK(_currentMonth),
+                "",
+                    FORMAT(_currentMonth, _formatString)
+            )
+        RETURN
+            "<tr>"
+                & "<td class='label'>" & [MetricName] & "</td>"
+                & "<td class='status'><span class='dot "
+                & COALESCE(_status, "") & "'></span></td>"
+                & "<td class='number'>" & _ytdHtml & "</td>"
+                & "<td class='number'>" & _monthPrior2Html & "</td>"
+                & "<td class='number'>" & _monthPrior1Html & "</td>"
+                & "<td class='number'>" & _currentMonthHtml & "</td>"
+                & "<td class='number'>" & _trendHtml & "</td>"
+                & "</tr>",
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT(_year, 2), "##") & " YTD</th>
+            <th>" & _displayMonth3 & "</th>
+            <th>" & _displayMonth2 & "</th>
+            <th>" & _displayMonth1 & "</th>
+            <th>" & _trending & "</th>
+          </tr>"
+        & _operationalRows
+        & "
+        </table>
+      </td>
+      <td class='right commentbackground'>
+        <div class='commentsheader'></div>
+        <div class='commentary'></div>
+      </td>
+    </tr>
+    "

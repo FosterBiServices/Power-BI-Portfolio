@@ -1,0 +1,123 @@
+// Pattern: CARD_COLUMNS_NO_TARGET | Card with Columns No Target
+// Purpose: Returns an SVG card with a slicer-aware callout and a trailing-month column chart.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+/* =========================
+   SETUP
+========================= */
+VAR _space = 3
+VAR _maximumWidth = 6
+VAR _rounding = 4
+VAR _width = 400
+VAR _height = 150
+/* =========================
+   COLORS
+========================= */
+VAR _barColor = "#004081"
+VAR _textColor = "#73AF2F"
+VAR _labelColor = "#333333"
+/* =========================
+   SVG WRAPPER
+========================= */
+VAR _declaration = "data:image/svg+xml;utf8,"
+VAR _header =
+  "<svg xmlns='http://www.w3.org/2000/svg' width='"
+    & _width & "' height='" & _height & "'>"
+VAR _end = "</svg>"
+VAR _style =
+  "<style>text{font-family:Segoe UI;dominant-baseline:middle}.bar{fill:"
+    & _barColor & ";}.bolder{font-weight:600;}</style>"
+/* =========================
+   CALLOUT
+========================= */
+VAR _selectedValue = [#VALUE_MEASURE#]
+VAR _selectedPeriod = SELECTEDVALUE(<DATE_TABLE>[&PERIOD_FIELD&])
+VAR _callout =
+  "<text x='20%' y='15%' fill='" & _textColor & "' font-size='12'>"
+    & "<tspan class='bolder'>" & FORMAT(_selectedValue, "#,0") & "</tspan>"
+    & "<tspan font-size='12'> <CALLOUT_SUFFIX> " & _selectedPeriod & "</tspan></text>"
+/* =========================
+   BAR DATA
+========================= */
+VAR _anchor =
+  CALCULATE(
+    MAX(<DATE_TABLE>[&PERIOD_SORT_FIELD&]),
+    REMOVEFILTERS(<DATE_TABLE>)
+  )
+VAR _periods =
+  FILTER(
+    SUMMARIZE(
+      ALL(<DATE_TABLE>),
+      <DATE_TABLE>[&PERIOD_FIELD&],
+      <DATE_TABLE>[&PERIOD_SORT_FIELD&]
+    ),
+    <DATE_TABLE>[&PERIOD_SORT_FIELD&] <= _anchor
+      && <DATE_TABLE>[&PERIOD_SORT_FIELD&] > _anchor - <PERIOD_COUNT>
+  )
+VAR _data =
+  ADDCOLUMNS(
+    _periods,
+    "@Value", [#VALUE_MEASURE#],
+    "@Row",
+      ROWNUMBER(
+        _periods,
+        ORDERBY(<DATE_TABLE>[&PERIOD_SORT_FIELD&], ASC)
+      )
+  )
+VAR _count = COUNTROWS(_data)
+VAR _maximum = MAXX(_data, [@Value])
+VAR _columnWidth =
+  MIN(
+    _maximumWidth,
+    DIVIDE(100 - (_count + 1) * _space, _count)
+  )
+/* =========================
+   BARS
+========================= */
+VAR _bars =
+  CONCATENATEX(
+    _data,
+    VAR _barHeight =
+      ROUND(DIVIDE([@Value], _maximum, 0) * 45, 2)
+    VAR _x = ([@Row] - 1) * _columnWidth + ([@Row] * _space)
+    VAR _y = 80 - _barHeight
+    VAR _centerX = _x + (_columnWidth / 2)
+    VAR _centerY = _y + (_barHeight / 2)
+    RETURN
+      "<rect class='bar' x='" & _x & "%' y='" & _y
+        & "%' width='" & _columnWidth & "%' height='" & _barHeight
+        & "%' rx='" & _rounding & "'/>"
+        & IF(
+            _barHeight >= 8,
+            "<text x='" & _centerX & "%' y='" & _centerY
+              & "%' text-anchor='middle' font-size='10' fill='white'>"
+              & FORMAT([@Value], "#,0") & "</text>",
+            ""
+          )
+  )
+/* =========================
+   PERIOD LABELS
+========================= */
+VAR _labels =
+  CONCATENATEX(
+    _data,
+    VAR _centerX =
+      ([@Row] - 1) * _columnWidth
+        + ([@Row] * _space)
+        + (_columnWidth / 2)
+    RETURN
+      "<text x='" & _centerX
+        & "%' y='86%' text-anchor='middle' font-size='10' fill='"
+        & _labelColor & "'>"
+        & <DATE_TABLE>[&PERIOD_LABEL_FIELD&]
+        & "</text>"
+  )
+RETURN
+  _declaration & _header & _style & _callout & _bars & _labels & _end

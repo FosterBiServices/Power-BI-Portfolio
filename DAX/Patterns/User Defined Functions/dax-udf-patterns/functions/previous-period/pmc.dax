@@ -1,0 +1,21 @@
+/// Evaluates an expression for the complete month before the current month.
+/// @param {ANYREF EXPR} CalcValue - Measure or expression evaluated inside the function.
+/// @param {ANYREF EXPR} dateTable - Date table whose filters are cleared when explicit boundaries are applied.
+/// @param {ANYREF EXPR} dateColumn - Continuous date column from the marked date table.
+/// @returns The calculated value for the requested time period.
+FUNCTION PriorMonthComplete = (
+    CalcValue : ANYREF EXPR,
+    dateTable : ANYREF EXPR,
+    dateColumn : ANYREF EXPR
+) =>
+VAR _LatestDate = MAX(dateColumn)
+VAR _EndDate = EOMONTH(_LatestDate, -1)
+VAR _StartDate = DATE(YEAR(_EndDate), MONTH(_EndDate), 1)
+VAR _Result =
+  CALCULATE(
+    CalcValue,
+    ALL(dateTable),
+    dateColumn >= _StartDate && dateColumn <= _EndDate
+  )
+RETURN
+  _Result

@@ -1,0 +1,481 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+WIOA Operational Metric Layout =
+DATATABLE(
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {1, "Adult/DW New Enrollments (% of Target)", "_adultEnrollments"},
+    {2, "Youth New Enrollments (% of Target)", "_youthEnrollments"},
+    {3, "Adult/DW High Impact Activity Starts (% of Target)", "_adultActivity"},
+    {4, "Youth High Impact Activity Starts (% of Target)", "_youthActivity"},
+    {5, "Adult MSG (% of Target)", "_adultMSG"},
+    {6, "DW MSG (% of Target)", "_dwMSG"},
+    {7, "Youth MSG (% of Target)", "_youthMSG"},
+    {8, "Adult / DW Employments @ Closure (% Positive)", "_adultDWEmployment"},
+    {9, "Youth Placements @ Closure (% Positive)", "_youthPlacement"},
+    {10, "Q2 Adult % Employment (% of Target)", "_adultQ2"},
+    {11, "Q2 DW % Employment (% of Target)", "_dwQ2"},
+    {12, "Q2 Youth % Placements (% of Target)", "_youthQ2"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = "YoY Trend"
+
+/* ============================================================
+   TIME PLACEHOLDERS
+   ============================================================ */
+
+VAR _year = [Current Fiscal Year]
+
+VAR _priorYear = [Prior Fiscal YTD]
+
+VAR _currentmonthsort = [Current Month Sort]
+
+VAR _month3 = [Month Year Prior 2]
+
+VAR _month2 = [Month Year Prior 1]
+
+VAR _month1 = [Month Year Current]
+
+VAR _displayMonth3 = [Month Display Prior 2]
+
+VAR _displayMonth2 = [Month Display Prior 1]
+
+VAR _displayMonth1 = [Month Display Current]
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE PLACEHOLDERS
+   ============================================================ */
+
+VAR __adultEnrollmentsMonth3 = CALCULATE([Adult_DW New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultEnrollmentsMonth2 = CALCULATE([Adult_DW New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultEnrollmentsMonth1 = CALCULATE([Adult_DW New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultEnrollmentsYtd = CALCULATE([Adult_DW New Enrollments], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __adultEnrollmentsTarget = CALCULATE([Adult_DW New Enrollments Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __adultEnrollmentsDisplay = FORMAT(__adultEnrollmentsYtd, "#,##") & IF(ISBLANK(DIVIDE(__adultEnrollmentsYtd, __adultEnrollmentsTarget)), "", " (" & FORMAT(DIVIDE(__adultEnrollmentsYtd, __adultEnrollmentsTarget), "0%") & ")")
+VAR __adultEnrollmentsPytd = CALCULATE([Adult_DW New Enrollments], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __adultEnrollmentsVar = __adultEnrollmentsYtd - __adultEnrollmentsPytd
+VAR __adultEnrollmentsVariancePct = DIVIDE(__adultEnrollmentsVar, __adultEnrollmentsPytd)
+VAR __adultEnrollmentsTrend = SWITCH(TRUE(), ISBLANK(__adultEnrollmentsVar), BLANK(), __adultEnrollmentsVar > 0, "up", __adultEnrollmentsVar < 0, "down", BLANK())
+
+VAR __youthEnrollmentsMonth3 = CALCULATE([Youth New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthEnrollmentsMonth2 = CALCULATE([Youth New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthEnrollmentsMonth1 = CALCULATE([Youth New Enrollments], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthEnrollmentsYtd = CALCULATE([Youth New Enrollments], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __youthEnrollmentsTarget = CALCULATE([Youth New Enrollments Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __youthEnrollmentsDisplay = FORMAT(__youthEnrollmentsYtd, "#,##") & IF(ISBLANK(DIVIDE(__youthEnrollmentsYtd, __youthEnrollmentsTarget)), "", " (" & FORMAT(DIVIDE(__youthEnrollmentsYtd, __youthEnrollmentsTarget), "0%") & ")")
+VAR __youthEnrollmentsPytd = CALCULATE([Youth New Enrollments], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __youthEnrollmentsVar = __youthEnrollmentsYtd - __youthEnrollmentsPytd
+VAR __youthEnrollmentsVariancePct = DIVIDE(__youthEnrollmentsVar, __youthEnrollmentsPytd)
+VAR __youthEnrollmentsTrend = SWITCH(TRUE(), ISBLANK(__youthEnrollmentsVar), BLANK(), __youthEnrollmentsVar > 0, "up", __youthEnrollmentsVar < 0, "down", BLANK())
+
+VAR __adultActivityMonth3 = CALCULATE([Adult_DW High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultActivityMonth2 = CALCULATE([Adult_DW High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultActivityMonth1 = CALCULATE([Adult_DW High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultActivityYtd = CALCULATE([Adult_DW High Impact Starts], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __adultActivityTarget = CALCULATE([Adult_DW High Impact Starts Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __adultActivityDisplay = FORMAT(__adultActivityYtd, "#,##") & IF(ISBLANK(DIVIDE(__adultActivityYtd, __adultActivityTarget)), "", " (" & FORMAT(DIVIDE(__adultActivityYtd, __adultActivityTarget), "0%") & ")")
+VAR __adultActivityPytd = CALCULATE([Adult_DW High Impact Starts], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __adultActivityVar = __adultActivityYtd - __adultActivityPytd
+VAR __adultActivityVariancePct = DIVIDE(__adultActivityVar, __adultActivityPytd)
+VAR __adultActivityTrend = SWITCH(TRUE(), ISBLANK(__adultActivityVar), BLANK(), __adultActivityVar > 0, "up", __adultActivityVar < 0, "down", BLANK())
+
+VAR __youthActivityMonth3 = CALCULATE([Youth High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthActivityMonth2 = CALCULATE([Youth High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthActivityMonth1 = CALCULATE([Youth High Impact Starts], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthActivityYtd = CALCULATE([Youth High Impact Starts], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __youthActivityTarget = CALCULATE([Youth High Impact Starts Target], ALL(dimdate), dimdate[Fiscal Year] = _year, dimdate[Month Sort] <= _currentmonthsort)
+VAR __youthActivityDisplay = FORMAT(__youthActivityYtd, "#,##") & IF(ISBLANK(DIVIDE(__youthActivityYtd, __youthActivityTarget)), "", " (" & FORMAT(DIVIDE(__youthActivityYtd, __youthActivityTarget), "0%") & ")")
+VAR __youthActivityPytd = CALCULATE([Youth High Impact Starts], ALL(dimdate), dimdate[Fiscal Year] = _year - 1, dimdate[Date] <= _priorYear)
+VAR __youthActivityVar = __youthActivityYtd - __youthActivityPytd
+VAR __youthActivityVariancePct = DIVIDE(__youthActivityVar, __youthActivityPytd)
+VAR __youthActivityTrend = SWITCH(TRUE(), ISBLANK(__youthActivityVar), BLANK(), __youthActivityVar > 0, "up", __youthActivityVar < 0, "down", BLANK())
+
+VAR __adultMSGMonth3 = CALCULATE([Adult MSG], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultMSGMonth2 = CALCULATE([Adult MSG], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultMSGMonth1 = CALCULATE([Adult MSG], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultMSGTargetMonth3 = CALCULATE([Adult MSG Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultMSGTargetMonth2 = CALCULATE([Adult MSG Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultMSGTargetMonth1 = CALCULATE([Adult MSG Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultMSGMonth3Display = FORMAT(DIVIDE(__adultMSGMonth3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultMSGMonth3, __adultMSGTargetMonth3)), "", " (" & FORMAT(DIVIDE(__adultMSGMonth3, __adultMSGTargetMonth3), "0%") & ")")
+VAR __adultMSGMonth2Display = FORMAT(DIVIDE(__adultMSGMonth2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultMSGMonth2, __adultMSGTargetMonth2)), "", " (" & FORMAT(DIVIDE(__adultMSGMonth2, __adultMSGTargetMonth2), "0%") & ")")
+VAR __adultMSGMonth1Display = FORMAT(DIVIDE(__adultMSGMonth1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultMSGMonth1, __adultMSGTargetMonth1)), "", " (" & FORMAT(DIVIDE(__adultMSGMonth1, __adultMSGTargetMonth1), "0%") & ")")
+
+VAR __dwMSGMonth3 = CALCULATE([DW MSG], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __dwMSGMonth2 = CALCULATE([DW MSG], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __dwMSGMonth1 = CALCULATE([DW MSG], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __dwMSGTargetMonth3 = CALCULATE([DW MSG Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __dwMSGTargetMonth2 = CALCULATE([DW MSG Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __dwMSGTargetMonth1 = CALCULATE([DW MSG Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __dwMSGMonth3Display = FORMAT(DIVIDE(__dwMSGMonth3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwMSGMonth3, __dwMSGTargetMonth3)), "", " (" & FORMAT(DIVIDE(__dwMSGMonth3, __dwMSGTargetMonth3), "0%") & ")")
+VAR __dwMSGMonth2Display = FORMAT(DIVIDE(__dwMSGMonth2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwMSGMonth2, __dwMSGTargetMonth2)), "", " (" & FORMAT(DIVIDE(__dwMSGMonth2, __dwMSGTargetMonth2), "0%") & ")")
+VAR __dwMSGMonth1Display = FORMAT(DIVIDE(__dwMSGMonth1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwMSGMonth1, __dwMSGTargetMonth1)), "", " (" & FORMAT(DIVIDE(__dwMSGMonth1, __dwMSGTargetMonth1), "0%") & ")")
+
+VAR __youthMSGMonth3 = CALCULATE([Youth MSG], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthMSGMonth2 = CALCULATE([Youth MSG], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthMSGMonth1 = CALCULATE([Youth MSG], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthMSGTargetMonth3 = CALCULATE([Youth MSG Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthMSGTargetMonth2 = CALCULATE([Youth MSG Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthMSGTargetMonth1 = CALCULATE([Youth MSG Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthMSGMonth3Display = FORMAT(DIVIDE(__youthMSGMonth3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthMSGMonth3, __youthMSGTargetMonth3)), "", " (" & FORMAT(DIVIDE(__youthMSGMonth3, __youthMSGTargetMonth3), "0%") & ")")
+VAR __youthMSGMonth2Display = FORMAT(DIVIDE(__youthMSGMonth2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthMSGMonth2, __youthMSGTargetMonth2)), "", " (" & FORMAT(DIVIDE(__youthMSGMonth2, __youthMSGTargetMonth2), "0%") & ")")
+VAR __youthMSGMonth1Display = FORMAT(DIVIDE(__youthMSGMonth1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthMSGMonth1, __youthMSGTargetMonth1)), "", " (" & FORMAT(DIVIDE(__youthMSGMonth1, __youthMSGTargetMonth1), "0%") & ")")
+
+VAR __adultDWEmploymentMonth3 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultDWEmploymentMonth2 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultDWEmploymentMonth1 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month1)
+
+VAR __youthPlacementMonth3 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthPlacementMonth2 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthPlacementMonth1 = CALCULATE([nan], ALL(dimdate), dimdate[Month_Year] = _month1)
+
+VAR __adultQ2Month3 = CALCULATE([Q2 Adult Employment], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultQ2Month2 = CALCULATE([Q2 Adult Employment], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultQ2Month1 = CALCULATE([Q2 Adult Employment], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultQ2TargetMonth3 = CALCULATE([Q2 Adult Employment Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __adultQ2TargetMonth2 = CALCULATE([Q2 Adult Employment Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __adultQ2TargetMonth1 = CALCULATE([Q2 Adult Employment Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __adultQ2Month3Display = FORMAT(DIVIDE(__adultQ2Month3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultQ2Month3, __adultQ2TargetMonth3)), "", " (" & FORMAT(DIVIDE(__adultQ2Month3, __adultQ2TargetMonth3), "0%") & ")")
+VAR __adultQ2Month2Display = FORMAT(DIVIDE(__adultQ2Month2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultQ2Month2, __adultQ2TargetMonth2)), "", " (" & FORMAT(DIVIDE(__adultQ2Month2, __adultQ2TargetMonth2), "0%") & ")")
+VAR __adultQ2Month1Display = FORMAT(DIVIDE(__adultQ2Month1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__adultQ2Month1, __adultQ2TargetMonth1)), "", " (" & FORMAT(DIVIDE(__adultQ2Month1, __adultQ2TargetMonth1), "0%") & ")")
+
+VAR __dwQ2Month3 = CALCULATE([Q2 DW Employment], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __dwQ2Month2 = CALCULATE([Q2 DW Employment], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __dwQ2Month1 = CALCULATE([Q2 DW Employment], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __dwQ2TargetMonth3 = CALCULATE([Q2 DW Employment Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __dwQ2TargetMonth2 = CALCULATE([Q2 DW Employment Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __dwQ2TargetMonth1 = CALCULATE([Q2 DW Employment Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __dwQ2Month3Display = FORMAT(DIVIDE(__dwQ2Month3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwQ2Month3, __dwQ2TargetMonth3)), "", " (" & FORMAT(DIVIDE(__dwQ2Month3, __dwQ2TargetMonth3), "0%") & ")")
+VAR __dwQ2Month2Display = FORMAT(DIVIDE(__dwQ2Month2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwQ2Month2, __dwQ2TargetMonth2)), "", " (" & FORMAT(DIVIDE(__dwQ2Month2, __dwQ2TargetMonth2), "0%") & ")")
+VAR __dwQ2Month1Display = FORMAT(DIVIDE(__dwQ2Month1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__dwQ2Month1, __dwQ2TargetMonth1)), "", " (" & FORMAT(DIVIDE(__dwQ2Month1, __dwQ2TargetMonth1), "0%") & ")")
+
+VAR __youthQ2Month3 = CALCULATE([Q2 Youth Employment], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthQ2Month2 = CALCULATE([Q2 Youth Employment], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthQ2Month1 = CALCULATE([Q2 Youth Employment], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthQ2TargetMonth3 = CALCULATE([Q2 Youth Employment Target], ALL(dimdate), dimdate[Month_Year] = _month3)
+VAR __youthQ2TargetMonth2 = CALCULATE([Q2 Youth Employment Target], ALL(dimdate), dimdate[Month_Year] = _month2)
+VAR __youthQ2TargetMonth1 = CALCULATE([Q2 Youth Employment Target], ALL(dimdate), dimdate[Month_Year] = _month1)
+VAR __youthQ2Month3Display = FORMAT(DIVIDE(__youthQ2Month3,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthQ2Month3, __youthQ2TargetMonth3)), "", " (" & FORMAT(DIVIDE(__youthQ2Month3, __youthQ2TargetMonth3), "0%") & ")")
+VAR __youthQ2Month2Display = FORMAT(DIVIDE(__youthQ2Month2,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthQ2Month2, __youthQ2TargetMonth2)), "", " (" & FORMAT(DIVIDE(__youthQ2Month2, __youthQ2TargetMonth2), "0%") & ")")
+VAR __youthQ2Month1Display = FORMAT(DIVIDE(__youthQ2Month1,100), "#,##0%") & IF(ISBLANK(DIVIDE(__youthQ2Month1, __youthQ2TargetMonth1)), "", " (" & FORMAT(DIVIDE(__youthQ2Month1, __youthQ2TargetMonth1), "0%") & ")")
+
+/* ============================================================
+   OPERATIONAL EXCELLENCE STATUS
+   ============================================================ */
+
+VAR __adultEnrollmentsStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__adultEnrollmentsMonth1), BLANK(),
+        __adultEnrollmentsMonth1 >= 10, "red",
+        __adultEnrollmentsMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __youthEnrollmentsStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__youthEnrollmentsMonth1), BLANK(),
+        __youthEnrollmentsMonth1 >= 10, "red",
+        __youthEnrollmentsMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __adultActivityStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__adultActivityMonth1), BLANK(),
+        __adultActivityMonth1 >= 10, "red",
+        __adultActivityMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __youthActivityStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__youthActivityMonth1), BLANK(),
+        __youthActivityMonth1 >= 10, "red",
+        __youthActivityMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __adultMSGStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__adultMSGMonth1), BLANK(),
+        __adultMSGMonth1 >= 10, "red",
+        __adultMSGMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __dwMSGStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__dwMSGMonth1), BLANK(),
+        __dwMSGMonth1 >= 10, "red",
+        __dwMSGMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __youthMSGStatus =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__youthMSGMonth1), BLANK(),
+        __youthMSGMonth1 >= 10, "red",
+        __youthMSGMonth1 >= 5, "amber",
+        "green"
+    )
+
+VAR __adultDWEmploymentStatus = BLANK()
+
+VAR __youthPlacementStatus = BLANK()
+
+VAR __adultQ2Status =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__adultQ2Month1), BLANK(),
+        __adultQ2Month1 >= 10, "red",
+        __adultQ2Month1 >= 5, "amber",
+        "green"
+    )
+
+VAR __dwQ2Status =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__dwQ2Month1), BLANK(),
+        __dwQ2Month1 >= 10, "red",
+        __dwQ2Month1 >= 5, "amber",
+        "green"
+    )
+
+VAR __youthQ2Status =
+    SWITCH(
+        TRUE(),
+        ISBLANK(__youthQ2Month1), BLANK(),
+        __youthQ2Month1 >= 10, "red",
+        __youthQ2Month1 >= 5, "amber",
+        "green"
+    )
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _operationalRows =
+    CONCATENATEX(
+        'WIOA Operational Metric Layout',
+        VAR _metricKey = [MetricKey]
+
+    VAR _status =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsStatus,
+            "_youthEnrollments", __youthEnrollmentsStatus,
+            "_adultActivity", __adultActivityStatus,
+            "_youthActivity", __youthActivityStatus,
+            "_adultMSG", __adultMSGStatus,
+            "_dwMSG", __dwMSGStatus,
+            "_youthMSG", __youthMSGStatus,
+            "_adultDWEmployment", __adultDWEmploymentStatus,
+            "_youthPlacement", __youthPlacementStatus,
+            "_adultQ2", __adultQ2Status,
+            "_dwQ2", __dwQ2Status,
+            "_youthQ2", __youthQ2Status
+        )
+
+    VAR _ytd =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsDisplay,
+            "_youthEnrollments", __youthEnrollmentsDisplay,
+            "_adultActivity", __adultActivityDisplay,
+            "_youthActivity", __youthActivityDisplay
+        )
+
+    VAR _monthPrior2 =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsMonth3,
+            "_youthEnrollments", __youthEnrollmentsMonth3,
+            "_adultActivity", __adultActivityMonth3,
+            "_youthActivity", __youthActivityMonth3,
+            "_adultMSG", __adultMSGMonth3Display,
+            "_dwMSG", __dwMSGMonth3Display,
+            "_youthMSG", __youthMSGMonth3Display,
+            "_adultDWEmployment", __adultDWEmploymentMonth3,
+            "_youthPlacement", __youthPlacementMonth3,
+            "_adultQ2", __adultQ2Month3Display,
+            "_dwQ2", __dwQ2Month3Display,
+            "_youthQ2", __youthQ2Month3Display
+        )
+
+    VAR _monthPrior1 =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsMonth2,
+            "_youthEnrollments", __youthEnrollmentsMonth2,
+            "_adultActivity", __adultActivityMonth2,
+            "_youthActivity", __youthActivityMonth2,
+            "_adultMSG", __adultMSGMonth2Display,
+            "_dwMSG", __dwMSGMonth2Display,
+            "_youthMSG", __youthMSGMonth2Display,
+            "_adultDWEmployment", __adultDWEmploymentMonth2,
+            "_youthPlacement", __youthPlacementMonth2,
+            "_adultQ2", __adultQ2Month2Display,
+            "_dwQ2", __dwQ2Month2Display,
+            "_youthQ2", __youthQ2Month2Display
+        )
+
+    VAR _currentMonth =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsMonth1,
+            "_youthEnrollments", __youthEnrollmentsMonth1,
+            "_adultActivity", __adultActivityMonth1,
+            "_youthActivity", __youthActivityMonth1,
+            "_adultMSG", __adultMSGMonth1Display,
+            "_dwMSG", __dwMSGMonth1Display,
+            "_youthMSG", __youthMSGMonth1Display,
+            "_adultDWEmployment", __adultDWEmploymentMonth1,
+            "_youthPlacement", __youthPlacementMonth1,
+            "_adultQ2", __adultQ2Month1Display,
+            "_dwQ2", __dwQ2Month1Display,
+            "_youthQ2", __youthQ2Month1Display
+        )
+
+    VAR _trendIcon =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsTrend,
+            "_youthEnrollments", __youthEnrollmentsTrend,
+            "_adultActivity", __adultActivityTrend,
+            "_youthActivity", __youthActivityTrend
+        )
+
+    VAR _pyVAR =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", __adultEnrollmentsVariancePct,
+            "_youthEnrollments", __youthEnrollmentsVariancePct,
+            "_adultActivity", __adultActivityVariancePct,
+            "_youthActivity", __youthActivityVariancePct
+        )
+
+        VAR _trendHtml =
+            SWITCH(
+                TRUE(),
+                ISBLANK(_pyVAR), "",
+                _trendIcon = "up",
+                    "<span class='trend up'>▲ "
+                        & FORMAT(_pyVAR, "0.0%")
+                        & "</span>",
+                _trendIcon = "down",
+                    "<span class='trend down'>▼ "
+                        & FORMAT(ABS(_pyVAR), "0.0%")
+                        & "</span>",
+                FORMAT(_pyVAR, "0.0%")
+            )
+
+    VAR _formatString =
+        SWITCH(
+            _metricKey,
+            "_adultEnrollments", "#,##0",
+            "_youthEnrollments", "#,##0",
+            "_adultActivity", "#,##0",
+            "_youthActivity", "#,##0",
+            "_adultMSG", "#,##0%",
+            "_dwMSG", "#,##0%",
+            "_youthMSG", "#,##0%",
+            "_adultDWEmployment", "#,##0%",
+            "_youthPlacement", "#,##0%",
+            "_adultQ2", "#,##0%",
+            "_dwQ2", "#,##0%",
+            "_youthQ2", "#,##0%"
+        )
+
+        VAR _ytdHtml =
+            IF(
+                ISBLANK(_ytd),
+                "",
+                    FORMAT(_ytd, _formatString)
+            )
+        VAR _monthPrior2Html =
+            IF(
+                ISBLANK(_monthPrior2),
+                "",
+                    FORMAT(_monthPrior2, _formatString)
+            )
+        VAR _monthPrior1Html =
+            IF(
+                ISBLANK(_monthPrior1),
+                "",
+                    FORMAT(_monthPrior1, _formatString)
+            )
+        VAR _currentMonthHtml =
+            IF(
+                ISBLANK(_currentMonth),
+                "",
+                    FORMAT(_currentMonth, _formatString)
+            )
+        RETURN
+            "<tr>"
+                & "<td class='label'>" & [MetricName] & "</td>"
+                & "<td class='status'><span class='dot "
+                & COALESCE(_status, "") & "'></span></td>"
+                & "<td class='number'>" & _ytdHtml & "</td>"
+                & "<td class='number'>" & _monthPrior2Html & "</td>"
+                & "<td class='number'>" & _monthPrior1Html & "</td>"
+                & "<td class='number'>" & _currentMonthHtml & "</td>"
+                & "<td class='number'>" & _trendHtml & "</td>"
+                & "</tr>",
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT(_year, 2), "##") & " YTD</th>
+            <th>" & _displayMonth3 & "</th>
+            <th>" & _displayMonth2 & "</th>
+            <th>" & _displayMonth1 & "</th>
+            <th>" & _trending & "</th>
+          </tr>"
+        & _operationalRows
+        & "
+        </table>
+      </td>
+      <td class='right commentbackground'>
+        <div class='commentsheader'></div>
+        <div class='commentary'></div>
+      </td>
+    </tr>
+    "

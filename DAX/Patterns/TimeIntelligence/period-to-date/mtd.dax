@@ -1,0 +1,17 @@
+// Pattern: MTD | Month-to-date
+// Purpose: Evaluates the base measure from the start of the month through the last visible date.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> MTD =
+CALCULATE(
+  [#VALUE_MEASURE#],
+  DATESMTD(
+    <DATE_TABLE>[&DATE_FIELD&]
+  )
+)

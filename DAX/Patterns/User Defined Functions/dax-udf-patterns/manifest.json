@@ -1,0 +1,210 @@
+[
+  {
+    "code": "YTD",
+    "function": "YearToDate",
+    "name": "Year-to-date",
+    "purpose": "Evaluates an expression from the first day of the current year through the latest visible date.",
+    "output": "value",
+    "path": "functions/period-to-date/ytd.dax"
+  },
+  {
+    "code": "QTD",
+    "function": "QuarterToDate",
+    "name": "Quarter-to-date",
+    "purpose": "Evaluates an expression from the first day of the current quarter through the latest visible date.",
+    "output": "value",
+    "path": "functions/period-to-date/qtd.dax"
+  },
+  {
+    "code": "MTD",
+    "function": "MonthToDate",
+    "name": "Month-to-date",
+    "purpose": "Evaluates an expression from the first day of the current month through the latest visible date.",
+    "output": "value",
+    "path": "functions/period-to-date/mtd.dax"
+  },
+  {
+    "code": "MAT",
+    "function": "MovingAnnualTotal",
+    "name": "Moving annual total",
+    "purpose": "Evaluates an expression for the 12-month window ending on the latest visible date.",
+    "output": "value",
+    "path": "functions/moving/mat.dax"
+  },
+  {
+    "code": "PY",
+    "function": "PriorYear",
+    "name": "Previous year",
+    "purpose": "Evaluates an expression in the current date context shifted back one year.",
+    "output": "value",
+    "path": "functions/previous-period/py.dax"
+  },
+  {
+    "code": "PQ",
+    "function": "PriorQuarter",
+    "name": "Previous quarter",
+    "purpose": "Evaluates an expression in the current date context shifted back one quarter.",
+    "output": "value",
+    "path": "functions/previous-period/pq.dax"
+  },
+  {
+    "code": "PM",
+    "function": "PriorMonth",
+    "name": "Previous month",
+    "purpose": "Evaluates an expression in the current date context shifted back one month.",
+    "output": "value",
+    "path": "functions/previous-period/pm.dax"
+  },
+  {
+    "code": "PYC",
+    "function": "PriorYearComplete",
+    "name": "Previous year complete",
+    "purpose": "Evaluates an expression for the complete calendar year before the current year.",
+    "output": "value",
+    "path": "functions/previous-period/pyc.dax"
+  },
+  {
+    "code": "PQC",
+    "function": "PriorQuarterComplete",
+    "name": "Previous quarter complete",
+    "purpose": "Evaluates an expression for the complete quarter before the current quarter.",
+    "output": "value",
+    "path": "functions/previous-period/pqc.dax"
+  },
+  {
+    "code": "PMC",
+    "function": "PriorMonthComplete",
+    "name": "Previous month complete",
+    "purpose": "Evaluates an expression for the complete month before the current month.",
+    "output": "value",
+    "path": "functions/previous-period/pmc.dax"
+  },
+  {
+    "code": "PP",
+    "function": "PriorPeriod",
+    "name": "Previous period",
+    "purpose": "Selects the previous month, quarter, or year according to hierarchy scope.",
+    "output": "value",
+    "path": "functions/dynamic/pp.dax"
+  },
+  {
+    "code": "PYMAT",
+    "function": "PriorYearMovingAnnualTotal",
+    "name": "Previous year moving annual total",
+    "purpose": "Evaluates the comparable 12-month window ending one year before the latest visible date.",
+    "output": "value",
+    "path": "functions/moving/pymat.dax"
+  },
+  {
+    "code": "YOY",
+    "function": "YearOverYear",
+    "name": "Year-over-year",
+    "purpose": "Returns growth versus the comparable date context one year earlier.",
+    "output": "percentage",
+    "path": "functions/growth/yoy.dax"
+  },
+  {
+    "code": "QOQ",
+    "function": "QuarterOverQuarter",
+    "name": "Quarter-over-quarter",
+    "purpose": "Returns growth versus the comparable date context one quarter earlier.",
+    "output": "percentage",
+    "path": "functions/growth/qoq.dax"
+  },
+  {
+    "code": "MOM",
+    "function": "MonthOverMonth",
+    "name": "Month-over-month",
+    "purpose": "Returns growth versus the comparable date context one month earlier.",
+    "output": "percentage",
+    "path": "functions/growth/mom.dax"
+  },
+  {
+    "code": "MATG",
+    "function": "MovingAnnualTotalGrowth",
+    "name": "Moving annual total growth",
+    "purpose": "Returns growth between the current moving annual total and the comparable prior-year window.",
+    "output": "percentage",
+    "path": "functions/growth/matg.dax"
+  },
+  {
+    "code": "POP",
+    "function": "PeriodOverPeriod",
+    "name": "Period-over-period",
+    "purpose": "Returns growth versus the previous month, quarter, or year according to hierarchy scope.",
+    "output": "percentage",
+    "path": "functions/dynamic/pop.dax"
+  },
+  {
+    "code": "PYTD",
+    "function": "PriorYearToDate",
+    "name": "Previous year-to-date",
+    "purpose": "Evaluates an expression through the corresponding elapsed point in the prior year.",
+    "output": "value",
+    "path": "functions/period-to-date/pytd.dax"
+  },
+  {
+    "code": "PQTD",
+    "function": "PriorQuarterToDate",
+    "name": "Previous quarter-to-date",
+    "purpose": "Evaluates an expression through the corresponding elapsed point in the prior quarter.",
+    "output": "value",
+    "path": "functions/period-to-date/pqtd.dax"
+  },
+  {
+    "code": "PMTD",
+    "function": "PriorMonthToDate",
+    "name": "Previous month-to-date",
+    "purpose": "Evaluates an expression through the corresponding elapsed point in the prior month.",
+    "output": "value",
+    "path": "functions/period-to-date/pmtd.dax"
+  },
+  {
+    "code": "YOYTD",
+    "function": "YearOverYearToDate",
+    "name": "Year-over-year-to-date",
+    "purpose": "Returns growth between current period-to-date and the corresponding prior period-to-date.",
+    "output": "percentage",
+    "path": "functions/growth/yoytd.dax"
+  },
+  {
+    "code": "QOQTD",
+    "function": "QuarterOverQuarterToDate",
+    "name": "Quarter-over-quarter-to-date",
+    "purpose": "Returns growth between current period-to-date and the corresponding prior period-to-date.",
+    "output": "percentage",
+    "path": "functions/growth/qoqtd.dax"
+  },
+  {
+    "code": "MOMTD",
+    "function": "MonthOverMonthToDate",
+    "name": "Month-over-month-to-date",
+    "purpose": "Returns growth between current period-to-date and the corresponding prior period-to-date.",
+    "output": "percentage",
+    "path": "functions/growth/momtd.dax"
+  },
+  {
+    "code": "YTDOPY",
+    "function": "YearToDateOverPriorYear",
+    "name": "Year-to-date over previous year",
+    "purpose": "Returns growth between the current period-to-date and the complete immediately preceding period.",
+    "output": "percentage",
+    "path": "functions/growth/ytdopy.dax"
+  },
+  {
+    "code": "QTDOPQ",
+    "function": "QuarterToDateOverPriorQuarter",
+    "name": "Quarter-to-date over previous quarter",
+    "purpose": "Returns growth between the current period-to-date and the complete immediately preceding period.",
+    "output": "percentage",
+    "path": "functions/growth/qtdopq.dax"
+  },
+  {
+    "code": "MTDOPM",
+    "function": "MonthToDateOverPriorMonth",
+    "name": "Month-to-date over previous month",
+    "purpose": "Returns growth between the current period-to-date and the complete immediately preceding period.",
+    "output": "percentage",
+    "path": "functions/growth/mtdopm.dax"
+  }
+]

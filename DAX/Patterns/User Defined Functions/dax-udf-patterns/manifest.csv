@@ -1,0 +1,27 @@
+code,function,name,purpose,output,path
+YTD,YearToDate,Year-to-date,Evaluates an expression from the first day of the current year through the latest visible date.,value,functions/period-to-date/ytd.dax
+QTD,QuarterToDate,Quarter-to-date,Evaluates an expression from the first day of the current quarter through the latest visible date.,value,functions/period-to-date/qtd.dax
+MTD,MonthToDate,Month-to-date,Evaluates an expression from the first day of the current month through the latest visible date.,value,functions/period-to-date/mtd.dax
+MAT,MovingAnnualTotal,Moving annual total,Evaluates an expression for the 12-month window ending on the latest visible date.,value,functions/moving/mat.dax
+PY,PriorYear,Previous year,Evaluates an expression in the current date context shifted back one year.,value,functions/previous-period/py.dax
+PQ,PriorQuarter,Previous quarter,Evaluates an expression in the current date context shifted back one quarter.,value,functions/previous-period/pq.dax
+PM,PriorMonth,Previous month,Evaluates an expression in the current date context shifted back one month.,value,functions/previous-period/pm.dax
+PYC,PriorYearComplete,Previous year complete,Evaluates an expression for the complete calendar year before the current year.,value,functions/previous-period/pyc.dax
+PQC,PriorQuarterComplete,Previous quarter complete,Evaluates an expression for the complete quarter before the current quarter.,value,functions/previous-period/pqc.dax
+PMC,PriorMonthComplete,Previous month complete,Evaluates an expression for the complete month before the current month.,value,functions/previous-period/pmc.dax
+PP,PriorPeriod,Previous period,"Selects the previous month, quarter, or year according to hierarchy scope.",value,functions/dynamic/pp.dax
+PYMAT,PriorYearMovingAnnualTotal,Previous year moving annual total,Evaluates the comparable 12-month window ending one year before the latest visible date.,value,functions/moving/pymat.dax
+YOY,YearOverYear,Year-over-year,Returns growth versus the comparable date context one year earlier.,percentage,functions/growth/yoy.dax
+QOQ,QuarterOverQuarter,Quarter-over-quarter,Returns growth versus the comparable date context one quarter earlier.,percentage,functions/growth/qoq.dax
+MOM,MonthOverMonth,Month-over-month,Returns growth versus the comparable date context one month earlier.,percentage,functions/growth/mom.dax
+MATG,MovingAnnualTotalGrowth,Moving annual total growth,Returns growth between the current moving annual total and the comparable prior-year window.,percentage,functions/growth/matg.dax
+POP,PeriodOverPeriod,Period-over-period,"Returns growth versus the previous month, quarter, or year according to hierarchy scope.",percentage,functions/dynamic/pop.dax
+PYTD,PriorYearToDate,Previous year-to-date,Evaluates an expression through the corresponding elapsed point in the prior year.,value,functions/period-to-date/pytd.dax
+PQTD,PriorQuarterToDate,Previous quarter-to-date,Evaluates an expression through the corresponding elapsed point in the prior quarter.,value,functions/period-to-date/pqtd.dax
+PMTD,PriorMonthToDate,Previous month-to-date,Evaluates an expression through the corresponding elapsed point in the prior month.,value,functions/period-to-date/pmtd.dax
+YOYTD,YearOverYearToDate,Year-over-year-to-date,Returns growth between current period-to-date and the corresponding prior period-to-date.,percentage,functions/growth/yoytd.dax
+QOQTD,QuarterOverQuarterToDate,Quarter-over-quarter-to-date,Returns growth between current period-to-date and the corresponding prior period-to-date.,percentage,functions/growth/qoqtd.dax
+MOMTD,MonthOverMonthToDate,Month-over-month-to-date,Returns growth between current period-to-date and the corresponding prior period-to-date.,percentage,functions/growth/momtd.dax
+YTDOPY,YearToDateOverPriorYear,Year-to-date over previous year,Returns growth between the current period-to-date and the complete immediately preceding period.,percentage,functions/growth/ytdopy.dax
+QTDOPQ,QuarterToDateOverPriorQuarter,Quarter-to-date over previous quarter,Returns growth between the current period-to-date and the complete immediately preceding period.,percentage,functions/growth/qtdopq.dax
+MTDOPM,MonthToDateOverPriorMonth,Month-to-date over previous month,Returns growth between the current period-to-date and the complete immediately preceding period.,percentage,functions/growth/mtdopm.dax

@@ -1,0 +1,60 @@
+// Pattern: STAR_RATING_SVG | Star Rating SVG
+// Purpose: Returns an SVG rating made from full, half, and empty stars.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _metric = SELECTEDVALUE(<THRESHOLD_TABLE>[&METRIC_FIELD&])
+VAR _score = [#VALUE_MEASURE#]
+VAR _maximum =
+  CALCULATE(
+    MAX(<WEIGHT_TABLE>[&WEIGHT_FIELD&]),
+    <WEIGHT_TABLE>[&METRIC_FIELD&] = _metric
+  )
+VAR _percentage = COALESCE(DIVIDE(_score, _maximum), 0)
+VAR _total = <STAR_COUNT>
+VAR _exact = MIN(_total, MAX(0, _percentage * _total))
+VAR _fullCount = INT(_exact)
+VAR _halfCount = IF(_exact - _fullCount >= 0.5, 1, 0)
+VAR _emptyCount = _total - _fullCount - _halfCount
+VAR _full =
+  "<path fill='#9C6500' d='M62.615 5.36c3.527-7.147 13.723-7.147 17.25 0l16.8 34.043 37.57 5.458c7.888 1.14 11.037 10.844 5.33 16.409l-27.189 26.497 6.419 37.407c1.354 7.866-6.897 13.858-13.958 10.146l-33.601-17.67-33.594 17.67c-7.054 3.705-15.305-2.28-13.965-10.139l6.42-37.413L2.913 61.263C-2.793 55.705.356 46.008 8.244 44.86l37.57-5.458 16.8-34.043Z'/>"
+VAR _half =
+  "<defs><linearGradient id='half'><stop offset='50%' stop-color='#9C6500'/><stop offset='50%' stop-color='white'/></linearGradient></defs>"
+    & SUBSTITUTE(_full, "fill='#9C6500'", "fill='url(#half)' stroke='#9C6500' stroke-width='4'")
+VAR _empty = SUBSTITUTE(_full, "fill='#9C6500'", "fill='none' stroke='#9C6500' stroke-width='4'")
+VAR _cellWidth = 150
+VAR _cellHeight = 150
+VAR _fullStars =
+  CONCATENATEX(
+    GENERATESERIES(0, _fullCount - 1, 1),
+    "<svg x='" & (_cellWidth * [Value])
+      & "' width='" & _cellWidth & "' height='" & _cellHeight
+      & "' viewBox='0 0 150 150'>" & _full & "</svg>",
+    ""
+  )
+VAR _halfStar =
+  IF(
+    _halfCount = 1,
+    "<svg x='" & (_cellWidth * _fullCount)
+      & "' width='" & _cellWidth & "' height='" & _cellHeight
+      & "' viewBox='0 0 150 150'>" & _half & "</svg>",
+    ""
+  )
+VAR _emptyStars =
+  CONCATENATEX(
+    GENERATESERIES(0, _emptyCount - 1, 1),
+    "<svg x='" & (_cellWidth * (_fullCount + _halfCount + [Value]))
+      & "' width='" & _cellWidth & "' height='" & _cellHeight
+      & "' viewBox='0 0 150 150'>" & _empty & "</svg>",
+    ""
+  )
+RETURN
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 "
+    & (_cellWidth * _total) & " " & _cellHeight & "' width='300' height='30'>"
+    & _fullStars & _halfStar & _emptyStars & "</svg>"

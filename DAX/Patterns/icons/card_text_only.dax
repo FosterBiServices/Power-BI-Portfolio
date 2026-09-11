@@ -1,0 +1,41 @@
+// Pattern: CARD_TEXT_ONLY | Card with Text Only
+// Purpose: Returns an SVG KPI card containing primary, secondary, and target-summary text.
+// Required replacements:
+//   [#VALUE_MEASURE#]              Existing measure evaluated by this pattern
+//   <DATE_TABLE>[&DATE_FIELD&]     Continuous date column from the marked date table
+// Notes:
+//   Replace <#MEASURE_NAME#> with the published measure name.
+//   Growth patterns return a decimal ratio and should be formatted as a percentage.
+//   Validate results at year, quarter, month, and total levels before release.
+
+<#MEASURE_NAME#> =
+VAR _width = 413.33
+VAR _height = 80
+VAR _data =
+  ADDCOLUMNS(
+    SUMMARIZE(
+      <DATE_TABLE>,
+      <DATE_TABLE>[&PERIOD_FIELD&],
+      <DATE_TABLE>[&PERIOD_SORT_FIELD&]
+    ),
+    "@Value", [#VALUE_MEASURE#],
+    "@Target", [#TARGET_MEASURE#]
+  )
+VAR _count = COUNTROWS(_data)
+VAR _met = COUNTROWS(FILTER(_data, [@Target] >= [@Value]))
+VAR _style =
+  "<style>text{font-family:Segoe UI}.bold{font-weight:600}</style>"
+VAR _content =
+  "<text x='4%' y='24%' font-size='18' fill='#333333' class='bold'><TITLE_TEXT></text>"
+    & "<text x='99%' y='20%' text-anchor='end' font-size='12' fill='#808080'>"
+    & [#PRIMARY_SUMMARY_MEASURE#] & "</text>"
+    & "<text x='4%' y='74%' font-size='18' fill='#333333' class='bold'>"
+    & [#SECONDARY_SUMMARY_MEASURE#] & "</text>"
+    & "<text x='99%' y='50%' text-anchor='end' font-size='12' fill='#808080'>"
+    & [#PERIOD_SUMMARY_MEASURE#] & "</text>"
+    & "<text x='99%' y='80%' text-anchor='end' font-size='10' fill='#B3B3B3'>"
+    & _met & " of " & _count & " <TARGET_SUFFIX></text>"
+RETURN
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='"
+    & _width & "' height='" & _height & "'>"
+    & _style & _content & "</svg>"

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "<ITEMS_GROUP_ID>",
+  "position": {
+    "x": <ITEMS_GROUP_POS_X>,
+    "y": <ITEMS_GROUP_POS_Y>,
+    "z": <ITEMS_GROUP_POS_Z>,
+    "height": <ITEMS_GROUP_POS_HEIGHT>,
+    "width": <ITEMS_GROUP_POS_WIDTH>,
+    "tabOrder": <ITEMS_GROUP_TAB_ORDER>
+  },
+  "visualGroup": {
+    "displayName": "<ITEMS_GROUP_TITLE>",
+    "groupMode": "ScaleMode"
+  },
+  "parentGroupName": "<PAGINATION_GROUP_ID>"
+}
