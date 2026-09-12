@@ -1,0 +1,81 @@
+let
+  // Pick Sheet Number (1=first, 5=fifth)
+      n = 1,
+  Source = Excel.Workbook(
+    Web.Contents(
+      "https://fosterbiservices.sharepoint.com/sites/DataandInsights/Shared%20Documents/Power%20BI%20Source%20Files/DOR-AJCC%20Collab/(All)%20DOR-AJCC%20Collab_GrantExiters.xlsx"
+    ), 
+    null, 
+    true
+  ), 
+
+  // Worksheets only
+      SheetsOnly = Table.SelectRows(Source, each [Kind] = "Sheet"),
+      SheetsOrdered = Table.Buffer(SheetsOnly),
+
+      // Guard against bad n
+      CountSheets = Table.RowCount(SheetsOnly),
+      NthSheetRow = 
+          if n >= 1 and n <= CountSheets 
+          then Table.First(Table.Skip(SheetsOrdered, n - 1)) 
+          else error Text.Format("Requested sheet index (#[n]) is out of range (1..#[m]).", [n=n, m=CountSheets]),
+
+      // Get that sheet's data
+      NthSheetData = NthSheetRow[Data],
+  RemoveRows = fxRemoveExiterRows(
+    NthSheetData
+  ), 
+  KeepRows = fxKeepExiterRows(
+    RemoveRows
+  ), 
+  ColumnCleanUp = fxColumnNameCleanup(
+    KeepRows
+  ), 
+  RemovedColumns = Table.RemoveColumns(
+    ColumnCleanUp, 
+    {"COLUMN2", "COLUMN11"}
+  ), 
+  TypePairs = {
+    {"GRANT", type text}, 
+    {"EXIT DATE", type date}, 
+    {
+      "LAST GRANT ACTIVITY DATE", 
+      type date
+    }, 
+    {"GRANT ENROLL DATE", type date}, 
+    {"PARTICIPATION DATE", type date}, 
+    {"LWDB", type text}, 
+    {"STATE ID", type text}, 
+    {"APP ID", type text}, 
+    {"RESPONSIBLE OFFICE", type text}, 
+    {"EXIT REASON", type text}, 
+    {"RECEIVED CREDENTIAL", type text}, 
+    {"ENTERED EMPLOYMENT", type text}
+  }, 
+  ExistingCols = Table.ColumnNames(
+    RemovedColumns
+  ), 
+    // Keep type rules only for columns that actually exist
+    TypePairsExistingOnly = List.Select(
+        TypePairs,
+        each List.Contains(ExistingCols, _{0})
+    ),
+
+    // Convert those explicit pairs into a lookup record: ColumnName -> Type
+    ExplicitTypeMap = Record.FromList(
+        List.Transform(TypePairsExistingOnly, each _{1}),
+        List.Transform(TypePairsExistingOnly, each _{0})
+    ),
+
+
+    // - If we specified a type in ExplicitTypeMap, use it.
+    // - Otherwise default to type text.
+    AllTypePairs = List.Transform(
+        ExistingCols,
+        (c) => { c, Record.FieldOrDefault(ExplicitTypeMap, c, type text) }
+    ),
+
+    // Apply types in one go
+    ChangeTypes = Table.TransformColumnTypes(RemovedColumns, AllTypePairs)
+in
+    ChangeTypes

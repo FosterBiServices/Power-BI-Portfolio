@@ -1,0 +1,68 @@
+Card with Text Only = 
+/* SETUP */
+VAR _width = 413.33
+VAR _height = 80
+
+VAR _initialTbl =
+    ADDCOLUMNS (
+        SELECTCOLUMNS (
+            SUMMARIZE ( 'dimdate', 'dimdate'[Month Year], 'dimdate'[YearMonthSort] ),
+            "@xAxisPeriod", 'dimdate'[Month Year],
+            "@xAxisPeriodSort", 'dimdate'[YearMonthSort]
+        ),
+        "@val", [Balance Expenses],
+        "@target", [Balance Expenses Budget Financials],
+        "@var", [Balance Expenses Variance]
+    )
+
+/* TEXT DECLARATIONS */
+VAR _firstLineInitialText = "Expenses"
+VAR _firstLineEndText = [Balance Expenses Last Completed Month Formatted]
+VAR _secondLineInitialText = CONCATENATE([Balance Expenses Formatted], REPT("‏‏‎ ‎",3))
+VAR _secondLineEndText = [Balance Expenses FYTD Formatted]
+VAR _thirdLineMiddleText = " of "
+VAR _thirdLineEndText = "months beat budget" 
+
+/* COLORS */
+VAR _darkGrey = "#808080"
+VAR _lightGrey = "B3B3B3"
+VAR _labelColor = "#333333"
+
+/* SVG DECLARATIONS */
+VAR _svgDeclaration = "data:image/svg+xml;utf8,"
+VAR _svgHeader = "<svg xmlns='http://www.w3.org/2000/svg' width='" & _width & "' height='" & _height & "'>"
+VAR _svgEnd = "</svg>"
+
+/* CSS */
+VAR _style = "<style>
+    text{ font-family:Segoe UI; }
+    .txtGroup{ dominant-baseline:middle; text-anchor:start; }
+    .bolder{ font-weight:bold; }
+</style>"
+
+/* CALCULATIONS */
+VAR _preparedTbl =
+    ADDCOLUMNS (
+        _initialTbl,
+        "@rowNum", RANKX ( _initialTbl, [@xAxisPeriodSort], , ASC )
+    )
+VAR _rowCounter = COUNTROWS ( _preparedTbl )
+
+VAR _initialText =
+    "<g class='txtGroup'>" &
+        "<text y='24%' x='4%' font-size='150%' text-anchor='start' fill='" &
+            _labelColor & "'><tspan class='bolder'> " & _firstLineInitialText & "</tspan></text>" &
+        "<text y='20%' x='99%' font-size='100%' text-anchor='end' fill='" &
+            _darkGrey & "'><tspan class='bolder'> " & _firstLineEndText & "</tspan></text>" &
+        "<text y='74%' x='4%' font-size='150%' text-anchor='start' fill='" &
+            _labelColor & "'><tspan class='bolder'> " & _secondLineInitialText & "</tspan></text>" &
+        "<text y='50%' x='99%' font-size='100%' text-anchor='end' fill='" &
+            _darkGrey & "'><tspan class='bolder'> " & _secondLineEndText & "</tspan></text>" &
+        "<text y='80%' x='99%' font-size='60%' text-anchor='end' fill='" &
+            _lightGrey & "'><tspan> " & COALESCE( COUNTROWS ( FILTER ( _preparedTbl, [@target] >= [@val] ) ), 0 ) &
+            "</tspan> " & _thirdLineMiddleText & "<tspan>" & _rowCounter & "</tspan> " & _thirdLineEndText & "</text>" &
+    "</g>"
+
+/* FINAL SVG */
+VAR SVGImageURL = _svgDeclaration & _svgHeader & _style & _initialText & _svgEnd
+RETURN SVGImageURL

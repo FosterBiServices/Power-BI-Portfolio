@@ -1,0 +1,17 @@
+  Pairs  = {
+            {"opened_at",   "opened at"},
+            {"resolved_at", "resolved at"}
+           }, 
+
+  Output =
+    fxAddDateTimeFromPairs(
+      KeepColumns,
+      Pairs,
+      [
+        KeepOriginalColumns = true,   // set false to drop the raw columns
+        Overwrite = true,             // replace existing "<prefix> date/time" if present
+        Culture = "en-US"             // or "en-GB", "de-DE", etc., for text parsing
+      ]
+    )
+in
+  Output

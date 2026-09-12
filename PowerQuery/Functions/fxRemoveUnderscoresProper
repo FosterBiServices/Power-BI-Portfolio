@@ -1,0 +1,13 @@
+let
+    FormatColumnNames = (inputTable as table) as table =>
+        let
+            originalColumns = Table.ColumnNames(inputTable),
+            formattedColumns = List.Transform(
+                originalColumns,
+                each Text.Proper(Text.Replace(_, "_", " "))
+            ),
+            renamedTable = Table.RenameColumns(inputTable, List.Zip({originalColumns, formattedColumns}))
+        in
+            renamedTable
+in
+    FormatColumnNames

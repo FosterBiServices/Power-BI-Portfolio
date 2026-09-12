@@ -1,0 +1,18 @@
+DEFINE
+	// This function evaluates a Prior Year (full) based on the selected measure
+    FUNCTION PriorYear = (
+			CalcValue : ANYREF EXPR,
+        	dateTable : ANYREF EXPR,
+        	yearColumn : ANYREF EXPR,
+        	offsetValue : VAL
+    ) =>
+		VAR CurrentYear =  MAX(yearColumn)
+        
+		VAR Result =
+        	CALCULATE(
+        		CalcValue,
+        		ALL(dateTable),
+        			yearColumn=CurrentYear - offsetValue
+				)
+        		RETURN
+        			Result

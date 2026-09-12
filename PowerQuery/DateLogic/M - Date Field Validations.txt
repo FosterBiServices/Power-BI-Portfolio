@@ -1,0 +1,26 @@
+AddValidation =
+    Table.AddColumn(
+      Source,
+      "Reason Invalid",
+      each
+        let
+          Value = [Date Approved]
+            in
+              if Value = null
+                or Text.Trim(Text.From(Value)) = ""
+              then
+                "No Approval Date"
+              else
+                let
+                  ParsedDateTime = try DateTime.From(Value)
+                in
+                  if ParsedDateTime[HasError] then
+                    "Invalid Date Format"
+                  else if ParsedDateTime[Value] > DateTime.LocalNow() then
+                    "Future Date"
+                  else if Date.Year(Date.From(ParsedDateTime[Value])) < 2020 then
+                    "Invalid Year"
+                  else
+                    "Valid"
+                ),
+    #"Filtered Rows" = Table.SelectRows(AddValidation, each ([Reason Invalid] <> "Valid")),

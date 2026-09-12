@@ -1,0 +1,23 @@
+COA_Extended = 
+DISTINCT( 
+    UNION (
+        SELECTCOLUMNS (
+            'COA - US',
+            "Internal Mapping Category", 'COA - US'[Internal Mapping Category],
+            "Internal Mapping Line", 'COA - US'[Internal Mapping Line],
+            "Full Name", 'COA - US'[Full Name],
+            "Mapping Category Sort", 'COA - US'[Mapping Category Sort],
+            "IsEBITDA", FALSE ()
+        ),
+        DATATABLE (
+            "Internal Mapping Category", STRING,
+            "Internal Mapping Line", STRING,
+            "Full Name", STRING,
+            "Mapping Category Sort", INTEGER,
+            "IsEBITDA", BOOLEAN,
+            {
+                { "EBITDA (excl IFRS16)", BLANK (), BLANK (), 3, TRUE () }
+            }
+        )
+    )
+)

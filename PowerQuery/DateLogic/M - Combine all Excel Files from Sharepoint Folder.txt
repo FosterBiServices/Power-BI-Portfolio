@@ -1,0 +1,133 @@
+let
+  // ----------------------------
+  // 0) Settings 
+  // ----------------------------
+  SiteUrl = "https://fosterbiservices.sharepoint.com/sites/DataandInsights/",
+  FolderUrl = "https://fosterbiservices.sharepoint.com/sites/DataandInsights/Shared Documents/Power BI Source Files/SmartRecruiters/",
+  // If your tab is consistently named, put it here (e.g., "Export", "Sheet1").
+  // If null, the query uses the first visible sheet in each workbook.
+  SheetName = null,
+  // e.g., "Sheet1"
+  // ----------------------------
+  // 1) Get files from SharePoint
+  // ----------------------------
+  Source = SharePoint.Files(SiteUrl, [ApiVersion = 15]),
+  // Keep only the target folder and Excel workbooks
+  ExportFilesOnly = Table.SelectRows(Source, each [Folder Path] = FolderUrl and Text.EndsWith([Name], ".xlsx") and not Text.StartsWith([Name], "~$")),
+  // Extract binary file contents
+  Files = ExportFilesOnly[Content],
+  FileCount = List.Count(Files),
+  // ----------------------------
+  // 2) Helper: Read one workbook's sheet data and promote headers
+  // ----------------------------
+  GetSheetTable = (bin as binary, optional desiredSheet as nullable text) as table =>
+        let
+            // Read workbook; delayTypes=true for performance on large files
+            wb        = Excel.Workbook(bin, null, true),
+
+            // Pick the sheet:
+            //  - If desiredSheet is provided, use that
+            //  - Otherwise, take the first visible sheet
+            candidates =
+                if desiredSheet = null
+                then Table.SelectRows(wb, each [Kind] = "Sheet" and ( [Hidden] = null or [Hidden] = false ))
+                else Table.SelectRows(wb, each [Kind] = "Sheet" and [Name] = desiredSheet),
+
+            // If no matching sheet found, return empty table to avoid errors
+            chosenData =
+                if Table.RowCount(candidates) = 0
+                then #table({}, {})
+                else candidates{0}[Data],
+
+            // Promote the first row to headers; if it fails, leave as-is
+            promoted =
+                try Table.PromoteHeaders(chosenData, [PromoteAllScalars = true])
+                otherwise chosenData
+        in
+            promoted,
+  // ----------------------------
+  // 3) Combine all files (each with its headers promoted independently)
+  // ----------------------------
+  CombineFiles = if FileCount = 0 then
+            #table({}, {})
+        else
+            Table.Combine(
+                List.Transform(Files, (f) => GetSheetTable(f, SheetName))
+            ),
+  // ----------------------------
+  // 4) Your original derivations for date/time split columns
+  // ----------------------------
+  // Declare the source datetime columns (must match your Excel headers)
+  DateColumns = {"Job Approval Status Change Date", "Latest Position Open Date", "Latest Position Creation Date", "Job Ad Latest Publish Date", "Job Ad Earliest Publish Date"},
+  // Prefixes used to name the derived columns
+  Prefixes = {"Approval Status Change", "Position Open", "Position Creation", "Ad Latest Publish", "Ad Earliest Publish"},
+  // Build output names: "<prefix> Date", "<prefix> Time"
+  FeatureNames = (p as text) as list => { p & " Date", p & " Time" },
+  // Coerce any value to datetime (supports text/datetime/datetimezone/date/time)
+  ToDateTime = (v as any) as nullable datetime =>
+        let
+            result =
+                if v = null then
+                    null
+                else if Value.Is(v, type datetime) then
+                    v
+                else if Value.Is(v, type datetimezone) then
+                    DateTimeZone.RemoveZone(v)
+                else if Value.Is(v, type date) then
+                    DateTime.From(v)                 // assume midnight
+                else if Value.Is(v, type time) then
+                    // time-only: anchor to 1899-12-30 (Excel epoch alignment)
+                    #datetime(1899, 12, 30, Time.Hour(v), Time.Minute(v), Time.Second(v))
+                else
+                    // best-effort parse from text
+                    try DateTime.FromText(Text.From(v)) otherwise null
+        in
+            result,
+  // Pair up each date column with its prefix
+  Pairs = List.Zip({ DateColumns, Prefixes }),
+  // Add derived date & time columns for each date column
+  WithDerived = List.Accumulate(
+            Pairs,
+            CombineFiles,
+            (state as table, current as list) =>
+                let
+                    colName  = current{0},
+                    prefix   = current{1},
+                    outNames = FeatureNames(prefix),
+
+                    NewDateCol =
+                        Table.AddColumn(
+                            state,
+                            outNames{0},
+                            (r as record) =>
+                                let dt = ToDateTime(Record.Field(r, colName))
+                                in  if dt = null then null else Date.From(dt),
+                            type date
+                        ),
+
+                    NewTimeCol =
+                        Table.AddColumn(
+                            NewDateCol,
+                            outNames{1},
+                            (r as record) =>
+                                let dt = ToDateTime(Record.Field(r, colName))
+                                in  if dt = null then null else Time.From(dt),
+                            type time
+                        )
+                in
+                    NewTimeCol
+        ),
+  // ----------------------------
+  // 5) Month parsing (handles text or already-date)
+  // ----------------------------
+  MonthParsed = Table.TransformColumns(WithDerived, {{"Month", each let t = Text.Trim(Text.From(_))
+                        in  if t = "" then null else try DateTime.FromText(t, "en-US") otherwise _, type datetime}}),
+  // ----------------------------
+  // 6) Final type conversions (same as your CSV version)
+  // NOTE: These expect the corresponding columns to exist in Excel.
+  // ----------------------------
+  ChangeType = Table.TransformColumnTypes(MonthParsed, {{"Month", type date}, {"Job Approval Status", type text}, {"Job ID", type text}, {"Job Ref ID", type text}, {"Job Status", type text}, {"Job Title", type text}, {"Location", type text}, {"Number of Applications", Int64.Type}, {"Number of Applications In State: Hired", Int64.Type}, {"Number of Applications In State: In-Review", Int64.Type}, {"Number of Applications In State: Interview", Int64.Type}, {"Number of Applications In State: Lead", Int64.Type}, {"Number of Applications In State: New", Int64.Type}, {"Number of Applications In State: Offered", Int64.Type}, {"Number of Applications In State: Rejected", Int64.Type}, {"Number of Applications In State: Transferred", Int64.Type}, {"Number of Applications In State: Withdrawn", Int64.Type}, {"Number of Applications In Status: In-Review/Attempted Contact", Int64.Type}, {"Number of Applications In Status: In-Review/Recruiter Screen", Int64.Type}, {"Number of Applications In Status: In-Review/Submitted to Manager", Int64.Type}, {"Number of Applications In Status: Interview/Final Interview", Int64.Type}, {"Number of Applications In Status: Interview/Team Interview", Int64.Type}, {"Number of Applications In Status: Offer/Background Check", Int64.Type}, {"Number of Applications In Status: Offer/I9 Completed", Int64.Type}, {"Number of Applications In Status: Offer/Offer Accepted", Int64.Type}, {"Number of Applications In Status: Offer/Offer Approval", Int64.Type}, {"Number of Candidates", Int64.Type}, {"Number of Positions in status Created", Int64.Type}, {"Number of Positions in status Filled", Int64.Type}, {"Number of Positions in status Hired", Int64.Type}, {"Number of Positions in status Open", Int64.Type}, {"State Location", type text}, {"Is Job Published", type logical}, {"ED # and Operation", type text}, {"Average Time-To-Hire", Int64.Type}, {"Average Time-To-Start", Int64.Type}, {"Number of interviews", Int64.Type}}),
+  #"Transform columns" = Table.TransformColumnTypes(ChangeType, {{"Job Approval Status Change Date", type text}, {"Latest Position Open Date", type text}, {"Latest Position Creation Date", type text}, {"Job Ad Latest Publish Date", type text}, {"Job Ad Earliest Publish Date", type text}}),
+  #"Replace errors" = Table.ReplaceErrorValues(#"Transform columns", {{"Job Approval Status Change Date", null}, {"Latest Position Open Date", null}, {"Latest Position Creation Date", null}, {"Job Ad Latest Publish Date", null}, {"Job Ad Earliest Publish Date", null}})
+in
+  #"Replace errors"

@@ -1,0 +1,72 @@
+DEFINE 	
+	FUNCTION dimDates = () =>
+	
+VAR MinYear = YEAR ( "January 2022")
+VAR MaxYear = YEAR ( MAX ( factglbalances[MonthYear] ) ) + 1
+RETURN
+ADDCOLUMNS (
+    FILTER (
+        CALENDARAUTO( ),
+        AND ( YEAR ( [Date] ) >= MinYear, YEAR ( [Date] ) <= MaxYear )
+    ),
+    "Calendar Year", YEAR ( [Date] ),
+    "Month Name", FORMAT ( [Date], "mmmm" ),
+    "Month Number", FORMAT( [Date], "mm"),
+    "Weekday", FORMAT ( [Date], "dddd" ),
+    "Weekday number", WEEKDAY( [Date] ),
+    "Quarter", "Q" & TRUNC ( ( MONTH ( [Date] ) - 1 ) / 3 ) + 1,
+    "Month Year", FORMAT( [Date], "mmmm yyyy" ),
+	
+    // Is Current Year
+        "IsCurrentYear",
+            VAR CurrentFiscalYear = YEAR(TODAY())
+            VAR RowFiscalYear = YEAR([Date]) 
+            RETURN IF(RowFiscalYear = CurrentFiscalYear, "Yes", "No"),
+
+    // Is Current Period
+        "IsCurrentPeriod",
+            VAR CurrentYear = YEAR(TODAY())
+            VAR CurrentPeriod = MOD(MONTH(TODAY()) - 7, 12) + 1
+            VAR RowYear = YEAR([Date])
+            VAR RowPeriod = MOD(MONTH([Date]) - 7, 12) + 1
+            RETURN IF(RowYear = CurrentYear && RowPeriod = CurrentPeriod, "Yes", "No"),	
+	
+    // Month Offset from current calendar month
+		"MonthOffset",
+			VAR CurrentYear = YEAR(TODAY())
+			VAR CurrentMonth = MONTH(TODAY())
+			VAR RowYear = YEAR([Date])
+			VAR RowMonth = MONTH([Date])
+			RETURN (CurrentYear * 12 + CurrentMonth) - (RowYear * 12 + RowMonth), 	
+	
+    // Fiscal Year
+    "Fiscal Year", 
+        YEAR([Date]) + IF(MONTH([Date]) >= 7, 1, 0),
+
+    // Fiscal Period
+    "Fiscal Period", 
+        "FY" & (YEAR([Date]) + IF(MONTH([Date]) >= 7, 1, 0)) & 
+        " P" & FORMAT(MOD(MONTH([Date]) - 7, 12) + 1, "00"),
+
+    // Fiscal Quarter
+    "Fiscal Quarter",
+        "FY" & (YEAR([Date]) + IF(MONTH([Date]) >= 7, 1, 0)) & 
+        " Q" & INT((MOD(MONTH([Date]) - 7, 12)) / 3) + 1, 
+
+    // Is Current Fiscal Year
+        "IsCurrentFiscalYear",
+            VAR CurrentFiscalYear = YEAR(TODAY()) + IF(MONTH(TODAY()) >= 7, 1, 0)
+            VAR RowFiscalYear = YEAR([Date]) + IF(MONTH([Date]) >= 7, 1, 0)
+            RETURN IF(RowFiscalYear = CurrentFiscalYear, "Yes", "No"),
+
+    // Is Current Fiscal Period
+        "IsCurrentFiscalPeriod",
+            VAR CurrentFY = YEAR(TODAY()) + IF(MONTH(TODAY()) >= 7, 1, 0)
+            VAR CurrentPeriod = MOD(MONTH(TODAY()) - 7, 12) + 1
+            VAR RowFY = YEAR([Date]) + IF(MONTH([Date]) >= 7, 1, 0)
+            VAR RowPeriod = MOD(MONTH([Date]) - 7, 12) + 1
+            RETURN IF(RowFY = CurrentFY && RowPeriod = CurrentPeriod, "Yes", "No")
+
+)
+
+
