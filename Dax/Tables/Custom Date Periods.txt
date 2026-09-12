@@ -1,0 +1,167 @@
+Custom Date Periods =
+VAR TodayDate =
+    TODAY ()
+VAR Dates_MTD =
+    DATESMTD ( dimDate[Date] )
+VAR Dates_QTD =
+    DATESQTD ( dimDate[Date] )
+VAR Dates_YTD =
+    DATESYTD ( dimDate[Date] )
+VAR Dates_L30 =
+    FILTER (
+        dimDate,
+        dimDate[Date] >= TodayDate - 30
+            && dimDate[Date] <= TodayDate
+    )
+VAR Dates_L60 =
+    FILTER (
+        dimDate,
+        dimDate[Date] >= TodayDate - 60
+            && dimDate[Date] <= TodayDate
+    )
+VAR Dates_L90 =
+    FILTER (
+        dimDate,
+        dimDate[Date] >= TodayDate - 90
+            && dimDate[Date] <= TodayDate
+    )
+VAR Dates_L180 =
+    FILTER (
+        dimDate,
+        dimDate[Date] >= TodayDate - 180
+            && dimDate[Date] <= TodayDate
+    )
+VAR Dates_L365 =
+    FILTER (
+        dimDate,
+        dimDate[Date] >= TodayDate - 365
+            && dimDate[Date] <= TodayDate
+    )
+RETURN
+    UNION (
+        SELECTCOLUMNS (
+            FILTER ( dimDate, dimDate[Date] IN Dates_MTD ),
+            "Date", dimDate[Date],
+            "Level", "MTD",
+            "Level Sort", 1
+        ),
+        SELECTCOLUMNS (
+            FILTER ( dimDate, dimDate[Date] IN Dates_QTD ),
+            "Date", dimDate[Date],
+            "Level", "QTD",
+            "Level Sort", 2
+        ),
+        SELECTCOLUMNS (
+            FILTER ( dimDate, dimDate[Date] IN Dates_YTD ),
+            "Date", dimDate[Date],
+            "Level", "YTD",
+            "Level Sort", 3
+        ),
+        SELECTCOLUMNS (
+            Dates_L30,
+            "Date", dimDate[Date],
+            "Level", "Last 30 Days",
+            "Level Sort", 4
+        ),
+        SELECTCOLUMNS (
+            Dates_L60,
+            "Date", dimDate[Date],
+            "Level", "Last 60 Days",
+            "Level Sort", 5
+        ),
+        SELECTCOLUMNS (
+            Dates_L90,
+            "Date", dimDate[Date],
+            "Level", "Last 90 Days",
+            "Level Sort", 6
+        ),
+        SELECTCOLUMNS (
+            Dates_L180,
+            "Date", dimDate[Date],
+            "Level", "Last 180 Days",
+            "Level Sort", 7
+        ),
+        SELECTCOLUMNS (
+            Dates_L365,
+            "Date", dimDate[Date],
+            "Level", "Last 365 Days",
+            "Level Sort", 8
+        )
+    )
+
+
+
+	
+	
+__MEASURE EXAAMPLE__
+
+Activations Trend (NEW) = VAR TodayDate = TODAY ( )
+VAR Activations_MTD =
+    CALCULATE ( [Activations], DATESMTD ( dimDate[Date] ) )
+VAR Activations_QTD =
+    CALCULATE ( [Activations], DATESQTD ( dimDate[Date] ) )
+VAR Activations_YTD =
+    CALCULATE ( [Activations], DATESYTD ( dimDate[Date] ) )
+VAR Activations_L30 =
+    CALCULATE
+    (
+        [Activations],
+        FILTER
+        (
+            dimDate,
+            dimDate[Date] >= TodayDate - 30 && dimDate[Date] <= TodayDate
+        )
+    )
+VAR Activations_L60 =
+    CALCULATE
+    (
+        [Activations],
+        FILTER
+        (
+            dimDate,
+            dimDate[Date] >= TodayDate - 60 && dimDate[Date] <= TodayDate
+        )
+    )
+VAR Activations_L90 =
+    CALCULATE
+    (
+        [Activations],
+        FILTER
+        (
+            dimDate,
+            dimDate[Date] >= TodayDate - 90 && dimDate[Date] <= TodayDate
+        )
+    )
+VAR Activations_L180 =
+    CALCULATE
+    (
+        [Activations],
+        FILTER
+        (
+            dimDate,
+            dimDate[Date] >= TodayDate - 180 && dimDate[Date] <= TodayDate
+        )
+    )
+VAR Activations_L365 =
+    CALCULATE
+    (
+        [Activations],
+        FILTER
+        (
+            dimDate,
+            dimDate[Date] >= TodayDate - 365 && dimDate[Date] <= TodayDate
+        )
+    )
+RETURN
+    SWITCH
+    (
+        SELECTEDVALUE ( 'Custom Date Periods'[Level] ),
+        "MTD", Activations_MTD,
+        "QTD", Activations_QTD,
+        "YTD", Activations_YTD,
+        "Last 30 Days", Activations_L30,
+        "Last 60 Days", Activations_L60,
+        "Last 90 Days", Activations_L90,
+        "Last 180 Days", Activations_L180,
+        "Last 365 Days", Activations_L365
+    )

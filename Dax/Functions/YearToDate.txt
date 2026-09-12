@@ -1,0 +1,17 @@
+DEFINE
+	// This function evaluates a Year to Date result based on the selected measure
+    FUNCTION YearToDate = (
+			CalcValue : ANYREF EXPR,
+        	dateTable : ANYREF EXPR,
+        	dateColumn : ANYREF EXPR,
+        	offsetValue : VAL
+    ) =>
+		VAR CurrentYear =  MAX(dateColumn)
+        
+		VAR Result =
+        	CALCULATE(
+        		CalcValue,
+        		DATESYTD(dateColumn)
+			)
+			RETURN
+				Result

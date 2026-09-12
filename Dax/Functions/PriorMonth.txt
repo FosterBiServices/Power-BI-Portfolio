@@ -1,0 +1,15 @@
+DEFINE
+	// This function evaluates a Prior Month result based on the selected measure
+    FUNCTION PriorMonth = (
+			CalcValue : ANYREF EXPR,
+        	dateColumn : ANYREF EXPR
+    ) =>
+		VAR CurrentYear =  MAX(dateColumn)
+        
+		VAR Result =
+        	CALCULATE(
+        		CalcValue,
+        		PREVIOUSMONTH(dateColumn)
+			)
+        		RETURN
+        			Result

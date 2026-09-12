@@ -1,0 +1,67 @@
+DEFINE
+    FUNCTION FullFiscalYear = (CalcValue : expr) =>
+	VAR CurrentYear = YEAR ( TODAY ( ) )
+VAR CurrentMonth = MONTH ( TODAY ( ) )
+VAR AllEntities =
+    VALUES
+    (
+        'Master Data'[SAP Code: Cost Center / Profit Center]
+    )
+RETURN
+    SUMX
+    (
+        AllEntities,
+        VAR CurrentEntity =
+            'Master Data'[SAP Code: Cost Center / Profit Center]
+        VAR FiscalYearStartDate =
+            CALCULATE
+            (
+                MAX ( NonEquusFundersBudgetsFY2026[Fiscal Year Start] ),
+                FILTER
+                (
+                    ALL ( NonEquusFundersBudgetsFY2026 ),
+                    NonEquusFundersBudgetsFY2026[SAP Code: Cost Center / Profit Center]
+                        = CurrentEntity
+                )
+            )
+        VAR FiscalYearEndDate =
+            CALCULATE
+            (
+                MAX ( NonEquusFundersBudgetsFY2026[Fiscal Year End] ),
+                FILTER
+                (
+                    ALL ( NonEquusFundersBudgetsFY2026 ),
+                    NonEquusFundersBudgetsFY2026[SAP Code: Cost Center / Profit Center]
+                        = CurrentEntity
+                )
+            )
+        VAR FinalFiscalYearStartDate =
+            IF
+            (
+                ISBLANK ( FiscalYearStartDate ),
+                DATE ( CurrentYear - IF ( CurrentMonth <= 6, 1, 0 ), 7, 1 ),
+                FiscalYearStartDate
+            )
+        VAR FinalFiscalYearEndDate =
+            IF
+            (
+                ISBLANK ( FiscalYearEndDate ),
+                DATE ( CurrentYear + IF ( CurrentMonth <= 6, 0, 1 ), 6, 30 ),
+                FiscalYearEndDate
+            )
+        VAR FYTDActuals =
+            CALCULATE
+            (
+                CalcValue,
+                FILTER
+                (
+                    ALL ( dimdate ),
+                    dimdate[Date] >= FinalFiscalYearStartDate
+                        && dimdate[Date] <= FinalFiscalYearEndDate
+                ),
+                'Master Data'[SAP Code: Cost Center / Profit Center]
+                    = CurrentEntity
+            )
+        RETURN
+            FYTDActuals
+    )

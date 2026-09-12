@@ -1,0 +1,8 @@
+Function GetFillColor(rng As Range) As Variant
+    On Error Resume Next
+    If rng.Interior.ColorIndex = xlColorIndexNone Then
+        GetFillColor = 0
+    Else
+        GetFillColor = rng.Interior.ColorIndex
+    End If
+End Function

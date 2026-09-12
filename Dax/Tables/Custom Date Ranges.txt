@@ -1,0 +1,56 @@
+DateSelector = 
+FILTER (
+    CALENDAR ( MIN(dimDate[Date]), MAX(dimDate[Date]) ),
+    [Date] < TODAY()
+)
+
+IsInSelectedDateRange = VAR SelectedOption = SELECTEDVALUE ( DateFilterOptions[Label] )
+VAR Today = TODAY ( )
+VAR StartDatePredefined =
+    SWITCH
+    (
+        SelectedOption,
+        "Last 30 Days", Today - 30,
+        "Last 60 Days", Today - 60,
+        "Last 90 Days", Today - 90,
+        "Last 180 Days", Today - 180,
+        BLANK ( )
+    )
+VAR CustomStart =
+    CALCULATE
+    (
+        MINX ( ALLSELECTED ( DateSelector ), DateSelector[Date] )
+    )
+VAR CustomEnd =
+    CALCULATE
+    (
+        MAXX ( ALLSELECTED ( DateSelector ), DateSelector[Date] )
+    )
+VAR FinalStart =
+    IF
+    (
+        SelectedOption = "Custom Range",
+        CustomStart,
+        StartDatePredefined
+    )
+VAR FinalEnd =
+    IF ( SelectedOption = "Custom Range", CustomEnd, Today )
+RETURN
+    IF
+    (
+        CALCULATE
+        (
+            COUNTROWS
+            (
+                FILTER
+                (
+                    dimDate,
+                    dimDate[Date] >= FinalStart && dimDate[Date] <= FinalEnd
+                )
+            )
+        )
+            > 0,
+        1,
+        0
+    )
+	

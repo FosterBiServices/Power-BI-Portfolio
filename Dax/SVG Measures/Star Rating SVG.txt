@@ -1,0 +1,90 @@
+Star Rating SVG = 
+VAR _Metric = SELECTEDVALUE('Thresholds'[MetricName])
+VAR _Score = [Total Weighted Score]
+VAR _MaxScore =
+    CALCULATE(
+        MAX('WeightedScoring'[Weighting]),
+        'WeightedScoring'[MetricName] = _Metric
+    )
+
+-- percentage (0–1)
+VAR _Pct = COALESCE(DIVIDE(_Score, _MaxScore), 0)
+
+-- scale to 10 stars
+VAR _TotalStars = 10
+VAR _ExactStars = _Pct * _TotalStars
+
+-- compute full, half, empty star counts
+VAR _FullStars = INT(_ExactStars)
+VAR _HasHalf = IF(_ExactStars - _FullStars >= 0.5, 1, 0)
+VAR _EmptyStars = _TotalStars - _FullStars - _HasHalf
+
+--------------------------------------
+-- Your sanitized SVG path fragments
+-- (IMPORTANT: use real < and > here, not &lt; &gt;)
+--------------------------------------
+VAR SVG_Full =
+    "<path fill='#9C6500' d='M62.615 5.36c3.527-7.147 13.723-7.147 17.25 0l16.8 34.043 37.57 5.458c7.888 1.14 11.037 10.844 5.33 16.409l-27.189 26.497 6.419 37.407c1.354 7.866-6.897 13.858-13.958 10.146l-33.601-17.67-33.594 17.67c-7.054 3.705-15.305-2.28-13.965-10.139l6.42-37.413L2.913 61.263C-2.793 55.705.356 46.008 8.244 44.86l37.57-5.458 16.8-34.043Z'/>"
+
+VAR SVG_Half =
+    "<path fill='#9C6500' d='M71.253 0c-3.434 0-6.868 1.781-8.635 5.358l-16.8 34.043L8.246 44.86C.36 46-2.797 55.703 2.917 61.268L30.1 87.766l-6.412 37.406c-1.069 6.227 3.876 11.279 9.483 11.272 1.482 0 3.007-.356 4.489-1.126l33.587-17.663 33.595 17.663c7.053 3.705 15.304-2.28 13.965-10.139l-6.427-37.413 27.189-26.505c5.7-5.558 2.558-15.255-5.33-16.402l-37.57-5.458-16.8-34.043A9.547 9.547 0 0 0 71.246 0m0 106.825v-94.77l16.081 32.576a9.619 9.619 0 0 0 7.24 5.266l35.981 5.23-26.035 25.378a9.613 9.613 0 0 0-2.765 8.514l6.142 35.832-32.176-16.921a9.606 9.606 0 0 0-4.468-1.105Z'/>"
+
+-- For an outline-only “empty”, set fill to 'none' and add stroke
+VAR SVG_Empty =
+    "<path fill='none' stroke='#9C6500' stroke-width='4' d='M62.615 5.36c3.527-7.147 13.723-7.147 17.25 0l16.8 34.043 37.57 5.458c7.888 1.14 11.037 10.844 5.33 16.409l-27.189 26.497 6.419 37.407c1.354 7.866-6.897 13.858-13.958 10.146l-33.601-17.67-33.594 17.67c-7.054 3.705-15.305-2.28-13.965-10.139l6.42-37.413L2.913 61.263C-2.793 55.705.356 46.008 8.244 44.86l37.57-5.458 16.8-34.043Zm8.621 6.676L55.148 44.633a9.619 9.619 0 0 1-7.24 5.265l-35.98 5.23 26.034 25.38a9.623 9.623 0 0 1 2.765 8.514l-6.142 35.831 32.176-16.922a9.623 9.623 0 0 1 8.957 0l32.176 16.922-6.142-35.839a9.618 9.618 0 0 1 2.765-8.507l26.035-25.38-35.982-5.229a9.62 9.62 0 0 1-7.239-5.265L71.236 12.036Z'/>"
+
+--------------------------------------
+-- Layout constants
+-- (each star sits in a 150x120 cell)
+--------------------------------------
+VAR StarViewW = 150
+VAR StarViewH = 120
+VAR CellW = StarViewW
+VAR CellH = StarViewH
+
+--------------------------------------
+-- Assemble repeated stars using nested <svg>
+-- so each star has its own viewBox.
+--------------------------------------
+VAR _RenderFull =
+    CONCATENATEX(
+        GENERATESERIES(0, _FullStars - 1, 1),
+        "<svg x='" & (CellW * [Value]) & "' y='0' width='" & CellW & "' height='" & CellH & "' viewBox='0 0 " & StarViewW & " " & StarViewH & "' preserveAspectRatio='xMidYMid meet'>" &
+        SVG_Full &
+        "</svg>",
+        ""
+    )
+
+VAR _RenderHalf =
+    IF(
+        _HasHalf = 1,
+        "<svg x='" & (CellW * _FullStars) & "' y='0' width='" & CellW & "' height='" & CellH & "' viewBox='0 0 " & StarViewW & " " & StarViewH & "' preserveAspectRatio='xMidYMid meet'>" &
+        SVG_Half &
+        "</svg>",
+        ""
+    )
+
+VAR _RenderEmpty =
+    CONCATENATEX(
+        GENERATESERIES(0, _EmptyStars - 1, 1),
+        "<svg x='" & (CellW * (_FullStars + _HasHalf + [Value])) & "' y='0' width='" & CellW & "' height='" & CellH & "' viewBox='0 0 " & StarViewW & " " & StarViewH & "' preserveAspectRatio='xMidYMid meet'>" &
+        SVG_Empty &
+        "</svg>",
+        ""
+    )
+
+--------------------------------------
+-- Build SVG wrapper (10 cells wide)
+--------------------------------------
+VAR _SVG_Start =
+    "data:image/svg+xml;utf8," &
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " & (CellW * _TotalStars) & " " & CellH & "' width='300' height='24'>"
+
+VAR _SVG_End = "</svg>"
+
+RETURN
+    _SVG_Start &
+    _RenderFull &
+    _RenderHalf &
+    _RenderEmpty &
+    _SVG_End

@@ -1,0 +1,196 @@
+Enrollment TT - Card with Columns = 
+/* =========================
+   SETUP
+========================= */
+VAR _spaceBetweenColumns = 3
+VAR _maxColumnWidthPct   = 6
+VAR _columnRounding      = 4
+VAR _width               = 400
+VAR _height              = 150
+
+/* =========================
+   COLORS
+========================= */
+VAR _barColor   = "#004081"
+VAR _textColor  = "#73AF2F"
+VAR _dataLabelColor = "#333333"
+
+/* =========================
+   SVG WRAPPER
+========================= */
+VAR _svgDeclaration = "data:image/svg+xml;utf8,"
+VAR _svgHeader =
+    "<svg xmlns='http://www.w3.org/2000/svg'
+          width='" & _width & "'
+          height='" & _height & "'>"
+VAR _svgEnd = "</svg>"
+
+/* =========================
+   CSS
+========================= */
+VAR _style =
+"<style>
+    text {
+        font-family: Segoe UI;
+        dominant-baseline: middle;
+    }
+    .bar {
+        fill: " & _barColor & ";
+    }
+    .bolder {
+        font-weight: 600;
+    }
+</style>"
+
+/* =========================
+   CALLOUT (SLICER AWARE)
+========================= */
+VAR _selectedMonthEnrollments =
+    [Enrollments]   -- intentionally keeps slicer context
+VAR _selectedMonth = 
+    SELECTEDVALUE('dimdate'[Month Year])
+VAR _calloutText =
+"<text x='20%' y='15%'
+       fill='" & _textColor & "'
+       font-size='12'>
+    <tspan class='bolder'>"
+        & FORMAT ( _selectedMonthEnrollments, "#,0" ) &
+    "</tspan>
+    <tspan font-size='12'> enrollment(s) in " & _selectedMonth & "</tspan>
+</text>"
+
+/* =========================
+   BAR DATA (IGNORE SLICER)
+========================= */
+VAR _anchorMonthSort =
+    CALCULATE (
+        MAX ( 'dimDate'[Month Sort] ),
+        REMOVEFILTERS ( 'dimDate' )
+    )
+
+VAR _data =
+    ADDCOLUMNS (
+        FILTER (
+            SUMMARIZE (
+                ALL ( 'dimDate' ),
+                'dimDate'[Month Year],
+                'dimDate'[Month Sort]
+            ),
+            'dimDate'[Month Sort] <= _anchorMonthSort
+                && 'dimDate'[Month Sort] > _anchorMonthSort - 12
+        ),
+        "@Enrollments", [Enrollments],
+        "@RowNum",
+            ROWNUMBER (
+                FILTER (
+                    SUMMARIZE (
+                        ALL ( 'dimDate' ),
+                        'dimDate'[Month Year],
+                        'dimDate'[Month Sort]
+                    ),
+                    'dimDate'[Month Sort] <= _anchorMonthSort
+                        && 'dimDate'[Month Sort] > _anchorMonthSort - 12
+                ),
+                ORDERBY ( 'dimDate'[Month Sort], ASC )
+            )
+    )
+
+VAR _rowCount = COUNTROWS ( _data )
+VAR _maxValue = MAXX ( _data, [@Enrollments] )
+
+/* =========================
+   COLUMN SIZING
+========================= */
+VAR _columnWidthPct =
+    MIN (
+        _maxColumnWidthPct,
+        DIVIDE (
+            100 - ( _rowCount + 1 ) * _spaceBetweenColumns,
+            _rowCount
+        )
+    )
+
+/* =========================
+   BARS
+========================= */
+VAR _columns =
+    CONCATENATEX (
+        _data,
+        VAR _heightPct =
+            IF (
+                _maxValue = 0,
+                0,
+                ROUND ( DIVIDE ( [@Enrollments], _maxValue ) * 45, 2 )
+            )
+
+        VAR _x =
+            ( [@RowNum] - 1 ) * _columnWidthPct
+            + ( [@RowNum] * _spaceBetweenColumns )
+
+        VAR _y = 80 - _heightPct
+
+        VAR _xCenter = _x + ( _columnWidthPct / 2 )
+        VAR _yCenter = _y + ( _heightPct / 2 )
+
+        RETURN
+            /* Bar */
+            "<rect class='bar'
+                x='" & _x & "%'
+                y='" & _y & "%'
+                width='" & _columnWidthPct & "%'
+                height='" & _heightPct & "%'
+                rx='" & _columnRounding & "' />"
+
+            /* Value label */
+            &
+            IF (
+                _heightPct >= 8,  -- prevent clutter on tiny bars
+                "<text
+                    x='" & _xCenter & "%'
+                    y='" & _yCenter & "%'
+                    text-anchor='middle'
+                    dominant-baseline='middle'
+                    font-size='10'
+                    fill='white'>"
+                        & FORMAT ( [@Enrollments], "#,0" ) &
+                "</text>",
+                ""
+            )
+    )
+/* =========================
+   MONTH LABELS
+========================= */
+VAR _monthLabels =
+    CONCATENATEX (
+        _data,
+        VAR _xCenter =
+            ( ( [@RowNum] - 1 ) * _columnWidthPct )
+            + ( [@RowNum] * _spaceBetweenColumns )
+            + ( _columnWidthPct / 2 )
+        RETURN
+            "<text x='" & _xCenter & "%'
+                   y='86%'
+                   text-anchor='middle'
+                   font-size='10'
+                   fill='" & _dataLabelColor & "'>"
+                & FORMAT (
+                    DATE (
+                        2000,
+                        MONTH ( DATEVALUE ( "1 " & 'dimDate'[Month Year] ) ),
+                        1
+                    ),
+                    "MMM"
+                )
+            & "</text>"
+    )
+/* =========================
+   FINAL SVG
+========================= */
+RETURN
+    _svgDeclaration
+        & _svgHeader
+        & _style
+        & _calloutText
+        & _columns
+        & _monthLabels
+        & _svgEnd
