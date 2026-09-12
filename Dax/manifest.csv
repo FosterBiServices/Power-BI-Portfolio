@@ -1,0 +1,43 @@
+code,name,description,kind,path
+CUSTOM_SPACING,Custom Spacing,Aligns two formatted measure values by inserting invisible spacing characters.,value,patterns/formatting/custom_spacing.dax
+DIVERGENT_COLOR,Divergent Color,Returns a color based on the selected-range position of the current measure value.,value,patterns/conditional-formatting/divergent_color.dax
+DRILL_THROUGH_MONTHLY_TEXT,Drill Through Monthly Text,Returns monthly drill-through text when a parameter is selected.,value,patterns/navigation/drill_through_monthly_text.dax
+DRILL_THROUGH_DAILY_TEXT,Drill Through Daily Text,Returns daily drill-through text when a parameter is selected.,value,patterns/navigation/drill_through_daily_text.dax
+MEASURE_SELECTION,Measure Selection,Field parameter for switching between published measures.,field parameter,patterns/field-parameters/measure_selection.dax
+MONTH_FILTER_CARD,Month Filter Card,Displays selected months in a card visual.,value,patterns/filter-display/month_filter_card.dax
+SENSITIVE_DATA,Sensitive Data,Returns data only when the required permission exists.,value,patterns/security/sensitive_data.dax
+PERIOD_CHANGE_ICON,Period Change Icon,Compares current MTD to prior month and returns an icon.,value,patterns/icons/period_change_icon.dax
+CARD_COLUMNS_NO_TARGET,Card with Columns No Target,Returns an SVG card with a slicer-aware callout and a trailing-month column chart.,value,patterns/icons/card_columns_no_target.dax
+CARD_COLUMNS_TARGET,Card with Columns and Target,"Returns an SVG KPI card with columns, a target line, period labels, and summary text.",value,patterns/icons/card_columns_target.dax
+CARD_TEXT_ONLY,Card with Text Only,"Returns an SVG KPI card containing primary, secondary, and target-summary text.",value,patterns/icons/card_text_only.dax
+NOTIFICATION_ICON,Notification Icon,Returns an SVG notification bell with a badge showing the number of actionable groups.,value,patterns/icons/notification_icon.dax
+STAR_RATING_SVG,Star Rating SVG,"Returns an SVG rating made from full, half, and empty stars.",value,patterns/icons/star_rating_svg.dax
+CALENDAR_DETAILS_SVG,Calendar with Details SVG,"Returns an SVG calendar grid with completed, qualifying, and remaining-day details.",value,patterns/icons/calendar_details_svg.dax
+DONUT_TARGET_PROGRESS_SVG,Donut Target Progress SVG,"Returns an SVG donut showing target, current value, and the amount over or under target.",value,patterns/icons/donut_target_progress_svg.dax
+ADD_SYNTHETIC_ROW,Add Synthetic Row,Adds a synthetic row to an existing table.,calculated table,patterns/modeling/add_synthetic_row.dax
+YTD,Year-to-date,Evaluates the base measure from the start of the year through the last visible date.,value,patterns/TimeIntelligence/period-to-date/ytd.dax
+QTD,Quarter-to-date,Evaluates the base measure from the start of the quarter through the last visible date.,value,patterns/TimeIntelligence/period-to-date/qtd.dax
+MTD,Month-to-date,Evaluates the base measure from the start of the month through the last visible date.,value,patterns/TimeIntelligence/period-to-date/mtd.dax
+MAT,Moving annual total,Evaluates the trailing 12-month window ending on the last visible date.,value,patterns/TimeIntelligence/moving/mat.dax
+PY,Previous year,Shifts the current date context backward by one year.,value,patterns/TimeIntelligence/previous-period/py.dax
+PQ,Previous quarter,Shifts the current date context backward by one quarter.,value,patterns/TimeIntelligence/previous-period/pq.dax
+PM,Previous month,Shifts the current date context backward by one month.,value,patterns/TimeIntelligence/previous-period/pm.dax
+PYC,Previous year complete,Evaluates the complete calendar year immediately before the year containing the last visible date.,value,patterns/TimeIntelligence/previous-period/pyc.dax
+PQC,Previous quarter complete,Evaluates the complete quarter immediately before the quarter containing the last visible date.,value,patterns/TimeIntelligence/previous-period/pqc.dax
+PMC,Previous month complete,Evaluates the complete month immediately before the month containing the last visible date.,value,patterns/TimeIntelligence/previous-period/pmc.dax
+PP,Previous period,"Selects previous month, quarter, or year from the active date hierarchy level.",value,patterns/TimeIntelligence/dynamic/pp.dax
+PYMAT,Previous year moving annual total,Evaluates the comparable trailing 12-month window ending one year before the last visible date.,value,patterns/TimeIntelligence/moving/pymat.dax
+YOY,Year-over-year,Calculates percentage change versus the comparable context one year earlier.,percentage,patterns/TimeIntelligence/growth/yoy.dax
+QOQ,Quarter-over-quarter,Calculates percentage change versus the comparable context one quarter earlier.,percentage,patterns/TimeIntelligence/growth/qoq.dax
+MOM,Month-over-month,Calculates percentage change versus the comparable context one month earlier.,percentage,patterns/TimeIntelligence/growth/mom.dax
+MATG,Moving annual total growth,Calculates percentage growth between MAT and the comparable MAT ending one year earlier.,percentage,patterns/TimeIntelligence/growth/matg.dax
+POP,Period-over-period,"Calculates percentage change from the previous month, quarter, or year based on hierarchy scope.",percentage,patterns/TimeIntelligence/dynamic/pop.dax
+PYTD,Previous year-to-date,Evaluates the prior year through the corresponding elapsed position in the current period.,value,patterns/TimeIntelligence/period-to-date/pytd.dax
+PQTD,Previous quarter-to-date,Evaluates the prior quarter through the corresponding elapsed position in the current period.,value,patterns/TimeIntelligence/period-to-date/pqtd.dax
+PMTD,Previous month-to-date,Evaluates the prior month through the corresponding elapsed position in the current period.,value,patterns/TimeIntelligence/period-to-date/pmtd.dax
+YOYTD,Year-over-year-to-date,Calculates percentage change between the current period-to-date value and the comparable prior year-to-date value.,percentage,patterns/TimeIntelligence/growth/yoytd.dax
+QOQTD,Quarter-over-quarter-to-date,Calculates percentage change between the current period-to-date value and the comparable prior quarter-to-date value.,percentage,patterns/TimeIntelligence/growth/qoqtd.dax
+MOMTD,Month-over-month-to-date,Calculates percentage change between the current period-to-date value and the comparable prior month-to-date value.,percentage,patterns/TimeIntelligence/growth/momtd.dax
+YTDOPY,Year-to-date over previous year,Calculates percentage change between current YTD and the complete previous calendar year.,percentage,patterns/TimeIntelligence/growth/ytdopy.dax
+QTDOPQ,Quarter-to-date over previous quarter,Calculates percentage change between current QTD and the complete previous quarter.,percentage,patterns/TimeIntelligence/growth/qtdopq.dax
+MTDOPM,Month-to-date over previous month,Calculates percentage change between current MTD and the complete previous month.,percentage,patterns/TimeIntelligence/growth/mtdopm.dax

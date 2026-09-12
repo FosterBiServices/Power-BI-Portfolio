@@ -1,0 +1,296 @@
+[
+  {
+    "code": "YTD",
+    "name": "Year-to-date",
+    "description": "Evaluates the base measure from the start of the year through the last visible date.",
+    "kind": "value",
+    "path": "patterns/period-to-date/ytd.dax"
+  },
+  {
+    "code": "QTD",
+    "name": "Quarter-to-date",
+    "description": "Evaluates the base measure from the start of the quarter through the last visible date.",
+    "kind": "value",
+    "path": "patterns/period-to-date/qtd.dax"
+  },
+  {
+    "code": "MTD",
+    "name": "Month-to-date",
+    "description": "Evaluates the base measure from the start of the month through the last visible date.",
+    "kind": "value",
+    "path": "patterns/period-to-date/mtd.dax"
+  },
+  {
+    "code": "MAT",
+    "name": "Moving annual total",
+    "description": "Evaluates the trailing 12-month window ending on the last visible date.",
+    "kind": "value",
+    "path": "patterns/moving/mat.dax"
+  },
+  {
+    "code": "PY",
+    "name": "Previous year",
+    "description": "Shifts the current date context backward by one year.",
+    "kind": "value",
+    "path": "patterns/previous-period/py.dax"
+  },
+  {
+    "code": "PQ",
+    "name": "Previous quarter",
+    "description": "Shifts the current date context backward by one quarter.",
+    "kind": "value",
+    "path": "patterns/previous-period/pq.dax"
+  },
+  {
+    "code": "PM",
+    "name": "Previous month",
+    "description": "Shifts the current date context backward by one month.",
+    "kind": "value",
+    "path": "patterns/previous-period/pm.dax"
+  },
+  {
+    "code": "PYC",
+    "name": "Previous year complete",
+    "description": "Evaluates the complete calendar year immediately before the year containing the last visible date.",
+    "kind": "value",
+    "path": "patterns/previous-period/pyc.dax"
+  },
+  {
+    "code": "PQC",
+    "name": "Previous quarter complete",
+    "description": "Evaluates the complete quarter immediately before the quarter containing the last visible date.",
+    "kind": "value",
+    "path": "patterns/previous-period/pqc.dax"
+  },
+  {
+    "code": "PMC",
+    "name": "Previous month complete",
+    "description": "Evaluates the complete month immediately before the month containing the last visible date.",
+    "kind": "value",
+    "path": "patterns/previous-period/pmc.dax"
+  },
+  {
+    "code": "PP",
+    "name": "Previous period",
+    "description": "Selects previous month, quarter, or year from the active date hierarchy level.",
+    "kind": "value",
+    "path": "patterns/dynamic/pp.dax"
+  },
+  {
+    "code": "PYMAT",
+    "name": "Previous year moving annual total",
+    "description": "Evaluates the comparable trailing 12-month window ending one year before the last visible date.",
+    "kind": "value",
+    "path": "patterns/moving/pymat.dax"
+  },
+  {
+    "code": "YOY",
+    "name": "Year-over-year",
+    "description": "Calculates percentage change versus the comparable context one year earlier.",
+    "kind": "percentage",
+    "path": "patterns/growth/yoy.dax"
+  },
+  {
+    "code": "QOQ",
+    "name": "Quarter-over-quarter",
+    "description": "Calculates percentage change versus the comparable context one quarter earlier.",
+    "kind": "percentage",
+    "path": "patterns/growth/qoq.dax"
+  },
+  {
+    "code": "MOM",
+    "name": "Month-over-month",
+    "description": "Calculates percentage change versus the comparable context one month earlier.",
+    "kind": "percentage",
+    "path": "patterns/growth/mom.dax"
+  },
+  {
+    "code": "MATG",
+    "name": "Moving annual total growth",
+    "description": "Calculates percentage growth between MAT and the comparable MAT ending one year earlier.",
+    "kind": "percentage",
+    "path": "patterns/growth/matg.dax"
+  },
+  {
+    "code": "POP",
+    "name": "Period-over-period",
+    "description": "Calculates percentage change from the previous month, quarter, or year based on hierarchy scope.",
+    "kind": "percentage",
+    "path": "patterns/dynamic/pop.dax"
+  },
+  {
+    "code": "PYTD",
+    "name": "Previous year-to-date",
+    "description": "Evaluates the prior year through the corresponding elapsed position in the current period.",
+    "kind": "value",
+    "path": "patterns/period-to-date/pytd.dax"
+  },
+  {
+    "code": "PQTD",
+    "name": "Previous quarter-to-date",
+    "description": "Evaluates the prior quarter through the corresponding elapsed position in the current period.",
+    "kind": "value",
+    "path": "patterns/period-to-date/pqtd.dax"
+  },
+  {
+    "code": "PMTD",
+    "name": "Previous month-to-date",
+    "description": "Evaluates the prior month through the corresponding elapsed position in the current period.",
+    "kind": "value",
+    "path": "patterns/period-to-date/pmtd.dax"
+  },
+  {
+    "code": "YOYTD",
+    "name": "Year-over-year-to-date",
+    "description": "Calculates percentage change between the current period-to-date value and the comparable prior year-to-date value.",
+    "kind": "percentage",
+    "path": "patterns/growth/yoytd.dax"
+  },
+  {
+    "code": "QOQTD",
+    "name": "Quarter-over-quarter-to-date",
+    "description": "Calculates percentage change between the current period-to-date value and the comparable prior quarter-to-date value.",
+    "kind": "percentage",
+    "path": "patterns/growth/qoqtd.dax"
+  },
+  {
+    "code": "MOMTD",
+    "name": "Month-over-month-to-date",
+    "description": "Calculates percentage change between the current period-to-date value and the comparable prior month-to-date value.",
+    "kind": "percentage",
+    "path": "patterns/growth/momtd.dax"
+  },
+  {
+    "code": "YTDOPY",
+    "name": "Year-to-date over previous year",
+    "description": "Calculates percentage change between current YTD and the complete previous calendar year.",
+    "kind": "percentage",
+    "path": "patterns/growth/ytdopy.dax"
+  },
+  {
+    "code": "QTDOPQ",
+    "name": "Quarter-to-date over previous quarter",
+    "description": "Calculates percentage change between current QTD and the complete previous quarter.",
+    "kind": "percentage",
+    "path": "patterns/growth/qtdopq.dax"
+  },
+  {
+    "code": "MTDOPM",
+    "name": "Month-to-date over previous month",
+    "description": "Calculates percentage change between current MTD and the complete previous month.",
+    "kind": "percentage",
+    "path": "patterns/growth/mtdopm.dax"
+  }
+  {
+    "code": "CUSTOM_SPACING",
+    "name": "Custom Spacing",
+    "description": "Aligns two formatted measure values by inserting invisible spacing characters.",
+    "kind": "value",
+    "path": "patterns/formatting/custom_spacing.dax"
+  },
+  {
+    "code": "DIVERGENT_COLOR",
+    "name": "Divergent Color",
+    "description": "Returns a color based on the selected-range position of the current measure value.",
+    "kind": "value",
+    "path": "patterns/conditional-formatting/divergent_color.dax"
+  },
+  {
+    "code": "DRILL_THROUGH_MONTHLY_TEXT",
+    "name": "Drill Through Monthly Text",
+    "description": "Returns monthly drill-through text when a parameter is selected.",
+    "kind": "value",
+    "path": "patterns/navigation/drill_through_monthly_text.dax"
+  },
+  {
+    "code": "DRILL_THROUGH_DAILY_TEXT",
+    "name": "Drill Through Daily Text",
+    "description": "Returns daily drill-through text when a parameter is selected.",
+    "kind": "value",
+    "path": "patterns/navigation/drill_through_daily_text.dax"
+  },
+  {
+    "code": "MEASURE_SELECTION",
+    "name": "Measure Selection",
+    "description": "Field parameter for switching between published measures.",
+    "kind": "field parameter",
+    "path": "patterns/field-parameters/measure_selection.dax"
+  },
+  {
+    "code": "MONTH_FILTER_CARD",
+    "name": "Month Filter Card",
+    "description": "Displays selected months in a card visual.",
+    "kind": "value",
+    "path": "patterns/filter-display/month_filter_card.dax"
+  },
+  {
+    "code": "SENSITIVE_DATA",
+    "name": "Sensitive Data",
+    "description": "Returns data only when the required permission exists.",
+    "kind": "value",
+    "path": "patterns/security/sensitive_data.dax"
+  },
+  {
+    "code": "PERIOD_CHANGE_ICON",
+    "name": "Period Change Icon",
+    "description": "Compares current MTD to prior month and returns an icon.",
+    "kind": "value",
+    "path": "patterns/icons/period_change_icon.dax"
+  },
+  {
+    "code": "CARD_COLUMNS_NO_TARGET",
+    "name": "Card with Columns No Target",
+    "description": "Returns an SVG card with a slicer-aware callout and a trailing-month column chart.",
+    "kind": "value",
+    "path": "patterns/icons/card_columns_no_target.dax"
+  },
+  {
+    "code": "CARD_COLUMNS_TARGET",
+    "name": "Card with Columns and Target",
+    "description": "Returns an SVG KPI card with columns, a target line, period labels, and summary text.",
+    "kind": "value",
+    "path": "patterns/icons/card_columns_target.dax"
+  },
+  {
+    "code": "CARD_TEXT_ONLY",
+    "name": "Card with Text Only",
+    "description": "Returns an SVG KPI card containing primary, secondary, and target-summary text.",
+    "kind": "value",
+    "path": "patterns/icons/card_text_only.dax"
+  },
+  {
+    "code": "NOTIFICATION_ICON",
+    "name": "Notification Icon",
+    "description": "Returns an SVG notification bell with a badge showing the number of actionable groups.",
+    "kind": "value",
+    "path": "patterns/icons/notification_icon.dax"
+  },
+  {
+    "code": "STAR_RATING_SVG",
+    "name": "Star Rating SVG",
+    "description": "Returns an SVG rating made from full, half, and empty stars.",
+    "kind": "value",
+    "path": "patterns/icons/star_rating_svg.dax"
+  },
+  {
+    "code": "CALENDAR_DETAILS_SVG",
+    "name": "Calendar with Details SVG",
+    "description": "Returns an SVG calendar grid with completed, qualifying, and remaining-day details.",
+    "kind": "value",
+    "path": "patterns/icons/calendar_details_svg.dax"
+  },
+  {
+    "code": "DONUT_TARGET_PROGRESS_SVG",
+    "name": "Donut Target Progress SVG",
+    "description": "Returns an SVG donut showing target, current value, and the amount over or under target.",
+    "kind": "value",
+    "path": "patterns/icons/donut_target_progress_svg.dax"
+  },
+  {
+    "code": "ADD_SYNTHETIC_ROW",
+    "name": "Add Synthetic Row",
+    "description": "Adds a synthetic row to an existing table.",
+    "kind": "calculated table",
+    "path": "patterns/modeling/add_synthetic_row.dax"
+  }
+]
