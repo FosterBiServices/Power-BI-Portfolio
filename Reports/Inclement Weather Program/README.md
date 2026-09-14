@@ -24,4 +24,4 @@ This report provides a centralized view of housing assistance program operations
 - Clients
 
 ## Preview
-![Report Screenshot](assets/Inclement-Weather-Program-Sample.png)
+![Report Screenshot](assets/Inclement-Weather-Program=Sample.png)
