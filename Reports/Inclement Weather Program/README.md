@@ -10,10 +10,10 @@ This report provides a centralized view of housing assistance program operations
 ## Files in this folder
 | File | Description |
 |------|--------------|
-| `Inclement%20Weather%20Sample.pbip` | Power BI project file |
-| `data/[Inclement%20Weather%20Sample%20Data].xlsx` | Sample dataset used to build the report |
-| `assets/Inclement%20Weather%20-%20Background.png` | Background image used in the report design |
-| `assets/Inclement%20Weather%20Program%20Sample.png` | Screenshot of the finished report |
+| `Inclement Weather Sample.pbip` | Power BI project file |
+| `data/[Inclement Weather Sample Data].xlsx` | Sample dataset used to build the report |
+| `assets/Inclement Weather - Background.png` | Background image used in the report design |
+| `assets/Inclement Weather Program Sample.png` | Screenshot of the finished report |
 
 ## Key features
 - Activations
