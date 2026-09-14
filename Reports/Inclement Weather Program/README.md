@@ -1,4 +1,4 @@
-# [Inclement Weather Program Sample]
+# Inclement Weather Program Sample
 
 > ⚠️ **Note:** This is a simplified example of a report I built for a real business scenario. 
 > It is not the full or final solution delivered to the client — data, scope, and complexity 
@@ -20,6 +20,6 @@ Brief description of the business problem this report addresses and who it's for
 - 
 
 ## Preview
-![Report Screenshot](assets/final_output_screenshot.png)
+![Report Screenshot](assets/Inclement Weather Program Sample.png)
 
 
