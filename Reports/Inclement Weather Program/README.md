@@ -5,21 +5,25 @@
 > have been reduced for portfolio purposes.
 
 ## Overview
-Brief description of the business problem this report addresses and who it's for.
+USed to track r.
 
 ## Files in this folder
 | File | Description |
 |------|--------------|
-| `[Inclement Weather Sample].pbip` | Power BI project file |
+| `Inclement Weather Sample.pbip` | Power BI project file |
 | `data/[Inclement Weather Sample Data].xlsx` | Sample dataset used to build the report |
-| `assets/background.png` | Background image used in the report design |
-| `assets/final_output_screenshot.png` | Screenshot of the finished report |
+| `assets/Inclement Weather - Background.png` | Background image used in the report design |
+| `assets/Inclement Weather Program Sample.png` | Screenshot of the finished report |
 
 ## Key features
-- (e.g., DAX measures used, visuals, interactivity)
-- 
+- Activations
+- Enrollments
+- Rooms
+- Nights
+- LOS
+- Clients
 
 ## Preview
-![Report Screenshot](assets/Inclement Weather Program Sample.png)
+[Report Screenshot](assets/Inclement Weather Program Sample.png)
 
 
