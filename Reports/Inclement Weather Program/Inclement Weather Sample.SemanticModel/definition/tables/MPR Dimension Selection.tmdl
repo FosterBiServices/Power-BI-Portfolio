@@ -1,0 +1,55 @@
+/// Field parameter table used to dynamically switch reporting dimensions within MPR visuals, such as Hotel or Community.
+table 'MPR Dimension Selection'
+	lineageTag: a8790ec0-51dd-4f12-a1e8-84da3c188b59
+
+	/// User-facing field parameter label used to select the MPR dimension shown in visuals.
+	column Dimension
+		displayFolder: TableColumns
+		lineageTag: 53214b33-8d40-40ef-b5a9-7cb78cf07679
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: Order
+
+		relatedColumnDetails
+			groupByColumn: Fields
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden field parameter reference to the selected MPR dimension field.
+	column Fields
+		isHidden
+		displayFolder: TableColumns
+		lineageTag: d5a06e25-8e42-4633-aef1-e7df7eba1158
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: Order
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden numeric sort value that controls the display order of MPR dimension selections.
+	column Order
+		isHidden
+		formatString: #,0
+		displayFolder: TableColumns
+		lineageTag: 3f41b4f8-bf13-4b5f-853c-3e33663a4c3a
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'MPR Dimension Selection' = calculated
+		mode: import
+		source =
+				{
+					("Hotel", NAMEOF('MPR'[HOTEL NAME]), 0),
+					("Community", NAMEOF('MPR'[COMMUNITY]), 1)
+				}
+
+	annotation PBI_Id = e11d38cb96594b8c819c7fc3c41eb58e
+

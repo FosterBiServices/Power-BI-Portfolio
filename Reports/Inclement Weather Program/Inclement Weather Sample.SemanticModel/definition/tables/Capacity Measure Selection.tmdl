@@ -1,0 +1,56 @@
+/// Field parameter table that allows report users to dynamically switch between capacity-related measures, including Rooms, Nights, and Average Length of Stay (LOS), within report visuals.
+table 'Capacity Measure Selection'
+	lineageTag: c5fe2562-2bb9-42b6-8fa7-738d4cbded0f
+
+	/// User-facing field parameter label used to select the capacity measure shown in visuals.
+	column Selection
+		displayFolder: TableColumns
+		lineageTag: 31b1db3c-0926-4043-a487-5afa769b6b7c
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Capacity Measure Selection Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Selection Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden field parameter reference to the selected measure.
+	column 'Selection Fields'
+		isHidden
+		displayFolder: TableColumns
+		lineageTag: f7064577-3a03-4eff-be0a-f35526843ab0
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Capacity Measure Selection Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden numeric sort value that controls the display order of capacity measure selections.
+	column 'Capacity Measure Selection Order'
+		isHidden
+		formatString: #,0
+		displayFolder: TableColumns
+		lineageTag: 9154497b-a879-41cd-8da1-4d105ccb6e37
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Capacity Measure Selection' = calculated
+		mode: import
+		source =
+				{
+					("Rooms", NAMEOF('_Measures'[Rooms]), 0),
+					("Nights", NAMEOF('_Measures'[Nights]), 1),
+					("LOS", NAMEOF('_Measures'[Average Length of Stay]), 2)
+				}
+
+	annotation PBI_Id = ad720d79dff347ad8991579d659fe450
+

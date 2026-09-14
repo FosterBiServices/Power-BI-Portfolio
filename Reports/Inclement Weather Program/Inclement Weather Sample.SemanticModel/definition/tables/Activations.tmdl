@@ -1,0 +1,55 @@
+/// Stores activation events for households or clients referred through the program. Used to track activation status, activation dates, and activation identifiers associated with MPR enrollment records.
+table Activations
+	lineageTag: 90903c6b-f5cd-44d4-bb5b-3db817a8386d
+
+	/// Indicates whether the related MPR record resulted in an activation.
+	column 'ACTIVATION INDICATOR'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 6f3656e8-2cd6-4667-ae7a-066bbe15a293
+		summarizeBy: none
+		sourceColumn: ACTIVATION INDICATOR
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Unique activation identifier used to relate activation records back to MPR records.
+	column 'ACTIVATION ID'
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 0e56dcd4-4fc3-4224-9ce0-0936d2468399
+		summarizeBy: none
+		sourceColumn: ACTIVATION ID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Date associated with the activation event.
+	column 'ACTIVATION DATE'
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 6f3dfbdc-9928-4f73-a90c-bf2ceea88f2a
+		summarizeBy: none
+		sourceColumn: ACTIVATION DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Activations = m
+		mode: import
+		queryGroup: Report
+		source =
+				let
+					Source = #"MPR Activations"
+				in
+					Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,149 @@
+/// Staff activity table containing employee time tracking records, including clock-in times, clock-out times, durations, and review information used for operational staffing analysis.
+table StaffTime
+	lineageTag: 6de24325-014a-4339-aa35-15938797b51c
+
+	/// Staff email address associated with the time entry.
+	column EMAIL
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 0eda46b3-15d8-4f11-9a56-3c9d12034e00
+		summarizeBy: none
+		sourceColumn: EMAIL
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Staff member name associated with the time entry.
+	column NAME
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 811452bf-802f-491d-ac9b-8bac070352c6
+		summarizeBy: none
+		sourceColumn: NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Date on which the staff time entry occurred.
+	column DATE
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 40eb581b-60f4-451c-9057-406287bf23d7
+		summarizeBy: none
+		sourceColumn: DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Recorded start time for the staff time entry.
+	column 'TIME IN'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8b1ad8bb-4047-4782-a5de-2c6247589b0d
+		summarizeBy: none
+		sourceColumn: TIME IN
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	/// Recorded end time for the staff time entry.
+	column 'TIME OUT'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 7ddb2e69-9857-4656-9f7f-ef218cd93234
+		summarizeBy: none
+		sourceColumn: TIME OUT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	/// Total duration of the staff time entry, typically represented in hours.
+	column DURATION
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: ed2480ff-76d0-44af-b350-cefe1c3de0d4
+		summarizeBy: none
+		sourceColumn: DURATION
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Review status or review notes associated with the staff time entry.
+	column REVIEW
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 836bd8b9-50dd-41d2-9590-c2e5a176cfcd
+		summarizeBy: none
+		sourceColumn: REVIEW
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Text-formatted start time in hour and minute format.
+	column 'TIME IN (HH:MM)'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8ad02726-708c-4891-ae18-7aa75c559787
+		summarizeBy: none
+		sourceColumn: TIME IN (HH:MM)
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Text-formatted start time using AM or PM notation.
+	column 'TIME IN (AM/PM)'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 08ba02d4-8efc-40ce-810b-61ebe55c5df1
+		summarizeBy: none
+		sourceColumn: TIME IN (AM/PM)
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Text-formatted end time in hour and minute format.
+	column 'TIME OUT (HH:MM)'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 53111af7-7862-4670-b914-1c76558ba932
+		summarizeBy: none
+		sourceColumn: TIME OUT (HH:MM)
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Text-formatted end time using AM or PM notation.
+	column 'TIME OUT (AM/PM)'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: ab7a455b-306e-4831-94b2-cb9a03b8f279
+		summarizeBy: none
+		sourceColumn: TIME OUT (AM/PM)
+
+		annotation SummarizationSetBy = Automatic
+
+	partition StaffTime = m
+		mode: import
+		queryGroup: Report
+		source =
+				let
+					Source = stage_StaffTime
+				in
+					Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

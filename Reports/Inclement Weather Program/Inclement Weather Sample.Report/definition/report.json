@@ -1,0 +1,140 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "Fluent2-CY26SU05",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "FOSTER_BI_SERVICES43081701158138797.json",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Middle'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "Fluent2-CY26SU05",
+          "path": "BaseThemes/Fluent2-CY26SU05.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Aging_Population6747188373305675.png",
+          "path": "Aging_Population6747188373305675.png",
+          "type": "Image"
+        },
+        {
+          "name": "Clients46311740690835046.png",
+          "path": "Clients46311740690835046.png",
+          "type": "Image"
+        },
+        {
+          "name": "Clients5907185744663119.png",
+          "path": "Clients5907185744663119.png",
+          "type": "Image"
+        },
+        {
+          "name": "Clients8891429475406107.png",
+          "path": "Clients8891429475406107.png",
+          "type": "Image"
+        },
+        {
+          "name": "Disability863773142985906.png",
+          "path": "Disability863773142985906.png",
+          "type": "Image"
+        },
+        {
+          "name": "FOSTER_BI_SERVICES43081701158138797.json",
+          "path": "FOSTER_BI_SERVICES43081701158138797.json",
+          "type": "Image"
+        },
+        {
+          "name": "hotel1268977472545595.png",
+          "path": "hotel1268977472545595.png",
+          "type": "Image"
+        },
+        {
+          "name": "hourglass088818082734612.png",
+          "path": "hourglass088818082734612.png",
+          "type": "Image"
+        },
+        {
+          "name": "Inclement_Weather_-_Overview9580722221365051.png",
+          "path": "Inclement_Weather_-_Overview9580722221365051.png",
+          "type": "Image"
+        },
+        {
+          "name": "siren6515599931071815.png",
+          "path": "siren6515599931071815.png",
+          "type": "Image"
+        },
+        {
+          "name": "Veteran29813307640570574.png",
+          "path": "Veteran29813307640570574.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  },
+  "slowDataSourceSettings": {
+    "isCrossHighlightingDisabled": true,
+    "isSlicerSelectionsButtonEnabled": false,
+    "isFilterSelectionsButtonEnabled": false,
+    "isFieldWellButtonEnabled": false,
+    "isApplyAllButtonEnabled": false
+  }
+}

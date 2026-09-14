@@ -1,0 +1,52 @@
+relationship 35ee5b62-3b9c-42f0-034f-146707b7331a
+	fromColumn: MPR.'ACTIVATION ID'
+	toColumn: Activations.'ACTIVATION ID'
+
+relationship AutoDetected_6ba460a8-a2a8-46a3-9694-b837c79c78dd
+	fromColumn: MPR.COMMUNITY
+	toColumn: Community.COMMUNITY
+
+relationship AutoDetected_389616a9-db86-4739-8ac4-f50a525f1d1d
+	fromColumn: Intake.'STAFF NAME'
+	toColumn: StaffBridge.'STAFF NAME'
+
+relationship d9a23e88-7b3d-09c9-d7b1-d49e45728dc3
+	fromColumn: StaffTime.NAME
+	toColumn: StaffBridge.'STAFF NAME'
+
+relationship AutoDetected_4fafc058-f95e-426c-bd67-62793703cb27
+	fromColumn: HMIS.'UNIQUE IDENTIFIER NUMBER'
+	toColumn: Clients.'UNIQUE IDENTIFIER NUMBER'
+
+relationship AutoDetected_0fe2d8c2-9cf2-49c0-9ec3-f883c21454b6
+	fromColumn: MPR.'UNIQUE IDENTIFIER NUMBER'
+	toColumn: Clients.'UNIQUE IDENTIFIER NUMBER'
+
+relationship 814beb12-cbc4-a26e-f662-8dc3221897b1
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dimDate.Date
+	toColumn: Activations.'ACTIVATION DATE'
+
+relationship e8220373-ab47-38ce-f0e6-48b4ebbd6558
+	fromColumn: HMIS.'ENROLL DATE'
+	toColumn: dimDate.Date
+
+relationship 489b43a5-cf51-89fe-f036-7eddbd769291
+	fromColumn: Intake.'CHECK IN DATE'
+	toColumn: dimDate.Date
+
+relationship 71cdb2e4-8147-21e0-46c0-a900a3ff0228
+	fromColumn: StaffTime.DATE
+	toColumn: dimDate.Date
+
+relationship 88de508d-4a2e-b0e8-8606-19da8d88cb05
+	isActive: false
+	fromColumn: MPR.'HOTEL CHECK IN'
+	toColumn: dimDate.Date
+
+relationship 3fce48dc-b656-c186-438c-4f7b45aa8986
+	isActive: false
+	fromColumn: MPR.'ENROLLMENT DATE'
+	toColumn: dimDate.Date
+

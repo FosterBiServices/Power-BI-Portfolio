@@ -1,0 +1,55 @@
+/// Field parameter table that allows report users to dynamically select people-related measures such as Activations and Enrollments in visuals.
+table 'People Measure Selection'
+	lineageTag: 91e4ceb6-9970-4dcd-b9ad-42621a57c515
+
+	/// User-facing field parameter label used to select the people-related measure shown in visuals.
+	column Name
+		displayFolder: TableColumns
+		lineageTag: 1fa6135b-14d7-4e87-a8d7-4e97e03962db
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Sort Order'
+
+		relatedColumnDetails
+			groupByColumn: Measure
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden field parameter reference to the selected people-related measure.
+	column Measure
+		isHidden
+		displayFolder: TableColumns
+		lineageTag: 831e28dd-4680-47da-bc13-d3ecab716793
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Sort Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden numeric sort value that controls the display order of people measure selections.
+	column 'Sort Order'
+		isHidden
+		formatString: #,0
+		displayFolder: TableColumns
+		lineageTag: 5b7fdba2-a399-4481-84f4-eb35863055a8
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'People Measure Selection' = calculated
+		mode: import
+		source =
+				{
+					("Activations", NAMEOF('_Measures'[Activations]), 0),
+					("Enrollments", NAMEOF('_Measures'[Enrollments]), 1)
+				}
+
+	annotation PBI_Id = 6f13e498012541e6a012cc97effc66fd
+

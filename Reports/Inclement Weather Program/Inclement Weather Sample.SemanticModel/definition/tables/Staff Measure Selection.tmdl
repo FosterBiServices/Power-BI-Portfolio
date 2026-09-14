@@ -1,0 +1,55 @@
+/// Field parameter table that allows report users to dynamically select staff-related performance measures in report visuals.
+table 'Staff Measure Selection'
+	lineageTag: 8cf2543c-2638-4915-997c-3d136ce12bab
+
+	/// User-facing field parameter label used to select the staff-related measure shown in visuals.
+	column 'Staff Measure Selection'
+		displayFolder: TableColumns
+		lineageTag: 6dc346a3-5ded-407e-96ec-bc5217ba9528
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Staff Measure Selection Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Staff Measure Selection Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden field parameter reference to the selected staff-related measure.
+	column 'Staff Measure Selection Fields'
+		isHidden
+		displayFolder: TableColumns
+		lineageTag: e45dea20-048d-4270-b291-e1f79081756c
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Staff Measure Selection Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hidden numeric sort value that controls the display order of staff measure selections.
+	column 'Staff Measure Selection Order'
+		isHidden
+		formatString: #,0
+		displayFolder: TableColumns
+		lineageTag: 6f6cbaa5-54f1-4bfd-992f-337bade1fa41
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Staff Measure Selection' = calculated
+		mode: import
+		source =
+				{
+					("Activations", NAMEOF('_Measures'[Intake - Activations]), 0),
+					("Hours", NAMEOF('_Measures'[Hours]), 1)
+				}
+
+	annotation PBI_Id = 4c961baf7e9d4914a7c792a9f6bb0bed
+

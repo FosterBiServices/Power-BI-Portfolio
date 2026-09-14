@@ -1,0 +1,70 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup functions
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup derived
+
+	annotation PBI_QueryGroupOrder = 4
+
+queryGroup load
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup stage
+
+	annotation PBI_QueryGroupOrder = 3
+
+queryGroup Report
+
+	annotation PBI_QueryGroupOrder = 7
+
+queryGroup 'Data Validations'
+
+	annotation PBI_QueryGroupOrder = 5
+
+queryGroup Connections
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup Manual
+
+	annotation PBI_QueryGroupOrder = 8
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["stage_HMIS","Activations","HMIS","MPR","Intake","Clients","_Measures","SharePointConnection","load_HMIS","load_Intake","load_MPR","fxRemoveHMISRows","fxCleanColumns","fxCleanValues","fxNormalize","stage_MPR","stage_Clients","stage_Intake","stage_StaffTime","MPR Clients","HMISClients","MPR Activations","Communities","MPR_Counts","MPR_variances","HMISOnly","MPROnly","NameMisMatches","fxCleanNames","Community","load_StaffTime","fxCleanTimes","StaffTime","StaffBridge","dimDate"]
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","MCP-PBIModeling","TMDLView_Desktop","DevMode"]
+
+annotation __BNorm = 1
+
+annotation __TEdtr = 1
+
+annotation BestPracticeAnalyzer_IgnoreRules = {"RuleIDs":["TE3_BUILT_IN_TRANSLATE_DISPLAY_FOLDERS","TE3_BUILT_IN_TRANSLATE_DESCRIPTIONS","TE3_BUILT_IN_TRANSLATE_VISIBLE_NAMES","TE3_BUILT_IN_TRANSLATE_HIERARCHY_LEVELS","TE3_BUILT_IN_TRANSLATE_PERSPECTIVES"]}
+
+ref table HMIS
+ref table MPR
+ref table Intake
+ref table _Measures
+ref table Clients
+ref table Activations
+ref table 'People Measure Selection'
+ref table 'Top X'
+ref table 'MPR Dimension Selection'
+ref table 'Capacity Measure Selection'
+ref table Community
+ref table StaffTime
+ref table StaffBridge
+ref table 'Staff Measure Selection'
+ref table dimDate
+
+ref cultureInfo en-US
+
