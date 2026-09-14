@@ -5,7 +5,7 @@
 > have been reduced for portfolio purposes.
 
 ## Overview
-USed to track r.
+This report provides a centralized view of housing assistance program operations by combining Intake, HMIS, and program tracking data into a single reproting solution. It helps program managers and leadership track participant enrollments, hotel placements, demographic trends, and overall program performances while ensuring information remains consistent across systems. 
 
 ## Files in this folder
 | File | Description |
