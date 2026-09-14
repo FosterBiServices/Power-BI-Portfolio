@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Report",
-    "displayName": "Inclement Weather Sample"
+    "type": "SemanticModel",
+    "displayName": "Inclement=Weather=Sample"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "57c53885-3f67-4db8-b495-4f9235fbf577"
+    "logicalId": "5ae701d6-ae48-4230-8ebf-552f72c71ad6"
   }
 }
