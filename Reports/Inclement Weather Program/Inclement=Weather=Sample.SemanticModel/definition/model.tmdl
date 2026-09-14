@@ -40,7 +40,7 @@ queryGroup Manual
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["stage_HMIS","Activations","HMIS","MPR","Intake","Clients","_Measures","SharePointConnection","load_HMIS","load_Intake","load_MPR","fxRemoveHMISRows","fxCleanColumns","fxCleanValues","fxNormalize","stage_MPR","stage_Clients","stage_Intake","stage_StaffTime","MPR Clients","HMISClients","MPR Activations","Communities","MPR_Counts","MPR_variances","HMISOnly","MPROnly","NameMisMatches","fxCleanNames","Community","load_StaffTime","fxCleanTimes","StaffTime","StaffBridge","dimDate"]
+annotation PBI_QueryOrder = ["stage_HMIS","Activations","HMIS","MPR","Intake","Clients","_Measures","SharePointConnection","load_HMIS","load_Intake","load_MPR","fxRemoveHMISRows","fxCleanColumns","fxCleanValues","fxNormalize","stage_MPR","stage_Clients","stage_Intake","MPR Clients","HMISClients","MPR Activations","Communities","MPR_Counts","MPR_variances","HMISOnly","MPROnly","NameMisMatches","fxCleanNames","Community","fxCleanTimes","dimDate"]
 
 annotation PBI_ProTooling = ["DaxQueryView_Desktop","MCP-PBIModeling","TMDLView_Desktop","DevMode"]
 
@@ -61,8 +61,6 @@ ref table 'Top X'
 ref table 'MPR Dimension Selection'
 ref table 'Capacity Measure Selection'
 ref table Community
-ref table StaffTime
-ref table StaffBridge
 ref table 'Staff Measure Selection'
 ref table dimDate
 
