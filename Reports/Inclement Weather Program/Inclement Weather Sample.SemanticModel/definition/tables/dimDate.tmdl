@@ -1,0 +1,162 @@
+table dimDate
+	lineageTag: 54dc1fa7-fb32-46c7-97cb-edeed7894447
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0cdd69e3-9e69-4564-aecc-1faa1aecc220
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: ea871d0c-362a-41cb-80ff-d0fadebc4d3c
+		summarizeBy: none
+		sourceColumn: Month Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: d54d88f1-7acc-4bfa-abab-fa18b5e9e0a8
+		summarizeBy: sum
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: 4f1cb4b6-dff1-428f-a02c-a7abbfc40b6f
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Sort'
+		dataType: int64
+		formatString: 0
+		lineageTag: 58b01bd5-05e6-4615-b80e-434ed264b0c1
+		summarizeBy: sum
+		sourceColumn: Month Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 55b976c3-de2b-45e0-902f-5fffc30770f9
+		summarizeBy: none
+		sourceColumn: Month Year
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 50679df4-686d-4a31-aaa9-61e5901de041
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Ending'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c9236ba6-7606-4afa-9fc1-f2e4e2029719
+		summarizeBy: none
+		sourceColumn: Week Ending
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Weekday
+		dataType: string
+		lineageTag: 9ea925ca-1544-4ce4-a6a7-28c3e93b3bb5
+		summarizeBy: none
+		sourceColumn: Weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 985c8033-7775-4ee1-8864-9aa35091b544
+		summarizeBy: sum
+		sourceColumn: Weekday number
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimDate = m
+		mode: import
+		source = ```
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "dimDate", Kind = "Sheet"]}[Data],
+				  #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true]),
+				 TypePairs = {
+				    {"Date", type date},
+				    {"Month Year", type date},
+				    {"Week Ending", type date},
+				    {"Year", Int64.Type},
+				    {"Month Sort", Int64.Type},
+				    {"Weekday number",Int64.Type},
+				    {"Month Number",Int64.Type}
+				
+				  }, 
+				  ExistingCols = Table.ColumnNames(
+				    #"Promoted Headers"
+				  ), 
+				  // Keep type rules only for columns that actually exist
+				  TypePairsExistingOnly = List.Select(
+				    TypePairs, 
+				    each List.Contains(
+				      ExistingCols, 
+				      _{0}
+				    )
+				  ), 
+				  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+				  ExplicitTypeMap = Record.FromList(
+				    List.Transform(
+				      TypePairsExistingOnly, 
+				      each _{1}
+				    ), 
+				    List.Transform(
+				      TypePairsExistingOnly, 
+				      each _{0}
+				    )
+				  ), 
+				  // - If we specified a type in ExplicitTypeMap, use it.
+				  // - Otherwise default to type text.
+				  AllTypePairs = List.Transform(
+				    ExistingCols, 
+				    (c) => {
+				      c, 
+				      Record.FieldOrDefault(
+				        ExplicitTypeMap, 
+				        c, 
+				        type text
+				      )
+				    }
+				  ), 
+				  // Apply types in one go
+				  ChangeTypes
+				    = Table.TransformColumnTypes(
+				    #"Promoted Headers", 
+				    AllTypePairs
+				  )
+				in
+				  ChangeTypes
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,217 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 181.71590599504657,
+        "y": 10070.209026717621
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 886.85842128810111,
+            "y": 10225.795512738856
+          },
+          "nodeIndex": "HMIS",
+          "nodeLineageTag": "dfa9e552-b408-46d1-a2ab-37affd54ef6a",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 597.91499794607671,
+            "y": 10226.03919338185
+          },
+          "nodeIndex": "MPR",
+          "nodeLineageTag": "18e63dd4-e104-4650-a430-1abb277175a4",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1164.2104465014238,
+            "y": 10221.747253345267
+          },
+          "nodeIndex": "Intake",
+          "nodeLineageTag": "85680d32-bd49-456f-96b3-be0b0abdb2e8",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 2098.5079388435752,
+            "y": 10753.309789957584
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "dd20d613-3ea5-4178-9d66-564fadc75a9e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 10902.539834836683
+          },
+          "nodeIndex": "Clients",
+          "nodeLineageTag": "a99ef001-6500-490a-8529-ee3a444270c5",
+          "size": {
+            "height": 305.23992477532931,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 286.52601458885823,
+            "y": 10228.129940991312
+          },
+          "nodeIndex": "Activations",
+          "nodeLineageTag": "90903c6b-f5cd-44d4-bb5b-3db817a8386d",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 2088.8124682175044,
+            "y": 11446.234697770084
+          },
+          "nodeIndex": "Top X",
+          "nodeLineageTag": "839bbca3-e40e-416e-8d02-dc680d3d11da",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 2088.5778773952261,
+            "y": 11258.037011201417
+          },
+          "nodeIndex": "MPR Dimension Selection",
+          "nodeLineageTag": "a8790ec0-51dd-4f12-a1e8-84da3c188b59",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 2099.2258490758622,
+            "y": 11076.738569379555
+          },
+          "nodeIndex": "People Measure Selection",
+          "nodeLineageTag": "91e4ceb6-9970-4dcd-b9ad-42621a57c515",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 2104.5156474180931,
+            "y": 10909.563453221177
+          },
+          "nodeIndex": "Capacity Measure Selection",
+          "nodeLineageTag": "c5fe2562-2bb9-42b6-8fa7-738d4cbded0f",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 10562.209757727211
+          },
+          "nodeIndex": "Community",
+          "nodeLineageTag": "d6fff2da-627d-4035-b03b-f9d25eb1af3d",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 10729.655649170069
+          },
+          "nodeIndex": "StaffBridge",
+          "nodeLineageTag": "f1f4d9a0-75b8-4d73-8840-1631af9289db",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1480.1123711353846,
+            "y": 10232.781006592813
+          },
+          "nodeIndex": "StaffTime",
+          "nodeLineageTag": "6de24325-014a-4339-aa35-15938797b51c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 2112.017541465656,
+            "y": 11708.023844826952
+          },
+          "nodeIndex": "Staff Measure Selection",
+          "nodeLineageTag": "8cf2543c-2638-4915-997c-3d136ce12bab",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 6.0878869494665651,
+            "y": 11318.592090831507
+          },
+          "nodeIndex": "dimDate",
+          "nodeLineageTag": "54dc1fa7-fb32-46c7-97cb-edeed7894447",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 15
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 69.889313929107516,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

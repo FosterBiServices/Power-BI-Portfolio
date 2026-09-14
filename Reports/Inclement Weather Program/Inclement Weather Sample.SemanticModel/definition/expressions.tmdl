@@ -1,0 +1,1339 @@
+expression load_HMIS =
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
+		  #"Navigation 1" = Source{[Item = "HMIS", Kind = "Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		in
+		  #"Promoted Headers"
+	lineageTag: 7d73f472-1bbc-4d20-9daa-6b7bd6dd0bea
+	queryGroup: load
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression load_Intake =
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
+		  #"Navigation 1" = Source{[Item = "Intake", Kind = "Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		in
+		  #"Promoted Headers"
+	lineageTag: 9f16b1fa-b0f0-4f16-ad64-5ec6bdfa11d8
+	queryGroup: load
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression load_MPR =
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
+		  #"Navigation 1" = Source{[Item = "MPR", Kind = "Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		in
+		  #"Promoted Headers"
+	lineageTag: b6efb3cb-fc71-4238-88b5-b368faf2116b
+	queryGroup: load
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression stage_HMIS = ```
+		let
+		  Source = load_HMIS, 
+		  TypePairs = {
+		    {"PROGRAM NAME", type text},
+		    {"CLIENT", type text},
+		    {"UNIQUE IDENTIFIER", type text},
+		    {"BIRTH DATE", type date},
+		    {"AGE AT ENTRY", Int64.Type},
+		    {"CURRENT AGE", Int64.Type},
+		    {"ENROLL DATE", type date},
+		    {"EXIT DATE", type date},
+		    {"LOS", Int64.Type},
+		    {"HOUSING MOVE IN", type text},
+		    {"ASSESSMENTS", type text},
+		    {"SERVICES", type text},
+		    {"CASE NOTES", type text},
+		    {"ASSIGNED STAFF", type text},
+		    {"UNIT ASSIGNMENT", type text},
+		    {"BED ASSIGNMENT", type text},
+		    {"OCCUPANCY START DATE", type date},
+		    {"OCCUPANCY END DATE", type date}
+		
+		
+		  }, 
+		  ExistingCols = Table.ColumnNames(
+		    Source
+		  ), 
+		  // Keep type rules only for columns that actually exist
+		  TypePairsExistingOnly = List.Select(
+		    TypePairs, 
+		    each List.Contains(
+		      ExistingCols, 
+		      _{0}
+		    )
+		  ), 
+		  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+		  ExplicitTypeMap = Record.FromList(
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{1}
+		    ), 
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{0}
+		    )
+		  ), 
+		  // - If we specified a type in ExplicitTypeMap, use it.
+		  // - Otherwise default to type text.
+		  AllTypePairs = List.Transform(
+		    ExistingCols, 
+		    (c) => {
+		      c, 
+		      Record.FieldOrDefault(
+		        ExplicitTypeMap, 
+		        c, 
+		        type text
+		      )
+		    }
+		  ), 
+		  // Apply types in one go
+		  ChangeTypes
+		    = Table.TransformColumnTypes(
+		    Source, 
+		    AllTypePairs
+		  ),
+		    ColumnsToClean = {
+		      "UNIQUE IDENTIFIER NUMBER"
+		    },
+		
+		    CleanedTable =
+		      Table.TransformColumns(
+		        ChangeTypes,
+		        List.Transform(
+		          ColumnsToClean,
+		          each {_, fxCleanValues, type text}
+		        )
+		      )
+		
+		    in
+		      CleanedTable
+		```
+	lineageTag: 2d565731-b843-4212-bede-6af3a51436f3
+	queryGroup: stage
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression fxRemoveHMISRows = ```
+		let
+		    Source = (InputTable as table) as table =>
+		
+		let
+		  IndexNumber = 
+		    let
+		    // Add Index to Table
+		        #"Added Index" = Table.AddIndexColumn(#"InputTable", "Index", 0, 1, Int64.Type), 
+		    // Change Column1 in next two steps to match your column name
+		        #"Changed Type" = Table.TransformColumnTypes(#"Added Index", {{"Column1", type text}}),  
+		    // Change Billable Encounters to match term you're looking for   
+		        #"Filtered Rows" = Table.SelectRows(#"Added Index", each ([Column1] = "Program Name")){0}[Index] 
+		    in
+		      #"Filtered Rows",
+		    // Skips down to row number found in Filtered Row steps and removes all previous rows
+		    RemoveRows = Table.Skip(InputTable, IndexNumber), 
+		    // Promotes headers, you can skip this if needed 
+		    PromoteHeaders = Table.PromoteHeaders(RemoveRows, [PromoteAllScalars=true]) 
+		    ,CleanNames = fxCleanColumns(PromoteHeaders) 
+		    in 
+		      CleanNames
+		
+		in
+		    Source
+		```
+	lineageTag: 24d77543-75d9-4003-b135-32cb5cfda52f
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression fxCleanColumns = ```
+		let
+		    Source = (InputTable as table) as table =>
+		
+		  let
+		    Source = #"InputTable",
+		    CleanNames =
+		      Table.TransformColumnNames(
+		        Source,
+		        each Text.Trim(
+		          Text.Replace(
+		            Text.Combine(List.Select(Text.Split(_, "#(lf)"), each _ <> ""), " "),
+		            "  ",
+		            " "
+		          )
+		        )
+		      )
+		    ,TrimColumnNames = Table.TransformColumnNames(CleanNames, Text.Trim) 
+		    ,UpperColumnNames = Table.TransformColumnNames(TrimColumnNames, Text.Upper) 
+		  in 
+		    UpperColumnNames
+		
+		in
+		  Source
+		```
+	lineageTag: e71caddd-4a8c-4f2c-8116-6a5cb78ecb3d
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression fxCleanValues =
+		let
+		    Source =
+		    (
+		        cleanValue as nullable text,
+		        optional allowSpaces as nullable logical
+		    )
+		    as nullable text =>
+		
+		let
+		    Result =
+		        if cleanValue = null then
+		            null
+		        else
+		            let
+		                BaseText =
+		                    Text.Trim(Text.From(cleanValue)),
+		                RemoveControlChars =
+		                    Text.Replace(
+		                        Text.Replace(BaseText, "#(lf)", ""),
+		                        "#(cr)",
+		                        ""
+		                    ),
+		                RemoveQuotes =
+		                    Text.Replace(RemoveControlChars, """", ""),
+		                AllowedCharacters =
+		                    if allowSpaces = true then
+		                        {"A".."Z", "a".."z", "0".."9", " "}
+		                    else
+		                        {"A".."Z", "a".."z", "0".."9"},
+		                Filtered =
+		                    Text.Select(RemoveQuotes, AllowedCharacters),
+		                FinalValue =
+		                    Text.Upper(Filtered)
+		
+		            in
+		                if FinalValue = "" then null else FinalValue
+		in
+		    Result
+		in
+		    Source
+	lineageTag: ddc7b737-4df9-4db0-b4a9-8bf42426c4bf
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression stage_MPR =
+		let
+		  Source
+		    = load_MPR,
+		  RenamedColumns
+		    = Table.RenameColumns(
+		    Source,
+		    {
+		      {
+		        "REFERRAL DATE & TIME",
+		        "REFERRAL DATE"
+		      },
+		      {
+		        "ENROLLMENT DATE & TIME",
+		        "ENROLLMENT DATE"
+		      },
+		      {
+		        "HOTEL CHECK-IN DATE & TIME",
+		        "HOTEL CHECK IN"
+		      },
+		      {
+		        "TOTAL INDIVIDUALS IN HOUSEHOLD (INCLUDING ADULTS & CHILDREN)",
+		        "HOUSEHOLD"
+		      },
+		      {
+		        "NUMBER OF CHILDREN UNDER 18",
+		        "NUMBER OF CHILDREN"
+		      },
+		      {
+		        "RACE/ETHNICITY",
+		        "RACE_ETHNICITY"
+		      }
+		    },
+		    MissingField.Ignore
+		  ),
+		  TypePairs
+		    = {
+		    {
+		      "RECORD ID",
+		      type text
+		    },
+		    {
+		      "UNIQUE IDENTIFIER NUMBER",
+		      type text
+		    },
+		    {
+		      "FIRST NAME",
+		      type text
+		    },
+		    {
+		      "LAST NAME",
+		      type text
+		    },
+		    {
+		    "ACTIVATION DATE",
+		      type date
+		    },
+		    {
+		    "ENROLLMENT DATE",
+		      type date
+		    },
+		    {
+		    "REFERRAL DATE",
+		      type date
+		    },
+		    {
+		      "HOTEL CHECK IN",
+		      type date
+		    },
+		    {
+		      "EXIT DATE",
+		      type date
+		    },
+		    {
+		      "HOUSEHOLD",
+		      Int64.Type
+		    },
+		    {
+		      "NUMBER OF ADULTS",
+		      Int64.Type
+		    },
+		    {
+		      "NUMBER OF CHILDREN",
+		      Int64.Type
+		    },
+		    {
+		      "NUMBER OF HOTEL NIGHTS",
+		      Int64.Type
+		    },
+		    {
+		      "TOTAL NIGHTS",
+		      Int64.Type
+		    },
+		    {
+		      "NUMBER OF HOTEL ROOMS RENTED",
+		      Int64.Type
+		    },
+		    {
+		      "DATE OF BIRTH",
+		      type date
+		    },
+		    {
+		      "CLIENT AGE",
+		      Int64.Type
+		    },
+		    {
+		      "GENDER",
+		      type text
+		    },
+		    {
+		      "RACE_ETHNICITY",
+		      type text
+		    },
+		    {
+		      "VETERAN",
+		      type text
+		    },
+		    {
+		      "DISABILITY",
+		      type text
+		    },
+		    {
+		      "ENROLLED THIS MONTH",
+		      type text
+		    },
+		    {
+		      "ENROLLED THIS FY",
+		      type text
+		    }
+		  },
+		  ExistingCols
+		    = Table.ColumnNames(
+		    RenamedColumns
+		  ),
+		  // Keep type rules only for columns that actually exist
+		  TypePairsExistingOnly
+		    = List.Select(
+		    TypePairs,
+		    each
+		      List.Contains(
+		        ExistingCols,
+		        _{
+		          0
+		        }
+		      )
+		  ),
+		  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+		  ExplicitTypeMap
+		    = Record.FromList(
+		    List.Transform(
+		      TypePairsExistingOnly,
+		      each
+		        _{
+		          1
+		        }
+		    ),
+		    List.Transform(
+		      TypePairsExistingOnly,
+		      each
+		        _{
+		          0
+		        }
+		    )
+		  ),
+		  // - If we specified a type in ExplicitTypeMap, use it.
+		  // - Otherwise default to type text.
+		  AllTypePairs
+		    = List.Transform(
+		    ExistingCols,
+		    (
+		      c
+		    ) => {
+		      c,
+		      Record.FieldOrDefault(
+		        ExplicitTypeMap,
+		        c,
+		        type text
+		      )
+		    }
+		  ),
+		  // Apply types in one go
+		  ChangeTypes
+		    = Table.TransformColumnTypes(
+		    RenamedColumns,
+		    AllTypePairs
+		  )
+		in
+		  ChangeTypes
+	lineageTag: 42245641-8106-4b75-9ecd-1757ea2a13d2
+	queryGroup: stage
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'MPR Clients' = ```
+		let
+		  Source = stage_MPR[[UNIQUE IDENTIFIER NUMBER], [FIRST NAME], [LAST NAME], [DATE OF BIRTH]],
+		  RemoveNulls = Table.SelectRows(Source, each ([UNIQUE IDENTIFIER NUMBER] <> null)),
+		  AddClient = Table.AddColumn(RemoveNulls, 
+		    "CLIENT", 
+		      each Text.Combine(
+		          {Text.From([LAST NAME]), Text.From([FIRST NAME])}, ", "), 
+		        type text
+		      ), 
+		  SourceField = Table.AddColumn(AddClient, "SOURCE", each "MPR"),
+		    RemoveDups = Table.Distinct(SourceField, {"UNIQUE IDENTIFIER NUMBER"}),
+		    NormalizeFirst = Table.AddColumn(RemoveDups, "First_Cleaned", each fxCleanNames([FIRST NAME], true),type text),
+		    NormalizeLast = Table.AddColumn(NormalizeFirst, "Last_Cleaned", each fxCleanNames([LAST NAME], true), type text)
+		in
+		    NormalizeLast
+		```
+	lineageTag: 52aaecc4-8a83-4e87-9c87-205108ec1abf
+	queryGroup: derived
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression HMISClients = ```
+		let
+		  Source = stage_HMIS[[UNIQUE IDENTIFIER NUMBER], [CLIENT], [BIRTH DATE]],
+		    RemoveNulls = Table.SelectRows(Source, each ([UNIQUE IDENTIFIER NUMBER] <> null)),
+		  CopyClient = Table.AddColumn(RemoveNulls, "CLIENT COPY", each [CLIENT]),
+		  SplitClient = Table.SplitColumn(
+		      CopyClient, "CLIENT COPY", 
+		        Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), 
+		          {"LAST NAME", "FIRST NAME"}), 
+		    SourceField = Table.AddColumn(SplitClient, "SOURCE", each "HMIS"),
+		    RemoveDuplicates = Table.Distinct(SourceField, {"UNIQUE IDENTIFIER NUMBER"}), 
+		    NormalizeFirst = Table.AddColumn(RemoveDuplicates, "First_Cleaned", each fxCleanNames([FIRST NAME], true),type text),
+		    NormalizeLast = Table.AddColumn(NormalizeFirst, "Last_Cleaned", each fxCleanNames([LAST NAME], true), type text)
+		in
+		    NormalizeLast
+		```
+	lineageTag: cf59712e-a2be-4b9d-8402-c7bb89e1b474
+	queryGroup: derived
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression stage_Clients = ```
+		let
+		  Source =
+		    Table.NestedJoin(
+		      HMISClients,
+		      {"UNIQUE IDENTIFIER NUMBER"},
+		      #"MPR Clients",
+		      {"UNIQUE IDENTIFIER NUMBER"},
+		      "MPR Clients",
+		      JoinKind.FullOuter
+		    ),
+		    ExpandMPRClients =
+		    Table.ExpandTableColumn(
+		      Source,
+		      "MPR Clients",
+		      {
+		        "UNIQUE IDENTIFIER NUMBER",
+		        "CLIENT",
+		        "FIRST NAME",
+		        "LAST NAME",
+		        "DATE OF BIRTH",
+		        "SOURCE"
+		      },
+		      {
+		        "MPR Clients.UNIQUE IDENTIFIER NUMBER",
+		        "MPR Clients.CLIENT",
+		        "MPR Clients.FIRST NAME",
+		        "MPR Clients.LAST NAME",
+		        "MPR Clients.DATE OF BIRTH",
+		        "MPR Clients.SOURCE"
+		      }
+		    ),
+		
+		  // ✅ Explicit mapping
+		  ColumnMapping = {
+		    {"UNIQUE IDENTIFIER NUMBER", "MPR Clients.UNIQUE IDENTIFIER NUMBER"},
+		    {"CLIENT", "MPR Clients.CLIENT"},
+		    {"FIRST NAME", "MPR Clients.FIRST NAME"},
+		    {"LAST NAME", "MPR Clients.LAST NAME"},
+		    {"BIRTH DATE", "MPR Clients.DATE OF BIRTH"},
+		    {"SOURCE", "MPR Clients.SOURCE"}
+		  },
+		
+		  AddFixedColumns =
+		    List.Accumulate(
+		      ColumnMapping,
+		      ExpandMPRClients,
+		      (state, currentPair) =>
+		        let
+		          primaryCol = currentPair{0},
+		          fallbackCol = currentPair{1}
+		        in
+		          Table.AddColumn(
+		            state,
+		            "_" & primaryCol,
+		            each
+		              let
+		                primary =
+		                  if Record.HasFields(_, primaryCol)
+		                  then Record.Field(_, primaryCol)
+		                  else null,
+		
+		                fallback =
+		                  if Record.HasFields(_, fallbackCol)
+		                  then Record.Field(_, fallbackCol)
+		                  else null
+		              in
+		                if primary = null or
+		                   (Value.Is(primary, type text) and Text.Trim(primary) = "")
+		                then fallback
+		                else primary,
+		            type any
+		          )
+		    ),
+		
+		  RemoveOriginalColumns =
+		    Table.RemoveColumns(
+		      AddFixedColumns,
+		      List.Transform(ColumnMapping, each _{0})
+		    ),
+		
+		  RenameFinalColumns =
+		    Table.RenameColumns(
+		      RemoveOriginalColumns,
+		      List.Transform(
+		        ColumnMapping,
+		        each {"_" & _{0}, _{0}}
+		      )
+		    ), 
+		
+		  RemoveMPRColumns =
+		  Table.RemoveColumns(
+		    RenameFinalColumns,
+		    {
+		      "MPR Clients.UNIQUE IDENTIFIER NUMBER",
+		      "MPR Clients.CLIENT",
+		      "MPR Clients.FIRST NAME",
+		      "MPR Clients.LAST NAME",
+		      "MPR Clients.DATE OF BIRTH",
+		      "MPR Clients.SOURCE"
+		    }
+		  ),
+		  TypePairs = {
+		    {"CLIENT", type text},
+		    {"UNIQUE IDENTIFIER NUMBER", type text},
+		    {"BIRTH DATE", type date},
+		    {"FIRST NAME", type text},
+		    {"LAST NAME", type text}, 
+		    {"SOURCE", type text} 
+		}, 
+		  ExistingCols = Table.ColumnNames(
+		    RemoveMPRColumns
+		  ), 
+		  // Keep type rules only for columns that actually exist
+		  TypePairsExistingOnly = List.Select(
+		    TypePairs, 
+		    each List.Contains(
+		      ExistingCols, 
+		      _{0}
+		    )
+		  ), 
+		  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+		  ExplicitTypeMap = Record.FromList(
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{1}
+		    ), 
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{0}
+		    )
+		  ), 
+		  // - If we specified a type in ExplicitTypeMap, use it.
+		  // - Otherwise default to type text.
+		  AllTypePairs = List.Transform(
+		    ExistingCols, 
+		    (c) => {
+		      c, 
+		      Record.FieldOrDefault(
+		        ExplicitTypeMap, 
+		        c, 
+		        type text
+		      )
+		    }
+		  ), 
+		  // Apply types in one go
+		  ChangeTypes
+		    = Table.TransformColumnTypes(
+		    RemoveMPRColumns, 
+		    AllTypePairs
+		  ), 
+		  AddAge =
+		    Table.AddColumn(
+		      ChangeTypes,
+		      "AGE",
+		      each
+		        if [BIRTH DATE] = null then
+		          null
+		        else
+		          let
+		            today = Date.From(DateTime.LocalNow()),
+		            birth = [BIRTH DATE],
+		
+		            currentYear = Date.Year(today),
+		
+		            // ✅ Manual leap year logic
+		            isLeapYear =
+		              (Number.Mod(currentYear, 4) = 0 and Number.Mod(currentYear, 100) <> 0)
+		              or Number.Mod(currentYear, 400) = 0,
+		
+		            yearDiff = currentYear - Date.Year(birth),
+		
+		            birthdayThisYear =
+		              if Date.Month(birth) = 2 and Date.Day(birth) = 29 and not isLeapYear
+		              then #date(currentYear, 2, 28)
+		              else #date(currentYear, Date.Month(birth), Date.Day(birth)),
+		
+		            adjustedAge =
+		              if today < birthdayThisYear then yearDiff - 1 else yearDiff
+		          in
+		            adjustedAge,
+		      Int64.Type
+		    ),
+		    #"Added Custom" = Table.AddColumn(AddAge, "Census UID", each [UNIQUE IDENTIFIER NUMBER], type text),
+		    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Demographics UID", each [UNIQUE IDENTIFIER NUMBER], type text),
+		    #"Added Custom2" = Table.AddColumn(#"Added Custom1", "Community UID", each [UNIQUE IDENTIFIER NUMBER], type text)
+		in
+		    #"Added Custom2"
+		```
+	lineageTag: 82c71b62-c368-4ad9-8d5e-556710c8a4d5
+	queryGroup: stage
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression fxNormalize = ```
+		let
+		  Source = (value as nullable text) as nullable text =>
+		  let
+		    Clean =
+		      if value = null then null
+		      else Text.Lower(Text.Trim(value)),
+		
+		    Standardized =
+		      if Clean = "y" or Clean = "YES" then "yes"
+		      else if Clean = "n" or Clean = "NO" then "no"
+		      else if Clean = "m" then "male"
+		      else if Clean = "f" then "female"
+		      else Clean
+		  in
+		    Standardized
+		in 
+		  Source
+		```
+	lineageTag: b25f042b-3c2a-484f-a16a-a9622b889d42
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression stage_Intake = ```
+		let
+		Source = load_Intake,
+		  RenamedColumns
+		    = Table.RenameColumns(
+		    Source,
+		    {
+		      { "LAST 4 OFF SSN", "SSN" },
+		      { "ON THE BLACK LIST / DNR ?", "BLACK LIST" },
+		      { "RACE/ETHNICITY", "RACE_ETHNICITY" },
+		      { "CHECK-IN DATE", "CHECK IN DATE"},
+		      { "CHECK-OUT DATE", "CHECK OUT DATE"}
+		    },
+		    MissingField.Ignore
+		  ),
+		
+		    #"Replaced Value" = Table.ReplaceValue(RenamedColumns,"no",0,Replacer.ReplaceValue,{"# OF PETS"}), 
+		  TypePairs = {
+		    {"STAFF NAME", type text},
+		    {"FIRST NAME", type text},
+		    {"LAST NAME", type text},
+		    {"VALID ID", type text},
+		    {"COMMUNITY", type text},
+		    {"ZIPCODE", type text},
+		    {"HMIS UNIQUE IDENTIFIER", type text},
+		    {"BLACK LIST", type text},
+		    {"PHONE NUMBER", type text},
+		    {"ALLOW TEXT", type text},
+		    {"GENDER", type text},
+		    {"RACE_ETHNICITY", type text},
+		    {"VETERAN STATUS", type text},
+		    {"DISABILITY", type text},
+		    {"TYPE OF PET", type text},
+		    {"HOTEL PREFERRED", type text},
+		    {"ADA ROOM", type text},
+		    {"CONFIRMATION #", type text},
+		    {"DOB", type date},
+		    {"CHECK IN DATE", type date},
+		    {"CHECK OUT DATE", type date},
+		    {"SSN", type text},
+		    {"# OF ADULTS", Int64.Type},
+		    {"# OF CHILDREN", Int64.Type},
+		    {"# OF ROOMS NEEDED", Int64.Type},
+		    {"# OF PETS", Int64.Type}
+		  }, 
+		  ExistingCols = Table.ColumnNames(
+		    #"Replaced Value"
+		  ), 
+		  // Keep type rules only for columns that actually exist
+		  TypePairsExistingOnly = List.Select(
+		    TypePairs, 
+		    each List.Contains(
+		      ExistingCols, 
+		      _{0}
+		    )
+		  ), 
+		  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+		  ExplicitTypeMap = Record.FromList(
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{1}
+		    ), 
+		    List.Transform(
+		      TypePairsExistingOnly, 
+		      each _{0}
+		    )
+		  ), 
+		  // - If we specified a type in ExplicitTypeMap, use it.
+		  // - Otherwise default to type text.
+		  AllTypePairs = List.Transform(
+		    ExistingCols, 
+		    (c) => {
+		      c, 
+		      Record.FieldOrDefault(
+		        ExplicitTypeMap, 
+		        c, 
+		        type text
+		      )
+		    }
+		  ), 
+		  // Apply types in one go
+		  ChangeTypes
+		    = Table.TransformColumnTypes(
+		    Source, 
+		    AllTypePairs
+		  )
+		in
+		   ChangeTypes
+		```
+	lineageTag: f9c17087-0944-4aab-a908-51e8cf339ea8
+	queryGroup: stage
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'MPR Activations' =
+		let
+		  Source = Table.Distinct(stage_MPR[[ACTIVATION ID],[ACTIVATION DATE], [ACTIVATION INDICATOR]])
+		in
+		  Source
+	lineageTag: 297ebc41-dc9c-4952-860b-85d4f30e1c71
+	queryGroup: derived
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression MPR_Counts = ```
+		let
+		  Source =
+		    Table.Distinct(
+		    stage_MPR[
+		      [UNIQUE IDENTIFIER NUMBER],
+		      [COMMUNITY],
+		      [DATE OF BIRTH],
+		      [GENDER],
+		      [RACE_ETHNICITY],
+		      [VETERAN],
+		      [DISABILITY],
+		      [HOTEL CHECK IN],
+		      [EXIT DATE]
+		      ]
+		    ),
+		    Grouped =
+		    Table.Group(
+		      Source,
+		      {"UNIQUE IDENTIFIER NUMBER"},
+		      {
+		        {"DateOfBirth_Count", each List.Count(List.Distinct(List.RemoveNulls([DATE OF BIRTH]))), Int64.Type},
+		        {"Gender_Count", each List.Count(List.Distinct(List.RemoveNulls([GENDER]))), Int64.Type},
+		        {"RaceEthnicity_Count", each List.Count(List.Distinct(List.RemoveNulls([RACE_ETHNICITY]))), Int64.Type},
+		        {"Veteran_Count", each List.Count(List.Distinct(List.RemoveNulls([VETERAN]))), Int64.Type},
+		        {"Disability_Count", each List.Count(List.Distinct(List.RemoveNulls([DISABILITY]))), Int64.Type},
+		        {"Community_Count", each List.Count(List.Distinct(List.RemoveNulls([COMMUNITY]))), Int64.Type},
+		
+		        {"Row_Count", each Table.RowCount(_), Int64.Type},
+		
+		
+		        {"StayCombo_Count",
+		          each
+		            Table.RowCount(
+		              Table.Distinct(
+		                Table.SelectColumns(_, {"HOTEL CHECK IN", "EXIT DATE"})
+		              )
+		            ),
+		          Int64.Type
+		        },
+		
+		        {"CheckIn_Count",
+		          each
+		            List.Count(
+		              List.Distinct(
+		                List.RemoveNulls([HOTEL CHECK IN])
+		              )
+		            ),
+		          Int64.Type
+		        }
+		      }
+		    ),
+		
+		
+		  AddDuplicateStay =
+		    Table.AddColumn(
+		      Grouped,
+		      "Has_Duplicate_Stay",
+		      each [StayCombo_Count] < [Row_Count],
+		      type logical
+		    ),
+		
+		
+		  AddDuplicateCheckIn =
+		    Table.AddColumn(
+		      AddDuplicateStay,
+		      "Has_Duplicate_CheckIn",
+		      each [CheckIn_Count] < [Row_Count],
+		      type logical
+		    ), 
+		
+		  AddHasConcerns =
+		    Table.AddColumn(
+		      AddDuplicateCheckIn,
+		      "Has_Concerns",
+		      each
+		        [DateOfBirth_Count] > 1
+		        or [Gender_Count] > 1
+		        or [RaceEthnicity_Count] > 1
+		        or [Veteran_Count] > 1
+		        or [Disability_Count] > 1,
+		        type logical
+		    ),
+		
+		  AddMultipleLocations =
+		    Table.AddColumn(
+		      AddHasConcerns,
+		      "Multiple_Locations",
+		      each
+		        [Community_Count] > 1,
+		      type logical
+		    ),
+		
+		  AddDuplicationConcern =
+		    Table.AddColumn(
+		      AddMultipleLocations,
+		      "Possible_Duplicate",
+		      each
+		        [Has_Duplicate_Stay] = true
+		        or [Has_Duplicate_CheckIn] = true,
+		      type logical
+		    )
+		in
+		    AddDuplicationConcern
+		```
+	lineageTag: 2477a684-5cd2-4493-a50a-9e551765db1e
+	queryGroup: 'Data Validations'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression MPR_variances = ```
+		let
+		  Source =
+		  Table.Distinct(
+		    stage_MPR[
+		        [UNIQUE IDENTIFIER NUMBER],
+		        [HOUSEHOLD],
+		        [NUMBER OF ADULTS],
+		        [NUMBER OF CHILDREN],
+		        [UID_SOURCE],
+		        [HOTEL CHECK IN],
+		        [EXIT DATE]
+		        ]
+		    ),
+		
+		    FilteredRows = Table.SelectRows(
+		        Source,
+		        each [UID_SOURCE] <> "LU"
+		    ),
+		    Grouped
+		    = Table.Group(
+		    FilteredRows,
+		    {"UNIQUE IDENTIFIER NUMBER"},
+		    {
+		        {"DISTINCT HOUSEHOLD", each List.Count(List.Distinct([HOUSEHOLD])), Int64.Type},
+		        {"DISTINCT CHILDREN", each List.Count(List.Distinct([NUMBER OF CHILDREN])), Int64.Type},
+		        {"DISTINCT ADULTS", each List.Count(List.Distinct([NUMBER OF ADULTS])), Int64.Type},
+		        {"HOUSEHOLD VARIANCE", each List.Max([HOUSEHOLD]) - List.Min([HOUSEHOLD]), Int64.Type},
+		        {"CHILDREN VARIANCE", each List.Max([NUMBER OF CHILDREN]) - List.Min([NUMBER OF CHILDREN]), Int64.Type},
+		        {"ADULTS VARIANCE", each List.Max([NUMBER OF ADULTS]) - List.Min([NUMBER OF ADULTS]), Int64.Type}
+		    }
+		    ),
+		
+		    AddFlags = Table.AddColumn(
+		        Grouped,
+		        "Has_Variance",
+		        each 
+		            ([DISTINCT HOUSEHOLD] > 1) or
+		            ([DISTINCT CHILDREN] > 1) or
+		            ([DISTINCT ADULTS] > 1),
+		        type logical
+		    ), 
+		    AddDetail = Table.AddColumn(
+		        AddFlags,
+		        "Variance_Details",
+		        each Text.Combine(
+		            List.RemoveNulls({
+		                if [HOUSEHOLD VARIANCE] > 0 then "Household" else null,
+		                if [CHILDREN VARIANCE] > 0 then "Children" else null,
+		                if [ADULTS VARIANCE] > 0 then "Adults" else null
+		            }),
+		            ", "
+		        ), 
+		        type text
+		    )
+		in
+		    AddDetail
+		```
+	lineageTag: 14c3156f-1438-4e7a-9310-5eb110219381
+	queryGroup: 'Data Validations'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression HMISOnly =
+		let
+			MPRSource =
+			#"MPR Clients"[[UNIQUE IDENTIFIER NUMBER]],
+		
+			HMISSource =
+			HMISClients[[UNIQUE IDENTIFIER NUMBER]],
+		
+			RenameHMIS =
+			Table.RenameColumns(
+				HMISSource,
+				{{"UNIQUE IDENTIFIER NUMBER", "UNIQUE IDENTIFIER NUMBER"}}
+			),
+		
+			MergeTables =
+			Table.NestedJoin(
+				RenameHMIS,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				MPRSource,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				"MPR",
+				JoinKind.LeftAnti
+			),
+		    #"Removed Columns" = Table.RemoveColumns(MergeTables,{"MPR"})
+		in
+			#"Removed Columns"
+	lineageTag: fede29de-2be3-46c4-beba-61a89f9e5277
+	queryGroup: 'Data Validations'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression MPROnly =
+		let
+			MPRSource =
+			#"MPR Clients"[[UNIQUE IDENTIFIER NUMBER]],
+		
+			HMISSource =
+			HMISClients[[UNIQUE IDENTIFIER NUMBER]],
+		
+			RenameHMIS =
+			Table.RenameColumns(
+				HMISSource,
+				{{"UNIQUE IDENTIFIER NUMBER", "UNIQUE IDENTIFIER NUMBER"}}
+			),
+		
+			MergeTables =
+			Table.NestedJoin(
+				MPRSource,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				RenameHMIS,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				"MPR",
+				JoinKind.LeftAnti
+			),
+		    #"Removed Columns" = Table.RemoveColumns(MergeTables,{"MPR"})
+		in
+			#"Removed Columns"
+	lineageTag: 3c1fc73c-62f9-497d-bed2-035598bb8381
+	queryGroup: 'Data Validations'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression NameMisMatches =
+		let
+			MPRSource =
+			#"MPR Clients"[[UNIQUE IDENTIFIER NUMBER],[First_Cleaned], [Last_Cleaned]],
+		
+			HMISSource =
+			HMISClients[[UNIQUE IDENTIFIER NUMBER],[First_Cleaned], [Last_Cleaned]],
+		
+			RenameHMIS =
+			Table.RenameColumns(
+				HMISSource,
+				{{"UNIQUE IDENTIFIER NUMBER", "UNIQUE IDENTIFIER NUMBER"}}
+			),
+		
+			MergeTables =
+			Table.NestedJoin(
+				RenameHMIS,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				MPRSource,
+				{"UNIQUE IDENTIFIER NUMBER"},
+				"MPR",
+				JoinKind.Inner
+			),
+		    Expanded = Table.ExpandTableColumn(MergeTables, "MPR", {"First_Cleaned", "Last_Cleaned"}, {"MPR.First_Cleaned", "MPR.Last_Cleaned"}),
+		    AddFlag = Table.AddColumn(
+		        Expanded,
+		        "NameMismatchFlag",
+		        each
+		            if [MPR.First_Cleaned] = null or [MPR.Last_Cleaned] = null then
+		                "Missing in HMIS"
+		            else if [First_Cleaned] <> [MPR.First_Cleaned]
+		                or [Last_Cleaned] <> [MPR.Last_Cleaned] then
+		                "Mismatch"
+		            else
+		                "Match",
+		        type text
+		    ),
+		    KeepMisMatches = Table.SelectRows(AddFlag, each ([NameMismatchFlag] = "Mismatch"))
+		in
+		    KeepMisMatches
+	lineageTag: 4bec6767-e896-40da-baff-4ee210445e2e
+	queryGroup: 'Data Validations'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression fxCleanNames =
+		let
+		  Source =
+		  (
+		    cleanValue as nullable text,
+		    optional allowSpaces as nullable logical
+		  )
+		  as nullable text =>
+		
+		let
+		  Result =
+		    if cleanValue = null then
+		      null
+		    else
+		      let
+		        BaseText =
+		          Text.Trim(Text.From(cleanValue)),
+		
+		        RemoveControlChars =
+		          Text.Replace(
+		            Text.Replace(BaseText, "#(lf)", ""),
+		            "#(cr)",
+		            ""
+		          ),
+		
+		        RemoveQuotes =
+		          Text.Replace(RemoveControlChars, """", ""),
+		
+		        AllowedCharacters =
+		          if allowSpaces = true then
+		            {"A".."Z", "a".."z", "0".."9", " ", "-"}
+		          else
+		            {"A".."Z", "a".."z", "0".."9", "-"},
+		
+		        Filtered =
+		          Text.Select(RemoveQuotes, AllowedCharacters),
+		
+		        FinalValue =
+		          Text.Upper(Filtered)
+		
+		      in
+		        if FinalValue = "" then null else FinalValue
+		
+		in
+		  Result
+		
+		in
+		  Source
+	lineageTag: b696cd92-e6bb-4b06-924c-3e4ecfeba6aa
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression SharePointConnection =
+		let
+		
+		    Source = SharePoint.Contents(
+		      "https://apmus-my.sharepoint.com/personal/mhdammar_kabbani_equusworks_com"
+		    ),
+		    Documents = Source{[Name="Documents"]}[Content],
+		    #"IWP Dashboard data" = Documents{[Name="IWP Dashboard data"]}[Content]
+		in
+		    #"IWP Dashboard data"
+	lineageTag: 91be0db5-2d56-407b-8afc-cc67d12701b0
+	queryGroup: Connections
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Communities =
+		let
+		  	Source = Table.Distinct(stage_Intake[[COMMUNITY], [ZIPCODE]]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([COMMUNITY] <> "" and [COMMUNITY] <> "Not found") and ([ZIPCODE] <> "n/a")),
+		    TrimCommunity = Table.TransformColumns(#"Filtered Rows",{{"COMMUNITY", Text.Trim, type text}})
+		in
+			TrimCommunity
+	lineageTag: d6e9f5a3-64fa-468a-a9fe-8f1ec2a6ca74
+	queryGroup: derived
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression load_StaffTime =
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
+		  #"Navigation 1" = Source{[Item = "STAFF TIME", Kind = "Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		in
+		  #"Promoted Headers"
+	lineageTag: ede1e3ab-2206-4c0d-bd26-1712967bd561
+	queryGroup: load
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression stage_StaffTime = ```
+		let
+		    Source = load_StaffTime,
+		  
+		    TypePairs = {
+		        {"ID", Int64.Type},
+		        {"START TIME", type datetime},
+		        {"COMPLETION TIME", type datetime},
+		        {"DATE", type date},
+		        {"NAME", type text},
+		        {"EMAIL", type text},
+		        {"SERVICES", type text},
+		        {"CASE NOTES", type text},
+		        {"TIME IN", type time},
+		        {"TIME OUT", type time}
+		
+		      }, 
+		  ExistingCols = Table.ColumnNames(
+		        Source
+		      ), 
+		      // Keep type rules only for columns that actually exist
+		  TypePairsExistingOnly = List.Select(
+		        TypePairs, 
+		        each List.Contains(
+		          ExistingCols, 
+		          _{0}
+		        )
+		      ), 
+		      // Convert those explicit pairs into a lookup record: ColumnName -> Type
+		  ExplicitTypeMap = Record.FromList(
+		        List.Transform(
+		          TypePairsExistingOnly, 
+		          each _{1}
+		        ), 
+		        List.Transform(
+		          TypePairsExistingOnly, 
+		          each _{0}
+		        )
+		      ), 
+		      // - If we specified a type in ExplicitTypeMap, use it.
+		      // - Otherwise default to type text.
+		  AllTypePairs = List.Transform(
+		        ExistingCols, 
+		        (c) => {
+		          c, 
+		          Record.FieldOrDefault(
+		            ExplicitTypeMap, 
+		            c, 
+		            type text
+		          )
+		        }
+		      ), 
+		      // Apply types in one go
+		  ChangeTypes
+		        = Table.TransformColumnTypes(
+		        Source, 
+		        AllTypePairs
+		      )
+		in
+		  ChangeTypes
+		```
+	lineageTag: f60c0247-b2b3-432e-b954-e3d3cc62bd1b
+	queryGroup: stage
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression fxCleanTimes =
+		(tbl as table, Columns as list) as table =>
+		let
+		  NormalizeTime = (Input as any) as nullable time =>
+		    let
+		      // Valid time = keep it
+		      _DirectTime =
+		        try Time.From(Input) otherwise null,
+		
+		      Result =
+		        if _DirectTime <> null then
+		          _DirectTime
+		        else
+		          let
+		            // Normalize Text
+		            _Text   = try Text.From(Input) otherwise null,
+		            _Trim   = if _Text <> null then Text.Trim(_Text) else null,
+		            _Upper  = if _Trim <> null then Text.Upper(_Trim) else null,
+		
+		            // Remove problematic characters
+		            _CleanChars =
+		              if _Upper <> null then
+		                Text.Select(_Upper, {"0".."9", ":", "A", "P", "M", " "})
+		              else null,
+		
+		            // Fix spacing
+		            _FixSpacing =
+		              if _CleanChars <> null then
+		                Text.Replace(Text.Replace(_CleanChars, "AM", " AM"), "PM", " PM")
+		              else null,
+		
+		            _Normalized =
+		              if _FixSpacing <> null then Text.Trim(_FixSpacing) else null,
+		
+		            // ✅ KEY FIX: Handle simple numbers explicitly
+		            _AddMinutes =
+		              if _Normalized <> null and _Normalized <> "" and not Text.Contains(_Normalized, ":")
+		              then _Normalized & ":00"
+		              else _Normalized,
+		
+		            // ✅ FINAL FIX: Convert the correct value
+		            _Time =
+		              try Time.From(_AddMinutes) otherwise null
+		          in
+		            _Time
+		    in
+		      Result,
+		
+		  Transform =
+		    Table.TransformColumns(
+		      tbl,
+		      List.Transform(
+		        Columns,
+		        each { _, NormalizeTime, type time }
+		      )
+		    )
+		in
+		  Transform
+	lineageTag: df39ab34-dc54-49d3-ad25-1edfd684bdc7
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

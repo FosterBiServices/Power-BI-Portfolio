@@ -1,0 +1,220 @@
+/// HMIS enrollment fact table containing client enrollment, demographic, program participation, and case management information sourced from the Homeless Management Information System (HMIS).
+table HMIS
+	lineageTag: dfa9e552-b408-46d1-a2ab-37affd54ef6a
+
+	/// The name of the program in which the client is enrolled, as recorded in HMIS.
+	column 'PROGRAM NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 81bd9ec9-d0b8-4e2c-a2d3-1cdc51a76c13
+		summarizeBy: none
+		sourceColumn: PROGRAM NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The full name of the client as recorded in HMIS.
+	column CLIENT
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8fb6ffc0-cfa8-4709-81bf-44069ebac0a8
+		summarizeBy: none
+		sourceColumn: CLIENT
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's date of birth as recorded in HMIS.
+	column 'BIRTH DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: a3c48b35-d852-47b0-94bf-18d17dd11c9c
+		summarizeBy: none
+		sourceColumn: BIRTH DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The client's age in years at the time of program enrollment, as recorded in HMIS.
+	column 'AGE AT ENTRY'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 0998caac-daae-4714-aa15-ef5818f1cf24
+		summarizeBy: sum
+		sourceColumn: AGE AT ENTRY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's current age in years as calculated or recorded in HMIS.
+	column 'CURRENT AGE'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8b873450-1935-4bd3-bf6d-51d08cdc4983
+		summarizeBy: sum
+		sourceColumn: CURRENT AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The date the client was enrolled in the program in HMIS.
+	column 'ENROLL DATE'
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 51625747-14ac-42d0-8f24-3f0edcf5c0d0
+		summarizeBy: none
+		sourceColumn: ENROLL DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The date the client exited the program, as recorded in HMIS. Blank if the client is still active.
+	column 'EXIT DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 754e01be-8930-4d72-a1f4-13a88ee7b0df
+		summarizeBy: none
+		sourceColumn: EXIT DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Length of stay in days, calculated as the difference between the enrollment and exit dates in HMIS.
+	column LOS
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 97259237-7c0e-480b-a041-dc04a5f7a848
+		summarizeBy: sum
+		sourceColumn: LOS
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'HOUSING MOVE-IN'
+		dataType: string
+		lineageTag: b5a30d35-c5ad-43b3-848e-0d3e67c3f9fe
+		summarizeBy: none
+		sourceColumn: HOUSING MOVE-IN
+
+		annotation SummarizationSetBy = Automatic
+
+	column SERVICES
+		dataType: string
+		lineageTag: d8c0c601-2fec-4cad-a9c1-670344dbda4b
+		summarizeBy: none
+		sourceColumn: SERVICES
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CASE NOTES'
+		dataType: string
+		lineageTag: 9436d8f3-b175-45f1-b881-2644bc9d0b4a
+		summarizeBy: none
+		sourceColumn: CASE NOTES
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UNIT ASSIGNMENT'
+		dataType: string
+		lineageTag: a7a52353-8ae7-4172-b028-3c8eefd0f169
+		summarizeBy: none
+		sourceColumn: UNIT ASSIGNMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'BED ASSIGNMENT'
+		dataType: string
+		lineageTag: 72cde4ba-4a18-44f7-abad-57767bfde735
+		summarizeBy: none
+		sourceColumn: BED ASSIGNMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OCCUPANCY START DATE'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 04e75387-c403-423d-9ae8-7615a6d86401
+		summarizeBy: none
+		sourceColumn: OCCUPANCY START DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'OCCUPANCY END DATE'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: de70eed2-c287-4f52-bac8-ff649b19f12e
+		summarizeBy: none
+		sourceColumn: OCCUPANCY END DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'CHECK IN ID'
+		dataType: string
+		lineageTag: 0e543bb1-d891-4e95-b7e4-09750acbd6e0
+		summarizeBy: none
+		sourceColumn: CHECK IN ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID
+		dataType: string
+		lineageTag: 30ce83ca-2d37-4942-9c62-451a0b5f45cb
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UNIQUE IDENTIFIER NUMBER'
+		dataType: string
+		lineageTag: 3fa6c3a2-da6e-4228-a129-a8c62bbb7786
+		summarizeBy: none
+		sourceColumn: UNIQUE IDENTIFIER NUMBER
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ASSIGNED STAFF'
+		dataType: string
+		lineageTag: 7034531a-8c8f-4934-bb95-8c5f36fbad1b
+		summarizeBy: none
+		sourceColumn: ASSIGNED STAFF
+
+		annotation SummarizationSetBy = Automatic
+
+	column ASSESSMENTS
+		dataType: string
+		lineageTag: b596890d-611d-43c1-932c-e700a233b122
+		summarizeBy: none
+		sourceColumn: ASSESSMENTS
+
+		annotation SummarizationSetBy = Automatic
+
+	partition HMIS = m
+		mode: import
+		queryGroup: Report
+		source =
+				let
+				  Source = stage_HMIS
+				in
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

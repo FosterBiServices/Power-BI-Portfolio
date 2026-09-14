@@ -1,0 +1,26 @@
+/// What-if parameter table used to dynamically control the number of top-ranking records displayed in report visuals and analyses.
+table 'Top X'
+	lineageTag: 839bbca3-e40e-416e-8d02-dc680d3d11da
+
+	/// Numeric what-if parameter value used to control the number of top items displayed in visuals.
+	column 'Top X'
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: c1ebd8e2-96a4-451e-82db-3938271f1409
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Top X' = calculated
+		mode: import
+		source = GENERATESERIES(1, 20, 1)
+
+	annotation PBI_Id = d1dbce9d2d5f4edda47dbcaecbd19bda
+
