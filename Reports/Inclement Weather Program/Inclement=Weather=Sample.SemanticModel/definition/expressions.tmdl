@@ -1,10 +1,9 @@
 expression load_HMIS =
 		let
-		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
-		  #"Navigation 1" = Source{[Item = "HMIS", Kind = "Sheet"]}[Data],
-		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		  Source = Excel.Workbook(File.Contents("C:\Users\Foster\Desktop\GitHub\Power-BI-Portfolio\Reports\Inclement Weather Program\data\Inclement=Weather=Sample=Data.xlsx"), true, true),
+		  #"Navigation 1" = Source{[Item = "HMIS", Kind = "Sheet"]}[Data]
 		in
-		  #"Promoted Headers"
+		    #"Navigation 1"
 	lineageTag: 7d73f472-1bbc-4d20-9daa-6b7bd6dd0bea
 	queryGroup: load
 
@@ -14,11 +13,10 @@ expression load_HMIS =
 
 expression load_Intake =
 		let
-		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
-		  #"Navigation 1" = Source{[Item = "Intake", Kind = "Sheet"]}[Data],
-		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		  Source = Excel.Workbook(File.Contents("C:\Users\Foster\Desktop\GitHub\Power-BI-Portfolio\Reports\Inclement Weather Program\data\Inclement=Weather=Sample=Data.xlsx"), true, true),
+		  #"Navigation 1" = Source{[Item = "Intake", Kind = "Sheet"]}[Data]
 		in
-		  #"Promoted Headers"
+		    #"Navigation 1"
 	lineageTag: 9f16b1fa-b0f0-4f16-ad64-5ec6bdfa11d8
 	queryGroup: load
 
@@ -28,11 +26,10 @@ expression load_Intake =
 
 expression load_MPR =
 		let
-		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
-		  #"Navigation 1" = Source{[Item = "MPR", Kind = "Sheet"]}[Data],
-		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
+		  Source = Excel.Workbook(File.Contents("C:\Users\Foster\Desktop\GitHub\Power-BI-Portfolio\Reports\Inclement Weather Program\data\Inclement=Weather=Sample=Data.xlsx"), true, true),
+		  #"Navigation 1" = Source{[Item = "MPR", Kind = "Sheet"]}[Data]
 		in
-		  #"Promoted Headers"
+		    #"Navigation 1"
 	lineageTag: b6efb3cb-fc71-4238-88b5-b368faf2116b
 	queryGroup: load
 
@@ -1185,88 +1182,6 @@ expression Communities =
 			TrimCommunity
 	lineageTag: d6e9f5a3-64fa-468a-a9fe-8f1ec2a6ca74
 	queryGroup: derived
-
-	annotation PBI_NavigationStepName = Navigation
-
-	annotation PBI_ResultType = Table
-
-expression load_StaffTime =
-		let
-		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\RHAP - Encrrypted Data.xlsx"), null, true),
-		  #"Navigation 1" = Source{[Item = "STAFF TIME", Kind = "Sheet"]}[Data],
-		    #"Promoted Headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars=true])
-		in
-		  #"Promoted Headers"
-	lineageTag: ede1e3ab-2206-4c0d-bd26-1712967bd561
-	queryGroup: load
-
-	annotation PBI_NavigationStepName = Navigation
-
-	annotation PBI_ResultType = Table
-
-expression stage_StaffTime = ```
-		let
-		    Source = load_StaffTime,
-		  
-		    TypePairs = {
-		        {"ID", Int64.Type},
-		        {"START TIME", type datetime},
-		        {"COMPLETION TIME", type datetime},
-		        {"DATE", type date},
-		        {"NAME", type text},
-		        {"EMAIL", type text},
-		        {"SERVICES", type text},
-		        {"CASE NOTES", type text},
-		        {"TIME IN", type time},
-		        {"TIME OUT", type time}
-		
-		      }, 
-		  ExistingCols = Table.ColumnNames(
-		        Source
-		      ), 
-		      // Keep type rules only for columns that actually exist
-		  TypePairsExistingOnly = List.Select(
-		        TypePairs, 
-		        each List.Contains(
-		          ExistingCols, 
-		          _{0}
-		        )
-		      ), 
-		      // Convert those explicit pairs into a lookup record: ColumnName -> Type
-		  ExplicitTypeMap = Record.FromList(
-		        List.Transform(
-		          TypePairsExistingOnly, 
-		          each _{1}
-		        ), 
-		        List.Transform(
-		          TypePairsExistingOnly, 
-		          each _{0}
-		        )
-		      ), 
-		      // - If we specified a type in ExplicitTypeMap, use it.
-		      // - Otherwise default to type text.
-		  AllTypePairs = List.Transform(
-		        ExistingCols, 
-		        (c) => {
-		          c, 
-		          Record.FieldOrDefault(
-		            ExplicitTypeMap, 
-		            c, 
-		            type text
-		          )
-		        }
-		      ), 
-		      // Apply types in one go
-		  ChangeTypes
-		        = Table.TransformColumnTypes(
-		        Source, 
-		        AllTypePairs
-		      )
-		in
-		  ChangeTypes
-		```
-	lineageTag: f60c0247-b2b3-432e-b954-e3d3cc62bd1b
-	queryGroup: stage
 
 	annotation PBI_NavigationStepName = Navigation
 

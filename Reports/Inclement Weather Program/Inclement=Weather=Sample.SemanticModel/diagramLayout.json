@@ -153,32 +153,6 @@
         },
         {
           "location": {
-            "x": 0,
-            "y": 10729.655649170069
-          },
-          "nodeIndex": "StaffBridge",
-          "nodeLineageTag": "f1f4d9a0-75b8-4d73-8840-1631af9289db",
-          "size": {
-            "height": 104,
-            "width": 234
-          },
-          "zIndex": 3
-        },
-        {
-          "location": {
-            "x": 1480.1123711353846,
-            "y": 10232.781006592813
-          },
-          "nodeIndex": "StaffTime",
-          "nodeLineageTag": "6de24325-014a-4339-aa35-15938797b51c",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 14
-        },
-        {
-          "location": {
             "x": 2112.017541465656,
             "y": 11708.023844826952
           },
