@@ -1,0 +1,214 @@
+/// Aggregated data sourced from (All) DOR-AJCC Collab_GrantParticipants file. Contains demographic and program details for individuals enrolled in a workforce program, including  region (LWDB), disability status, employment status, and key dates such as Grant Enrollment Date and Exit Date. This is the primary fact table for enrollment-based measures.
+table Participants
+	lineageTag: 746f207c-5c43-44d7-868a-d6d48bf2d38b
+
+	/// The date the participant exited the program. A non-null value indicates the participant has left.
+	column 'EXIT DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 122a5bb4-2cf0-4a1d-9949-126ce758de09
+		summarizeBy: none
+		sourceColumn: EXIT DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Column LWDB from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column LWDB
+		dataType: int64
+		isHidden
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 64c5a8bf-12c3-458a-9e78-42fecbaae38f
+		summarizeBy: none
+		sourceColumn: LWDB
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column RESPONSIBLE OFFICE from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'RESPONSIBLE OFFICE'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 7863ed84-358c-4e59-8a9d-104ff045f973
+		summarizeBy: none
+		sourceColumn: RESPONSIBLE OFFICE
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column PARTICIPATION DATE from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'PARTICIPATION DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 42f547a1-b5bc-4a79-9bf2-d6070d7f2819
+		summarizeBy: none
+		sourceColumn: PARTICIPATION DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Column GRANT ENROLL DATE from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'GRANT ENROLL DATE'
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 3a0669b7-74af-4406-a539-e741d02b982c
+		summarizeBy: none
+		sourceColumn: GRANT ENROLL DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Column LAST GRANT ACTIVITY DATE from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'LAST GRANT ACTIVITY DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 07d3b3af-d500-498a-800c-92584ebd8a9b
+		summarizeBy: none
+		sourceColumn: LAST GRANT ACTIVITY DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Column PROJECTED GRANT ACTIVITY END DATE from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'PROJECTED GRANT ACTIVITY END DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 2e09c2c5-8a05-4d98-87f4-98555b38f4e2
+		summarizeBy: none
+		sourceColumn: PROJECTED GRANT ACTIVITY END DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Column RECEIVED CREDENTIAL from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'RECEIVED CREDENTIAL'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: f0a3ce27-312f-4b11-9d64-6f76b01d312d
+		summarizeBy: none
+		sourceColumn: RECEIVED CREDENTIAL
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column ENTERED EMPLOYMENT from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'ENTERED EMPLOYMENT'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 3b1ed942-880d-4e9c-9997-973c2864a35a
+		summarizeBy: none
+		sourceColumn: ENTERED EMPLOYMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column WITH DISABILITY from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'WITH DISABILITY'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 3fae06f6-a96f-493b-97db-69e1ca634f43
+		summarizeBy: none
+		sourceColumn: WITH DISABILITY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column APP ID from the Participants table. Used for filtering, grouping, relationships, or calculation logic in the DOR AJCC Collaboration semantic model.
+	column 'APP ID'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 938828bb-8518-4a13-9133-cfefef1a2197
+		summarizeBy: none
+		sourceColumn: APP ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Participants = m
+		mode: import
+		queryGroup: facts
+		source = ```
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\Grant Enrollment Sample Data.xlsx"), true, true),
+				  PromoteHeaders = Source{[Item = "Participants", Kind = "Sheet"]}[Data]
+				, 
+				  TypePairs = {
+				    {"LWDB", Int64.Type},
+				    {"APP ID", Int64.Type},
+				    {"RESPONSIBLE OFFICE", type text},
+				    {"PARTICIPATION DATE", type date},
+				    {"GRANT ENROLL DATE", type date},
+				    {"LAST GRANT ACTIVITY DATE", type date},
+				    {"PROJECTED GRANT ACTIVITY END DATE", type date},
+				    {"EXIT DATE", type date},
+				    {"RECEIVED CREDENTIAL", type text},
+				    {"ENTERED EMPLOYMENT", type text},
+				    {"WITH DISABILITY", type text}
+				  }, 
+				  ExistingCols = Table.ColumnNames(
+				    PromoteHeaders
+				  ), 
+				  // Keep type rules only for columns that actually exist
+				  TypePairsExistingOnly = List.Select(
+				    TypePairs, 
+				    each List.Contains(
+				      ExistingCols, 
+				      _{0}
+				    )
+				  ), 
+				  // Convert those explicit pairs into a lookup record: ColumnName -> Type
+				  ExplicitTypeMap = Record.FromList(
+				    List.Transform(
+				      TypePairsExistingOnly, 
+				      each _{1}
+				    ), 
+				    List.Transform(
+				      TypePairsExistingOnly, 
+				      each _{0}
+				    )
+				  ), 
+				  // - If we specified a type in ExplicitTypeMap, use it.
+				  // - Otherwise default to type text.
+				  AllTypePairs = List.Transform(
+				    ExistingCols, 
+				    (c) => {
+				      c, 
+				      Record.FieldOrDefault(
+				        ExplicitTypeMap, 
+				        c, 
+				        type text
+				      )
+				    }
+				  ), 
+				  // Apply types in one go
+				  ChangeTypes
+				    = Table.TransformColumnTypes(
+				    PromoteHeaders, 
+				    AllTypePairs
+				  )
+				in
+				  ChangeTypes
+				```
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
