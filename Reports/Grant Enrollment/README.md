@@ -9,18 +9,9 @@
 ## Overview
 
  
-
 This Power BI sample demonstrates how enrollment, service delivery, participant outcomes, and performance targets can be modeled and analyzed using a modern semantic model.
-
  
-
 ## Files in this folder
-
- 
-
-| File | Description |
-
-|--------|--------|
 
 | `Grant-Enrollment-Sample.pbip` | Power BI project file |
 
@@ -30,11 +21,7 @@ This Power BI sample demonstrates how enrollment, service delivery, participant 
 
 | `Grant-Enrollment-Sample-Data.xlsx` | Sample source data |
 
- 
-
 ## Key Features
-
- 
 
 - Enrollment tracking
 
@@ -51,7 +38,3 @@ This Power BI sample demonstrates how enrollment, service delivery, participant 
  
 
 ## Preview
-
- 
-
-assets/report-preview.png
