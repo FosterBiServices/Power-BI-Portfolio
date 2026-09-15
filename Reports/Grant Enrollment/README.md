@@ -41,4 +41,4 @@ This Power BI sample demonstrates how enrollment, service delivery, participant 
 ![Report Screenshot](assets/final-output/Grant-Enrollment.png)
 ![Report Screenshot](assets/final-output/Grant-Enrollment-Services.png)
 ![Report Screenshot](assets/final-output/Grant-Enrollment-Exits.png)
-![Report Screenshot](assets/final-output/Grant-Enrollment-Localization.png)
+![Report Screenshot](assets/final-output/Grant-Enrollment-localization.png)
