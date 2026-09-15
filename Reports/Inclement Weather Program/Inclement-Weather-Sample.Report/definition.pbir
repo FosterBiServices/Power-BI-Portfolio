@@ -2,7 +2,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "../Inclement=Weather=Sample.SemanticModel"
+      "path": "../Inclement-Weather-Sample.SemanticModel"
     }
   }
 }
