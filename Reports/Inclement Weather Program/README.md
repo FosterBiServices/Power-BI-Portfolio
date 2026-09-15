@@ -3,6 +3,7 @@
 > ⚠️ **Note:** This is a simplified example of a report I built for a real business scenario. 
 > It is not the full or final solution delivered to the client — data, scope, and complexity 
 > have been reduced for portfolio purposes.
+> This project uses sample data and is intended for demonstration and learning purposes only.
 
 ## Overview
 This report provides a centralized view of housing assistance program operations by combining Intake, HMIS, and program tracking data into a single reporting solution. It helps program managers and leadership track participant enrollments, hotel placements, demographic trends, and overall program performance while ensuring information remains consistent across systems.
