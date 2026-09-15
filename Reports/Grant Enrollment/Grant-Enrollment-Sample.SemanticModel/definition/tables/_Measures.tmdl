@@ -2193,16 +2193,16 @@ table _Measures
 		lineageTag: 25e4260f-53ea-40bb-ac6e-8235d639f1d4
 
 	/// Returns an SVG image URL string for the Enrollment TT - Progress Bar SVG visual. Used in report cards or tooltip visuals and should be categorized as Image URL rather than formatted as a number.
-	measure 'Enrollment TT - Progress Bar SVG' =
+	measure 'Enrollment TT - Progress Bar SVG' = ```
 			VAR _target = [Target]
 			VAR _value = [Enrollment Switch]
 			
 			
 			/* CARD SIZE */
 			VAR _width = 400
-			VAR _height = 150
+			VAR _height = 160
 			VAR _paddingX = 20
-			VAR _visualXOffset = 20  -- tweak between 15–30 for your card
+			// VAR _visualXOffset = 20  -- tweak between 15–30 for your card
 			/* STATE */
 			VAR _hasTarget =
 			    NOT ISBLANK ( _target ) && _target > 0
@@ -2229,7 +2229,10 @@ table _Measures
 			        & _width
 			        & " "
 			        & _height
-			        & "'>
+			        & "'
+			          preserveAspectRatio='none'
+			          width='100%'
+			          height='100%'>
 			
 			<style>
 			text{
@@ -2273,7 +2276,7 @@ table _Measures
 			}
 			</style>
 			<g transform='translate("
-			        & _visualXOffset
+			        & "0" 
 			        & ",0)'>
 			"
 			
@@ -2292,23 +2295,23 @@ table _Measures
 			    </text>
 			    ",
 			        "
-			    <text class='main' x='50%' y='32'>
+			    <text class='main' x='50%' y='42'>
 			        Total Enrollments: "
 			            & FORMAT ( _value, "#,0" )
 			            & "</text>
 			
-			    <text class='sub' x='50%' y='58'>
+			    <text class='sub' x='50%' y='66'>
 			        Target: "
 			            & _target
 			            & "</text>
 			
-			    <text class='total' x='50%' y='84'>
+			    <text class='total' x='50%' y='90'>
 			        "
 			            & FORMAT ( _div, "#,#.0%" )
 			            & " of target reached "
 			            & "</text>
 			
-			    <text class='sub' x='50%' y='110'>
+			    <text class='sub' x='50%' y='114'>
 			        "
 			            & ABS ( _value - _target )
 			            & IF
@@ -2367,6 +2370,7 @@ table _Measures
 			        [Enrollment TT - Card with Columns]
 			    //_svg & _montexts & "</g></svg>"
 			    )
+			```
 		displayFolder: KPIs
 		lineageTag: c906bef7-9a9b-45ee-b2e0-1c827e3f21df
 
@@ -2889,10 +2893,10 @@ table _Measures
 			   SETUP
 			========================= */
 			VAR _spaceBetweenColumns = 3
-			VAR _maxColumnWidthPct = 6
+			VAR _maxColumnWidthPct = 100
 			VAR _columnRounding = 4
 			VAR _width = 400
-			VAR _height = 150
+			VAR _height = 200
 			
 			/* =========================
 			   COLORS
@@ -2908,12 +2912,10 @@ table _Measures
 			    "data:image/svg+xml;utf8,"
 			VAR _svgHeader =
 			    "<svg xmlns='http://www.w3.org/2000/svg'
-			          width='"
-			        & _width
-			        & "'
-			          height='"
-			        & _height
-			        & "'>"
+			          viewBox='0 0 " & _width & " " & _height & "'
+			          preserveAspectRatio='none'
+			          width='100%'
+			          height='100%'>"
 			VAR _svgEnd = "</svg>"
 			
 			/* =========================
@@ -2935,16 +2937,6 @@ table _Measures
 			    }
 			</style>"
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			/* =========================
 			   CALLOUT (SLICER AWARE)
 			========================= */
@@ -2955,7 +2947,7 @@ table _Measures
 			VAR _avgMonthlyEnrollments =
 			    [Average Monthly Enrollments]
 			VAR _calloutText =
-			    "<text x='20%' y='15%'
+			    "<text x='35%' y='15%'
 			       fill='"
 			        & _textColor
 			        & "'
@@ -2970,7 +2962,7 @@ table _Measures
 			    <tspan font-size='12'> enrollment(s) in "
 			        & _selectedMonth
 			        & "</tspan>
-			    <tspan x='20%' dy='14' fill='"
+			    <tspan x='35%' dy='14' fill='"
 			        & _dataLabelColor
 			        & "' font-size='11'>
 			        Avg enrollments per month: "
@@ -2982,10 +2974,6 @@ table _Measures
 			        & "</tspan>
 			
 			</text>"
-			
-			
-			
-			
 			
 			/* =========================
 			   BAR DATA (IGNORE SLICER)
@@ -3056,21 +3044,14 @@ table _Measures
 			    CONCATENATEX
 			    (
 			        _data,
-			        VAR _heightPct =
-			            IF
-			            (
-			                _maxValue = 0,
-			                0,
-			                ROUND
-			                (
-			                    DIVIDE ( [@Enrollments], _maxValue ) * 45,
-			                    2
-			                )
-			            )
+					VAR _heightPct =
+						IF ( _maxValue = 0, 0,
+							ROUND ( DIVIDE ( [@Enrollments], _maxValue ) * 60, 2 )   -- was * 45
+							)
 			        VAR _x =
 			            ( [@RowNum] - 1 ) * _columnWidthPct
 			                + ( [@RowNum] * _spaceBetweenColumns )
-			        VAR _y = 80 - _heightPct
+			        VAR _y = 88 - _heightPct
 			        VAR _xCenter = _x + ( _columnWidthPct / 2 )
 			        VAR _yCenter = _y + ( _heightPct / 2 )
 			        RETURN
@@ -3126,7 +3107,7 @@ table _Measures
 			        RETURN
 			            "<text x='" & _xCenter
 			                & "%'
-			                   y='86%'
+			                   y='94%'
 			                   text-anchor='middle'
 			                   font-size='10'
 			                   fill='"
