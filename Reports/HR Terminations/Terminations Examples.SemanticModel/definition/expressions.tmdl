@@ -1,0 +1,70 @@
+expression fxColumnTyping =
+		// Applies data types from a supplied mapping.
+		// Any column not found in the mapping defaults to text.
+		let
+		    Source = (
+		    SourceTable as table,
+		    TypePairs as list,
+		    optional DefaultType as nullable type
+		)
+		as table =>
+		let
+		  _defaultType =
+		    if DefaultType <> null then
+		      DefaultType
+		    else
+		      type text,
+		
+		  ExistingCols =
+		    Table.ColumnNames(SourceTable),
+		
+		  TypePairsExistingOnly =
+		    List.Select(
+		      TypePairs,
+		      each List.Contains(
+		        ExistingCols,
+		        _{0}
+		      )
+		    ),
+		
+		  ExplicitTypeMap =
+		    Record.FromList(
+		      List.Transform(
+		        TypePairsExistingOnly,
+		        each _{1}
+		      ),
+		      List.Transform(
+		        TypePairsExistingOnly,
+		        each _{0}
+		      )
+		    ),
+		
+		  AllTypePairs =
+		    List.Transform(
+		      ExistingCols,
+		      (c) => {
+		        c,
+		        Record.FieldOrDefault(
+		          ExplicitTypeMap,
+		          c,
+		          _defaultType
+		        )
+		      }
+		    ),
+		
+		  Result =
+		    Table.TransformColumnTypes(
+		      SourceTable,
+		      AllTypePairs
+		    )
+		in
+		  Result
+		in
+		    Source
+	lineageTag: 1304df7b-62df-458a-9833-b62be2784896
+	queryGroup: functions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

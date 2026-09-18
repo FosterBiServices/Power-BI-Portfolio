@@ -1,0 +1,36 @@
+relationship AutoDetected_05cf82f9-7438-4f44-bf31-16b4a1421364
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: ProjectsContractPeriod.'Project Name'
+	toColumn: Projects.'Project Name'
+
+relationship 139e90fc-0e67-6933-3e0a-7782148f3d61
+	fromColumn: 'Terms for TO details'.'Termination Date'
+	toColumn: dimdate.Date
+
+relationship 9369ad41-2f96-47f5-27c8-a2a029ddf1f2
+	fromColumn: Projects.'Related Company'
+	toColumn: Companies.'Record ID #'
+
+relationship db0469aa-15ae-ff62-3982-10044a78af70
+	fromColumn: Headcount.'WORKLOC CODE'
+	toColumn: dimLocationHierarchy.'WORKLOC CODE'
+
+relationship 401815f9-40b1-245d-16e2-1b9d6d0ea105
+	fromColumn: 'Terms for TO details'.'WORKLOC CODE'
+	toColumn: dimLocationHierarchy.'WORKLOC CODE'
+
+relationship AutoDetected_719f9e9d-b99e-4c3e-b9ad-f4749c1f7115
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dimLocationCrosswalk.'WORKLOC CODE'
+	toColumn: dimLocationHierarchy.'WORKLOC CODE'
+
+relationship 9c39126f-91ff-f466-fc65-4033ed556165
+	fromColumn: dimLocationCrosswalk.'Related Project'
+	toColumn: Projects.'Record ID #'
+
+relationship d0c65f31-c398-0cd0-c416-9b87c781084b
+	fromColumn: Headcount.Date
+	toColumn: dimdate.Date
+

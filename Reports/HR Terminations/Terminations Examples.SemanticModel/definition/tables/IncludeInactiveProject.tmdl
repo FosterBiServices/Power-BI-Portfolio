@@ -1,0 +1,20 @@
+table IncludeInactiveProject
+	lineageTag: 0c9f6e01-2432-4833-adb9-91481bd1d038
+
+	column IncludeInactiveProject
+		displayFolder: TableColumns
+		lineageTag: a465a31e-abaf-47a6-ab8b-1eccc717ab7d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IncludeInactiveProject]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition IncludeInactiveProject = calculated
+		mode: import
+		source =
+				
+				DATATABLE("IncludeInactiveProject", STRING, {{"Yes"}, {"No"}})
+
+	annotation PBI_Id = 8c7af6218fbe46d0b2b4209ec60ff696
+

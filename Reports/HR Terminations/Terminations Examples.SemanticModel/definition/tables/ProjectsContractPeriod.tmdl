@@ -1,0 +1,73 @@
+table ProjectsContractPeriod
+	lineageTag: 2fa54c41-b1b4-4aba-8b94-1df34d0b808e
+
+	column 'Project Name'
+		dataType: string
+		lineageTag: a279728c-88d8-4036-96f6-997164a2ce6b
+		summarizeBy: none
+		sourceColumn: Project Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Contract Start'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8fe609e3-9ba0-48d6-8d97-a0a04ac6e2f7
+		summarizeBy: none
+		sourceColumn: Contract Start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Contract End'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d96567cc-ff36-4f83-aa97-9422f1348767
+		summarizeBy: none
+		sourceColumn: Contract End
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition ProjectsContractPeriod = m
+		mode: import
+		queryGroup: Helper
+		source =
+				let
+				    Source = Projects[[Project Name], [Contract Period]],
+				  // Split into two columns
+				  Split =
+				    Table.SplitColumn(
+				      Source,
+				      "Contract Period",
+				      Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv),
+				      {"Contract Start", "Contract End"}
+				    ),
+				
+				  Trimmed =
+				    Table.TransformColumns(
+				      Split,
+				      {
+				        {"Contract Start", Text.Trim, type text},
+				        {"Contract End", Text.Trim, type text}
+				      }
+				    ),
+				
+				  Converted =
+				    Table.TransformColumns(
+				      Trimmed,
+				      {
+				        {"Contract Start", each try Date.From(_) otherwise null, type date},
+				        {"Contract End", each try Date.From(_) otherwise null, type date}
+				      }
+				    )
+				
+				in
+				  Converted
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

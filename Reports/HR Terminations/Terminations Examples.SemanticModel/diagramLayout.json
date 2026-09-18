@@ -1,0 +1,165 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1230.8972342929726,
+            "y": 78.9666877067752
+          },
+          "nodeIndex": "Projects",
+          "nodeLineageTag": "36cebd9a-c126-4c37-b132-a5969a94fabe",
+          "size": {
+            "height": 337,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 1571.0102417269802,
+            "y": 0
+          },
+          "nodeIndex": "Companies",
+          "nodeLineageTag": "e1f7cfe1-71c4-46e1-af26-db9a003f8f05",
+          "size": {
+            "height": 145,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1661.820901931168,
+            "y": 513.7473388641464
+          },
+          "nodeIndex": "IncludeInactiveProject",
+          "nodeLineageTag": "0c9f6e01-2432-4833-adb9-91481bd1d038",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 1285.91663582326,
+            "y": 568.5947803949681
+          },
+          "nodeIndex": "ProjectsContractPeriod",
+          "nodeLineageTag": "2fa54c41-b1b4-4aba-8b94-1df34d0b808e",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1656.6917490118744,
+            "y": 737.91380937844428
+          },
+          "nodeIndex": "Termination Demographics",
+          "nodeLineageTag": "1bd0a7e0-eba6-4102-bef9-b7fa61a7157b",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 86.363196519586211,
+            "y": 761.26311929126769
+          },
+          "nodeIndex": "dimdate",
+          "nodeLineageTag": "92d9aa27-af7c-4022-9c5e-cd53a4f94f55",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1661.2706478182786,
+            "y": 374.22717882642354
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "2c4d7cd6-6454-401f-b157-4a1f52fe1346",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 805.8821294910075,
+            "y": 850.598614766883
+          },
+          "nodeIndex": "Terms for TO details",
+          "nodeLineageTag": "abde646c-a5f8-4def-8c3d-e39ae19c648f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 790.55221453471552,
+            "y": 455.11401053160182
+          },
+          "nodeIndex": "Headcount",
+          "nodeLineageTag": "5626a61c-0c61-4f11-b21a-fcee4e2222a7",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 341.36342337520927,
+            "y": 131.29652389374104
+          },
+          "nodeIndex": "dimLocationHierarchy",
+          "nodeLineageTag": "de3f9ade-4e5a-4983-8b1f-86405d3de248",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 782.93224851105447,
+            "y": 112.08724749276553
+          },
+          "nodeIndex": "dimLocationCrosswalk",
+          "nodeLineageTag": "bef1024d-bcd6-496a-8911-b3ccc54fc035",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 2
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 62.051481989405879,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

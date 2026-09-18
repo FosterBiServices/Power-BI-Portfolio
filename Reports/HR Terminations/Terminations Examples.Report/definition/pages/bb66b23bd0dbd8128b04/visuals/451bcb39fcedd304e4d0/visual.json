@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "451bcb39fcedd304e4d0",
+  "position": {
+    "x": 11,
+    "y": 108,
+    "z": 2000,
+    "height": 592,
+    "width": 1256
+  },
+  "visualGroup": {
+    "displayName": "All Tenure Visuals",
+    "groupMode": "ScaleMode"
+  }
+}

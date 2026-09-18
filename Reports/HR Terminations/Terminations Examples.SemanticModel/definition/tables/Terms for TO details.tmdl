@@ -1,0 +1,483 @@
+table 'Terms for TO details'
+	lineageTag: abde646c-a5f8-4def-8c3d-e39ae19c648f
+
+	column 'Employee ID'
+		dataType: string
+		lineageTag: 4a50c9d4-91e7-4f6a-a51a-8597cb9f1054
+		summarizeBy: none
+		sourceColumn: Employee ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Preferred Name'
+		dataType: string
+		lineageTag: 930135e8-9e75-4867-a040-e0be7c7bbf57
+		summarizeBy: none
+		sourceColumn: Employee Preferred Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Legal Name'
+		dataType: string
+		lineageTag: 95e9416f-eaba-41ab-86c5-0c8f97f3f2e9
+		summarizeBy: none
+		sourceColumn: Employee Legal Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column EEO1
+		dataType: string
+		lineageTag: 67352471-266e-4972-8bbc-723c0ad6fc6c
+		summarizeBy: none
+		sourceColumn: EEO1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Job
+		dataType: string
+		lineageTag: 9c6ecc10-4839-4127-964a-b83df5289216
+		summarizeBy: none
+		sourceColumn: Job
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 68f31f1a-6414-4418-b6a0-5c28c3db8b05
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Work Location State/Territory'
+		dataType: string
+		lineageTag: 33c4916c-bcf4-452a-bd3a-cff414de5b4c
+		summarizeBy: none
+		sourceColumn: Work Location State/Territory
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Work Location City'
+		dataType: string
+		lineageTag: e74a3eab-a794-43cd-8349-c51d5352ab8e
+		summarizeBy: none
+		sourceColumn: Work Location City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Work Location Name'
+		dataType: string
+		lineageTag: 0f1a557c-e97d-4f5e-9b8d-98c859d23710
+		summarizeBy: none
+		sourceColumn: Work Location Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Work Location Category'
+		dataType: string
+		lineageTag: d848a226-f1cc-48f5-9887-6db745433b0d
+		summarizeBy: none
+		sourceColumn: Work Location Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Company Code'
+		dataType: string
+		lineageTag: a931524e-4acc-4c02-84c0-8b2e3077b8e3
+		summarizeBy: none
+		sourceColumn: Company Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Business Unit'
+		dataType: string
+		lineageTag: 2ea20826-a63a-4a1d-81f1-a70197d26b61
+		summarizeBy: none
+		sourceColumn: Business Unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Employee Status'
+		dataType: string
+		lineageTag: 1173528d-a1aa-49ed-bccb-ff6b20806f66
+		summarizeBy: none
+		sourceColumn: Employee Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Manager Preferred Name'
+		dataType: string
+		lineageTag: d34f1cf0-eee9-4ee9-a60d-98a4d3083ef8
+		summarizeBy: none
+		sourceColumn: Manager Preferred Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Manager Legal Name'
+		dataType: string
+		lineageTag: 719548ea-c017-4709-a6e4-e04c2dad8cb0
+		summarizeBy: none
+		sourceColumn: Manager Legal Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hire/Rehire Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 76bc07ab-4f38-4281-9b64-63984026a3a3
+		summarizeBy: none
+		sourceColumn: Hire/Rehire Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Termination Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: aebe6e80-8e13-42a4-a7db-7fdbede13b4f
+		summarizeBy: none
+		sourceColumn: Termination Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Tenure
+		dataType: double
+		lineageTag: 25dc14e4-c24a-4b0f-97d4-b6ed28ad9f24
+		summarizeBy: sum
+		sourceColumn: Tenure
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Termination Type'
+		dataType: string
+		lineageTag: f44c7659-a04f-4d25-b0cc-1123742be3f9
+		summarizeBy: none
+		sourceColumn: Termination Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Termination Reason'
+		dataType: string
+		lineageTag: 5c56105b-c696-4c1e-8d23-f25449835b36
+		summarizeBy: none
+		sourceColumn: Termination Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Band'
+		dataType: string
+		lineageTag: fd1bedc8-84e6-49d7-a9b7-9f593bc5af29
+		summarizeBy: none
+		sourceColumn: Age Band
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Position ID'
+		dataType: string
+		lineageTag: 7a88f865-7e37-4ccb-b93d-e3e8726373f7
+		summarizeBy: none
+		sourceColumn: Position ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Rate Type'
+		dataType: string
+		lineageTag: 93b89b7e-80ab-472a-93fd-f43809233d38
+		summarizeBy: none
+		sourceColumn: Rate Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Org Level'
+		dataType: string
+		lineageTag: 652c33b8-dbd3-4c4b-b10b-1a0c57876642
+		summarizeBy: none
+		sourceColumn: Org Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tenure Band'
+		dataType: string
+		lineageTag: 14eb6643-5700-490a-b6c4-9817cafd27c4
+		summarizeBy: none
+		sourceColumn: Tenure Band
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Termination Action'
+		dataType: string
+		lineageTag: 44a7327c-72e3-44d1-b382-376b3e0912ae
+		summarizeBy: none
+		sourceColumn: Termination Action
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Manager'
+		dataType: string
+		lineageTag: a52505d2-8a97-43ba-b371-4277ef8cf01d
+		summarizeBy: none
+		sourceColumn: Is Manager
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Job Function'
+		dataType: string
+		lineageTag: f6ee4eab-c559-4eca-87ca-1f429aeac74b
+		summarizeBy: none
+		sourceColumn: Job Function
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Job Level'
+		dataType: string
+		lineageTag: 55b3594c-d23e-42c5-b2e1-226766cc6780
+		summarizeBy: none
+		sourceColumn: Job Level
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FLSA Status'
+		dataType: string
+		lineageTag: 9a1cd510-937a-4887-9935-e0ce89b0860d
+		summarizeBy: none
+		sourceColumn: FLSA Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Number'
+		dataType: string
+		lineageTag: dd7aee4c-c56f-40d8-bec4-763bf9955f5f
+		summarizeBy: none
+		sourceColumn: Cost Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Race/Ethnicity
+		dataType: string
+		lineageTag: cf859a57-f268-4cce-8e2c-269d4f119495
+		summarizeBy: none
+		sourceColumn: Race/Ethnicity
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Gender for Insurance Coverage'
+		dataType: string
+		lineageTag: be6b7247-9541-455e-baa9-f61e37fd73a1
+		summarizeBy: none
+		sourceColumn: Gender for Insurance Coverage
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Gender (Self ID)'
+		dataType: string
+		lineageTag: e97a5923-4485-44d4-9115-bc54f000826f
+		summarizeBy: none
+		sourceColumn: Gender (Self ID)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Veteran Status'
+		dataType: string
+		lineageTag: 59839683-561f-48ae-ba96-c49b7cd53cd5
+		summarizeBy: none
+		sourceColumn: Veteran Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Disability Status'
+		dataType: string
+		lineageTag: 8d314ffd-f898-4186-9d00-5e8379de34d2
+		summarizeBy: none
+		sourceColumn: Disability Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Business Category'
+		dataType: string
+		lineageTag: 9437d5bb-13fe-4ef4-9fbd-9b5cc87712d0
+		summarizeBy: none
+		sourceColumn: Business Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjusted Service Date'
+		dataType: string
+		lineageTag: 7f0a0ce5-230d-4bcd-8b7d-6e9aabacd39f
+		summarizeBy: none
+		sourceColumn: Adjusted Service Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Credited Service Date'
+		dataType: string
+		lineageTag: db8f8134-48dc-4e11-8c12-88bbb1df606f
+		summarizeBy: none
+		sourceColumn: Credited Service Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hire Type'
+		dataType: string
+		lineageTag: 3a41a774-6d12-4906-acc6-488ffd3c8b0f
+		summarizeBy: none
+		sourceColumn: Hire Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Worker Category'
+		dataType: string
+		lineageTag: 7e07e0c8-4208-46c4-9a0c-a398a137e6f9
+		summarizeBy: none
+		sourceColumn: Worker Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seniority Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c3fb6f4b-bf70-4d8c-a067-03d4ace51311
+		summarizeBy: none
+		sourceColumn: Seniority Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Job Class'
+		dataType: string
+		lineageTag: c264f9ce-1a94-437e-9b56-bf7bd533f103
+		summarizeBy: none
+		sourceColumn: Job Class
+
+		annotation SummarizationSetBy = Automatic
+
+	column Generation
+		dataType: string
+		lineageTag: 8ec8e1fa-443e-4182-9cdc-52dec67d5dc3
+		summarizeBy: none
+		sourceColumn: Generation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Home Location City'
+		dataType: string
+		lineageTag: dc49e139-08af-4eba-a1a6-7dff43b2d6dd
+		summarizeBy: none
+		sourceColumn: Home Location City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Home Location State'
+		dataType: string
+		lineageTag: 735c5b6b-eee1-4ce5-8e05-caf858925724
+		summarizeBy: none
+		sourceColumn: Home Location State
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Performance Rating'
+		dataType: string
+		lineageTag: d095397b-6e68-45a6-b26a-640a3512b07a
+		summarizeBy: none
+		sourceColumn: Performance Rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Management Position'
+		dataType: string
+		lineageTag: c58ffec5-a270-47ab-af56-8c8d6e907b07
+		summarizeBy: none
+		sourceColumn: Management Position
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Work Location Country'
+		dataType: string
+		lineageTag: 1233194c-a04c-48e6-8b6c-269859794633
+		summarizeBy: none
+		sourceColumn: Work Location Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Home Location Country'
+		dataType: string
+		lineageTag: 07b44141-7735-4e01-85b9-fe8d314e4f45
+		summarizeBy: none
+		sourceColumn: Home Location Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Pay Grade'
+		dataType: string
+		lineageTag: 921ed03f-cd52-4e75-a899-b7a40a3f7559
+		summarizeBy: none
+		sourceColumn: Pay Grade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Home Location Zip Code'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7333a68f-4efa-4e32-a31a-978f6bc863b5
+		summarizeBy: count
+		sourceColumn: Home Location Zip Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WORKLOC CODE'
+		dataType: int64
+		formatString: 0
+		lineageTag: ad8a683d-3ae3-43fa-a0b5-52fa8eadf150
+		summarizeBy: none
+		sourceColumn: WORKLOC CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total
+		dataType: string
+		lineageTag: 70751b53-eda2-47eb-b283-c7c49875727c
+		summarizeBy: none
+		sourceColumn: Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column '1st Year Terms'
+		dataType: string
+		lineageTag: 6e2edaff-b5b2-4535-bb5e-4c319701da91
+		summarizeBy: none
+		sourceColumn: 1st Year Terms
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Terms for TO details' = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Foster\Downloads\Termination-Report-Sample-Data.xlsx"), true, true),
+				  _data = Source{[Item = "Terminations", Kind = "Sheet"]}[Data],
+				  TypePairs = {
+				    {"Hire/Rehire Date", type date},
+				    {"Termination Date", type date},
+				    {"Seniority Date", type date},
+				    {"Tenure", type number},
+				    {"Home Location Zip Code", Int64.Type},
+				    {"WORKLOC CODE", Int64.Type}
+				  },
+				
+				  ChangeTypes =
+				    fxColumnTyping(
+				      _data,
+				      TypePairs
+				    )
+				in
+				  ChangeTypes
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
