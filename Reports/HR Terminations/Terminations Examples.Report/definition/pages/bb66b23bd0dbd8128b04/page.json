@@ -1,0 +1,383 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "bb66b23bd0dbd8128b04",
+  "displayName": "Terminations",
+  "displayOption": "ActualSize",
+  "height": 720,
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b74e46e080530567809c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimdate"
+              }
+            },
+            "Property": "Date"
+          }
+        },
+        "type": "RelativeDate",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d",
+              "Entity": "dimdate",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Between": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "d"
+                        }
+                      },
+                      "Property": "Date"
+                    }
+                  },
+                  "LowerBound": {
+                    "DateSpan": {
+                      "Expression": {
+                        "DateAdd": {
+                          "Expression": {
+                            "Now": {}
+                          },
+                          "Amount": -12,
+                          "TimeUnit": 2
+                        }
+                      },
+                      "TimeUnit": 2
+                    }
+                  },
+                  "UpperBound": {
+                    "DateSpan": {
+                      "Expression": {
+                        "DateAdd": {
+                          "Expression": {
+                            "Now": {}
+                          },
+                          "Amount": -1,
+                          "TimeUnit": 2
+                        }
+                      },
+                      "TimeUnit": 2
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "isHiddenInViewMode": true,
+        "isLockedInViewMode": true
+      },
+      {
+        "name": "c34194510bea304c3a0e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "IncludeInactiveProject"
+              }
+            },
+            "Property": "IncludeInactiveProject"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "i",
+              "Entity": "IncludeInactiveProject",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "i"
+                          }
+                        },
+                        "Property": "IncludeInactiveProject"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'No'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "isHiddenInViewMode": true,
+        "isLockedInViewMode": true
+      },
+      {
+        "name": "9debf2fa95a25e2c510a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Projects"
+              }
+            },
+            "Property": "Status"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Projects",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "Status"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Active'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Start Up'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "isHiddenInViewMode": true,
+        "isLockedInViewMode": true
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "969f384bbbdef4fea724",
+    "type": "Default",
+    "parameters": []
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Terminations.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Terminations8856754464314445.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "debbba343c2f67820f3a",
+      "target": "134229c3d1fad132a5da",
+      "type": "DataFilter"
+    },
+    {
+      "source": "debbba343c2f67820f3a",
+      "target": "967163637593806210ce",
+      "type": "DataFilter"
+    },
+    {
+      "source": "967163637593806210ce",
+      "target": "debbba343c2f67820f3a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "967163637593806210ce",
+      "target": "134229c3d1fad132a5da",
+      "type": "DataFilter"
+    },
+    {
+      "source": "134229c3d1fad132a5da",
+      "target": "967163637593806210ce",
+      "type": "DataFilter"
+    },
+    {
+      "source": "134229c3d1fad132a5da",
+      "target": "debbba343c2f67820f3a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "debbba343c2f67820f3a",
+      "target": "6224dc804a28868f7232",
+      "type": "DataFilter"
+    },
+    {
+      "source": "134229c3d1fad132a5da",
+      "target": "6224dc804a28868f7232",
+      "type": "DataFilter"
+    },
+    {
+      "source": "967163637593806210ce",
+      "target": "6224dc804a28868f7232",
+      "type": "DataFilter"
+    },
+    {
+      "source": "bb9cdd1cb2b5459e156b",
+      "target": "967163637593806210ce",
+      "type": "DataFilter"
+    },
+    {
+      "source": "bb9cdd1cb2b5459e156b",
+      "target": "134229c3d1fad132a5da",
+      "type": "DataFilter"
+    },
+    {
+      "source": "bb9cdd1cb2b5459e156b",
+      "target": "debbba343c2f67820f3a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "bb9cdd1cb2b5459e156b",
+      "target": "6224dc804a28868f7232",
+      "type": "DataFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "967163637593806210ce",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "134229c3d1fad132a5da",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "5da0abe1354fddef8f45",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "6224dc804a28868f7232",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "debbba343c2f67820f3a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "ca0f29208608b194ae39",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "d91a0d76f531c46c2551",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "4411ddae9ff86619b16a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1814084a1d2717909931",
+      "target": "bc3180107cb035a2a227",
+      "type": "NoFilter"
+    },
+    {
+      "source": "967163637593806210ce",
+      "target": "ca0f29208608b194ae39",
+      "type": "NoFilter"
+    },
+    {
+      "source": "134229c3d1fad132a5da",
+      "target": "ca0f29208608b194ae39",
+      "type": "DataFilter"
+    },
+    {
+      "source": "bb9cdd1cb2b5459e156b",
+      "target": "ca0f29208608b194ae39",
+      "type": "DataFilter"
+    },
+    {
+      "source": "debbba343c2f67820f3a",
+      "target": "ca0f29208608b194ae39",
+      "type": "NoFilter"
+    }
+  ]
+}

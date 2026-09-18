@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "27437cd56a4207227d9f",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "height": 400,
+    "width": 550,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6855",
+    "query": {
+      "queryState": {
+        "content": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Top Projects HTML"
+                }
+              },
+              "queryRef": "Terms for TO details.Top Projects HTML",
+              "nativeQueryRef": "Top Projects HTML"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

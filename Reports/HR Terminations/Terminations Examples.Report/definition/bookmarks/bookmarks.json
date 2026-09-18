@@ -1,0 +1,73 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "Bookmarkf6ec113b274b88630039"
+    },
+    {
+      "name": "Bookmark4b763bd8062d8488b094"
+    },
+    {
+      "name": "Bookmark6260c53eaeaad6ad2c4f"
+    },
+    {
+      "name": "Bookmarkc0e20e5c62d941f1a614"
+    },
+    {
+      "name": "Bookmark582650883e5b0e6a62d4"
+    },
+    {
+      "name": "Bookmarkaf73a1f3393583d7350b"
+    },
+    {
+      "name": "Bookmark59cbbae7cb82b4b4a963"
+    },
+    {
+      "name": "Bookmark2a5216b7c05c7952700c"
+    },
+    {
+      "name": "Bookmark31e293c0605535004385"
+    },
+    {
+      "name": "Bookmark78ad1a040941dce62020"
+    },
+    {
+      "name": "Bookmark2b8ae8800323b243d2a3"
+    },
+    {
+      "name": "Bookmarkda8cf24a54b0e846d673"
+    },
+    {
+      "name": "eea3ff65801c4b079c53",
+      "displayName": "Tenure",
+      "children": [
+        "552ab4629128a3184544",
+        "708ee3bd5c5b103c2e7b"
+      ]
+    },
+    {
+      "name": "da52b92b060b200e7e83",
+      "displayName": "Score Type",
+      "children": [
+        "c7a99f870b9c072e34d5",
+        "7383a22e50b136b91a76"
+      ]
+    },
+    {
+      "name": "063b4cc16f84d11ea8c6",
+      "displayName": "Term Summary",
+      "children": [
+        "5ce827265190703109a3",
+        "31f913578f3668aba1ba"
+      ]
+    },
+    {
+      "name": "3bb79ff8a30abb47ab4c",
+      "displayName": ">90 Term Summary",
+      "children": [
+        "3f8d219eb62682757cf5",
+        "d57e3c328d8655913da5"
+      ]
+    }
+  ]
+}

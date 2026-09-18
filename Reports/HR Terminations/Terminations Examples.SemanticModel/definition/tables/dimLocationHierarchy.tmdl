@@ -1,0 +1,196 @@
+table dimLocationHierarchy
+	lineageTag: de3f9ade-4e5a-4983-8b1f-86405d3de248
+
+	column Location
+		dataType: string
+		lineageTag: 0aea2b2b-fd75-4ed1-835c-b3235eb80a23
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Category'
+		dataType: string
+		lineageTag: 43640f42-046a-4269-826e-b110787b7554
+		summarizeBy: none
+		sourceColumn: Product Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		dataType: string
+		lineageTag: 83005802-412d-467f-8f6b-21309b12a088
+		summarizeBy: none
+		sourceColumn: Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Company'
+		dataType: int64
+		formatString: 0
+		lineageTag: e7f14d3a-36b8-4b9a-a2e2-99a96345cb9e
+		summarizeBy: sum
+		sourceColumn: SAP Code: Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Company'
+		dataType: string
+		lineageTag: 68dab7f6-f17f-4e20-802b-e8bff96c90fe
+		summarizeBy: none
+		sourceColumn: SAP Name: Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Line of Business'
+		dataType: string
+		lineageTag: 4477a6c7-c5de-4154-a44d-ce144d320803
+		summarizeBy: none
+		sourceColumn: SAP Code: Line of Business
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Line of Business'
+		dataType: string
+		lineageTag: 501fdf3d-77d9-4a0d-955c-f37c1811c09e
+		summarizeBy: none
+		sourceColumn: SAP Name: Line of Business
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Product Category'
+		dataType: string
+		lineageTag: 2bc0f03f-e5ff-4224-8f64-8c115d2b4f4e
+		summarizeBy: none
+		sourceColumn: SAP Code: Product Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Product Category'
+		dataType: string
+		lineageTag: ee78e41b-2ae8-4cfa-8fe0-892b84fde89e
+		summarizeBy: none
+		sourceColumn: SAP Name: Product Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Cost Center / Profit Center Roll-up'
+		dataType: string
+		lineageTag: 1626ae3f-a69a-4ddc-9bb9-f7ee7e5d8ac3
+		summarizeBy: none
+		sourceColumn: SAP Code: Cost Center / Profit Center Roll-up
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Cost Center / Profit Center Roll-up'
+		dataType: string
+		lineageTag: d70ce877-254a-4470-950b-d3b5b404a2dd
+		summarizeBy: none
+		sourceColumn: SAP Name: Cost Center / Profit Center Roll-up
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Contract Parent (Segment)'
+		dataType: string
+		lineageTag: 5793fb72-e856-45e2-af5e-1a7b721bd794
+		summarizeBy: none
+		sourceColumn: SAP Code: Contract Parent (Segment)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Contract Parent (Segment)'
+		dataType: string
+		lineageTag: c6584ac7-8fb7-4b85-901b-15b1841f403c
+		summarizeBy: none
+		sourceColumn: SAP Name: Contract Parent (Segment)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Code: Cost Center / Profit Center'
+		dataType: string
+		lineageTag: 91c03757-5f7d-443f-a37d-ceb974903c52
+		summarizeBy: none
+		sourceColumn: SAP Code: Cost Center / Profit Center
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SAP Name: Cost Center / Profit Center'
+		dataType: string
+		lineageTag: 6417b4be-2df4-4fd2-9c68-ea8f2f559379
+		summarizeBy: none
+		sourceColumn: SAP Name: Cost Center / Profit Center
+
+		annotation SummarizationSetBy = Automatic
+
+	column Company
+		dataType: string
+		lineageTag: 493c8ec2-3163-45e4-8767-332187e2a8a5
+		summarizeBy: none
+		sourceColumn: Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Center / Profit Center (Roll-up)'
+		dataType: string
+		lineageTag: de936759-3762-4598-b794-7b8bfca9905a
+		summarizeBy: none
+		sourceColumn: Cost Center / Profit Center (Roll-up)
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segment
+		dataType: string
+		lineageTag: e0e1d8b0-d978-41c4-b640-8d2f60cff5f2
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Line of Business'
+		dataType: string
+		lineageTag: 0810da6d-d94f-4743-89cd-999f3362d4f9
+		summarizeBy: none
+		sourceColumn: Line of Business
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost Center / Profit Center'
+		dataType: string
+		lineageTag: 7f04619f-7850-41dd-b0df-9ebdf66ba436
+		summarizeBy: none
+		sourceColumn: Cost Center / Profit Center
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WORKLOC CODE'
+		dataType: int64
+		formatString: 0
+		lineageTag: 39176d84-e61f-4020-b85c-7e223f380de0
+		summarizeBy: none
+		sourceColumn: WORKLOC CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimLocationHierarchy = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\Users\Foster\Downloads\Termination-Report-Sample-Data.xlsx"), true, true),
+				  _data = Source{[Item = "dimLocationHierarchy", Kind = "Sheet"]}[Data],
+				  TypePairs = {
+				    {"WORKLOC CODE", Int64.Type},
+				    {"SAP Code: Company", Int64.Type}
+				  },
+				
+				  ChangeTypes =
+				    fxColumnTyping(
+				      _data,
+				      TypePairs
+				    )
+				in
+				  ChangeTypes
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,1016 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "No Term Summary",
+  "name": "31f913578f3668aba1ba",
+  "options": {
+    "applyOnlyToTargetVisuals": true,
+    "targetVisualNames": [
+      "387b40df2ece10697e6d",
+      "f765fb6f6f5accb39b7d",
+      "4411ddae9ff86619b16a",
+      "ef92110843f3f72f3822",
+      "fba796c21c4cf875edcd",
+      "451bcb39fcedd304e4d0",
+      "134229c3d1fad132a5da",
+      "1814084a1d2717909931",
+      "6224dc804a28868f7232",
+      "71dda920fabb9bd4a24d",
+      "8fe89428a6452ca8ce2d",
+      "967163637593806210ce",
+      "debbba343c2f67820f3a",
+      "eab186702552ee7f505d"
+    ],
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "bb66b23bd0dbd8128b04",
+    "filters": {
+      "byName": {
+        "Filter8b2381d193166a11b036": {
+          "name": "Filter8b2381d193166a11b036",
+          "type": "Categorical",
+          "filter": {
+            "Version": 2,
+            "From": [
+              {
+                "Name": "c",
+                "Entity": "Companies",
+                "Type": 0
+              }
+            ],
+            "Where": [
+              {
+                "Condition": {
+                  "In": {
+                    "Expressions": [
+                      {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "c"
+                            }
+                          },
+                          "Property": "Company Name"
+                        }
+                      }
+                    ],
+                    "Values": [
+                      [
+                        {
+                          "Literal": {
+                            "Value": "'EQUUS WORKFORCE SOLUTIONS'"
+                          }
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Companies"
+                }
+              },
+              "Property": "Company Name"
+            }
+          },
+          "howCreated": 1
+        }
+      },
+      "byExpr": [
+        {
+          "name": "Filterfca1b225a2f3d6f7d177",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Projects"
+                }
+              },
+              "Property": "Category"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter919d1d7ed1b0f1d4de6d",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Parents"
+                }
+              },
+              "Property": "LoB"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Projects"
+                }
+              },
+              "Property": "VP Name"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter3",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Projects"
+                }
+              },
+              "Property": "PD Name"
+            }
+          },
+          "howCreated": 1
+        }
+      ]
+    },
+    "sections": {
+      "bb66b23bd0dbd8128b04": {
+        "filters": {
+          "byName": {
+            "b74e46e080530567809c": {
+              "name": "b74e46e080530567809c",
+              "type": "RelativeDate",
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "d",
+                    "Entity": "dimdate",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "Between": {
+                        "Expression": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Date"
+                          }
+                        },
+                        "LowerBound": {
+                          "DateSpan": {
+                            "Expression": {
+                              "DateAdd": {
+                                "Expression": {
+                                  "Now": {}
+                                },
+                                "Amount": -12,
+                                "TimeUnit": 2
+                              }
+                            },
+                            "TimeUnit": 2
+                          }
+                        },
+                        "UpperBound": {
+                          "DateSpan": {
+                            "Expression": {
+                              "DateAdd": {
+                                "Expression": {
+                                  "Now": {}
+                                },
+                                "Amount": -1,
+                                "TimeUnit": 2
+                              }
+                            },
+                            "TimeUnit": 2
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimdate"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "howCreated": 1
+            },
+            "c34194510bea304c3a0e": {
+              "name": "c34194510bea304c3a0e",
+              "type": "Categorical",
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "i",
+                    "Entity": "IncludeInactiveProject",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "i"
+                                }
+                              },
+                              "Property": "IncludeInactiveProject"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'No'"
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IncludeInactiveProject"
+                    }
+                  },
+                  "Property": "IncludeInactiveProject"
+                }
+              },
+              "howCreated": 1
+            },
+            "9debf2fa95a25e2c510a": {
+              "name": "9debf2fa95a25e2c510a",
+              "type": "Categorical",
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "p",
+                    "Entity": "Projects",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "p"
+                                }
+                              },
+                              "Property": "Status"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Active'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Start Up'"
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Projects"
+                    }
+                  },
+                  "Property": "Status"
+                }
+              },
+              "howCreated": 1
+            }
+          }
+        },
+        "visualContainers": {
+          "134229c3d1fad132a5da": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "9e23e1a0a6a7064c5098",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Termination Reason"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "110147bcb10c23f73acf",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms by Termination Reason - Percent Of Total"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "e316af6d390b61af0787",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "barChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Termination Reason"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "1814084a1d2717909931": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "3412b965924ef5c44962",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Termination Demographics"
+                        }
+                      },
+                      "Property": "Demographic"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "advancedSlicerVisual",
+              "objects": {
+                "merge": {
+                  "general": [
+                    {
+                      "properties": {
+                        "filter": {
+                          "filter": {
+                            "Version": 2,
+                            "From": [
+                              {
+                                "Name": "t",
+                                "Entity": "Termination Demographics",
+                                "Type": 0
+                              }
+                            ],
+                            "Where": [
+                              {
+                                "Condition": {
+                                  "In": {
+                                    "Expressions": [
+                                      {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Source": "t"
+                                            }
+                                          },
+                                          "Property": "Demographic"
+                                        }
+                                      }
+                                    ],
+                                    "Values": [
+                                      [
+                                        {
+                                          "Literal": {
+                                            "Value": "'Gender'"
+                                          }
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "selection": [
+                    {
+                      "properties": {
+                        "strictSingleSelect": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "true"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "6224dc804a28868f7232": {
+            "singleVisual": {
+              "visualType": "advancedSlicerVisual",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "967163637593806210ce": {
+            "filters": {
+              "byName": {
+                "fefbf96c5950860fd5b8": {
+                  "name": "fefbf96c5950860fd5b8",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Termination Reason"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              },
+              "byExpr": [
+                {
+                  "name": "b7499013451cba3c4337",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dimdate"
+                        }
+                      },
+                      "Property": "Month Year"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "93e904a44dfb7eabc236",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "clusteredColumnChart",
+              "objects": {},
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dimdate"
+                        }
+                      },
+                      "Property": "Month Year"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "debbba343c2f67820f3a": {
+            "filters": {
+              "byName": {
+                "fefbf96c5950860fd5b8": {
+                  "name": "fefbf96c5950860fd5b8",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Termination Reason"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              },
+              "byExpr": [
+                {
+                  "name": "d7108746e1013c15db70",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Tenure Band"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "95c829cae60e8d4d452e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms by Tenure Band - Percent Of Total"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a69bb34d6f924114a615",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "barChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Terms Project Level"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Terms for TO details"
+                        }
+                      },
+                      "Property": "Tenure Band"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "bc3180107cb035a2a227": {
+            "filters": {
+              "byName": {
+                "Filter53e90ad99fada0ec38f4": {
+                  "name": "Filter53e90ad99fada0ec38f4",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "RD Name"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                "Filtera7f28432df9acf098dba": {
+                  "name": "Filtera7f28432df9acf098dba",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "p",
+                        "Entity": "Projects",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "p"
+                                    }
+                                  },
+                                  "Property": "Status"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Active'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Start Up'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              },
+              "byExpr": [
+                {
+                  "name": "c0333502b8de378b21a6",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "VP Name"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "VP Name"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "d91a0d76f531c46c2551": {
+            "filters": {
+              "byName": {
+                "Filter0a366ebaa3a366393eae": {
+                  "name": "Filter0a366ebaa3a366393eae",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "p",
+                        "Entity": "Projects",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "p"
+                                    }
+                                  },
+                                  "Property": "Status"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Active'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Start Up'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "Status"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              }
+            },
+            "singleVisual": {
+              "visualType": "slicer",
+              "objects": {
+                "merge": {
+                  "data": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "expr": {
+                            "Literal": {
+                              "Value": "'Dropdown'"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "activeProjections": {
+                "Values": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Projects"
+                        }
+                      },
+                      "Property": "Project Name"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "fba796c21c4cf875edcd": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "c5b9b29f6f8881d05696",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Termination Narrative Summary HTML"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6855",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "ef92110843f3f72f3822": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {},
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "4411ddae9ff86619b16a": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          }
+        },
+        "visualContainerGroups": {
+          "451bcb39fcedd304e4d0": {
+            "isHidden": false
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              },
+              "visible": {
+                "expr": {
+                  "Literal": {
+                    "Value": "true"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

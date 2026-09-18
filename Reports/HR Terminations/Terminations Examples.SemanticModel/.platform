@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Terminations Examples"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fee6c015-7cab-46a2-862f-39356fbc4305"
+  }
+}

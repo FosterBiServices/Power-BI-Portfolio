@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Terminations Examples"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fcbf49c0-fe03-4ca9-9751-b0e9da9eb1a9"
+  }
+}

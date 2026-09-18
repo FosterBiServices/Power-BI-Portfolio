@@ -1,0 +1,736 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "516c53e7e953a7bbdf91",
+  "position": {
+    "x": 10,
+    "y": 150,
+    "z": 3000,
+    "height": 560,
+    "width": 1260,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dimdate"
+                    }
+                  },
+                  "Property": "Month Year"
+                }
+              },
+              "queryRef": "dimdate.Month Year",
+              "nativeQueryRef": "Month Year"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Projects"
+                    }
+                  },
+                  "Property": "VP Name"
+                }
+              },
+              "queryRef": "Projects.VP Name",
+              "nativeQueryRef": "VP Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Projects"
+                    }
+                  },
+                  "Property": "Project Name"
+                }
+              },
+              "queryRef": "Projects.Project Name",
+              "nativeQueryRef": "Project Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Termination Date"
+                }
+              },
+              "queryRef": "Terms for TO details.Termination Date",
+              "nativeQueryRef": "Termination Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Termination Type"
+                }
+              },
+              "queryRef": "Terms for TO details.Termination Type",
+              "nativeQueryRef": "Termination Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Termination Reason"
+                }
+              },
+              "queryRef": "Terms for TO details.Termination Reason",
+              "nativeQueryRef": "Termination Reason"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Job"
+                }
+              },
+              "queryRef": "Terms for TO details.Job",
+              "nativeQueryRef": "Job"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Job Class"
+                }
+              },
+              "queryRef": "Terms for TO details.Job Class",
+              "nativeQueryRef": "Job Class"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Worker Category"
+                }
+              },
+              "queryRef": "Terms for TO details.Worker Category",
+              "nativeQueryRef": "Worker Category"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Tenure Band"
+                }
+              },
+              "queryRef": "Terms for TO details.Tenure Band",
+              "nativeQueryRef": "Tenure Band"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Gender for Insurance Coverage"
+                }
+              },
+              "queryRef": "Terms for TO details.Gender for Insurance Coverage",
+              "nativeQueryRef": "Gender for Insurance Coverage"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Race/Ethnicity"
+                }
+              },
+              "queryRef": "Terms for TO details.Race/Ethnicity",
+              "nativeQueryRef": "Race/Ethnicity"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Veteran Status"
+                }
+              },
+              "queryRef": "Terms for TO details.Veteran Status",
+              "nativeQueryRef": "Veteran Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Disability Status"
+                }
+              },
+              "queryRef": "Terms for TO details.Disability Status",
+              "nativeQueryRef": "Disability Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Generation"
+                }
+              },
+              "queryRef": "Terms for TO details.Generation",
+              "nativeQueryRef": "Generation"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Terms for TO details"
+                    }
+                  },
+                  "Property": "Age Band"
+                }
+              },
+              "queryRef": "Terms for TO details.Age Band",
+              "nativeQueryRef": "Age Band"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Terms Project Level"
+                }
+              },
+              "queryRef": "_Measures.Terms Project Level",
+              "nativeQueryRef": "Terms",
+              "displayName": "Terms"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dimdate"
+                  }
+                },
+                "Property": "Month Year"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "outlineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "gridHorizontal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.5
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontColorPrimary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#004081'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#004081'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Terminations by Month'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#666666'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "section": {
+              "expr": {
+                "Literal": {
+                  "Value": "'7ebe438b14b2018fadee'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "divider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#e6e6e6'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Terminations over 90 By Month Subtitle"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#CCCCCC'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e1e2aab9efa4dea18904",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dimdate"
+              }
+            },
+            "Property": "Month Year"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "abc86a0632011ea0534a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Projects"
+              }
+            },
+            "Property": "VP Name"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "a85828999b0f0e3e1a3c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Projects"
+              }
+            },
+            "Property": "Project Name"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "1084c1ae15ec9772b603",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Termination Date"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "3ae8220264f17ec34348",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Termination Type"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "fb4a92dff3b0431dcda2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Termination Reason"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "3ba99d158a8e2c5a96de",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Job"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "dd93bfacf18b54e2d60d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Job Class"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "3106611f906909d6347a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Worker Category"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "d5d425bc487b3d620cd3",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Tenure Band"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "0babd15f04025dccf17c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Gender for Insurance Coverage"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "db7a07e0c54f43042c4a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Race/Ethnicity"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "7c1348525eed5e0bbec6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Veteran Status"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "fdaa90874e71cdf8c49a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Disability Status"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "529b8c5863ad7d541143",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Generation"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "c3eabdd0355ff43318de",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Terms for TO details"
+              }
+            },
+            "Property": "Age Band"
+          }
+        },
+        "type": "Categorical",
+        "isHiddenInViewMode": true
+      },
+      {
+        "name": "ed5c4cbd94fac12a6470",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Terms Project Level"
+          }
+        },
+        "type": "Advanced",
+        "isHiddenInViewMode": true
+      }
+    ]
+  }
+}
