@@ -1,0 +1,1526 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+WIOA Operational Metric Layout =
+DATATABLE(
+    "ProjectName", STRING,
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {"ALL", 24, "Individuals Served During Month", "_dServed"},
+    {"ALL", 25, "Participants Served During Month (Job Seekers)", "_dSeekers"},
+    {"ALL", 26, "New Enrollments", "_dEnrollments"},
+    {"ALL", 27, "Closures", "_dClosures"},
+    {"ALL", 28, "Apprenticeship Starts", "_dAppStart"},
+    {"ALL", 29, "OJT Starts", "_dOjtStart"},
+    {"ALL", 30, "Training Starts", "_dTrainStart"},
+    {"ALL", 31, "WEX Starts", "_dWexStart"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 1, "Adult/DW New Enrollments (% of Target)", "_nvadultEnrollments"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 2, "Youth New Enrollments (% of Target)", "_nvyouthEnrollments"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 3, "Adult/DW High Impact Activity Starts (% of Target)", "_nvadultActivity"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 4, "Youth High Impact Activity Starts (% of Target)", "_nvyouthActivity"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 5, "Adult MSG (% of Target)", "_nvadultMSG"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 6, "DW MSG (% of Target)", "_nvdwMSG"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 7, "Youth MSG (% of Target)", "_nvyouthMSG"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 8, "Adult / DW Employments @ Closure (% Positive)", "_nvadultDWEmployment"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 9, "Youth Placements @ Closure (% Positive)", "_nvyouthPlacement"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 10, "Q2 Adult % Employment (% of Target)", "_nvadultQ2"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 11, "Q2 DW % Employment (% of Target)", "_nvdwQ2"},
+    {"NV LAS VEGAS ONE STOP SERVICES", 12, "Q2 Youth % Placements (% of Target)", "_nvyouthQ2"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = " "
+
+
+/* ============================================================
+    OPERATIONAL EXCELLENCE COMMENTS TABLE
+============================================================ */
+
+VAR __adult1 =
+        FosterBI.YTDValue([Adult New Enrollments], [Current Fiscal Year],[Current Month Sort] ) 
+VAR __dw1 =
+    FosterBI.YTDValue([DW New Enrollments], [Current Fiscal Year],[Current Month Sort] ) 
+VAR __adult1Target =
+    FosterBI.YTDValue([Adult New Enrollments Target], [Current Fiscal Year],[Current Month Sort] ) 
+VAR __dw1Target =
+    FosterBI.YTDValue([DW New Enrollments Target], [Current Fiscal Year],[Current Month Sort] ) 
+VAR __youth1 =
+        FosterBI.YTDValue([Youth New Enrollments], [Current Fiscal Year],[Current Month Sort] ) 
+VAR __youth1Target =
+    FosterBI.YTDValue([Youth New Enrollments Target], [Current Fiscal Year],[Current Month Sort] ) 
+
+VAR _adult2 = BLANK ( )
+VAR _dw2 = BLANK ( )
+VAR _youth2 = BLANK ( )
+VAR __adultQ4 =
+    FosterBI.MonthValue([AD- Placement on unsubsidized employment Q4 after exit], [Month Year Current])
+VAR __adultQ4Target =
+    FosterBI.MonthValue([AD- Placement on unsubsidized employment Q4 after exit Target], [Month Year Current])
+VAR __adultQ4Display =
+    FORMAT
+    (
+        DIVIDE ( __adultQ4, 100 ),
+        "#,##0%"
+    )
+        & IF
+        (
+            ISBLANK
+            (
+                DIVIDE ( __adultQ4, __adultQ4Target )
+            ),
+            "",
+            " ("
+                & FORMAT
+                (
+                    DIVIDE ( __adultQ4, __adultQ4Target ),
+                    "0%"
+                )
+                & ")"
+        )
+VAR __dwQ4 =
+    FosterBI.MonthValue([DW- Placement on unsubsidized employment Q4 after exit], [Month Year Current])
+VAR __dwQ4Target =
+    FosterBI.MonthValue([DW- Placement on unsubsidized employment Q4 after exit Target], [Month Year Current])
+VAR __dwQ4Display =
+    FORMAT
+    (
+        DIVIDE ( __dwQ4, 100 ),
+        "#,##0%"
+    )
+        & IF
+        (
+            ISBLANK
+            (
+                DIVIDE ( __dwQ4, __dwQ4Target )
+            ),
+            "",
+            " ("
+                & FORMAT
+                (
+                    DIVIDE ( __dwQ4, __dwQ4Target ),
+                    "0%"
+                )
+                & ")"
+        )
+VAR __youthQ4 =
+    FosterBI.MonthValue([Placement on Education/training activities, or unsubsidized employment  Q4], [Month Year Current])
+VAR __youthQ4Target =
+    FosterBI.MonthValue([Placement on Education/training activities, or unsubsidized employment  Q4 Target], [Month Year Current])
+VAR __youthQ4Display =
+    FORMAT
+    (
+        DIVIDE ( __youthQ4, 100 ),
+        "#,##0%"
+    )
+        & IF
+        (
+            ISBLANK
+            (
+                DIVIDE ( __youthQ4, __youthQ4Target )
+            ),
+            "",
+            " ("
+                & FORMAT
+                (
+                    DIVIDE ( __youthQ4, __youthQ4Target ),
+                    "0%"
+                )
+                & ")"
+        )
+
+
+
+/* ============================================================
+    OPERATIONAL EXCELLENCE COMMENTS STATUS
+============================================================ */
+
+VAR __totalEnrollActual =
+    COALESCE ( __adult1, 0 )
+        + COALESCE ( __dw1, 0 )
+        + COALESCE ( __youth1, 0 )
+VAR __totalEnrollTarget =
+    COALESCE ( __adult1Target, 0 )
+        + COALESCE ( __dw1Target, 0 )
+        + COALESCE ( __youth1Target, 0 )
+VAR __overallEnrollStatus =
+    SWITCH
+    (
+        TRUE ( ),
+        __totalEnrollTarget = 0, BLANK ( ),
+        DIVIDE
+        (
+            __totalEnrollActual,
+            __totalEnrollTarget
+        )
+            < 0.95, "red",
+        DIVIDE
+        (
+            __totalEnrollActual,
+            __totalEnrollTarget
+        )
+            < 1, "amber",
+        "green"
+    )
+VAR __totalQ4Actual =
+    COALESCE ( __adultQ4, 0 )
+        + COALESCE ( __dwQ4, 0 )
+        + COALESCE ( __youthQ4, 0 )
+VAR __totalQ4Target =
+    COALESCE ( __adultQ4Target, 0 )
+        + COALESCE ( __dwQ4Target, 0 )
+        + COALESCE ( __youthQ4Target, 0 )
+VAR __overallQ4Status =
+    SWITCH
+    (
+        TRUE ( ),
+        __totalQ4Target = 0, BLANK ( ),
+        DIVIDE
+        (
+            __totalQ4Actual,
+            __totalQ4Target
+        )
+            < 0.95, "red",
+        DIVIDE
+        (
+            __totalQ4Actual,
+            __totalQ4Target
+        )
+            < 1, "amber",
+        "green"
+    )
+
+
+
+/* ============================================================
+    OPERATIONAL EXCELLENCE COMMENTS HTML
+============================================================  */
+VAR _performanceTable =
+    VAR _row1 =
+        "<tr>
+            <td>Total Enrollments</td>
+            <td>"
+            & "PY '" & FORMAT ( RIGHT ( [Current Fiscal Year], 2 ), "##" )
+            & "</td>
+            <td>"
+            & FORMAT ( __adult1, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( __dw1, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( __youth1, "#,##0" )
+            & "</td>
+            <td class='status'>
+                Overall Status:
+                <span class='dot "
+            & COALESCE ( __overallEnrollStatus, "" )
+            & "'></span>
+            </td>
+        </tr>"
+    VAR _row2 =
+        "<tr>
+            <td>Real-Time Credential</td>
+            <td>"
+            & "PY '" & FORMAT ( RIGHT ( [Current Fiscal Year], 2 ), "##" )
+            & "</td>
+            <td>"
+            & FORMAT ( _adult2, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( _dw2, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( _youth2, "#,##0" )
+            & "</td>
+            <td><span class='dot'></span></td>
+        </tr>"
+    VAR _row3 =
+        "<tr>
+            <td>Q4 % Employment (% Target)</td>
+            <td>"
+            & [Month Display Current]
+            & "</td>
+            <td>"
+            & FORMAT ( _adult2, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( _dw2, "#,##0" )
+            & "</td>
+            <td>"
+            & FORMAT ( _youth2, "#,##0" )
+            & "</td>
+            <td class='status'>
+                Overall Status:
+                <span class='dot "
+            & COALESCE ( __overallQ4Status, "" )
+            & "'></span>
+            </td>
+        </tr>"
+    RETURN
+        "
+    <table class='commentaryTable'>
+        <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Period</th>
+                <th>Adult</th>
+                <th>DW</th>
+                <th>Youth</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            "
+            & _row1
+            & _row2
+            & _row3
+            & "
+        </tbody>
+    </table>
+    "
+
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _selectedProject =
+    SELECTEDVALUE(
+        'Projects'[Project Name]
+    )
+
+VAR _hasSpecificMetrics =
+    COUNTROWS(
+        FILTER(
+            ALL('WIOA Operational Metric Layout'),
+            [ProjectName] = _selectedProject
+        )
+    ) > 0
+
+VAR _projectMetrics =
+    FILTER(
+        ALL('WIOA Operational Metric Layout'),
+        [ProjectName] = _selectedProject
+            || (
+                [ProjectName] = "ALL"
+                    && NOT _hasSpecificMetrics
+            )
+    )
+
+VAR _metricTable =
+    GENERATE(
+        _projectMetrics,
+        VAR _metricKey = [MetricKey]
+
+            VAR _monthPrior2 =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        MonthValue(
+                        [Actuals],
+                        "Individuals Served During Month",
+                        [Month Year Prior 2]
+                        ),
+                    "_dSeekers",
+                        MonthValue(
+                        [Actuals],
+                        "Participants Served During Month (Job Seekers)",
+                        [Month Year Prior 2]
+                        ),
+                    "_dEnrollments",
+                        MonthValue(
+                        [Actuals],
+                        "New Enrollments",
+                        [Month Year Prior 2]
+                        ),
+                    "_dClosures",
+                        MonthValue(
+                        [Actuals],
+                        "Closures",
+                        [Month Year Prior 2]
+                        ),
+                    "_dAppStart",
+                        MonthValue(
+                        [Actuals],
+                        "Apprenticeship Starts",
+                        [Month Year Prior 2]
+                        ),
+                    "_dOjtStart",
+                        MonthValue(
+                        [Actuals],
+                        "OJT Starts",
+                        [Month Year Prior 2]
+                        ),
+                    "_dTrainStart",
+                        MonthValue(
+                        [Actuals],
+                        "Training Starts",
+                        [Month Year Prior 2]
+                        ),
+                    "_dWexStart",
+                        MonthValue(
+                        [Actuals],
+                        "WEX Starts",
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.MonthValue(
+                        [Adult_DW New Enrollments],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.MonthValue(
+                        [Youth New Enrollments],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.MonthValue(
+                        [Adult_DW High Impact Starts],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.MonthValue(
+                        [Youth High Impact Starts],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultDWEmployment",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthPlacement",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment],
+                        [Month Year Prior 2]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior1 =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        MonthValue(
+                        [Actuals],
+                        "Individuals Served During Month",
+                        [Month Year Prior 1]
+                        ),
+                    "_dSeekers",
+                        MonthValue(
+                        [Actuals],
+                        "Participants Served During Month (Job Seekers)",
+                        [Month Year Prior 1]
+                        ),
+                    "_dEnrollments",
+                        MonthValue(
+                        [Actuals],
+                        "New Enrollments",
+                        [Month Year Prior 1]
+                        ),
+                    "_dClosures",
+                        MonthValue(
+                        [Actuals],
+                        "Closures",
+                        [Month Year Prior 1]
+                        ),
+                    "_dAppStart",
+                        MonthValue(
+                        [Actuals],
+                        "Apprenticeship Starts",
+                        [Month Year Prior 1]
+                        ),
+                    "_dOjtStart",
+                        MonthValue(
+                        [Actuals],
+                        "OJT Starts",
+                        [Month Year Prior 1]
+                        ),
+                    "_dTrainStart",
+                        MonthValue(
+                        [Actuals],
+                        "Training Starts",
+                        [Month Year Prior 1]
+                        ),
+                    "_dWexStart",
+                        MonthValue(
+                        [Actuals],
+                        "WEX Starts",
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.MonthValue(
+                        [Adult_DW New Enrollments],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.MonthValue(
+                        [Youth New Enrollments],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.MonthValue(
+                        [Adult_DW High Impact Starts],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.MonthValue(
+                        [Youth High Impact Starts],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultDWEmployment",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthPlacement",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment],
+                        [Month Year Prior 1]
+                        ),
+                    BLANK()
+                )
+
+            VAR _currentMonth =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        MonthValue(
+                        [Actuals],
+                        "Individuals Served During Month",
+                        [Month Year Current]
+                        ),
+                    "_dSeekers",
+                        MonthValue(
+                        [Actuals],
+                        "Participants Served During Month (Job Seekers)",
+                        [Month Year Current]
+                        ),
+                    "_dEnrollments",
+                        MonthValue(
+                        [Actuals],
+                        "New Enrollments",
+                        [Month Year Current]
+                        ),
+                    "_dClosures",
+                        MonthValue(
+                        [Actuals],
+                        "Closures",
+                        [Month Year Current]
+                        ),
+                    "_dAppStart",
+                        MonthValue(
+                        [Actuals],
+                        "Apprenticeship Starts",
+                        [Month Year Current]
+                        ),
+                    "_dOjtStart",
+                        MonthValue(
+                        [Actuals],
+                        "OJT Starts",
+                        [Month Year Current]
+                        ),
+                    "_dTrainStart",
+                        MonthValue(
+                        [Actuals],
+                        "Training Starts",
+                        [Month Year Current]
+                        ),
+                    "_dWexStart",
+                        MonthValue(
+                        [Actuals],
+                        "WEX Starts",
+                        [Month Year Current]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.MonthValue(
+                        [Adult_DW New Enrollments],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.MonthValue(
+                        [Youth New Enrollments],
+                        [Month Year Current]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.MonthValue(
+                        [Adult_DW High Impact Starts],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.MonthValue(
+                        [Youth High Impact Starts],
+                        [Month Year Current]
+                        ),
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG],
+                        [Month Year Current]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG],
+                        [Month Year Current]
+                        ),
+                    "_nvadultDWEmployment",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthPlacement",
+                        FosterBI.MonthValue(
+                        [nan],
+                        [Month Year Current]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment],
+                        [Month Year Current]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment],
+                        [Month Year Current]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior2Target =
+                SWITCH(
+                    _metricKey,
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment Target],
+                        [Month Year Prior 2]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior1Target =
+                SWITCH(
+                    _metricKey,
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment Target],
+                        [Month Year Prior 1]
+                        ),
+                    BLANK()
+                )
+
+            VAR _currentMonthTarget =
+                SWITCH(
+                    _metricKey,
+                    "_nvadultMSG",
+                        FosterBI.MonthValue(
+                        [Adult MSG Target],
+                        [Month Year Current]
+                        ),
+                    "_nvdwMSG",
+                        FosterBI.MonthValue(
+                        [DW MSG Target],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthMSG",
+                        FosterBI.MonthValue(
+                        [Youth MSG Target],
+                        [Month Year Current]
+                        ),
+                    "_nvadultQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Adult Employment Target],
+                        [Month Year Current]
+                        ),
+                    "_nvdwQ2",
+                        FosterBI.MonthValue(
+                        [Q2 DW Employment Target],
+                        [Month Year Current]
+                        ),
+                    "_nvyouthQ2",
+                        FosterBI.MonthValue(
+                        [Q2 Youth Employment Target],
+                        [Month Year Current]
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytd =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        YTDValue(
+                        [Actuals],
+                        "Individuals Served During Month",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dSeekers",
+                        YTDValue(
+                        [Actuals],
+                        "Participants Served During Month (Job Seekers)",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dEnrollments",
+                        YTDValue(
+                        [Actuals],
+                        "New Enrollments",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dClosures",
+                        YTDValue(
+                        [Actuals],
+                        "Closures",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dAppStart",
+                        YTDValue(
+                        [Actuals],
+                        "Apprenticeship Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dOjtStart",
+                        YTDValue(
+                        [Actuals],
+                        "OJT Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dTrainStart",
+                        YTDValue(
+                        [Actuals],
+                        "Training Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dWexStart",
+                        YTDValue(
+                        [Actuals],
+                        "WEX Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.YTDValue(
+                        [Adult_DW New Enrollments],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.YTDValue(
+                        [Youth New Enrollments],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.YTDValue(
+                        [Adult_DW High Impact Starts],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.YTDValue(
+                        [Youth High Impact Starts],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdTarget =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        YTDValue(
+                        [Target],
+                        "Individuals Served During Month",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dSeekers",
+                        YTDValue(
+                        [Target],
+                        "Participants Served During Month (Job Seekers)",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dEnrollments",
+                        YTDValue(
+                        [Target],
+                        "New Enrollments",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dClosures",
+                        YTDValue(
+                        [Target],
+                        "Closures",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dAppStart",
+                        YTDValue(
+                        [Target],
+                        "Apprenticeship Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dOjtStart",
+                        YTDValue(
+                        [Target],
+                        "OJT Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dTrainStart",
+                        YTDValue(
+                        [Target],
+                        "Training Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dWexStart",
+                        YTDValue(
+                        [Target],
+                        "WEX Starts",
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.YTDValue(
+                        [Adult_DW New Enrollments Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.YTDValue(
+                        [Youth New Enrollments Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.YTDValue(
+                        [Adult_DW High Impact Starts Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.YTDValue(
+                        [Youth High Impact Starts Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _pytd =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        PYTDValue(
+                        [Actuals],
+                        "Individuals Served During Month",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dSeekers",
+                        PYTDValue(
+                        [Actuals],
+                        "Participants Served During Month (Job Seekers)",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dEnrollments",
+                        PYTDValue(
+                        [Actuals],
+                        "New Enrollments",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dClosures",
+                        PYTDValue(
+                        [Actuals],
+                        "Closures",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dAppStart",
+                        PYTDValue(
+                        [Actuals],
+                        "Apprenticeship Starts",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dOjtStart",
+                        PYTDValue(
+                        [Actuals],
+                        "OJT Starts",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dTrainStart",
+                        PYTDValue(
+                        [Actuals],
+                        "Training Starts",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dWexStart",
+                        PYTDValue(
+                        [Actuals],
+                        "WEX Starts",
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_nvadultEnrollments",
+                        FosterBI.PYTDValue(
+                        [Adult_DW New Enrollments],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_nvyouthEnrollments",
+                        FosterBI.PYTDValue(
+                        [Youth New Enrollments],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_nvadultActivity",
+                        FosterBI.PYTDValue(
+                        [Adult_DW High Impact Starts],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_nvyouthActivity",
+                        FosterBI.PYTDValue(
+                        [Youth High Impact Starts],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    BLANK()
+                )
+
+            VAR _formatString =
+                SWITCH(
+                    _metricKey,
+                    "_dServed", "#,##0",
+                    "_dSeekers", "#,##0",
+                    "_dEnrollments", "#,##0",
+                    "_dClosures", "#,##0",
+                    "_dAppStart", "#,##0",
+                    "_dOjtStart", "#,##0",
+                    "_dTrainStart", "#,##0",
+                    "_dWexStart", "#,##0",
+                    "_nvadultEnrollments", "#,##0",
+                    "_nvyouthEnrollments", "#,##0",
+                    "_nvadultActivity", "#,##0",
+                    "_nvyouthActivity", "#,##0",
+                    "_nvadultMSG", "#,##0%",
+                    "_nvdwMSG", "#,##0%",
+                    "_nvyouthMSG", "#,##0%",
+                    "_nvadultDWEmployment", "#,##0%",
+                    "_nvyouthPlacement", "#,##0%",
+                    "_nvadultQ2", "#,##0%",
+                    "_nvdwQ2", "#,##0%",
+                    "_nvyouthQ2", "#,##0%",
+                    "#,##0"
+                )
+
+            VAR _isPercent =
+                SWITCH(
+                    _metricKey,
+                    "_dServed", FALSE(),
+                    "_dSeekers", FALSE(),
+                    "_dEnrollments", FALSE(),
+                    "_dClosures", FALSE(),
+                    "_dAppStart", FALSE(),
+                    "_dOjtStart", FALSE(),
+                    "_dTrainStart", FALSE(),
+                    "_dWexStart", FALSE(),
+                    "_nvadultEnrollments", FALSE(),
+                    "_nvyouthEnrollments", FALSE(),
+                    "_nvadultActivity", FALSE(),
+                    "_nvyouthActivity", FALSE(),
+                    "_nvadultMSG", TRUE(),
+                    "_nvdwMSG", TRUE(),
+                    "_nvyouthMSG", TRUE(),
+                    "_nvadultDWEmployment", TRUE(),
+                    "_nvyouthPlacement", TRUE(),
+                    "_nvadultQ2", TRUE(),
+                    "_nvdwQ2", TRUE(),
+                    "_nvyouthQ2", TRUE(),
+                    FALSE()
+                )
+
+            VAR _monthTargetDisplay =
+                SWITCH(
+                    _metricKey,
+                    "_dServed", FALSE(),
+                    "_dSeekers", FALSE(),
+                    "_dEnrollments", FALSE(),
+                    "_dClosures", FALSE(),
+                    "_dAppStart", FALSE(),
+                    "_dOjtStart", FALSE(),
+                    "_dTrainStart", FALSE(),
+                    "_dWexStart", FALSE(),
+                    "_nvadultEnrollments", FALSE(),
+                    "_nvyouthEnrollments", FALSE(),
+                    "_nvadultActivity", FALSE(),
+                    "_nvyouthActivity", FALSE(),
+                    "_nvadultMSG", TRUE(),
+                    "_nvdwMSG", TRUE(),
+                    "_nvyouthMSG", TRUE(),
+                    "_nvadultDWEmployment", FALSE(),
+                    "_nvyouthPlacement", FALSE(),
+                    "_nvadultQ2", TRUE(),
+                    "_nvdwQ2", TRUE(),
+                    "_nvyouthQ2", TRUE(),
+                    FALSE()
+                )
+
+            VAR _ytdRatio =
+                DIVIDE(
+                    _ytd,
+                    _ytdTarget
+                )
+
+            VAR _variance =
+                _ytd - _pytd
+
+            VAR _variancePct =
+                DIVIDE(
+                    _variance,
+                    _pytd
+                )
+
+            VAR _trendIcon =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variance), BLANK(),
+                    _variance > 0, "up",
+                    _variance < 0, "down",
+                    BLANK()
+                )
+
+            VAR _status =
+                SWITCH(
+                    _metricKey,
+                    "_dServed",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dSeekers",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dEnrollments",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dClosures",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dAppStart",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dOjtStart",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dTrainStart",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dWexStart",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_nvadultEnrollments",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_nvyouthEnrollments",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_nvadultActivity",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_nvyouthActivity",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_nvadultMSG",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_nvdwMSG",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_nvyouthMSG",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_nvadultQ2",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_nvdwQ2",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_nvyouthQ2",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdHtml =
+                IF(
+                    ISBLANK(_ytd),
+                    "",
+                    FORMAT(
+                        _ytd,
+                        _formatString
+                    )
+                        & IF(
+                            ISBLANK(_ytdRatio),
+                            "",
+                            " ("
+                                & FORMAT(
+                                    _ytdRatio,
+                                    "0%"
+                                )
+                                & ")"
+                        )
+                )
+
+            VAR _monthPrior2Html =
+                IF(
+                    NOT ISBLANK(_monthPrior2),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior2Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior2,
+                                    _monthPrior2Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _monthPrior1Html =
+                IF(
+                    NOT ISBLANK(_monthPrior1),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior1Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior1,
+                                    _monthPrior1Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _currentMonthHtml =
+                IF(
+                    NOT ISBLANK(_currentMonth),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_currentMonthTarget),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _currentMonth,
+                                    _currentMonthTarget
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _trendHtml =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variancePct), "",
+                    _trendIcon = "up",
+                        "<span class='trend up'>▲ "
+                            & FORMAT(_variancePct, "0.0%")
+                            & "</span>",
+                    _trendIcon = "down",
+                        "<span class='trend down'>▼ "
+                            & FORMAT(ABS(_variancePct), "0.0%")
+                            & "</span>",
+                    FORMAT(_variancePct, "0.0%")
+                )
+
+            VAR _rowHtml =
+                "<tr>"
+                    & "<td class='label'>" & [MetricName] & "</td>"
+                    & "<td class='status'><span class='dot "
+                    & COALESCE(_status, "")
+                    & "'></span></td>"
+                    & "<td class='number'>" & _ytdHtml & "</td>"
+                    & "<td class='number'>" & _monthPrior2Html & "</td>"
+                    & "<td class='number'>" & _monthPrior1Html & "</td>"
+                    & "<td class='number'>" & _currentMonthHtml & "</td>"
+                    & "<td class='number'>" & _trendHtml & "</td>"
+                    & "</tr>"
+
+            RETURN
+                ROW(
+                    "RowHtml", _rowHtml
+                )
+    )
+
+VAR _operationalRows =
+    CONCATENATEX(
+        _metricTable,
+        [RowHtml],
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    IF(
+        NOT HASONEVALUE(
+            'Projects'[Project Name]
+        )
+            || ISEMPTY(_projectMetrics),
+        BLANK(),
+        "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT([Current Fiscal Year], 2), "##") & " YTD</th>
+            <th>" & [Month Display Prior 2] & "</th>
+            <th>" & [Month Display Prior 1] & "</th>
+            <th>" & [Month Display Current] & "</th>
+            <th>" & _trending & "</th>
+          </tr>"
+        & _operationalRows
+        & "
+        </table>
+      </td>
+
+             <td class='right commentbackground'>
+               <div class='commentsheader'>Performance Summary</div>
+               <div class='commentary'>" & _performanceTable & "</div>
+              </td>
+            
+    </tr>
+        "
+    )

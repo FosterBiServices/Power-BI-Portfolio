@@ -1,0 +1,615 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+WECARE Operational Metric Layout =
+DATATABLE(
+    "ProjectName", STRING,
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {"ALL", 13, "Clinical Assessment Completions", "_dCompletions"},
+    {"ALL", 14, "SSI/SSDI Applications Submitted", "_dSubmitted"},
+    {"ALL", 15, "VRS Initiations", "_dVar"},
+    {"ALL", 16, "Day 1 Placements (% Target)", "_dPlacements"},
+    {"ALL", 17, "30-Day Employment Retention (% Target)", "_dEmployment"},
+    {"ALL", 18, "90-Day Employment Retention (% Target)", "_dRetention"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = "YoY Trend"
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _selectedProject =
+    SELECTEDVALUE(
+        'Projects'[Project Name]
+    )
+
+VAR _hasSpecificMetrics =
+    COUNTROWS(
+        FILTER(
+            ALL('WECARE Operational Metric Layout'),
+            [ProjectName] = _selectedProject
+        )
+    ) > 0
+
+VAR _projectMetrics =
+    FILTER(
+        ALL('WECARE Operational Metric Layout'),
+        [ProjectName] = _selectedProject
+            || (
+                [ProjectName] = "ALL"
+                    && NOT _hasSpecificMetrics
+            )
+    )
+
+VAR _metricTable =
+    GENERATE(
+        _projectMetrics,
+        VAR _metricKey = [MetricKey]
+
+            VAR _monthPrior2 =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions",
+                        FosterBI.MonthValue(
+                        [Clinical Assessment Completions],
+                        [Month Year Prior 2]
+                        ),
+                    "_dSubmitted",
+                        FosterBI.MonthValue(
+                        [Scorecard Total SSI Initial and Supplemental Applications],
+                        [Month Year Prior 2]
+                        ),
+                    "_dVar",
+                        FosterBI.MonthValue(
+                        [Scorecard Total VRS Initiation Appointments],
+                        [Month Year Prior 2]
+                        ),
+                    "_dPlacements",
+                        FosterBI.MonthValue(
+                        [Day 1 Placements],
+                        [Month Year Prior 2]
+                        ),
+                    "_dEmployment",
+                        FosterBI.MonthValue(
+                        [30-Day Employment Retention],
+                        [Month Year Prior 2]
+                        ),
+                    "_dRetention",
+                        FosterBI.MonthValue(
+                        [90-Day Employment Retention Target],
+                        [Month Year Prior 2]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior1 =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions",
+                        FosterBI.MonthValue(
+                        [Clinical Assessment Completions],
+                        [Month Year Prior 1]
+                        ),
+                    "_dSubmitted",
+                        FosterBI.MonthValue(
+                        [Scorecard Total SSI Initial and Supplemental Applications],
+                        [Month Year Prior 1]
+                        ),
+                    "_dVar",
+                        FosterBI.MonthValue(
+                        [Scorecard Total VRS Initiation Appointments],
+                        [Month Year Prior 1]
+                        ),
+                    "_dPlacements",
+                        FosterBI.MonthValue(
+                        [Day 1 Placements],
+                        [Month Year Prior 1]
+                        ),
+                    "_dEmployment",
+                        FosterBI.MonthValue(
+                        [30-Day Employment Retention],
+                        [Month Year Prior 1]
+                        ),
+                    "_dRetention",
+                        FosterBI.MonthValue(
+                        [90-Day Employment Retention Target],
+                        [Month Year Prior 1]
+                        ),
+                    BLANK()
+                )
+
+            VAR _currentMonth =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions",
+                        FosterBI.MonthValue(
+                        [Clinical Assessment Completions],
+                        [Month Year Current]
+                        ),
+                    "_dSubmitted",
+                        FosterBI.MonthValue(
+                        [Scorecard Total SSI Initial and Supplemental Applications],
+                        [Month Year Current]
+                        ),
+                    "_dVar",
+                        FosterBI.MonthValue(
+                        [Scorecard Total VRS Initiation Appointments],
+                        [Month Year Current]
+                        ),
+                    "_dPlacements",
+                        FosterBI.MonthValue(
+                        [Day 1 Placements],
+                        [Month Year Current]
+                        ),
+                    "_dEmployment",
+                        FosterBI.MonthValue(
+                        [30-Day Employment Retention],
+                        [Month Year Current]
+                        ),
+                    "_dRetention",
+                        FosterBI.MonthValue(
+                        [90-Day Employment Retention Target],
+                        [Month Year Current]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior2Target = BLANK()
+
+            VAR _monthPrior1Target = BLANK()
+
+            VAR _currentMonthTarget = BLANK()
+
+            VAR _ytd =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions",
+                        FosterBI.YTDValue(
+                        [Clinical Assessment Completions],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dSubmitted",
+                        FosterBI.YTDValue(
+                        [Scorecard Total SSI Initial and Supplemental Applications],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dVar",
+                        FosterBI.YTDValue(
+                        [Scorecard Total VRS Initiation Appointments],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dPlacements",
+                        FosterBI.YTDValue(
+                        [Day 1 Placements],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dEmployment",
+                        FosterBI.YTDValue(
+                        [30-Day Employment Retention],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dRetention",
+                        FosterBI.YTDValue(
+                        [90-Day Employment Retention Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdTarget =
+                SWITCH(
+                    _metricKey,
+                    "_dPlacements",
+                        FosterBI.YTDValue(
+                        [Day 1 Placements Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dEmployment",
+                        FosterBI.YTDValue(
+                        [30-Day Employment Retention],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    "_dRetention",
+                        FosterBI.YTDValue(
+                        [90-Day Employment Retention Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _pytd =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions",
+                        FosterBI.PYTDValue(
+                        [Clinical Assessment Completions],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dSubmitted",
+                        FosterBI.PYTDValue(
+                        [Scorecard Total SSI Initial and Supplemental Applications],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dVar",
+                        FosterBI.PYTDValue(
+                        [Scorecard Total VRS Initiation Appointments],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dPlacements",
+                        FosterBI.PYTDValue(
+                        [Day 1 Placements],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dEmployment",
+                        FosterBI.PYTDValue(
+                        [30-Day Employment Retention],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    "_dRetention",
+                        FosterBI.PYTDValue(
+                        [90-Day Employment Retention Target],
+                        [Current Fiscal Year],
+                        [Prior Fiscal YTD]
+                        ),
+                    BLANK()
+                )
+
+            VAR _formatString =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions", "#,##0",
+                    "_dSubmitted", "#,##0",
+                    "_dVar", "#,##0",
+                    "_dPlacements", "#,##0",
+                    "_dEmployment", "#,##0",
+                    "_dRetention", "#,##0",
+                    "#,##0"
+                )
+
+            VAR _isPercent =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions", FALSE(),
+                    "_dSubmitted", FALSE(),
+                    "_dVar", FALSE(),
+                    "_dPlacements", FALSE(),
+                    "_dEmployment", FALSE(),
+                    "_dRetention", FALSE(),
+                    FALSE()
+                )
+
+            VAR _monthTargetDisplay =
+                SWITCH(
+                    _metricKey,
+                    "_dCompletions", FALSE(),
+                    "_dSubmitted", FALSE(),
+                    "_dVar", FALSE(),
+                    "_dPlacements", FALSE(),
+                    "_dEmployment", FALSE(),
+                    "_dRetention", FALSE(),
+                    FALSE()
+                )
+
+            VAR _ytdRatio =
+                DIVIDE(
+                    _ytd,
+                    _ytdTarget
+                )
+
+            VAR _variance =
+                _ytd - _pytd
+
+            VAR _variancePct =
+                DIVIDE(
+                    _variance,
+                    _pytd
+                )
+
+            VAR _trendIcon =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variance), BLANK(),
+                    _variance > 0, "up",
+                    _variance < 0, "down",
+                    BLANK()
+                )
+
+            VAR _status =
+                SWITCH(
+                    _metricKey,
+                    "_dPlacements",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio <= 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dEmployment",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio <= 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dRetention",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio <= 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdHtml =
+                IF(
+                    ISBLANK(_ytd),
+                    "",
+                    FORMAT(
+                        _ytd,
+                        _formatString
+                    )
+                        & IF(
+                            ISBLANK(_ytdRatio),
+                            "",
+                            " ("
+                                & FORMAT(
+                                    _ytdRatio,
+                                    "0%"
+                                )
+                                & ")"
+                        )
+                )
+
+            VAR _monthPrior2Html =
+                IF(
+                    NOT ISBLANK(_monthPrior2),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior2Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior2,
+                                    _monthPrior2Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _monthPrior1Html =
+                IF(
+                    NOT ISBLANK(_monthPrior1),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior1Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior1,
+                                    _monthPrior1Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _currentMonthHtml =
+                IF(
+                    NOT ISBLANK(_currentMonth),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_currentMonthTarget),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _currentMonth,
+                                    _currentMonthTarget
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _trendHtml =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variancePct), "",
+                    _trendIcon = "up",
+                        "<span class='trend up'>▲ "
+                            & FORMAT(_variancePct, "0.0%")
+                            & "</span>",
+                    _trendIcon = "down",
+                        "<span class='trend down'>▼ "
+                            & FORMAT(ABS(_variancePct), "0.0%")
+                            & "</span>",
+                    FORMAT(_variancePct, "0.0%")
+                )
+
+            VAR _rowHtml =
+                "<tr>"
+                    & "<td class='label'>" & [MetricName] & "</td>"
+                    & "<td class='status'><span class='dot "
+                    & COALESCE(_status, "")
+                    & "'></span></td>"
+                    & "<td class='number'>" & _ytdHtml & "</td>"
+                    & "<td class='number'>" & _monthPrior2Html & "</td>"
+                    & "<td class='number'>" & _monthPrior1Html & "</td>"
+                    & "<td class='number'>" & _currentMonthHtml & "</td>"
+                    & "<td class='number'>" & _trendHtml & "</td>"
+                    & "</tr>"
+
+            RETURN
+                ROW(
+                    "RowHtml", _rowHtml
+                )
+    )
+
+VAR _operationalRows =
+    CONCATENATEX(
+        _metricTable,
+        [RowHtml],
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    IF(
+        NOT HASONEVALUE(
+            'Projects'[Project Name]
+        )
+            || ISEMPTY(_projectMetrics),
+        BLANK(),
+        "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT([Current Fiscal Year], 2), "##") & " YTD</th>
+            <th>" & [Month Display Prior 2] & "</th>
+            <th>" & [Month Display Prior 1] & "</th>
+            <th>" & [Month Display Current] & "</th>
+            <th>" & _trending & "</th>
+          </tr>"
+        & _operationalRows
+        & "
+        </table>
+      </td>
+
+         <td class='right commentbackground'>
+           <div class='commentsheader'></div>
+           <div class='commentary'></div>
+          </td>
+        
+    </tr>
+        "
+    )
