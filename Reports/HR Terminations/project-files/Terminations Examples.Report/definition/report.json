@@ -120,66 +120,9 @@
     ]
   },
   "publicCustomVisuals": [
-    "PBI_CV_FFFE680D_D220_4F62_B16C_C7B5C5732654",
-    "WordCloud1447959067750",
     "htmlContent443BE3AD55E043BF878BED274D3A6855"
   ],
   "resourcePackages": [
-    {
-      "name": "bciCalendarCC0FA2BFE4B54EE1ACCFE383B9B1DE61",
-      "type": "CustomVisual",
-      "items": [
-        {
-          "name": "resources/bciCalendarCC0FA2BFE4B54EE1ACCFE383B9B1DE61.pbiviz.json",
-          "path": "bciCalendarCC0FA2BFE4B54EE1ACCFE383B9B1DE61.pbiviz.json",
-          "type": "CustomVisualMetadata"
-        }
-      ]
-    },
-    {
-      "name": "comicgen1058F16C30B888F41E2AE146D059FD5ACEE",
-      "type": "CustomVisual",
-      "items": [
-        {
-          "name": "resources/comicgen1058F16C30B888F41E2AE146D059FD5ACEE.pbiviz.json",
-          "path": "comicgen1058F16C30B888F41E2AE146D059FD5ACEE.pbiviz.json",
-          "type": "CustomVisualMetadata"
-        }
-      ]
-    },
-    {
-      "name": "payPalKPIDonutChart55A431AB15A540ED924ACD72ED8D259F",
-      "type": "CustomVisual",
-      "items": [
-        {
-          "name": "resources/payPalKPIDonutChart55A431AB15A540ED924ACD72ED8D259F.pbiviz.json",
-          "path": "payPalKPIDonutChart55A431AB15A540ED924ACD72ED8D259F.pbiviz.json",
-          "type": "CustomVisualMetadata"
-        }
-      ]
-    },
-    {
-      "name": "swDataTextBox142233AC1451461DB2DC3DAACF6A119C",
-      "type": "CustomVisual",
-      "items": [
-        {
-          "name": "resources/swDataTextBox142233AC1451461DB2DC3DAACF6A119C.pbiviz.json",
-          "path": "swDataTextBox142233AC1451461DB2DC3DAACF6A119C.pbiviz.json",
-          "type": "CustomVisualMetadata"
-        }
-      ]
-    },
-    {
-      "name": "textFilter25A4896A83E0487089E2B90C9AE57C8A",
-      "type": "CustomVisual",
-      "items": [
-        {
-          "name": "resources/textFilter25A4896A83E0487089E2B90C9AE57C8A.pbiviz.json",
-          "path": "textFilter25A4896A83E0487089E2B90C9AE57C8A.pbiviz.json",
-          "type": "CustomVisualMetadata"
-        }
-      ]
-    },
     {
       "name": "SharedResources",
       "type": "SharedResources",
