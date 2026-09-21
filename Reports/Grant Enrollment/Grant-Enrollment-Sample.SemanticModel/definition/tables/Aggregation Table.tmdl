@@ -1,0 +1,30 @@
+/// Single-column parameter table containing the two aggregation options: 'Total' and 'Monthly'. Used as a slicer to switch all charts and measures between cumulative (up-to-selected-month) and point-in-time (selected-month-only) views via the ApplyPeriod calculation group.
+table 'Aggregation Table'
+	lineageTag: 8492ea3a-dbd8-4dad-8c57-e938d8f22b77
+
+	/// The aggregation period option displayed in the slicer (e.g. 'Monthly', 'Total'). Selecting one drives the ApplyPeriod calculation group to switch all Switch measures between their monthly and cumulative variants.
+	column Aggregation
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: f7f072ab-8db2-453b-805b-95fb7eb42144
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Aggregation]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Aggregation Table' = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Aggregation", STRING, 
+				    {
+				        {"Total"}, 
+				        {"Monthly"}
+				    }
+				)
+				```
+
+	annotation PBI_Id = 154da0b51e9e48cc98cd6a047f0136ff
+

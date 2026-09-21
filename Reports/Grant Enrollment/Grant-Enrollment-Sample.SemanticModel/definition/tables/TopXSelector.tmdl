@@ -1,0 +1,25 @@
+/// TopXSelector is used to control number of objects shown in various visuals throughout the report.
+table TopXSelector
+	lineageTag: 261d9846-3531-4837-a4fa-31595e386465
+
+	/// Numeric Top N selector value used to control the number of items displayed in ranking visuals.
+	column Value
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8492d916-16a7-4c82-9353-a80ced47f077
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TopXSelector = calculated
+		mode: import
+		source = ```
+				GENERATESERIES(1, 10, 1)
+				
+				```
+
+	annotation PBI_Id = ff74c583a76545f3bffe8da50afd822a
+

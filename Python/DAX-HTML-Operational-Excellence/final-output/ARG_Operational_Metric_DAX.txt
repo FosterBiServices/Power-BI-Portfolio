@@ -1,0 +1,574 @@
+/* ============================================================
+   METRIC LAYOUT TABLE
+   ============================================================ */
+
+ARG Operational Metric Layout =
+DATATABLE(
+    "ProjectName", STRING,
+    "SortOrder", INTEGER,
+    "MetricName", STRING,
+    "MetricKey", STRING,
+{
+    {"ALL", 19, "CO Determinations (% Target)", "_dCOdeterminations"},
+    {"ALL", 20, "CO TAT (Application Review)", "_dCOtatApplicationReview"},
+    {"ALL", 21, "CO Avg Days Ahead of Target", "_dCOavgDaysAheadOfTarget"},
+    {"ALL", 22, "PA TAT (Application Review)", "_dPAtatApplicationReview"},
+    {"ALL", 23, "PA Avg Days Ahead of Target", "_dPAavgDaysAheadOfTarget"}
+}
+)
+
+/* ============================================================
+   TREND COLUMN VARIABLE
+   ============================================================ */
+
+VAR _trending = " "
+
+/* ============================================================
+   DYNAMIC HTML CREATION
+   ============================================================ */
+VAR _selectedProject =
+    SELECTEDVALUE(
+        'Projects'[Project Name]
+    )
+
+VAR _hasSpecificMetrics =
+    COUNTROWS(
+        FILTER(
+            ALL('ARG Operational Metric Layout'),
+            [ProjectName] = _selectedProject
+        )
+    ) > 0
+
+VAR _projectMetrics =
+    FILTER(
+        ALL('ARG Operational Metric Layout'),
+        [ProjectName] = _selectedProject
+            || (
+                [ProjectName] = "ALL"
+                    && NOT _hasSpecificMetrics
+            )
+    )
+
+VAR _metricTable =
+    GENERATE(
+        _projectMetrics,
+        VAR _metricKey = [MetricKey]
+
+            VAR _monthPrior2 =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        FosterBI.MonthValue(
+                        [Determinations],
+                        [Month Year Prior 2]
+                        ),
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Prior 2]
+                        ),
+                    "_dCOavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Prior 2]
+                        )) - (FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Prior 2]
+                        )),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Prior 2]
+                        ),
+                    "_dPAavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Prior 2]
+                        )) - (FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Prior 2]
+                        )),
+                    BLANK()
+                )
+
+            VAR _monthPrior1 =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        FosterBI.MonthValue(
+                        [Determinations],
+                        [Month Year Prior 1]
+                        ),
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Prior 1]
+                        ),
+                    "_dCOavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Prior 1]
+                        )) - (FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Prior 1]
+                        )),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Prior 1]
+                        ),
+                    "_dPAavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Prior 1]
+                        )) - (FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Prior 1]
+                        )),
+                    BLANK()
+                )
+
+            VAR _currentMonth =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        FosterBI.MonthValue(
+                        [Determinations],
+                        [Month Year Current]
+                        ),
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Current]
+                        ),
+                    "_dCOavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Current]
+                        )) - (FosterBI.MonthValue(
+                        [CO Avg Processing Time],
+                        [Month Year Current]
+                        )),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Current]
+                        ),
+                    "_dPAavgDaysAheadOfTarget",
+                        (FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Current]
+                        )) - (FosterBI.MonthValue(
+                        [PA Avg Processing Time],
+                        [Month Year Current]
+                        )),
+                    BLANK()
+                )
+
+            VAR _monthPrior2Target =
+                SWITCH(
+                    _metricKey,
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Prior 2]
+                        ),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Prior 2]
+                        ),
+                    BLANK()
+                )
+
+            VAR _monthPrior1Target =
+                SWITCH(
+                    _metricKey,
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Prior 1]
+                        ),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Prior 1]
+                        ),
+                    BLANK()
+                )
+
+            VAR _currentMonthTarget =
+                SWITCH(
+                    _metricKey,
+                    "_dCOtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [CO Avg Processing Time Target],
+                        [Month Year Current]
+                        ),
+                    "_dPAtatApplicationReview",
+                        FosterBI.MonthValue(
+                        [PA Avg Processing Time Target],
+                        [Month Year Current]
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytd =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        FosterBI.YTDValue(
+                        [Determinations],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdTarget =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        FosterBI.YTDValue(
+                        [Determinations Target],
+                        [Current Fiscal Year],
+                        [Current Month Sort]
+                        ),
+                    BLANK()
+                )
+
+            VAR _pytd = BLANK()
+
+            VAR _formatString =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations", "#,##0",
+                    "_dCOtatApplicationReview", "#,##0",
+                    "_dCOavgDaysAheadOfTarget", "#,##0",
+                    "_dPAtatApplicationReview", "#,##0",
+                    "_dPAavgDaysAheadOfTarget", "#,##0",
+                    "#,##0"
+                )
+
+            VAR _isPercent =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations", FALSE(),
+                    "_dCOtatApplicationReview", FALSE(),
+                    "_dCOavgDaysAheadOfTarget", FALSE(),
+                    "_dPAtatApplicationReview", FALSE(),
+                    "_dPAavgDaysAheadOfTarget", FALSE(),
+                    FALSE()
+                )
+
+            VAR _monthTargetDisplay =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations", FALSE(),
+                    "_dCOtatApplicationReview", FALSE(),
+                    "_dCOavgDaysAheadOfTarget", FALSE(),
+                    "_dPAtatApplicationReview", FALSE(),
+                    "_dPAavgDaysAheadOfTarget", FALSE(),
+                    FALSE()
+                )
+
+            VAR _ytdRatio =
+                DIVIDE(
+                    _ytd,
+                    _ytdTarget
+                )
+
+            VAR _variance =
+                _ytd - _pytd
+
+            VAR _variancePct =
+                DIVIDE(
+                    _variance,
+                    _pytd
+                )
+
+            VAR _trendIcon =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variance), BLANK(),
+                    _variance > 0, "up",
+                    _variance < 0, "down",
+                    BLANK()
+                )
+
+            VAR _status =
+                SWITCH(
+                    _metricKey,
+                    "_dCOdeterminations",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_ytd) || ISBLANK(_ytdTarget), BLANK(),
+                            _ytdRatio < 0.95, "red",
+                            _ytdRatio < 1, "amber",
+                            "green"
+                        ),
+                    "_dCOtatApplicationReview",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    "_dPAtatApplicationReview",
+                        SWITCH(
+                            TRUE(),
+                            ISBLANK(_currentMonth) || ISBLANK(_currentMonthTarget), BLANK(),
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 0.95, "red",
+                            DIVIDE(_currentMonth, _currentMonthTarget) < 1, "amber",
+                            "green"
+                        ),
+                    BLANK()
+                )
+
+            VAR _ytdHtml =
+                IF(
+                    ISBLANK(_ytd),
+                    "",
+                    FORMAT(
+                        _ytd,
+                        _formatString
+                    )
+                        & IF(
+                            ISBLANK(_ytdRatio),
+                            "",
+                            " ("
+                                & FORMAT(
+                                    _ytdRatio,
+                                    "0%"
+                                )
+                                & ")"
+                        )
+                )
+
+            VAR _monthPrior2Html =
+                IF(
+                    NOT ISBLANK(_monthPrior2),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior2Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior2,
+                                    _monthPrior2Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior2,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior2,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _monthPrior1Html =
+                IF(
+                    NOT ISBLANK(_monthPrior1),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_monthPrior1Target),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _monthPrior1,
+                                    _monthPrior1Target
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _monthPrior1,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _monthPrior1,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _currentMonthHtml =
+                IF(
+                    NOT ISBLANK(_currentMonth),
+                    IF(
+                        _monthTargetDisplay
+                            && NOT ISBLANK(_currentMonthTarget),
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                            & " ("
+                            & FORMAT(
+                                DIVIDE(
+                                    _currentMonth,
+                                    _currentMonthTarget
+                                ),
+                                "0%"
+                            )
+                            & ")",
+                        IF(
+                            _isPercent,
+                            FORMAT(
+                                _currentMonth,
+                                SUBSTITUTE(_formatString, "%", "")
+                            )
+                                & "%"
+                            ,
+                            FORMAT(
+                                _currentMonth,
+                                _formatString
+                            )
+                        )
+                    ),
+                    ""
+                )
+
+            VAR _trendHtml =
+                SWITCH(
+                    TRUE(),
+                    ISBLANK(_variancePct), "",
+                    _trendIcon = "up",
+                        "<span class='trend up'>▲ "
+                            & FORMAT(_variancePct, "0.0%")
+                            & "</span>",
+                    _trendIcon = "down",
+                        "<span class='trend down'>▼ "
+                            & FORMAT(ABS(_variancePct), "0.0%")
+                            & "</span>",
+                    FORMAT(_variancePct, "0.0%")
+                )
+
+            VAR _rowHtml =
+                "<tr>"
+                    & "<td class='label'>" & [MetricName] & "</td>"
+                    & "<td class='status'><span class='dot "
+                    & COALESCE(_status, "")
+                    & "'></span></td>"
+                    & "<td class='number'>" & _ytdHtml & "</td>"
+                    & "<td class='number'>" & _monthPrior2Html & "</td>"
+                    & "<td class='number'>" & _monthPrior1Html & "</td>"
+                    & "<td class='number'>" & _currentMonthHtml & "</td>"
+                    & "<td class='number'>" & _trendHtml & "</td>"
+                    & "</tr>"
+
+            RETURN
+                ROW(
+                    "RowHtml", _rowHtml
+                )
+    )
+
+VAR _operationalRows =
+    CONCATENATEX(
+        _metricTable,
+        [RowHtml],
+        "",
+        [SortOrder],
+        ASC
+    )
+
+RETURN
+    IF(
+        NOT HASONEVALUE(
+            'Projects'[Project Name]
+        )
+            || ISEMPTY(_projectMetrics),
+        BLANK(),
+        "
+    <!-- OPERATIONAL EXCELLENCE -->
+    <tr>
+      <td colspan='6' class='header'>
+        Operational Excellence
+      </td>
+    </tr>
+    <tr>
+      <td class='left'>
+        <table class='metric'>
+          <colgroup>
+            <col style='width:34%'>
+            <col style='width:3%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+            <col style='width:12.6%'>
+          </colgroup>
+          <tr class='subheader'>
+            <th></th>
+            <th></th>
+            <th>PY '" & FORMAT(RIGHT([Current Fiscal Year], 2), "##") & " YTD</th>
+            <th>" & [Month Display Prior 2] & "</th>
+            <th>" & [Month Display Prior 1] & "</th>
+            <th>" & [Month Display Current] & "</th>
+            <th>" & _trending & "</th>
+          </tr>"
+        & _operationalRows
+        & "
+        </table>
+      </td>
+
+         <td class='right commentbackground'>
+           <div class='commentsheader'></div>
+           <div class='commentary'></div>
+          </td>
+        
+    </tr>
+        "
+    )

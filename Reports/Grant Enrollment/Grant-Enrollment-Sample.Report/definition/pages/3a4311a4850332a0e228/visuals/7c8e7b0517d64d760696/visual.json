@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "7c8e7b0517d64d760696",
+  "position": {
+    "x": 13.808290155440416,
+    "y": 202.87564766839378,
+    "z": 6000,
+    "height": 50.984455958549226,
+    "width": 251.7357512953368,
+    "tabOrder": 9000
+  },
+  "visualGroup": {
+    "displayName": "Num Selector",
+    "groupMode": "ScaleMode"
+  }
+}

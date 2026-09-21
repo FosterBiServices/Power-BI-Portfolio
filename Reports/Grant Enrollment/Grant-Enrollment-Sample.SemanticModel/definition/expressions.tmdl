@@ -1,0 +1,68 @@
+expression ActivityCodes = ```
+		let
+		  Source = Excel.Workbook(File.Contents("C:\Users\StevenFoster\Downloads\Grant Enrollment Sample Data.xlsx"), true, true),
+		  PromoteHeaders = Source{[Item = "Activity Codes", Kind = "Sheet"]}[Data],  
+		  TypePairs = {
+		    {"Activity Code Name", type text}, 
+		    {"Reporting Category", type text}, 
+		    {"Code", type text}
+		  }, 
+		  ExistingCols = Table.ColumnNames(
+		    PromoteHeaders
+		  ), 
+		  TypePairsExistingOnly = List.Select(
+		    TypePairs, 
+		    each List.Contains(
+		      ExistingCols, 
+		      _{0}
+		    )
+		  ), 
+		  ChangeTypes
+		    = Table.TransformColumnTypes(
+		    PromoteHeaders, 
+		    TypePairsExistingOnly
+		  ),
+		  AddedSort = Table.AddColumn(ChangeTypes, "CATEGORY SORT", 
+		    each if [REPORTING CATEGORY] = "Housekeeping" then 10
+		      else if [REPORTING CATEGORY] = "Basic Career Service (Self-Service)" then 20
+		      else if [REPORTING CATEGORY] = "Basic Career Service (Staff-Assisted)" then 30
+		      else if [REPORTING CATEGORY] = "Individualized Career Service" then 40
+		      else if [REPORTING CATEGORY] = "Training Service" then 50
+		      else if [REPORTING CATEGORY] = "Youth Training Service" then 60
+		      else if [REPORTING CATEGORY] = "Supportive Service" then 70
+		      else if [REPORTING CATEGORY] = "Dislocated Worker Grants" then 80
+		      else if [REPORTING CATEGORY] = "Youth Service" then 90
+		      else if [REPORTING CATEGORY] = "Follow-up" then 100
+		    else 200, Int64.Type)
+		in
+		    AddedSort
+		```
+	lineageTag: c228a1b4-a997-4af4-84c9-f3ae87af658f
+	queryGroup: Helper
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression AssessmentQuestions = ```
+		let
+		  Source = Excel.Workbook(
+		    Web.Contents(
+		      "https://apmus.sharepoint.com/sites/DataandInsights/Shared%20Documents/Power%20BI%20Source%20Files/DOR-AJCC%20Collab/AssessmentQuestions.xlsx"
+		    ), 
+		    null, 
+		    true
+		  ),
+		    Sheet1_Sheet = Source{[Item="Questions",Kind="Sheet"]}[Data],
+		    PromoteHeaders = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+		    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders,{{"Question", type text}, {"Section", type text}, {"QuestionText", type text}, {"Description", type text}, {"Question Number", Int64.Type}})
+		in 
+		    ChangeTypes
+		```
+	lineageTag: 09188f43-ee28-4236-884b-288ebecfd37c
+	queryGroup: Helper
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

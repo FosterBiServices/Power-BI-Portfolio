@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "317d2841c2e9c3105ea7",
+  "displayName": "Enrollment Trend TT",
+  "displayOption": "ActualSize",
+  "height": 360,
+  "width": 250,
+  "visibility": "HiddenInViewMode",
+  "type": "Tooltip"
+}

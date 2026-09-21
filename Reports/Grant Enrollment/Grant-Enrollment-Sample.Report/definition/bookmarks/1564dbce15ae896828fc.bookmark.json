@@ -1,0 +1,42 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Survey Hide Navigation",
+  "name": "1564dbce15ae896828fc",
+  "options": {
+    "targetVisualNames": [
+      "4bd1008dd163b9d19ee8"
+    ],
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "2b5d7300ea16a60e42db",
+    "sections": {
+      "2b5d7300ea16a60e42db": {
+        "visualContainers": {},
+        "visualContainerGroups": {
+          "5a68480a25c01c41cc6b": {
+            "isHidden": true
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
