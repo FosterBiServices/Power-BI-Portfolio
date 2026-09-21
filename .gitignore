@@ -2,7 +2,6 @@
 # Power BI
 # -------------------------
 
-*.pbix
 *.pbit
 *.pbix.lock
 
