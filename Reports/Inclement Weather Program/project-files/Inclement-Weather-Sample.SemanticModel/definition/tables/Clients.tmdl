@@ -1,0 +1,157 @@
+/// Consolidated client dimension containing identifying, demographic, and matching information used to relate client records across census, demographics, community, HMIS, and program datasets.
+table Clients
+	lineageTag: a99ef001-6500-490a-8529-ee3a444270c5
+
+	/// Source system or process from which the client record originated.
+	column SOURCE
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 518f5174-7176-4d24-87c9-92c205afd302
+		summarizeBy: none
+		sourceColumn: SOURCE
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Client age in years.
+	column AGE
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 1e3ff694-97d7-4de2-b5fc-8789e850ea96
+		summarizeBy: none
+		sourceColumn: AGE
+
+		annotation SummarizationSetBy = User
+
+	/// Census-specific unique identifier for the client record.
+	column 'Census UID'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 7a37f670-e690-4c26-85ef-0af58b031242
+		summarizeBy: none
+		sourceColumn: Census UID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Demographics-specific unique identifier for the client record.
+	column 'Demographics UID'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: f9f4194f-6c62-430c-a079-bae49b5e92df
+		summarizeBy: none
+		sourceColumn: Demographics UID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Community-specific unique identifier for the client record.
+	column 'Community UID'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: dd1e7d5f-b2a3-47ae-8d19-b0a45dd1d268
+		summarizeBy: none
+		sourceColumn: Community UID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Client full name or display name used in reporting.
+	column CLIENT
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: ec5629bd-0fa9-4d77-80d2-940ce686359c
+		summarizeBy: none
+		sourceColumn: CLIENT
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Client first name as recorded in the source system.
+	column 'FIRST NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 27762359-7de8-4e6d-b6f4-b0c36b7d80c3
+		summarizeBy: none
+		sourceColumn: FIRST NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Client last name as recorded in the source system.
+	column 'LAST NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 67b5959e-5fa5-4d0e-bd1c-e2cd3d023633
+		summarizeBy: none
+		sourceColumn: LAST NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Client date of birth as recorded in the source system.
+	column 'BIRTH DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: ce4bfcfd-8058-4d49-a15f-dc4745c0dffc
+		summarizeBy: none
+		sourceColumn: BIRTH DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Cleaned first name used for matching, deduplication, or data quality review.
+	column First_Cleaned
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: af527eb1-889e-4915-bc2e-5d6ae39d15d1
+		summarizeBy: none
+		sourceColumn: First_Cleaned
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Cleaned last name used for matching, deduplication, or data quality review.
+	column Last_Cleaned
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 21a56c00-cb42-49c3-a1ec-22798283c9fd
+		summarizeBy: none
+		sourceColumn: Last_Cleaned
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'UNIQUE IDENTIFIER NUMBER'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 006b52c9-c1f1-45c7-894d-88bac7aacda5
+		summarizeBy: none
+		sourceColumn: UNIQUE IDENTIFIER NUMBER
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Clients = m
+		mode: import
+		queryGroup: Report
+		source =
+				let
+				
+				  // Data Source
+				  Source = stage_Clients
+				
+				// Result
+				in
+				
+				  // Data Source
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

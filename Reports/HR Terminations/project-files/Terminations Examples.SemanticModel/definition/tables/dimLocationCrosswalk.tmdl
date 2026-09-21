@@ -1,0 +1,64 @@
+table dimLocationCrosswalk
+	lineageTag: bef1024d-bcd6-496a-8911-b3ccc54fc035
+
+	column 'WORKLOC CODE'
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: a55ad526-49f3-4b26-b0fb-031a849da59e
+		summarizeBy: none
+		sourceColumn: WORKLOC CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Related Project'
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: f032a8d3-c7d4-442d-88c0-832f454d6f74
+		summarizeBy: none
+		sourceColumn: Related Project
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimLocationCrosswalk = m
+		mode: import
+		source = ```
+				let
+				
+				  // Data Source
+				  Source = Excel.Workbook(
+				    File.Contents(
+				      "C:\Users\Foster\Downloads\Termination-Report-Sample-Data.xlsx"
+				    ), 
+				    true, 
+				    true
+				  ), 
+				  _data = Source
+				    {
+				      [
+				        Item = "locationCrosswalk", 
+				        Kind = "Sheet"
+				      ]
+				    }
+				    [Data], 
+				  TypePairs = {
+				    {"WORKLOC CODE", Int64.Type}, 
+				    {"Related Project", Int64.Type}
+				  }, 
+				  ChangeTypes = fxColumnTyping(
+				    _data, 
+				    TypePairs
+				  )
+				
+				// Result
+				in
+				  ChangeTypes
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY25SU12",
+      "reportVersionAtImport": {
+        "visual": "2.5.0",
+        "report": "3.1.0",
+        "page": "2.3.0"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "FOSTER_BI_SERVICES9286480894837436.json",
+      "reportVersionAtImport": {
+        "visual": "2.8.0",
+        "report": "3.2.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Middle'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY25SU12",
+          "path": "BaseThemes/CY25SU12.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Ani's_Collab_Page_Navigation5769649798875959.png",
+          "path": "Ani's_Collab_Page_Navigation5769649798875959.png",
+          "type": "Image"
+        },
+        {
+          "name": "Ani's_Collab_Page_Navigation7179638241812788.png",
+          "path": "Ani's_Collab_Page_Navigation7179638241812788.png",
+          "type": "Image"
+        },
+        {
+          "name": "Ani's_Collab_Page_Navigation7183586940050004.png",
+          "path": "Ani's_Collab_Page_Navigation7183586940050004.png",
+          "type": "Image"
+        },
+        {
+          "name": "Ani's_Collab_Page_Navigation8448429373248474.png",
+          "path": "Ani's_Collab_Page_Navigation8448429373248474.png",
+          "type": "Image"
+        },
+        {
+          "name": "carbon_close-filled8368103904704426.png",
+          "path": "carbon_close-filled8368103904704426.png",
+          "type": "Image"
+        },
+        {
+          "name": "Co-Enollment32714689308188205.png",
+          "path": "Co-Enollment32714689308188205.png",
+          "type": "Image"
+        },
+        {
+          "name": "collaboration5849615071194451.png",
+          "path": "collaboration5849615071194451.png",
+          "type": "Image"
+        },
+        {
+          "name": "Filter_Navigation5346226128683677.png",
+          "path": "Filter_Navigation5346226128683677.png",
+          "type": "Image"
+        },
+        {
+          "name": "FOSTER_BI_SERVICES9286480894837436.json",
+          "path": "FOSTER_BI_SERVICES9286480894837436.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "Grant_Enrollment_-_Enrollments1273864590922711.svg",
+          "path": "Grant_Enrollment_-_Enrollments1273864590922711.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Grant_Enrollment_-_Exits02782129829510993.svg",
+          "path": "Grant_Enrollment_-_Exits02782129829510993.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Grant_Enrollment_-_Localizatio5957984865131595.svg",
+          "path": "Grant_Enrollment_-_Localizatio5957984865131595.svg",
+          "type": "Image"
+        },
+        {
+          "name": "Grant_Enrollment_-_Services7877630391643943.svg",
+          "path": "Grant_Enrollment_-_Services7877630391643943.svg",
+          "type": "Image"
+        },
+        {
+          "name": "hamburger_menu1320580969177817.png",
+          "path": "hamburger_menu1320580969177817.png",
+          "type": "Image"
+        },
+        {
+          "name": "up_close34546046588759405.png",
+          "path": "up_close34546046588759405.png",
+          "type": "Image"
+        },
+        {
+          "name": "Visual_Selections7597104990573108.png",
+          "path": "Visual_Selections7597104990573108.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

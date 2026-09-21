@@ -1,0 +1,121 @@
+table Headcount
+	lineageTag: 5626a61c-0c61-4f11-b21a-fcee4e2222a7
+
+	column Headcount
+		dataType: int64
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: c4267f12-b156-4a68-ae89-907774f97196
+		summarizeBy: none
+		sourceColumn: Headcount
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Headcount Percentage'
+		dataType: double
+		displayFolder: TableColumns
+		lineageTag: 033c89df-a349-45c1-a930-f68ac92343a9
+		summarizeBy: none
+		sourceColumn: Headcount Percentage
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'WORKLOC CODE'
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: d38f85a7-b905-4a9a-8af4-5642ad336735
+		summarizeBy: none
+		sourceColumn: WORKLOC CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		displayFolder: TableColumns
+		lineageTag: 4474d0fc-803e-4680-a0c8-1de8760f6edc
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Month
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 776cae4b-2dea-4d52-884b-0254cdaadc8e
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: 1aee6bcd-5e3e-4835-b1c8-05a35037d577
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'WORK LOCATION NAME'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 5f51fb7d-d441-4db7-97ae-5e3fadf37c12
+		summarizeBy: none
+		sourceColumn: WORK LOCATION NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Headcount = m
+		mode: import
+		source = ```
+				let
+				
+				  // Data Source
+				  Source = Excel.Workbook(
+				    File.Contents(
+				      "C:\Users\Foster\Downloads\Termination-Report-Sample-Data.xlsx"
+				    ), 
+				    true, 
+				    true
+				  ), 
+				  _data = Source
+				    {
+				      [
+				        Item = "Headount", 
+				        Kind = "Sheet"
+				      ]
+				    }
+				    [Data], 
+				  TypePairs = {
+				    {"Date", type date}, 
+				    {"Year", Int64.Type}, 
+				    {
+				      "Headcount Percentage", 
+				      type number
+				    }, 
+				    {"Headcount", Int64.Type}, 
+				    {"WORKLOC CODE", Int64.Type}
+				  }, 
+				  ChangeTypes = fxColumnTyping(
+				    _data, 
+				    TypePairs
+				  )
+				
+				// Result
+				in
+				  ChangeTypes
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,38 @@
+EVALUATE
+	SELECTCOLUMNS(
+		TOPN(
+			1000,
+			'ServicesProvided',
+			'ServicesProvided'[OFFICE],
+			ASC
+		),
+		'ServicesProvided'[OFFICE],
+		'ServicesProvided'[SERVICE],
+		'ServicesProvided'[COMPLETION STATUS],
+		'ServicesProvided'[PROGRAM],
+		'ServicesProvided'[PROVIDER],
+		'ServicesProvided'[CREATE DATE],
+		'ServicesProvided'[ACTUAL BEGIN DATE],
+		'ServicesProvided'[PROJECTED BEGIN DATE],
+		'ServicesProvided'[ACTUAL END DATE],
+		'ServicesProvided'[PROJECTED END DATE],
+		'ServicesProvided'[REGISTERED APPRENTICESHIP],
+		'ServicesProvided'[HISPANIC],
+		'ServicesProvided'[COMMENTS],
+		'ServicesProvided'[USER ID],
+		'ServicesProvided'[OFFICE OF RESPONSIBILITY],
+		'ServicesProvided'[NAICS],
+		'ServicesProvided'[ONET],
+		'ServicesProvided'[TYPE OF APPRENTICESHIP],
+		'ServicesProvided'[REGION LWDB],
+		'ServicesProvided'[MOST RECENT EMPLOYMENT DATE],
+		'ServicesProvided'[LEARNING MODE],
+		'ServicesProvided'[AGENCY CODE],
+		'ServicesProvided'[SERVICE PROVIDED],
+		'ServicesProvided'[EX OFFENDER],
+		'ServicesProvided'[SERVICE PREFIX],
+		'ServicesProvided'[SERVICE CATEGORY],
+		'ServicesProvided'[CATEGORY SORT],
+		'ServicesProvided'[REGION CODE]
+	)
+	ORDER BY 'ServicesProvided'[CREATE DATE] DESC

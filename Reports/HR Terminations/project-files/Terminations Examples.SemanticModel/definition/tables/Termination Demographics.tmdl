@@ -1,0 +1,64 @@
+table 'Termination Demographics'
+	lineageTag: 1bd0a7e0-eba6-4102-bef9-b7fa61a7157b
+
+	column 'Termination Demographics'
+		displayFolder: TableColumns
+		lineageTag: 7986a4c6-8009-4a1d-beec-b1b192f6320d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Termination Demographics Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Termination Demographics Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Termination Demographics Fields'
+		isHidden
+		displayFolder: TableColumns
+		lineageTag: dadffe24-97b1-46e1-97b5-a012c4a790c9
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Termination Demographics Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Termination Demographics Order'
+		isHidden
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: 4d80fdc7-27cd-4047-a432-337a9fb727a7
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Demographic
+		displayFolder: TableColumns
+		lineageTag: 1065d71c-600e-4895-a0cc-38f1ce81afb7
+		summarizeBy: none
+		sourceColumn: [Value4]
+		sortByColumn: 'Termination Demographics Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Termination Demographics' = calculated
+		mode: import
+		source =
+				{
+				    ("Gender for Insurance Coverage", NAMEOF('Terms for TO details'[Gender for Insurance Coverage]), 0, "Gender"),
+				    ("Race/Ethnicity", NAMEOF('Terms for TO details'[Race/Ethnicity]), 1, "Race"),
+				    ("Veteran Status", NAMEOF('Terms for TO details'[Veteran Status]), 2, "Veteran"),
+				    ("Disability Status", NAMEOF('Terms for TO details'[Disability Status]), 3, "Disability"),
+				    ("Generation", NAMEOF('Terms for TO details'[Generation]), 4, "Generation"),
+				    ("Age Band", NAMEOF('Terms for TO details'[Age Band]), 5, "Age")
+				}
+
+	annotation PBI_Id = ca0b9d628e944d2484b5b4a2ebd26f5c
+

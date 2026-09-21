@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Grant-Enrollment-Sample"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bb0dbf12-c79a-4c0d-ad7f-79ca45c0c4eb"
+  }
+}
