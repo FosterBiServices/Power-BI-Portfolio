@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # DOR AJCC File Validation Review
+# # Grant Enrollments File Validation Review
 # 
 # ## Purpose
 # 
-# This notebook validates all source files required for the DOR AJCC Power BI reporting solution before a dataset refresh is performed.
+# This notebook validates all source files required for the Grant Enrollments Power BI reporting solution before a dataset refresh is performed.
 # 
 # The objective is to ensure incoming files meet the required structural and data quality standards and do not introduce refresh failures, data integrity issues, or inaccurate reporting results.
 # 
@@ -14,8 +11,8 @@
 # | File | Purpose |
 # |--------|--------|
 # | Regions.xlsx | Regional reference data used for lookup relationships |
-# | DOR-AJCC Collab_GrantParticipants.xlsx | Participant-level grant activity data |
-# | DOR-AJCC Collab_ServicesProvided.xlsx | Service-level activity and outcome data |
+# | Grant Enrollments_GrantParticipants.xlsx | Participant-level grant activity data |
+# | Grant Enrollments_ServicesProvided.xlsx | Service-level activity and outcome data |
 # 
 # ## Validation Categories
 # 
@@ -56,11 +53,11 @@ import numpy as np
 from pathlib import Path
 
 # Update this path if needed
-DATA_DIR = Path( r"C:\Users\StevenFoster\APM US\Data and Insights - Documents\Power BI Source Files\DOR-AJCC Collab")
+DATA_DIR = Path( r"C:\Users\<USER>\Downloads\Grant Enrollments")
 
 regions = pd.read_excel(DATA_DIR / 'Regions.xlsx')
-participants = pd.read_excel(DATA_DIR / '(All) DOR-AJCC Collab_GrantParticipants.xlsx')
-services = pd.read_excel(DATA_DIR / '(All) DOR-AJCC Collab_SevicesProvided.xlsx')
+participants = pd.read_excel(DATA_DIR / 'GrantEnrollments_GrantParticipants.xlsx')
+services = pd.read_excel(DATA_DIR / 'GrantEnrollments_SevicesProvided.xlsx')
 
 participants.head()
 
@@ -453,8 +450,8 @@ def print_report(report: dict) -> None:
 # =============================
 
 file_path = (
-    r"C:\Users\StevenFoster\APM US\Data and Insights - Documents"
-    r"\Power BI Source Files\DOR-AJCC Collab\Regions.xlsx"
+    r"C:\Users\<USER>\<COMPANY>\<PARENT>"
+    r"\Power BI Source Files\Grant Enrollments\Regions.xlsx"
 )
 
 
@@ -913,8 +910,8 @@ def print_report(report: dict) -> None:
 # =============================
 
 file_path = (
-    r"C:\Users\StevenFoster\APM US\Data and Insights - Documents"
-    r"\Power BI Source Files\DOR-AJCC Collab\(All) DOR-AJCC Collab_GrantParticipants.xlsx"
+    r"C:\Users\<USER>\<COMPANY>\<PARENT>"
+    r"\Power BI Source Files\Grant Enrollments\GrantEnrollments_GrantParticipants.xlsx"
 )
 
 
@@ -1419,8 +1416,8 @@ def print_report(report: dict) -> None:
 # =============================
 
 file_path = (
-    r"C:\Users\StevenFoster\APM US\Data and Insights - Documents"
-    r"\Power BI Source Files\DOR-AJCC Collab\(All) DOR-AJCC Collab_ServicesProvided.xlsx"
+    r"C:\C:\Users\<USER>\<COMPANY>\<PARENT>"
+    r"\Power BI Source Files\Grant Enrollments\GrantEnrollments_ServicesProvided.xlsx"
 )
 
 
@@ -1441,10 +1438,4 @@ df = pd.read_excel(
 report = validate_excel(df)
 
 print_report(report)
-
-
-# In[ ]:
-
-
-
 
