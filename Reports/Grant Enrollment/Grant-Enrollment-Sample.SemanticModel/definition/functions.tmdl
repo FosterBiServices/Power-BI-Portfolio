@@ -1,0 +1,118 @@
+/// ApplyPeriod: applies Total vs Monthly (MTD) transformation to a base measure reference
+function 'FosterBIServices.ApplyPeriod' = ```
+		
+		(
+		    total  : ANYREF EXPR,
+		    monthly : ANYREF EXPR
+		)
+		=>
+		    SWITCH(
+				SELECTEDVALUE( 'Aggregation Table'[Aggregation] ), 
+		        "Total", total, 
+		        "Monthly", monthly
+		    )
+		```
+	lineageTag: 58112bd0-2036-4da5-a43a-59c963ad125b
+
+/// User-defined function that maps readiness survey response text to a hex color for consistent conditional formatting.
+function 'FosterBIServices.SurveyColorHelper' = ```
+		(
+			ColumnName : anyref expr
+		) =>     
+		VAR txt = LOWER( SELECTEDVALUE( ColumnName ) )
+		RETURN
+		SWITCH(
+		    TRUE(),
+		    txt = BLANK(),                    "#333333",   
+			txt = "n",        "#AB0C2F",   -- Red
+		    txt = "y",       "#73AF2F",   -- Green
+			CONTAINSSTRING(txt, "planning"), "#0076A5",   -- Blue
+			CONTAINSSTRING(txt, "has started"),       "#73AF2F",   -- Green
+		    CONTAINSSTRING(txt, "no"),        "#AB0C2F",   -- Red
+		    CONTAINSSTRING(txt, "yes"),       "#73AF2F",   -- Green
+		    CONTAINSSTRING(txt, "scheduled"), "#0076A5",   -- Light Blue
+		    CONTAINSSTRING(txt, "progress"),  "#F89D24",   -- Orange
+		    CONTAINSSTRING(txt, "not yet"),   "#333333",   
+		    "#333333"  -- default
+		)
+		```
+	lineageTag: 021d30e1-c403-4e07-9fb5-2d62d6c226bb
+
+/// User-defined function that maps simple Yes/No or text response values to a hex color for conditional formatting.
+function 'FosterBIServices.TextCFColorHelper' = ```
+		(
+			ColumnName : anyref expr
+		) =>     
+		VAR txt = LOWER( SELECTEDVALUE( ColumnName ) )
+		RETURN
+		SWITCH(
+		    TRUE(),
+		    txt = BLANK(),                    "#333333",   
+			txt = "n", "#AB0C2F",   -- Red
+		    txt = "y", "#73AF2F",   -- Green
+			CONTAINSSTRING(txt, "not specified"), "#004081",   -- Blue
+		    CONTAINSSTRING(txt, "no"),        "#AB0C2F",   -- Red
+		    CONTAINSSTRING(txt, "yes"),       "#73AF2F",   -- Green
+		
+		     "#004081"  -- default
+		)
+		```
+	lineageTag: ca0ee41e-34c0-4518-bc2c-ea936ec6d8ba
+
+/// User-defined function that maps staff survey response values to a hex color representing positive, neutral, or negative sentiment/status.
+function 'FosterBIServices.StaffSurveyColorHelper' =
+		(
+		        ColumnName : anyref expr
+		    ) =>
+		VAR txt = LOWER( TRIM( SELECTEDVALUE( ColumnName, "" ) ) )
+		
+		RETURN
+		SWITCH(
+		    TRUE(),
+		
+		    //----------------------------------
+		    -- Blank / Missing
+		    //----------------------------------
+		    txt = "", "#333333",
+		
+		    //----------------------------------
+		    -- POSITIVE (Green)
+		    //----------------------------------
+		    txt = "yes", "#73AF2F",
+		    CONTAINSSTRING(txt, "strongly agree"), "#73AF2F",
+		    CONTAINSSTRING(txt, "agree"), "#73AF2F",
+		    CONTAINSSTRING(txt, "very strong"), "#73AF2F",
+		    txt = "strong", "#73AF2F",
+		    CONTAINSSTRING(txt, "very effective"), "#73AF2F",
+		    txt = "effective", "#73AF2F",
+		    CONTAINSSTRING(txt, "great extent"), "#73AF2F",
+		    txt = "frequently", "#73AF2F",
+		
+		    //----------------------------------
+		    -- NEUTRAL (Orange)
+		    //----------------------------------
+		    txt = "neutral", "#F89D24",
+		    txt = "moderate", "#F89D24",
+		    txt = "occasionally", "#F89D24",
+		    txt = "not sure", "#F89D24",
+		    CONTAINSSTRING(txt, "moderate extent"), "#F89D24",
+		
+		    //----------------------------------
+		    -- NEGATIVE (Red)
+		    //----------------------------------
+		    txt = "no", "#AB0C2F",
+		    CONTAINSSTRING(txt, "strongly disagree"), "#AB0C2F",
+		    CONTAINSSTRING(txt, "disagree"), "#AB0C2F",
+		    txt = "ineffective", "#AB0C2F",
+		    txt = "limited", "#AB0C2F",
+		    txt = "rarely", "#AB0C2F",
+		    txt = "never", "#AB0C2F",
+		    CONTAINSSTRING(txt, "small extent"), "#AB0C2F",
+		
+		    //----------------------------------
+		    -- FALLBACK
+		    //----------------------------------
+		    "#333333"
+		)
+	lineageTag: 2c50e849-222d-4906-9dfd-e7f642a4e6b0
+
