@@ -17,18 +17,18 @@ DATATABLE(
     {"ALL", 29, "OJT Starts", "_dOjtStart"},
     {"ALL", 30, "Training Starts", "_dTrainStart"},
     {"ALL", 31, "WEX Starts", "_dWexStart"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 1, "Adult/DW New Enrollments (% of Target)", "_nvadultEnrollments"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 2, "Youth New Enrollments (% of Target)", "_nvyouthEnrollments"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 3, "Adult/DW High Impact Activity Starts (% of Target)", "_nvadultActivity"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 4, "Youth High Impact Activity Starts (% of Target)", "_nvyouthActivity"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 5, "Adult MSG (% of Target)", "_nvadultMSG"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 6, "DW MSG (% of Target)", "_nvdwMSG"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 7, "Youth MSG (% of Target)", "_nvyouthMSG"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 8, "Adult / DW Employments @ Closure (% Positive)", "_nvadultDWEmployment"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 9, "Youth Placements @ Closure (% Positive)", "_nvyouthPlacement"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 10, "Q2 Adult % Employment (% of Target)", "_nvadultQ2"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 11, "Q2 DW % Employment (% of Target)", "_nvdwQ2"},
-    {"NV LAS VEGAS ONE STOP SERVICES", 12, "Q2 Youth % Placements (% of Target)", "_nvyouthQ2"}
+    {"CITY STATE SERVICES", 1, "Adult/DW New Enrollments (% of Target)", "_nvadultEnrollments"},
+    {"CITY STATE SERVICES", 2, "Youth New Enrollments (% of Target)", "_nvyouthEnrollments"},
+    {"CITY STATE SERVICES", 3, "Adult/DW High Impact Activity Starts (% of Target)", "_nvadultActivity"},
+    {"CITY STATE SERVICES", 4, "Youth High Impact Activity Starts (% of Target)", "_nvyouthActivity"},
+    {"CITY STATE SERVICES", 5, "Adult MSG (% of Target)", "_nvadultMSG"},
+    {"CITY STATE SERVICES", 6, "DW MSG (% of Target)", "_nvdwMSG"},
+    {"CITY STATE SERVICES", 7, "Youth MSG (% of Target)", "_nvyouthMSG"},
+    {"CITY STATE SERVICES", 8, "Adult / DW Employments @ Closure (% Positive)", "_nvadultDWEmployment"},
+    {"CITY STATE SERVICES", 9, "Youth Placements @ Closure (% Positive)", "_nvyouthPlacement"},
+    {"CITY STATE SERVICES", 10, "Q2 Adult % Employment (% of Target)", "_nvadultQ2"},
+    {"CITY STATE SERVICES", 11, "Q2 DW % Employment (% of Target)", "_nvdwQ2"},
+    {"CITY STATE SERVICES", 12, "Q2 Youth % Placements (% of Target)", "_nvyouthQ2"}
 }
 )
 
