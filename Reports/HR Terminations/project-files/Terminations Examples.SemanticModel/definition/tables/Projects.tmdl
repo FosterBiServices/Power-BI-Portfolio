@@ -1,0 +1,163 @@
+table Projects
+	lineageTag: 36cebd9a-c126-4c37-b132-a5969a94fabe
+
+	column 'Project Name'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 4d236faa-9498-4363-94ea-e0d702a47397
+		summarizeBy: none
+		sourceColumn: Project Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PD Name'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: c186c86e-151f-4143-b206-fb783cd40abb
+		summarizeBy: none
+		sourceColumn: PD Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'VP Name'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 05c549b2-2478-407c-b42a-794f3ec4fcbf
+		summarizeBy: none
+		sourceColumn: VP Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: efe4876b-ae0e-4b2e-9a61-a6115b519fcf
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: b77822ea-f183-41b0-9141-375f32de2b21
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Related Company'
+		dataType: int64
+		isHidden
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: bcb618ca-6aad-4161-b473-869fad4bee5a
+		summarizeBy: none
+		sourceColumn: Related Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Project Code'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 45a904b9-0f1a-4257-9330-247a7c83001c
+		summarizeBy: none
+		sourceColumn: Project Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Contract Period'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 927409af-cf3a-4a49-b8bc-5c4e020ae2f8
+		summarizeBy: none
+		sourceColumn: Contract Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type RD'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 89a9c142-6a44-465e-84e5-7396ea796e45
+		summarizeBy: none
+		sourceColumn: Type RD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Contract Start'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		displayFolder: TableColumns
+		lineageTag: 6db5b87d-03f9-4ae2-8242-4b70c88b3970
+		summarizeBy: none
+		sourceColumn: Contract Start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Contract End'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		displayFolder: TableColumns
+		lineageTag: 5d53da37-f3ec-48d8-92ef-bf9202e60620
+		summarizeBy: none
+		sourceColumn: Contract End
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Record ID #'
+		dataType: int64
+		formatString: 0
+		displayFolder: TableColumns
+		lineageTag: b0cda5e0-940a-48c8-98d2-116ff556f6f0
+		summarizeBy: none
+		sourceColumn: Record ID #
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Projects-dbb2bd5b-53a6-496a-99ed-e3b5a39269ee = m
+		mode: import
+		source = ```
+				let
+				
+				  // Data Source
+				  Source = Excel.Workbook(
+				    File.Contents(
+				      "C:\Users\Foster\Downloads\Termination-Report-Sample-Data.xlsx"
+				    ), 
+				    true, 
+				    true
+				  ), 
+				  _data = Source
+				    {
+				      [
+				        Item = "Projects", 
+				        Kind = "Sheet"
+				      ]
+				    }
+				    [Data], 
+				  TypePairs = {
+				    {"Contract Start", type date}, 
+				    {"Contract End", type date}, 
+				    {"Related Company", Int64.Type}, 
+				    {"Record ID #", Int64.Type}
+				  }, 
+				  ChangeTypes = fxColumnTyping(
+				    _data, 
+				    TypePairs
+				  )
+				
+				// Result
+				in
+				  ChangeTypes
+				```
+
+	annotation PBI_QueryRelationships = {"columnCount":30,"keyColumnNames":[],"queryRelationships":[],"columnIdentities":["Section1/Projects/291.{Record ID#,0}","Section1/Projects/291.{Parent,1}","Section1/Projects/Replaced Value.{Project Type,2}","Section1/Projects/291.{Project Name,3}","Section1/Projects/291.{PD Name,4}","Section1/Projects/291.{RD Name,5}","Section1/Projects/291.{VP Name,6}","Section1/Projects/291.{Status,7}","Section1/Projects/291.{Header - Amount,8}","Section1/Projects/291.{Header - Annual Amount,9}","Section1/Projects/291.{Header - Annual Pass Thru,10}","Section1/Projects/291.{Header - Annual Revenue,11}","Section1/Projects/291.{Header - Contract Parent,12}","Section1/Projects/291.{Header - Contract Type,13}","Section1/Projects/291.{Header - End Date,14}","Section1/Projects/291.{Header - Indirect Rate,15}","Section1/Projects/291.{Header - Pass Thru,16}","Section1/Projects/291.{Header - Profit Rate,17}","Section1/Projects/291.{Header - Revenue,18}","Section1/Projects/291.{Header - Start Date,19}","Section1/Projects/291.{# of Budgeted Positions,20}","Section1/Projects/291.{Main Office - Postal Code,21}","Section1/Projects/291.{# of Active Employees,22}","Section1/Projects/291.{BL - Score (CP),23}","Section1/Projects/291.{RD - Score (CP),24}","Section1/Projects/291.{Score (CP),25}","Section1/Projects/291.{BL - Score (PM),26}","Section1/Projects/291.{RD - Score (PM),27}","Section1/Projects/291.{Score (PM),28}","Section1/Projects/Added Custom.{Project Type v2,29}"],"ColumnCount":30,"KeyColumnNames":[],"ColumnIdentities":["Section1/Projects/291.{Record ID#,0}","Section1/Projects/291.{Parent,1}","Section1/Projects/Replaced Value.{Project Type,2}","Section1/Projects/291.{Project Name,3}","Section1/Projects/291.{PD Name,4}","Section1/Projects/291.{RD Name,5}","Section1/Projects/291.{VP Name,6}","Section1/Projects/291.{Status,7}","Section1/Projects/291.{Header - Amount,8}","Section1/Projects/291.{Header - Annual Amount,9}","Section1/Projects/291.{Header - Annual Pass Thru,10}","Section1/Projects/291.{Header - Annual Revenue,11}","Section1/Projects/291.{Header - Contract Parent,12}","Section1/Projects/291.{Header - Contract Type,13}","Section1/Projects/291.{Header - End Date,14}","Section1/Projects/291.{Header - Indirect Rate,15}","Section1/Projects/291.{Header - Pass Thru,16}","Section1/Projects/291.{Header - Profit Rate,17}","Section1/Projects/291.{Header - Revenue,18}","Section1/Projects/291.{Header - Start Date,19}","Section1/Projects/291.{# of Budgeted Positions,20}","Section1/Projects/291.{Main Office - Postal Code,21}","Section1/Projects/291.{# of Active Employees,22}","Section1/Projects/291.{BL - Score (CP),23}","Section1/Projects/291.{RD - Score (CP),24}","Section1/Projects/291.{Score (CP),25}","Section1/Projects/291.{BL - Score (PM),26}","Section1/Projects/291.{RD - Score (PM),27}","Section1/Projects/291.{Score (PM),28}","Section1/Projects/Added Custom.{Project Type v2,29}"],"RelationshipInfo":[]}
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

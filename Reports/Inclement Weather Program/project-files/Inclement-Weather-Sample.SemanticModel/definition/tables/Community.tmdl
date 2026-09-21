@@ -1,0 +1,70 @@
+/// Community dimension table containing communities and associated ZIP codes. Used for geographic reporting, filtering, and relationship management across program datasets.
+table Community
+	lineageTag: d6fff2da-627d-4035-b03b-f9d25eb1af3d
+
+	/// Community name associated with a ZIP code or service area.
+	column COMMUNITY
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 6db256b6-749a-4fb1-8feb-915f44bf880d
+		summarizeBy: none
+		sourceColumn: COMMUNITY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// ZIP code associated with the community.
+	column ZIPCODE
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 20f0039d-300e-4d55-8dff-48834ab561ee
+		summarizeBy: none
+		sourceColumn: ZIPCODE
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Community = m
+		mode: import
+		queryGroup: Manual
+		source = ```
+				let
+				
+				  // Data Source
+				  Source = Table.FromRows(
+				    Json.Document(
+				      Binary.Decompress(
+				        Binary.FromText(
+				          "bdBNb8IwDAbgvxL1DKgfUJXjYJoEYhMS0y6Ig2ktFJHalZMe9u+X4u6TXfM+ke33eEzWSEHAmQ05oMZMzYPrLGEySZbZMs2S0+Qfs4MretvcVJ7OU1UMPkQ1NWYNbWf2SI3DwKRqsbipR/QoIaIVi+CFzaETSxevKJ3/Rluo+/YMuk2h4TP3FMBSjKOrgTxrnpV/823vLIzzC01fZt9nPIFzZ2G+qsirO/EWBb6boQAUVVX+qX4M2oPjFuTrSWmpxRxmw7ENygA5CMq4cFnc5a9YQxjbr+L30wc=", 
+				          BinaryEncoding.Base64
+				        ), 
+				        Compression.Deflate
+				      )
+				    ), 
+				    let
+				      _t = (
+				        (type nullable text)
+				          meta [Serialized.Text = true]
+				      )
+				    in
+				      type table [
+				        COMMUNITY = _t, 
+				        ZIPCODE = _t
+				      ]
+				  ), 
+				
+				  // Step
+				  #"Appended Query" = Table.Distinct(
+				    Table.Combine({Source, Communities})
+				  )
+				
+				// Result
+				in
+				  #"Appended Query"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

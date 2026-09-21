@@ -1,0 +1,85 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "fa784e8f783669981aab",
+      "displayName": "Enrollments",
+      "children": [
+        "3d7d781ec7e911583e42",
+        "5890616792ebffa3e640"
+      ]
+    },
+    {
+      "name": "09d1c0911e783b227ff3",
+      "displayName": "Services Provided",
+      "children": [
+        "ac8975258d6e38d95950",
+        "2fa194521b6c4ea9c445"
+      ]
+    },
+    {
+      "name": "a8f547eacd71462394a8",
+      "displayName": "Exiters",
+      "children": [
+        "18bc85d443a6fb2a802e",
+        "3a882be98bfa5109f0ce"
+      ]
+    },
+    {
+      "name": "b1f2d047069183811cb6",
+      "displayName": "Localized",
+      "children": [
+        "f0a03337d290785b2782",
+        "f062a036aee057aaa783"
+      ]
+    },
+    {
+      "name": "b07362d0c41cd5bc5a02"
+    },
+    {
+      "name": "4a21af8b86010d909123"
+    },
+    {
+      "name": "46ea1d2dbb3cddeb999a"
+    },
+    {
+      "name": "ba4935b372f78c14e4cc"
+    },
+    {
+      "name": "82713c135db973e5b205"
+    },
+    {
+      "name": "51ba31a9cf94ee6edc0d"
+    },
+    {
+      "name": "7107944ae2d343dca7b3"
+    },
+    {
+      "name": "325fd69b5d09f6eb4b82"
+    },
+    {
+      "name": "e3a11fb225d90a882221"
+    },
+    {
+      "name": "de1e5d4ecd36a72ba091"
+    },
+    {
+      "name": "373a77e5dd99dfc85ecf"
+    },
+    {
+      "name": "320bbb91942261e09ac7"
+    },
+    {
+      "name": "ec29c75b2e1ea8453ac1"
+    },
+    {
+      "name": "cbf9ad414143bda25efe"
+    },
+    {
+      "name": "1564dbce15ae896828fc"
+    },
+    {
+      "name": "d1b86f2cfe0fe771c58d"
+    }
+  ]
+}

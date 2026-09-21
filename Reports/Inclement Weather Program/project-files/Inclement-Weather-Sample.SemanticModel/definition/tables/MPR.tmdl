@@ -1,0 +1,458 @@
+/// Primary program participation fact table containing hotel placement, enrollment, activation, household, demographic, and outcome information used for operational and performance reporting.
+table MPR
+	lineageTag: 18e63dd4-e104-4650-a430-1abb277175a4
+
+	/// The unique record identifier assigned by QuickBase for each MPR row.
+	column 'RECORD ID'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 5f61cea5-34df-414b-82f9-705146ba3a17
+		summarizeBy: none
+		sourceColumn: RECORD ID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's HMIS Unique Identifier, as entered in QuickBase. Used to match MPR records with HMIS enrollment records.
+	column 'UNIQUE IDENTIFIER NUMBER'
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 550ba5a0-5dc7-40a2-8280-f51c6bd88078
+		summarizeBy: none
+		sourceColumn: UNIQUE IDENTIFIER NUMBER
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's first name as recorded in QuickBase.
+	column 'FIRST NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: a23e2dfc-13f1-4b87-a763-a708d6ed47cb
+		summarizeBy: none
+		sourceColumn: FIRST NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's last name as recorded in QuickBase.
+	column 'LAST NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 3224fdbb-3549-4d51-ac0f-c585fd669cbe
+		summarizeBy: none
+		sourceColumn: LAST NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The date the household checked into the hotel. This is the primary date field used in time-based analysis for MPR records.
+	column 'HOTEL CHECK IN'
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: dcfda441-a898-4c3c-8d0d-2f696cfc4090
+		summarizeBy: none
+		sourceColumn: HOTEL CHECK IN
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The date the household exited the program or checked out of the hotel. Blank if still active.
+	column 'EXIT DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: ec09fe74-4573-435a-8fe8-cae1ff997467
+		summarizeBy: none
+		sourceColumn: EXIT DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The number of adults in the household at the time of check-in, as recorded in QuickBase.
+	column 'NUMBER OF ADULTS'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 58d1f737-e1fb-496b-b726-e53c0c46154c
+		summarizeBy: none
+		sourceColumn: NUMBER OF ADULTS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The client's date of birth as recorded in QuickBase.
+	column 'DATE OF BIRTH'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: a34eb844-7c0d-45e0-aff7-5f9187b509d0
+		summarizeBy: none
+		sourceColumn: DATE OF BIRTH
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The client's age in years at the time of the MPR record, calculated or entered in QuickBase.
+	column 'CLIENT AGE'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 92e119de-ca51-4827-9d8a-e3775902ce17
+		summarizeBy: none
+		sourceColumn: CLIENT AGE
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The gender identity of the primary household member, as recorded in QuickBase.
+	column GENDER
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 7f6be429-d634-4b85-a30f-46029a9c82f7
+		summarizeBy: none
+		sourceColumn: GENDER
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The race and/or ethnicity of the primary household member, as recorded in QuickBase.
+	column RACE_ETHNICITY
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8ae1c09d-d6e3-47bd-9105-e7d1a3b1e6be
+		summarizeBy: none
+		sourceColumn: RACE_ETHNICITY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether the primary household member is a veteran. Values are typically Yes or No.
+	column VETERAN
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 9f3fe63e-13dd-447c-9ca6-31a261184934
+		summarizeBy: none
+		sourceColumn: VETERAN
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether the primary household member has a disability. Values are typically Yes or No.
+	column DISABILITY
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 4acc4dd4-e4ae-45c4-ab65-137eb4a3ea5e
+		summarizeBy: none
+		sourceColumn: DISABILITY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The community of origin for the household, representing where they were living prior to program entry.
+	column COMMUNITY
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: d5bd4a78-d141-4ea2-a01a-0e6bfa746cdb
+		summarizeBy: none
+		sourceColumn: COMMUNITY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The date the household was enrolled in the program, as recorded in QuickBase.
+	column 'ENROLLMENT DATE'
+		dataType: dateTime
+		isHidden
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 67b6ef4e-ba2b-4745-8ac5-1c21d0627c11
+		summarizeBy: none
+		sourceColumn: ENROLLMENT DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// The name of the hotel where the household was placed.
+	column 'HOTEL NAME'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: f78d6818-5012-4497-85c2-96dc81c4fd7c
+		summarizeBy: none
+		sourceColumn: HOTEL NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The number of hotel rooms rented for this household during their stay.
+	column 'NUMBER OF HOTEL ROOMS RENTED'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: c6c026fc-d268-4c16-8674-846f323eb57d
+		summarizeBy: none
+		sourceColumn: NUMBER OF HOTEL ROOMS RENTED
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The total number of hotel nights used for this household during their stay.
+	column 'NUMBER OF HOTEL NIGHTS'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 93144f31-732d-4aa5-a8b3-a0f49c210cdb
+		summarizeBy: none
+		sourceColumn: NUMBER OF HOTEL NIGHTS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The total number of people in the household, including all adults and children.
+	column HOUSEHOLD
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 047847c9-0227-4a47-892b-1d9ed81ff60a
+		summarizeBy: none
+		sourceColumn: HOUSEHOLD
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The number of children (under 18) in the household at the time of this MPR record.
+	column 'NUMBER OF CHILDREN'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 83d66798-40fd-4e3f-882e-6222990003af
+		summarizeBy: none
+		sourceColumn: NUMBER OF CHILDREN
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates the source of the HMIS Unique Identifier — e.g., whether it was entered manually or pulled from a system.
+	column UID_SOURCE
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 268a51e1-4a59-4e99-90f4-a3feb8a89386
+		summarizeBy: none
+		sourceColumn: UID_SOURCE
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Length of stay in days for this record, calculated from check-in to exit date (or today if still active).
+	column LOS
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 6994dfaf-e6c7-4a04-aee9-29d74ee20c9c
+		summarizeBy: none
+		sourceColumn: LOS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The number of times this household was turned down for placement before being successfully activated. A higher number indicates more placement difficulty.
+	column TURNDOWNS
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 888c8426-430b-4927-a671-9c7172c689df
+		summarizeBy: none
+		sourceColumn: TURNDOWNS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// A composite identifier linking this MPR record to an activation event. Used to connect with the Activations table.
+	column 'ACTIVATION ID'
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8073d73c-ec5f-40d2-91e9-da4de5785ca5
+		summarizeBy: none
+		sourceColumn: ACTIVATION ID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether the related MPR record resulted in an activation.
+	column 'ACTIVATION INDICATOR'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 4aa7f4bf-a608-498e-b0d6-9ca60f754337
+		summarizeBy: none
+		sourceColumn: ACTIVATION INDICATOR
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Date associated with the activation event.
+	column 'ACTIVATION DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: c0ade585-22b6-4e05-ac45-e37e6a8accaa
+		summarizeBy: none
+		sourceColumn: ACTIVATION DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Date the household or client was referred for placement.
+	column 'REFERRAL DATE'
+		dataType: dateTime
+		formatString: m/d/yyyy
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 053a3f95-c09a-4269-a232-a1a970cdfe12
+		summarizeBy: none
+		sourceColumn: REFERRAL DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Indicates whether enrollment occurred within 30 minutes of the relevant referral or activation event.
+	column 'ENROLLMENT WITHIN 30 MIN'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 81a18246-1451-4803-859e-af8a47cef2ee
+		summarizeBy: none
+		sourceColumn: ENROLLMENT WITHIN 30 MIN
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Total number of nights associated with the stay or placement record.
+	column 'TOTAL NIGHTS'
+		dataType: int64
+		formatString: #,0
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 90a9a5fa-096f-4192-9a45-7ed277e2a087
+		summarizeBy: none
+		sourceColumn: TOTAL NIGHTS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether transportation occurred within 6 hours after referral.
+	column 'TRANSPORTED SINCE REFERRAL WITHIN 6 HRS'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 4c72ecfa-9350-4d94-acdd-fd2bce76522e
+		summarizeBy: none
+		sourceColumn: TRANSPORTED SINCE REFERRAL WITHIN 6 HRS
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether transportation was provided to the household or client.
+	column 'TRANSPORTATION PROVIDED'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 8e7f4239-f9b0-41ba-a845-7165ba082c8e
+		summarizeBy: none
+		sourceColumn: TRANSPORTATION PROVIDED
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether the household or client was enrolled during the current reporting month.
+	column 'ENROLLED THIS MONTH'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: dc6713a6-c205-47d9-95c2-55b78f6251d2
+		summarizeBy: none
+		sourceColumn: ENROLLED THIS MONTH
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicates whether the household or client was enrolled during the current fiscal year.
+	column 'ENROLLED THIS FY'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 4228bdbc-e0d1-4e4d-ae75-ea1d573b6734
+		summarizeBy: none
+		sourceColumn: ENROLLED THIS FY
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Check-in identifier used for matching or duplicate detection.
+	column 'CHECK IN ID'
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: be6eba14-a000-476b-bcb6-bda255ac9b8b
+		summarizeBy: none
+		sourceColumn: CHECK IN ID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// MPR row or business identifier used for matching or traceability.
+	column ID
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 73378562-dbb6-4ebe-8054-0bd6b54b8e13
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	/// ZIP code associated with the household or client in the MPR record.
+	column ZIPCODE
+		dataType: string
+		isAvailableInMdx: false
+		displayFolder: TableColumns
+		lineageTag: 32b1e00e-cc72-45b5-a831-7f7182dea7a3
+		summarizeBy: none
+		sourceColumn: ZIPCODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DATE OF BIRTH - STRING'
+		dataType: string
+		displayFolder: TableColumns
+		lineageTag: 3b345848-6c6b-47dd-9aba-232b7cb6d9cf
+		summarizeBy: none
+		sourceColumn: DATE OF BIRTH - STRING
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MPR = m
+		mode: import
+		queryGroup: Report
+		source =
+				let
+				
+				  // Data Source
+				  Source = stage_MPR
+				
+				// Result
+				in
+				
+				  // Data Source
+				  Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
