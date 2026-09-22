@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 
 from .documentation import DocumentationOptions, write_documentation
 from .diagnostics import export_diagnostics, open_diagnostics_folder
-from .parser import ProjectError, load_project
+from .parser import ProjectError, load_project_from_pbip
 from .reliability import (
   configure_logging, log_exception, log_info, open_logs_folder,
 )
@@ -135,7 +135,7 @@ class MainWindow(QMainWindow):
       current_app.installEventFilter(self.guard); current_app.clipboard().clear()
 
     bar = QToolBar(); self.addToolBar(bar)
-    open_action = QAction("Open PBIP project", self); open_action.triggered.connect(self.open_project); bar.addAction(open_action)
+    open_action = QAction("Open PBIP file", self); open_action.triggered.connect(self.open_project); bar.addAction(open_action)
     doc_action = QAction("Generate documentation", self); doc_action.triggered.connect(self.generate_docs); bar.addAction(doc_action)
 
     file_menu = self.menuBar().addMenu("File")
@@ -197,22 +197,36 @@ class MainWindow(QMainWindow):
     self.settings["OpenLastProject"] = bool(enabled); self.save_current_settings()
 
   def open_project(self):
-    folder = QFileDialog.getExistingDirectory(self, "Select PBIP project folder")
-    if folder:
-      self.load_project_path(Path(folder))
 
-  def load_project_path(self, folder: Path):
+      pbip_file, _ = QFileDialog.getOpenFileName(
+          self,
+          "Select PBIP File",
+          "",
+          "PBIP Files (*.pbip)"
+      )
+
+      if not pbip_file:
+          return
+
+      self.load_project_path(
+          Path(pbip_file) 
+        )
+
+  def load_project_path(self, pbip_path: Path):
     try:
-      log_info("Opening project | %s", folder)
-      self.project = load_project(folder)
-      add_recent_project(self.settings, folder)
+      log_info("Opening PBIP | %s", pbip_path)
+      self.project = load_project_from_pbip(pbip_path)
+      add_recent_project(self.settings,pbip_path)
       self.save_current_settings(); self.refresh_recent_menu(); self.populate()
-      log_info("Project loaded | %s", folder)
+      log_info("Project loaded | %s", pbip_path)
     except ProjectError as error:
-      log_path = log_exception(f"Project error while opening {folder}", error)
+      log_path = log_exception(
+          f"Project error while opening {pbip_path}",
+          error
+      )
       QMessageBox.critical(self, "Cannot Open Project", f"{error}\n\nDetails were written to:\n{log_path}")
     except Exception as error:
-      log_path = log_exception(f"Unexpected error while opening {folder}", error)
+      log_path = log_exception(f"Unexpected error while opening {pbip_path}", error)
       QMessageBox.critical(self, "Unexpected Error", f"{error}\n\nDetails were written to:\n{log_path}")
 
   def populate(self):

@@ -188,9 +188,135 @@ def parse_partitions(project: Project):
         line_number=parsed["line_number"],
       ))
       existing.add(parsed["name"])
+def discover_from_pbip(
+    pbip_path: Path
+) -> tuple[Path, Path | None]:
 
-def load_project(selected: Path) -> Project:
-  semantic, report = discover(selected)
-  project = Project(selected.resolve(), semantic, report, semantic.parent.name.removesuffix(".SemanticModel"))
-  parse_tmdl(project); parse_partitions(project); parse_pbir(project)
-  return project
+    pbip = json.loads(
+        read(pbip_path)
+    )
+
+    artifacts = pbip.get(
+        "artifacts",
+        []
+    )
+
+    report_root = None
+
+    for artifact in artifacts:
+
+        if "report" in artifact:
+
+            report_path = (
+                artifact["report"]
+                .get("path")
+            )
+
+            if report_path:
+
+                report_root = (
+                    pbip_path.parent
+                    / report_path
+                )
+
+                break
+
+    if report_root is None:
+        raise ProjectError(
+            "No report reference found in PBIP."
+        )
+
+    if not report_root.exists():
+        raise ProjectError(
+            f"Report path not found:\n"
+            f"{report_root}"
+        )
+
+    report_definition = (
+        report_root
+        / "definition.pbir"
+    )
+
+    if not report_definition.exists():
+
+        report_definition = (
+            report_root
+            / "definition"
+            / "definition.pbir"
+        )
+
+    if not report_definition.exists():
+        raise ProjectError(
+            f"Cannot locate PBIR:\n"
+            f"{report_root}"
+        )
+
+    pbir = json.loads(
+        read(report_definition)
+    )
+
+    semantic_relative = (
+        pbir
+        .get(
+            "datasetReference",
+            {}
+        )
+        .get(
+            "byPath",
+            {}
+        )
+        .get(
+            "path"
+        )
+    )
+
+    if not semantic_relative:
+        raise ProjectError(
+            "PBIR missing datasetReference."
+        )
+
+    semantic_root = (
+        report_definition.parent
+        / semantic_relative
+    ).resolve()
+
+    if not semantic_root.exists():
+        raise ProjectError(
+            f"Semantic model not found:\n"
+            f"{semantic_root}"
+        )
+
+    semantic_definition = (
+        semantic_root
+        / "definition"
+    )
+
+    if not semantic_definition.exists():
+        raise ProjectError(
+            f"Semantic definition not found:\n"
+            f"{semantic_definition}"
+        )
+
+    return (
+        semantic_definition,
+        report_root
+    )
+
+def load_project_from_pbip(pbip_path: Path) -> Project:
+
+    project_folder = pbip_path.parent
+
+    semantic, report = (discover_from_pbip(pbip_path))
+
+    project = Project(
+        pbip_path.resolve(),
+        semantic,
+        report,
+        semantic.parent.name.removesuffix(".SemanticModel")
+    )
+
+    parse_tmdl(project)
+    parse_partitions(project)
+    parse_pbir(project)
+
+    return project
