@@ -1,0 +1,65 @@
+from __future__ import annotations
+import sys, webbrowser
+from pathlib import Path
+from PySide6.QtCore import Qt, QObject, QEvent
+from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtWidgets import QApplication, QCheckBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QLabel, QMainWindow, QMessageBox, QPlainTextEdit, QTabWidget, QToolBar, QTreeWidget, QTreeWidgetItem
+from .documentation import DocumentationOptions, write_documentation
+from .parser import ProjectError, load_project
+
+class ClipboardGuard(QObject):
+  def eventFilter(self, obj, event):
+    return bool(event.type()==QEvent.KeyPress and event.matches(QKeySequence.Copy))
+
+class OptionsDialog(QDialog):
+  def __init__(self,parent=None):
+    super().__init__(parent); self.setWindowTitle("Documentation options")
+    layout=QFormLayout(self)
+    self.report=QCheckBox(); self.report.setChecked(True)
+    self.hidden=QCheckBox(); self.dax=QCheckBox(); self.power=QCheckBox(); self.sources=QCheckBox()
+    layout.addRow("Include report pages and visual usage",self.report); layout.addRow("Include hidden objects",self.hidden); layout.addRow("Include DAX expressions",self.dax); layout.addRow("Include Power Query expressions",self.power); layout.addRow("Include source details",self.sources)
+    note=QLabel("Sensitive expression content is opt-in. Common credential patterns are redacted."); note.setWordWrap(True); layout.addRow(note)
+    buttons=QDialogButtonBox(QDialogButtonBox.Ok|QDialogButtonBox.Cancel); buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject); layout.addRow(buttons)
+  def options(self): return DocumentationOptions(self.dax.isChecked(),self.power.isChecked(),self.sources.isChecked(),self.hidden.isChecked(),self.report.isChecked())
+
+class MainWindow(QMainWindow):
+  def __init__(self):
+    super().__init__(); self.setWindowTitle("Local TMDL Documenter V2"); self.resize(1250,800); self.project=None
+    self.guard=ClipboardGuard(self); QApplication.instance().installEventFilter(self.guard); QApplication.clipboard().clear()
+    bar=QToolBar(); self.addToolBar(bar)
+    open_action=QAction("Open PBIP project",self); open_action.triggered.connect(self.open_project); bar.addAction(open_action)
+    doc_action=QAction("Generate documentation",self); doc_action.triggered.connect(self.generate_docs); bar.addAction(doc_action)
+    self.tree=QTreeWidget(); self.tree.setHeaderLabels(["Project objects"]); self.tree.setContextMenuPolicy(Qt.NoContextMenu)
+    self.summary=QPlainTextEdit(); self.summary.setReadOnly(True); self.summary.setContextMenuPolicy(Qt.NoContextMenu)
+    tabs=QTabWidget(); tabs.addTab(self.tree,"Explorer"); tabs.addTab(self.summary,"Summary"); self.setCentralWidget(tabs)
+    self.statusBar().showMessage("Open a PBIP project, semantic model, or definition folder.")
+  def open_project(self):
+    folder=QFileDialog.getExistingDirectory(self,"Select PBIP project folder")
+    if not folder:return
+    try:self.project=load_project(Path(folder)); self.populate()
+    except ProjectError as error: QMessageBox.critical(self,"Cannot open project",str(error))
+    except Exception as error: QMessageBox.critical(self,"Unexpected error",str(error))
+  def populate(self):
+    self.tree.clear(); p=self.project
+    tables=QTreeWidgetItem([f"Tables ({len(p.tables)})"])
+    for table in sorted(p.tables.values(),key=lambda x:x.name.casefold()):
+      item=QTreeWidgetItem([table.name]); item.addChild(QTreeWidgetItem([f"Columns ({len(table.columns)})"])); item.addChild(QTreeWidgetItem([f"Measures ({len(table.measures)})"])); tables.addChild(item)
+    pages=QTreeWidgetItem([f"Report pages ({len(p.pages)})"])
+    for page in p.pages: pages.addChild(QTreeWidgetItem([f"{page.display_name} ({len(page.visuals)} visuals)"]))
+    self.tree.addTopLevelItems([tables,QTreeWidgetItem([f"Relationships ({len(p.relationships)})"]),QTreeWidgetItem([f"Expressions ({len(p.expressions)})"]),pages]); self.tree.expandToDepth(0)
+    self.summary.setPlainText(f"Model: {p.name}\nSemantic model: {p.semantic_root}\nReport: {p.report_root or 'Not found'}\n\nTables: {len(p.tables)}\nColumns: {sum(len(t.columns) for t in p.tables.values())}\nMeasures: {sum(len(t.measures) for t in p.tables.values())}\nRelationships: {len(p.relationships)}\nPages: {len(p.pages)}\nVisuals: {sum(len(x.visuals) for x in p.pages)}\nWarnings: {len(p.warnings)}")
+    self.statusBar().showMessage(f"Loaded {p.name}")
+  def generate_docs(self):
+    if not self.project: QMessageBox.information(self,"No project","Open a project first."); return
+    dialog=OptionsDialog(self)
+    if dialog.exec()!=QDialog.Accepted:return
+    default=str(self.project.selected_root/f"{self.project.name}-full-report.html")
+    output,_=QFileDialog.getSaveFileName(self,"Save local documentation",default,"HTML files (*.html)")
+    if not output:return
+    try:
+      write_documentation(self.project,Path(output),dialog.options()); QMessageBox.information(self,"Documentation created",f"Created:\n{output}"); webbrowser.open(Path(output).resolve().as_uri())
+    except OSError as error: QMessageBox.critical(self,"Cannot write documentation",str(error))
+  def closeEvent(self,event): QApplication.clipboard().clear(); self.project=None; event.accept()
+
+def main():
+  app=QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2"); window=MainWindow(); window.show(); return app.exec()

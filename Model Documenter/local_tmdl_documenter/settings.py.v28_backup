@@ -1,0 +1,105 @@
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+from copy import deepcopy
+from pathlib import Path
+
+_DEFAULTS = {
+  "Profile": "Business Documentation",
+  "IncludeReport": False,
+  "IncludeHidden": False,
+  "IncludeDax": False,
+  "IncludePowerQuery": False,
+  "IncludeSources": False,
+  "ShowAutoDateTables": False,
+  "IncludeMeasuresTable": False,
+  "WindowWidth": 1250,
+  "WindowHeight": 800,
+}
+
+
+def settings_folder() -> Path:
+  app_data = os.environ.get("APPDATA")
+  base = Path(app_data) if app_data else Path.home() / "AppData" / "Roaming"
+  return base / "LocalTmdlDocumenter"
+
+
+def settings_path() -> Path:
+  folder = settings_folder()
+  folder.mkdir(parents=True, exist_ok=True)
+  return folder / "settings.json"
+
+
+def default_settings() -> dict:
+  return deepcopy(_DEFAULTS)
+
+
+def _validated(settings: dict) -> dict:
+  output = default_settings()
+  if not isinstance(settings, dict):
+    return output
+
+  profiles = {"Business Documentation", "Developer Documentation", "Custom"}
+  profile = settings.get("Profile")
+  if profile in profiles:
+    output["Profile"] = profile
+
+  for key in (
+    "IncludeReport",
+    "IncludeHidden",
+    "IncludeDax",
+    "IncludePowerQuery",
+    "IncludeSources",
+    "ShowAutoDateTables",
+    "IncludeMeasuresTable",
+  ):
+    if isinstance(settings.get(key), bool):
+      output[key] = settings[key]
+
+  for key, minimum, maximum in (
+    ("WindowWidth", 800, 5000),
+    ("WindowHeight", 600, 3000),
+  ):
+    value = settings.get(key)
+    if isinstance(value, int):
+      output[key] = min(max(value, minimum), maximum)
+
+  return output
+
+
+def load_settings() -> dict:
+  path = settings_path()
+  if not path.exists():
+    return default_settings()
+  try:
+    return _validated(json.loads(path.read_text(encoding="utf-8")))
+  except (OSError, json.JSONDecodeError, TypeError, ValueError):
+    return default_settings()
+
+
+def save_settings(settings: dict) -> None:
+  path = settings_path()
+  temporary = path.with_suffix(".json.tmp")
+  payload = json.dumps(_validated(settings), indent=2, ensure_ascii=False)
+  temporary.write_text(payload, encoding="utf-8")
+  temporary.replace(path)
+
+
+def reset_settings() -> None:
+  path = settings_path()
+  if path.exists():
+    path.unlink()
+
+
+def open_settings_folder() -> None:
+  folder = settings_folder()
+  folder.mkdir(parents=True, exist_ok=True)
+  if os.name == "nt":
+    os.startfile(folder)  # type: ignore[attr-defined]
+  elif sys.platform == "darwin":
+    subprocess.Popen(["open", str(folder)])
+  else:
+    subprocess.Popen(["xdg-open", str(folder)])
