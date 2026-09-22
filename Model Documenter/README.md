@@ -1,11 +1,11 @@
-# Local TMDL Documenter V2
+# Model Documenter
 
 A local PySide6 application that reads PBIP/TMDL and PBIR files in place and generates a standalone HTML documentation report.
 
 ## Run with Anaconda
 
 ```powershell
-cd C:\Projects\LocalTmdlDocumenterV2
+cd C:\Projects\LocalTmdlDocumenter
 pip install -r requirements.txt
 python -m local_tmdl_documenter
 ```
