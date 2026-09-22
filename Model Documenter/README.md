@@ -19,3 +19,6 @@ Select the PBIP project folder, `.SemanticModel` folder, or semantic model `defi
 - Documentation is written only when you select an output path.
 - DAX, Power Query, source paths, and hidden objects are opt-in.
 - Credentials and common connection secrets are redacted from generated HTML.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
