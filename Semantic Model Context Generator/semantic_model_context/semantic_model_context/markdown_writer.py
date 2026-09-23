@@ -29,6 +29,14 @@ def write_context(
         for table in model.tables
     )
 
+    measure_only_tables = sum(
+        1
+        for table in model.tables
+        if (
+            len(table.columns) == 0
+            and len(table.measures) > 0
+        )
+    )
     # ==========================================
     # Model Profile Statistics
     # ==========================================
@@ -93,6 +101,7 @@ def write_context(
         f"- Model: {model.name}",
         f"- Storage mode: {model.storage_mode}",
         f"- Tables: {len(model.tables)}",
+        f"- Measure-Only Tables Remaining: {measure_only_tables}",
         f"- Columns: {column_count}",
         f"- Measures: {measure_count}",
         f"- Relationships: {len(model.relationships)}",
