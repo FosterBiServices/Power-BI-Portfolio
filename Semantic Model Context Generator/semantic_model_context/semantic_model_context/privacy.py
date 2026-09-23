@@ -13,7 +13,7 @@ class PrivacyOptions:
   include_data_source_locations: bool = False
   include_role_expressions: bool = False
   include_local_paths: bool = False
-  include_measure_only_tables: bool = False
+  include_measure_only_tables: bool = True
 
 
 def apply_privacy(model: SemanticModel, options: PrivacyOptions) -> SemanticModel:
