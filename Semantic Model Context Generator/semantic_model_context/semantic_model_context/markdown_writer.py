@@ -29,14 +29,6 @@ def write_context(
         for table in model.tables
     )
 
-    measure_only_tables = sum(
-        1
-        for table in model.tables
-        if (
-            len(table.columns) == 0
-            and len(table.measures) > 0
-        )
-    )
     # ==========================================
     # Model Profile Statistics
     # ==========================================
@@ -80,6 +72,15 @@ def write_context(
         key=lambda item: item[1],
         reverse=True
     )[:10]
+
+    measure_only_tables = sum(
+        1
+        for table in model.tables
+        if (
+            len(table.columns) == 0
+            and len(table.measures) > 0
+        )
+    )
 
     lines = [
         "---",
