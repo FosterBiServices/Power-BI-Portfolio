@@ -26,6 +26,13 @@ class GeneratorConfig:
   FontSize: int = 18
   MeasureName: str = "About This Report HTML"
   MeasureTable: str = "_Measures"
+  ShowAudience: bool = True
+  ShowKpiPurpose: bool = True
+  ShowBusinessObjectives: bool = True
+  ShowKeyDecisions: bool = True
+  ShowPrimaryOutcomes: bool = True
+  ShowSuccessIndicators: bool = True
+  ShowEvidenceGaps: bool = True
 
   def __post_init__(self):
     if not 1 <= self.MaxKpis <= 10:

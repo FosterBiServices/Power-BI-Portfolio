@@ -42,15 +42,20 @@ class ModelInventory:
   Relationships: tuple[RelationshipInfo, ...] = ()
 
 @dataclass(frozen=True)
+class BusinessKpi:
+  Name: str
+  Purpose: str = ""
+
+@dataclass(frozen=True)
 class AboutReportModel:
   ReportName: str
   ReportSummary: str
   BusinessValue: str
-  Sources: tuple[SourceInfo, ...]
-  Kpis: tuple[MeasureInfo, ...]
-  TableCount: int
-  ColumnCount: int
-  MeasureCount: int
-  RelationshipCount: int
-  RelationshipStrategy: str
+  Sources: tuple[str, ...]
+  Kpis: tuple[BusinessKpi, ...]
   EvidenceGaps: tuple[str, ...] = field(default_factory=tuple)
+  Audience: str = ""
+  BusinessObjectives: tuple[str, ...] = field(default_factory=tuple)
+  KeyDecisionsSupported: tuple[str, ...] = field(default_factory=tuple)
+  PrimaryOutcomes: tuple[str, ...] = field(default_factory=tuple)
+  SuccessIndicators: tuple[str, ...] = field(default_factory=tuple)
