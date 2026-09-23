@@ -82,6 +82,30 @@ def write_context(
         )
     )
 
+    measure_dependency_count = 0
+
+    for table in model.tables:
+
+        for measure in table.measures:
+
+            measure_dependency_count += (
+                len(
+                    getattr(
+                        measure,
+                        "measure_refs",
+                        []
+                    )
+                )
+                +
+                len(
+                    getattr(
+                        measure,
+                        "column_refs",
+                        []
+                    )
+                )
+            )
+
     lines = [
         "---",
         "contextType: Power BI Semantic Model",
@@ -116,6 +140,10 @@ def write_context(
         "",
         "## Model Profile",
         "",
+        f"### Measure Dependencies Found",
+        "",
+        f"- Total Dependencies: {measure_dependency_count}",
+        "",
         "### Data Type Distribution",
         ""
     ])
@@ -128,6 +156,7 @@ def write_context(
         lines.append(
             f"- {data_type}: {count}"
         )
+
 
     lines.extend([
         "",
@@ -295,11 +324,75 @@ def write_context(
                 lines.extend([
                     "",
                     f"#### {measure.name}",
-                    "",
-                    "```dax",
-                    measure.expression,
-                    "```",
                 ])
+
+                # --------------------------------------
+                # Measure Dependencies
+                # --------------------------------------
+
+                if (
+                    getattr(
+                        measure,
+                        "measure_refs",
+                        []
+                    )
+                    or
+                    getattr(
+                        measure,
+                        "column_refs",
+                        []
+                    )
+                ):
+
+                    lines.extend([
+                        "",
+                        "##### Dependencies",
+                        "",
+                    ])
+
+                    if measure.measure_refs:
+
+                        lines.append(
+                            "**Referenced Measures**"
+                        )
+
+                        for dependency in sorted(
+                            measure.measure_refs
+                        ):
+
+                            lines.append(
+                                f"- {dependency}"
+                            )
+
+                        lines.append("")
+
+                    if measure.column_refs:
+
+                        lines.append(
+                            "**Referenced Columns**"
+                        )
+
+                        for dependency in sorted(
+                            measure.column_refs
+                        ):
+
+                            lines.append(
+                                f"- {dependency}"
+                            )
+
+                        lines.append("")
+
+                # --------------------------------------
+                # Optional DAX
+                # --------------------------------------
+
+                if measure.expression:
+
+                    lines.extend([
+                        "```dax",
+                        measure.expression,
+                        "```",
+                    ])
 
     # ==========================================
     # Relationships

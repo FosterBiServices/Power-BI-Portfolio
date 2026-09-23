@@ -59,8 +59,6 @@ class MainWindow(QMainWindow):
     self.hidden_check = QCheckBox("Include hidden objects")
     self.dax_check = QCheckBox("Include DAX expressions")
     self.dax_check.setChecked(True)
-    self.measure_only_tables_check = QCheckBox("Include Measure-Only Tables")
-    self.measure_only_tables_check.setChecked(True)
     self.sources_check = QCheckBox("Include data-source locations")
     self.status_label = QLabel("Select a PBIP file to begin.")
     self.build_button = QPushButton("Build Context File")
@@ -86,7 +84,6 @@ class MainWindow(QMainWindow):
     layout.addLayout(form)
     layout.addWidget(self.hidden_check)
     layout.addWidget(self.dax_check)
-    layout.addWidget(self.measure_only_tables_check)
     layout.addWidget(self.sources_check)
     layout.addStretch()
     layout.addWidget(self.build_button)
@@ -120,12 +117,9 @@ class MainWindow(QMainWindow):
       return
 
     options = PrivacyOptions(
-        include_hidden_objects=self.hidden_check.isChecked(),
-        include_dax=self.dax_check.isChecked(),
-        include_data_source_locations=self.sources_check.isChecked(),
-        include_measure_only_tables=(
-            self.measure_only_tables_check.isChecked()
-        ),
+      include_hidden_objects=self.hidden_check.isChecked(),
+      include_dax=self.dax_check.isChecked(),
+      include_data_source_locations=self.sources_check.isChecked(),
     )
     self.build_button.setEnabled(False)
     self.status_label.setText("Building context file...")
