@@ -13,11 +13,24 @@ class PrivacyOptions:
   include_data_source_locations: bool = False
   include_role_expressions: bool = False
   include_local_paths: bool = False
+  include_measure_only_tables: bool = False
 
 
 def apply_privacy(model: SemanticModel, options: PrivacyOptions) -> SemanticModel:
   tables: list[Table] = []
   for table in model.tables:
+
+    is_measure_only_table = (
+        len(table.columns) == 0
+        and len(table.measures) > 0
+    )
+
+    if (
+        is_measure_only_table
+        and not options.include_measure_only_tables
+    ):
+        continue
+    
     if table.is_hidden and not options.include_hidden_objects:
       continue
     columns = [
