@@ -12,7 +12,7 @@ from .response_validator import ParseAiResponse
 
 class MainWindow(QMainWindow):
   def __init__(self):
-    super().__init__();self.setWindowTitle("About This Report AI Context Generator V1.3");self.resize(1200,800);self.ProjectPath=None;self.Inventory=None
+    super().__init__();self.setWindowTitle("About This Report AI Context Generator V3.0");self.resize(1200,800);self.ProjectPath=None;self.Inventory=None
     self.Tabs=QTabWidget();self.Context=QPlainTextEdit();self.Prompt=QPlainTextEdit();self.Response=QPlainTextEdit();self.Dax=QPlainTextEdit()
     for Label,Editor in (("Context JSON",self.Context),("AI Prompt",self.Prompt),("AI Response JSON",self.Response),("HTML DAX Measure",self.Dax)): self.Tabs.addTab(Editor,Label)
     self.setCentralWidget(self.Tabs);Bar=QToolBar("Main",self);self.addToolBar(Bar)
@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
     if not self.Inventory: QMessageBox.information(self,"No Project","Open a PBIP file first.");return
     try:
       KnownSources=[Item.Name for Item in self.Inventory.Sources if Item.Name not in {"Other / not detected","JSON"}];KnownMeasures=[Item.Name for Item in self.Inventory.Measures]
-      Result=ParseAiResponse(self.Response.toPlainText(),KnownSources,KnownMeasures,5);Html=BuildAiHtml(Result,18);self.Dax.setPlainText(BuildDaxMeasure(Html,GeneratorConfig()));self.Tabs.setCurrentWidget(self.Dax)
+      Result=ParseAiResponse(self.Response.toPlainText(),KnownSources,KnownMeasures,5);Config=GeneratorConfig();Html=BuildAiHtml(Result,Config=Config);self.Dax.setPlainText(BuildDaxMeasure(Html,Config));self.Tabs.setCurrentWidget(self.Dax)
     except Exception as Error: QMessageBox.critical(self,"Build Failed",str(Error))
   def save_dax(self):
     if not self.Dax.toPlainText().strip():return
