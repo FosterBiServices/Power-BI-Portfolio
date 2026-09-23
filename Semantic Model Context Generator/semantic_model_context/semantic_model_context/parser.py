@@ -167,25 +167,17 @@ from .domain import SemanticModel
 
 
 class TmdlParser:
-  """Load the parsed project and return a semantic model."""
 
-  def parse(self, resolved_project) -> SemanticModel:
-    project = load_project(
-      resolved_project.semantic_model_path
-    )
+    def parse(self, resolved_project) -> SemanticModel:
 
-    tables = list(project.tables.values())
-    relationships = list(project.relationships)
+        project = load_project(
+            resolved_project.semantic_model_path
+        )
 
-    print(
-      f"Tables={len(tables)} "
-      f"Relationships={len(relationships)}"
-    )
-
-    return SemanticModel(
-      name=project.name,
-      pbip_path=resolved_project.pbip_path,
-      semantic_model_path=resolved_project.semantic_model_path,
-      tables=tables,
-      relationships=relationships,
-    )
+        return SemanticModel(
+            name=project.name,
+            pbip_path=resolved_project.pbip_path,
+            semantic_model_path=resolved_project.semantic_model_path,
+            tables=list(project.tables.values()),
+            relationships=list(project.relationships),
+        )
