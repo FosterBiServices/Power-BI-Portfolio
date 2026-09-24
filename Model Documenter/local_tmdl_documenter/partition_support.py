@@ -125,6 +125,9 @@ UNDETECTED = "Other / not detected"
 # file formats before generic transports, so Excel.Workbook(File.Contents(...))
 # reports "Excel Workbook" rather than "File".
 _M_CONNECTORS = (
+  # Quickbase custom connectors vary in name (Quickbased, QuickBase.Contents, ...);
+  # a quickbase.com URL also identifies Web.Contents calls to its API.
+  (r"\bQuick_?Base\w*(?:\.\w+)?\s*\(|quickbase\.com", "Quickbase"),
   (r"\bSql\.Databases?\s*\(", "SQL Server"),
   (r"\bOracle\.Database\s*\(", "Oracle"),
   (r"\bPostgreSQL\.Database\s*\(", "PostgreSQL"),

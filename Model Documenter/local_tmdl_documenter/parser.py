@@ -132,41 +132,101 @@ def parse_tmdl(project: Project):
     level = re.search(r"compatibilityLevel\s*:\s*(\d+)", text, re.I); culture = re.search(r"culture\s*:\s*([^\s]+)", text, re.I)
     project.compatibility_level = level.group(1) if level else ""; project.culture = culture.group(1) if culture else ""
 
-def walk_values(value):
-  if isinstance(value, dict):
-    for key, child in value.items():
-      yield key, child
-      yield from walk_values(child)
-  elif isinstance(value, list):
-    for child in value: yield from walk_values(child)
+def _source_entity(expression, aliases: dict[str, str]) -> str:
+  if not isinstance(expression, dict): return ""
+  source = expression.get("SourceRef")
+  if not isinstance(source, dict): return ""
+  return source.get("Entity") or aliases.get(source.get("Source", ""), "")
 
 def parse_visual_fields(data) -> list[str]:
+  """Return Table[Field] references from a PBIR visual (projections, filters, formatting)."""
+  aliases: dict[str, str] = {}
+  def collect_aliases(node):
+    if isinstance(node, dict):
+      for item in node.get("From", []) if isinstance(node.get("From"), list) else []:
+        if isinstance(item, dict) and item.get("Name") and item.get("Entity"): aliases[item["Name"]] = item["Entity"]
+      for child in node.values(): collect_aliases(child)
+    elif isinstance(node, list):
+      for child in node: collect_aliases(child)
+  collect_aliases(data)
   refs = set()
-  text = json.dumps(data, ensure_ascii=False)
-  for table, column in re.findall(r'"Entity"\s*:\s*"([^"]+)".*?"Property"\s*:\s*"([^"]+)"', text): refs.add(f"{table}[{column}]")
-  for table, measure in re.findall(r'"Entity"\s*:\s*"([^"]+)".*?"Measure"\s*:\s*"([^"]+)"', text): refs.add(f"{table}[{measure}]")
+  def walk(node):
+    if isinstance(node, dict):
+      expression = node.get("Expression")
+      if "Property" in node:
+        entity = _source_entity(expression, aliases)
+        if entity: refs.add(f"{entity}[{node['Property']}]")
+      if "Level" in node and isinstance(expression, dict) and isinstance(expression.get("Hierarchy"), dict):
+        hierarchy = expression["Hierarchy"]
+        entity = _source_entity(hierarchy.get("Expression"), aliases)
+        if entity: refs.add(f"{entity}[{hierarchy.get('Hierarchy', '')}].[{node['Level']}]")
+      for child in node.values(): walk(child)
+    elif isinstance(node, list):
+      for child in node: walk(child)
+  walk(data)
   return sorted(refs)
+
+def _visual_title(visual: dict) -> str:
+  for item in (visual.get("visualContainerObjects") or {}).get("title", []) + (visual.get("objects") or {}).get("title", []):
+    value = (((item.get("properties") or {}).get("text") or {}).get("expr") or {}).get("Literal", {}).get("Value", "")
+    if value: return value.strip("'")
+  return ""
+
+def report_definition_root(report_root: Path) -> Path:
+  """Return the PBIR folder that contains pages/, whether given X.Report or X.Report/definition."""
+  for candidate in (report_root / "definition", report_root):
+    if (candidate / "pages").is_dir(): return candidate
+  return report_root
 
 def parse_pbir(project: Project):
   if not project.report_root: return
-  pages_root = project.report_root / "pages"
-  if not pages_root.exists(): pages_root = project.report_root
-  for page_dir in sorted([p for p in pages_root.iterdir() if p.is_dir()] if pages_root.exists() else []):
-    page_json = page_dir / "page.json"
-    try: pdata = json.loads(read(page_json)) if page_json.exists() else {}
+  pages_root = report_definition_root(project.report_root) / "pages"
+  if not pages_root.is_dir():
+    project.warnings.append(f"No report pages folder found under {project.report_root}")
+    return
+  page_dirs = {p.name: p for p in pages_root.iterdir() if p.is_dir() and (p / "page.json").exists()}
+  order = []
+  pages_json = pages_root / "pages.json"
+  if pages_json.exists():
+    try: order = [name for name in json.loads(read(pages_json)).get("pageOrder", []) if name in page_dirs]
+    except json.JSONDecodeError as error: project.warnings.append(f"Invalid JSON {pages_json}: {error}")
+  order += sorted(name for name in page_dirs if name not in order)
+  for page_name in order:
+    page_dir = page_dirs[page_name]; page_json = page_dir / "page.json"
+    try: pdata = json.loads(read(page_json))
     except json.JSONDecodeError as error:
       project.warnings.append(f"Invalid JSON {page_json}: {error}"); continue
-    page = ReportPage(name=page_dir.name, display_name=pdata.get("displayName", page_dir.name), width=float(pdata.get("width",1280) or 1280), height=float(pdata.get("height",720) or 720))
+    page = ReportPage(name=page_dir.name, display_name=pdata.get("displayName", page_dir.name), width=float(pdata.get("width",1280) or 1280), height=float(pdata.get("height",720) or 720), is_hidden=pdata.get("visibility") == "HiddenInViewMode")
+    raw = {}
     visuals_root = page_dir / "visuals"
-    if visuals_root.exists():
-      for vdir in sorted(p for p in visuals_root.iterdir() if p.is_dir()):
-        path = vdir / "visual.json"
-        if not path.exists(): continue
-        try: data = json.loads(read(path))
-        except json.JSONDecodeError as error:
-          project.warnings.append(f"Invalid JSON {path}: {error}"); continue
-        pos = data.get("position", {}); visual = data.get("visual", {})
-        page.visuals.append(Visual(page.display_name, data.get("name",vdir.name), visual.get("visualType",data.get("visualType","unknown")), float(pos.get("x",0) or 0), float(pos.get("y",0) or 0), float(pos.get("width",0) or 0), float(pos.get("height",0) or 0), parse_visual_fields(data)))
+    for vdir in sorted(p for p in visuals_root.iterdir() if p.is_dir()) if visuals_root.exists() else []:
+      path = vdir / "visual.json"
+      if not path.exists(): continue
+      try: data = json.loads(read(path))
+      except json.JSONDecodeError as error:
+        project.warnings.append(f"Invalid JSON {path}: {error}"); continue
+      raw[data.get("name", vdir.name)] = data
+    def absolute(name, seen=()):
+      # Grouped visuals store positions relative to their parent group.
+      data = raw[name]; pos = data.get("position", {})
+      x, y = float(pos.get("x", 0) or 0), float(pos.get("y", 0) or 0)
+      parent = data.get("parentGroupName")
+      if parent in raw and parent not in seen:
+        px, py = absolute(parent, seen + (name,)); x += px; y += py
+      return x, y
+    for name, data in raw.items():
+      pos = data.get("position", {}); visual = data.get("visual", {}); is_group = "visualGroup" in data
+      x, y = absolute(name)
+      page.visuals.append(Visual(
+        page.display_name, name,
+        "group" if is_group else visual.get("visualType", data.get("visualType", "unknown")),
+        x, y, float(pos.get("width", 0) or 0), float(pos.get("height", 0) or 0),
+        [] if is_group else parse_visual_fields(data),
+        z=float(pos.get("z", 0) or 0), is_hidden=bool(data.get("isHidden")), is_group=is_group,
+        parent_group=data.get("parentGroupName", ""),
+        title=(data.get("visualGroup") or {}).get("displayName", "") if is_group else _visual_title(visual),
+      ))
+    page.visuals.sort(key=lambda v: v.z)
     project.pages.append(page)
 
 def parse_partitions(project: Project):
@@ -323,6 +383,16 @@ def discover_from_pbip(
         semantic_definition,
         report_root
     )
+
+def load_project(selected: Path) -> Project:
+  """Load a project from a PBIP folder, .SemanticModel folder, or definition folder."""
+  semantic, report = discover(selected)
+  model_folder = semantic.parent if semantic.name == "definition" else semantic
+  project = Project(selected.expanduser().resolve(), semantic, report, model_folder.name.removesuffix(".SemanticModel"))
+  parse_tmdl(project)
+  parse_partitions(project)
+  parse_pbir(project)
+  return project
 
 def load_project_from_pbip(pbip_path: Path) -> Project:
 

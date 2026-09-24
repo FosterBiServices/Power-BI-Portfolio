@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
   QPlainTextEdit, QTabWidget, QToolBar, QTreeWidget, QTreeWidgetItem,
 )
 
-from .documentation import DocumentationOptions, write_documentation
+from .documentation import DocumentationOptions, default_filename, write_documentation
 from .diagnostics import export_diagnostics, open_diagnostics_folder
 from .parser import ProjectError, load_project_from_pbip
 from .reliability import (
@@ -123,7 +123,7 @@ class OptionsDialog(QDialog):
 class MainWindow(QMainWindow):
   def __init__(self):
     super().__init__()
-    self.setWindowTitle("Local TMDL Documenter V2.10.0")
+    self.setWindowTitle("Local TMDL Documenter V2.11.0")
     self.log_path = configure_logging()
     self.settings = load_settings()
     self.resize(self.settings.get("WindowWidth", 1250), self.settings.get("WindowHeight", 800))
@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
       f"Model: {project.name}\nSemantic model: {project.semantic_root}\nReport: {project.report_root or 'Not found'}\n\n"
       f"Tables: {len(project.tables)}\nColumns: {sum(len(t.columns) for t in project.tables.values())}\n"
       f"Measures: {sum(len(t.measures) for t in project.tables.values())}\nPartitions: {sum(len(t.partitions) for t in project.tables.values())}\n"
-      f"Relationships: {len(project.relationships)}\nPages: {len(project.pages)}\nVisuals: {sum(len(p.visuals) for p in project.pages)}\nWarnings: {len(project.warnings)}"
+      f"Relationships: {len(project.relationships)}\nPages: {len(project.pages)}\nVisuals: {sum(not v.is_group for p in project.pages for v in p.visuals)}\nWarnings: {len(project.warnings)}"
     )
     self.statusBar().showMessage(f"Loaded {project.name}")
 
@@ -253,7 +253,8 @@ class MainWindow(QMainWindow):
     if dialog.exec() != QDialog.Accepted:
       return
     options = dialog.options(); self.settings.update(dialog.settings_values()); self.save_current_settings()
-    default = str(self.project.selected_root / f"{self.project.name}-full-report.html")
+    folder = self.project.selected_root if self.project.selected_root.is_dir() else self.project.selected_root.parent
+    default = str(folder / default_filename(self.project, options))
     output, _ = QFileDialog.getSaveFileName(self, "Save local documentation", default, "HTML files (*.html)")
     if not output:
       return
@@ -329,5 +330,5 @@ class MainWindow(QMainWindow):
 
 
 def main():
-  app = QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2.10.0")
+  app = QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2.11.0")
   window = MainWindow(); window.show(); return app.exec()

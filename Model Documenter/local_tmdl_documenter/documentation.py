@@ -7,6 +7,7 @@ from .domain import Project
 from .v27_validation import build_validation_html
 from .v26_lineage import build_measure_lineage_html
 from .v25_sections import build_relationship_matrix, build_source_inventory
+from .report_pages import build_report_pages_html, build_visual_usage_html
 from .diagram_v21 import diagram_v21, is_dedicated_measures_table
 
 @dataclass
@@ -40,18 +41,46 @@ def diagram(project: Project) -> str:
     nodes.append(f'<g><rect x="{x}" y="{y[name]}" width="200" height="60" rx="6" fill="#fff" stroke="#d0ccc4"/><rect x="{x}" y="{y[name]}" width="200" height="30" rx="6" fill="#1a3a5c"/><text x="{x+100}" y="{y[name]+20}" text-anchor="middle" fill="white" class="node">{esc(name[:28])}</text><text x="{x+10}" y="{y[name]+48}" class="small">{len(table.columns)} columns · {len(table.measures)} measures</text></g>')
   return f'<svg viewBox="0 0 {width} {height}" class="diagram"><style>.node{{font:600 12px Segoe UI}}.small{{font:11px Segoe UI;fill:#666}}</style>{"".join(lines)}{"".join(nodes)}</svg>'
 
-def generate_html(project: Project, options: DocumentationOptions) -> str:
+def section_visibility(options: DocumentationOptions) -> dict[str, bool]:
+  """Profiles control section visibility. Custom keeps the individual checkbox behavior."""
   profile = (options.profile or "Custom").strip()
-  is_business = profile == "Business Documentation"
   is_developer = profile == "Developer Documentation"
+  return {
+    "report": is_developer or (profile == "Custom" and options.include_report),
+    "power_query": is_developer or (profile == "Custom" and options.include_power_query),
+    "validation": is_developer or profile == "Custom",
+  }
 
-  # Profiles control section visibility. Custom keeps the individual checkbox behavior.
-  show_report_sections = is_developer or (profile == "Custom" and options.include_report)
-  show_power_query = is_developer or (profile == "Custom" and options.include_power_query)
-  show_validation = is_developer or profile == "Custom"
+def documentation_title(options: DocumentationOptions) -> tuple[str, list[str]]:
+  """Return a descriptive report title and the optional content it includes."""
+  shown = section_visibility(options)
+  profile = (options.profile or "Custom").strip()
+  subject = "Model & Report Documentation" if shown["report"] else "Semantic Model Documentation"
+  audience = {"Business Documentation": "Business", "Developer Documentation": "Developer"}.get(profile, "")
+  title = f"{audience} {subject}".strip()
+  included = [label for label, flag in (
+    ("report pages & visual usage", shown["report"]),
+    ("DAX expressions", options.include_dax),
+    ("Power Query", shown["power_query"]),
+    ("model validation", shown["validation"]),
+    ("hidden objects", options.include_hidden),
+    ("measures tables", options.include_measures_tables),
+    ("auto date tables", options.show_auto_date_tables),
+  ) if flag]
+  return title, included
+
+def default_filename(project: Project, options: DocumentationOptions) -> str:
+  title, _ = documentation_title(options)
+  return f"{project.name} - {title.replace('&', 'and')}.html"
+
+def generate_html(project: Project, options: DocumentationOptions) -> str:
+  shown = section_visibility(options)
+  show_report_sections = shown["report"]
+  show_power_query = shown["power_query"]
+  show_validation = shown["validation"]
   tables=[t for t in project.tables.values() if (options.include_hidden or not t.is_hidden) and (options.include_measures_tables or not is_dedicated_measures_table(t))]
   measures=[(t,m) for t in tables for m in t.measures if options.include_hidden or not m.is_hidden]
-  visuals=[v for p in project.pages for v in p.visuals]
+  visuals=[v for p in project.pages for v in p.visuals if not v.is_group]
   toc=['<a href="#overview">Model Overview</a>','<a href="#diagram">Relationship Diagram</a>','<a href="#tables">Table Inventory</a>','<a href="#measures">Measure Catalog</a>','<a href="#measure-lineage">Measure Lineage</a>','<a href="#relationships">Relationships</a>','<a href="#relationship-matrix">Relationship Matrix</a>','<a href="#source-inventory">Source Inventory</a>']
   if show_validation:
     toc += ['<a href="#model-validation">Model Validation</a>']
@@ -106,21 +135,14 @@ def generate_html(project: Project, options: DocumentationOptions) -> str:
       + ''.join(query_sections)
     )
   if show_report_sections and project.pages:
-    pages=[]
-    for page in project.pages:
-      scale=min(700/max(page.width,1),400/max(page.height,1)); boxes=''.join(f'<div class="vbox" style="left:{v.x*scale}px;top:{v.y*scale}px;width:{max(v.width*scale,25)}px;height:{max(v.height*scale,18)}px" title="{esc(v.visual_type)}">{esc(v.name[:22])}</div>' for v in page.visuals)
-      details=''.join(f'<details><summary>{esc(v.name)} · {esc(v.visual_type)}</summary><div class="inside"><p>{esc(", ".join(v.fields) or "No fields detected")}</p><p>Position: {v.x:g}, {v.y:g}, {v.width:g} × {v.height:g}</p></div></details>' for v in page.visuals)
-      pages.append(f'<h3>{esc(page.display_name)} ({len(page.visuals)} visuals)</h3><div class="page" style="width:{page.width*scale}px;height:{page.height*scale}px">{boxes}</div>{details}')
-    sections.append('<h2 id="pages">Report Pages</h2>'+''.join(pages))
-    usage={}
-    for visual in visuals:
-      for field in visual.fields: usage.setdefault(field,[]).append(f'{visual.page}: {visual.name}')
-    rows=''.join(f'<tr><td>{esc(field)}</td><td>{esc("; ".join(items))}</td></tr>' for field,items in sorted(usage.items()))
-    sections.append(f'<h2 id="usage">Visual Usage</h2><table><tr><th>Field</th><th>Used In</th></tr>{rows}</table>')
+    sections.append(build_report_pages_html(project))
+    sections.append(build_visual_usage_html(project))
   warnings=''.join(f'<li>{esc(w)}</li>' for w in project.warnings)
   if warnings: sections.append(f'<h2 id="validation">Validation Notes</h2><ul>{warnings}</ul>')
-  css='''body{font-family:Segoe UI,Arial;max-width:1100px;margin:auto;padding:40px 24px;background:#fafaf8;color:#2c2c2c;line-height:1.5}h1,h2,h3{color:#1a3a5c}h2{margin-top:40px;border-bottom:3px solid #c89632;padding-bottom:8px}.toc{columns:2}.toc a{display:block;color:#1a3a5c;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.stat{background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center}.stat b{display:block;font-size:28px;color:#1a3a5c}.stat span{color:#666}table{width:100%;border-collapse:collapse;margin:12px 0 22px;font-size:13px}th{background:#1a3a5c;color:#fff;text-align:left;padding:9px}td{padding:8px;border-bottom:1px solid #ddd}details{margin:8px 0;border:1px solid #ddd;border-radius:6px}summary{cursor:pointer;padding:10px;background:#f5f2ed;color:#1a3a5c;font-weight:600}.inside{padding:12px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f2ed;border-left:4px solid #c89632;padding:12px;font:12px Consolas}.rel{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #ddd;border-radius:6px;margin:6px 0}.rel em{font-size:11px;background:#eef2f5;padding:2px 7px;border-radius:10px}.diagram{width:100%;border:1px solid #ddd;background:#fff}.page{position:relative;background:#f5f5f5;border:1px solid #bbb;margin:12px 0;overflow:hidden}.matrix-filter{width:100%;max-width:520px;padding:10px 12px;margin:8px 0 14px;border:1px solid #bbb;border-radius:6px;font:14px Segoe UI}.table-scroll{overflow-x:auto}.relationship-row:hover{background:#f4f7fa}.validation-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.validation-controls select{padding:10px;border:1px solid #bbb;border-radius:6px}.severity{font-weight:700;padding:3px 8px;border-radius:12px;font-size:11px}.severity.error{background:#fde2e2;color:#9b1c1c}.severity.warning{background:#fff3cd;color:#7a5200}.severity.info{background:#e8f1fb;color:#1f4e79}.coverage-bar{min-width:160px;height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden}.coverage-bar span{display:block;height:100%;background:#2f855a}.vbox{position:absolute;border:1px solid #6a1b9a;background:rgba(106,27,154,.10);font-size:9px;overflow:hidden;padding:2px}@media print{body{max-width:none}h2{break-before:page}details{break-inside:avoid}}'''
-  return f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{esc(project.name)} — Full Report</title><style>{css}</style></head><body><h1>{esc(project.name)} — Full Report</h1><p>Local documentation generated on {date.today().isoformat()}</p><h2>Table of Contents</h2><div class="toc">{"".join(toc)}</div>{"".join(sections)}<footer><p>Generated locally by Local TMDL Documenter V2.</p></footer></body></html>'
+  css='''body{font-family:Segoe UI,Arial;max-width:1100px;margin:auto;padding:40px 24px;background:#fafaf8;color:#2c2c2c;line-height:1.5}h1,h2,h3{color:#1a3a5c}h2{margin-top:40px;border-bottom:3px solid #c89632;padding-bottom:8px}.toc{columns:2}.toc a{display:block;color:#1a3a5c;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.stat{background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center}.stat b{display:block;font-size:28px;color:#1a3a5c}.stat span{color:#666}table{width:100%;border-collapse:collapse;margin:12px 0 22px;font-size:13px}th{background:#1a3a5c;color:#fff;text-align:left;padding:9px}td{padding:8px;border-bottom:1px solid #ddd}details{margin:8px 0;border:1px solid #ddd;border-radius:6px}summary{cursor:pointer;padding:10px;background:#f5f2ed;color:#1a3a5c;font-weight:600}.inside{padding:12px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f2ed;border-left:4px solid #c89632;padding:12px;font:12px Consolas}.rel{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #ddd;border-radius:6px;margin:6px 0}.rel em{font-size:11px;background:#eef2f5;padding:2px 7px;border-radius:10px}.diagram{width:100%;border:1px solid #ddd;background:#fff}.page{position:relative;background:#f5f5f5;border:1px solid #bbb;margin:12px 0;overflow:hidden}.matrix-filter{width:100%;max-width:520px;padding:10px 12px;margin:8px 0 14px;border:1px solid #bbb;border-radius:6px;font:14px Segoe UI}.table-scroll{overflow-x:auto}.relationship-row:hover{background:#f4f7fa}.validation-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.validation-controls select{padding:10px;border:1px solid #bbb;border-radius:6px}.severity{font-weight:700;padding:3px 8px;border-radius:12px;font-size:11px}.severity.error{background:#fde2e2;color:#9b1c1c}.severity.warning{background:#fff3cd;color:#7a5200}.severity.info{background:#e8f1fb;color:#1f4e79}.coverage-bar{min-width:160px;height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden}.coverage-bar span{display:block;height:100%;background:#2f855a}.page{width:100%;background:#fff}.vbox{position:absolute;box-sizing:border-box;border:1px solid #6a1b9a;background:rgba(106,27,154,.08);font-size:9px;line-height:1.25;overflow:hidden;padding:2px 3px;color:#3b1356}.vbox b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vbox code{font:8px Consolas;color:#555;word-break:break-all}.vbox.group{border:1px dashed #1a3a5c;background:transparent;color:#1a3a5c}.vbox.hidden{opacity:.45;border-style:dashed}.vbox:hover{background:rgba(200,150,50,.25);z-index:9999}.badge{font-size:11px;background:#eef2f5;color:#1a3a5c;padding:2px 8px;border-radius:10px;vertical-align:middle}.muted{color:#666;margin-top:-6px}.subtitle{color:#555;margin-top:-10px}table.top td{vertical-align:top}@media print{body{max-width:none}h2{break-before:page}details{break-inside:avoid}}'''
+  title, included = documentation_title(options)
+  scope_line = "Includes model overview, tables, measures, lineage, relationships, and sources" + (", plus " + ", ".join(included) if included else "") + "."
+  return f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{esc(project.name)} — {esc(title)}</title><style>{css}</style></head><body><h1>{esc(project.name)} — {esc(title)}</h1><p class="subtitle">{esc(scope_line)}</p><p>Local documentation generated on {date.today().isoformat()}</p><h2>Table of Contents</h2><div class="toc">{"".join(toc)}</div>{"".join(sections)}<footer><p>Generated locally by Local TMDL Documenter V2.</p></footer></body></html>'
 
 def write_documentation(project: Project, output: Path, options: DocumentationOptions):
   output.write_text(generate_html(project, options), encoding="utf-8")
