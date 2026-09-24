@@ -21,80 +21,6 @@
     }
   },
   "filterConfig": {
-    "filters": [
-      {
-        "name": "Filterfca1b225a2f3d6f7d177",
-        "displayName": "Project Category",
-        "ordinal": 0,
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Projects"
-              }
-            },
-            "Property": "Category"
-          }
-        },
-        "type": "Categorical",
-        "howCreated": "User"
-      },
-      {
-        "name": "Filter",
-        "ordinal": 1,
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Projects"
-              }
-            },
-            "Property": "VP Name"
-          }
-        },
-        "type": "Categorical",
-        "howCreated": "User",
-        "objects": {
-          "general": [
-            {
-              "properties": {}
-            }
-          ]
-        }
-      },
-      {
-        "name": "Filter3",
-        "ordinal": 2,
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Projects"
-              }
-            },
-            "Property": "PD Name"
-          }
-        },
-        "type": "Categorical",
-        "howCreated": "User"
-      },
-      {
-        "name": "9ece9ca8e02b5b90704d",
-        "ordinal": 3,
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Companies"
-              }
-            },
-            "Property": "Company Name"
-          }
-        },
-        "type": "Categorical",
-        "howCreated": "User"
-      }
-    ],
     "filterSortOrder": "Custom"
   },
   "objects": {
@@ -156,6 +82,11 @@
         {
           "name": "Selected18289709681167388.png",
           "path": "Selected18289709681167388.png",
+          "type": "Image"
+        },
+        {
+          "name": "Terminations-drillthrough6543766612181894.png",
+          "path": "Terminations-drillthrough6543766612181894.png",
           "type": "Image"
         },
         {

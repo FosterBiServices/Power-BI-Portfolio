@@ -48,6 +48,9 @@
       }
     ]
   },
+  "publicCustomVisuals": [
+    "htmlContent443BE3AD55E043BF878BED274D3A6855"
+  ],
   "resourcePackages": [
     {
       "name": "SharedResources",
@@ -107,6 +110,11 @@
         {
           "name": "Inclement_Weather_-_Overview9580722221365051.png",
           "path": "Inclement_Weather_-_Overview9580722221365051.png",
+          "type": "Image"
+        },
+        {
+          "name": "Inclement-Weather-Background-17234231599747848.png",
+          "path": "Inclement-Weather-Background-17234231599747848.png",
           "type": "Image"
         },
         {

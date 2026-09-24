@@ -81,62 +81,6 @@
         "isLockedInViewMode": true
       },
       {
-        "name": "c34194510bea304c3a0e",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "IncludeInactiveProject"
-              }
-            },
-            "Property": "IncludeInactiveProject"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "i",
-              "Entity": "IncludeInactiveProject",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "i"
-                          }
-                        },
-                        "Property": "IncludeInactiveProject"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'No'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User",
-        "isHiddenInViewMode": true,
-        "isLockedInViewMode": true
-      },
-      {
         "name": "9debf2fa95a25e2c510a",
         "field": {
           "Column": {
@@ -196,7 +140,6 @@
           ]
         },
         "howCreated": "User",
-        "isHiddenInViewMode": true,
         "isLockedInViewMode": true
       }
     ]
