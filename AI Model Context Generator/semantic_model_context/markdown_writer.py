@@ -109,7 +109,7 @@ def write_context(
     lines = [
         "---",
         "contextType: Power BI Semantic Model",
-        "schemaVersion: 1.0",
+        "schemaVersion: 1.1",
         "generator: Semantic Model Context Builder",
         f"modelName: {_safe_cell(model.name)}",
         f"generatedUtc: {generated_utc}",
@@ -120,6 +120,7 @@ def write_context(
         "Treat this file as the authoritative structural reference for this model.",
         "Do not invent tables, columns, measures, or relationships that are not listed.",
         "Use exact object names when proposing DAX.",
+        "Measures listed under Validation errors are broken; do not treat them as working references.",
         "",
         "# Model Summary",
         "",
@@ -294,12 +295,19 @@ def write_context(
                     f"- {related_table}"
                 )
 
+        has_column_descriptions = any(
+            column.description
+            for column in table.columns
+        )
+
         lines.extend([
             "",
             "### Columns",
             "",
-            "| Column | Data Type | Hidden | Key | Sort By |",
-            "|---|---|---:|---:|---|",
+            "| Column | Data Type | Hidden | Key | Sort By |"
+            + (" Description |" if has_column_descriptions else ""),
+            "|---|---|---:|---:|---|"
+            + ("---|" if has_column_descriptions else ""),
         ])
 
         for column in table.columns:
@@ -310,6 +318,11 @@ def write_context(
                 f"{'Yes' if column.is_hidden else 'No'} | "
                 f"{'Yes' if column.is_key else 'No'} | "
                 f"{_safe_cell(column.sort_by_column)} |"
+                + (
+                    f" {_safe_cell(column.description)} |"
+                    if has_column_descriptions
+                    else ""
+                )
             )
 
         if table.measures:
@@ -325,6 +338,13 @@ def write_context(
                     "",
                     f"#### {measure.name}",
                 ])
+
+                if measure.description:
+
+                    lines.extend([
+                        "",
+                        measure.description,
+                    ])
 
                 # --------------------------------------
                 # Measure Dependencies
@@ -417,6 +437,56 @@ def write_context(
         )
 
     # ==========================================
+    # Data Sources
+    # ==========================================
+
+    lines.extend([
+        "",
+        "# Data Sources",
+        "",
+    ])
+
+    if model.data_sources:
+
+        source_counts: dict[str, int] = {}
+
+        for source in model.data_sources:
+            source_counts[source.source_type] = (
+                source_counts.get(source.source_type, 0) + 1
+            )
+
+        for source_type, count in sorted(source_counts.items()):
+            lines.append(f"- {source_type}: {count}")
+
+        lines.extend([
+            "",
+            "| Table | Source | Storage Mode | Location |",
+            "|---|---|---|---|",
+        ])
+
+        for source in sorted(
+            model.data_sources,
+            key=lambda item: item.table.casefold()
+        ):
+
+            location = " / ".join(
+                value
+                for value in (source.server, source.database, source.path)
+                if value
+            )
+
+            lines.append(
+                f"| {_safe_cell(source.table)} | "
+                f"{_safe_cell(source.source_type)} | "
+                f"{_safe_cell(source.mode or 'Not specified')} | "
+                f"{_safe_cell(location)} |"
+            )
+
+    else:
+
+        lines.append("No table partitions were found.")
+
+    # ==========================================
     # Validation
     # ==========================================
 
@@ -424,7 +494,7 @@ def write_context(
         "",
         "# Validation",
         "",
-        f"- Model parsed successfully: {'Yes' if validation.is_valid else 'No'}",
+        f"- Validation passed: {'Yes' if validation.is_valid else 'No'}",
         f"- Errors: {len(validation.errors)}",
         f"- Warnings: {len(validation.warnings)}",
     ])

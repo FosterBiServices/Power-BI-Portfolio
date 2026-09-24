@@ -1,14 +1,14 @@
 from __future__ import annotations
 import json, re
 from pathlib import Path
-from .domain import Column, Expression, Measure, Project, Relationship, ReportPage, Table, Visual
+from .dax_checks import measure_references
+from .domain import Column, DataSource, Expression, Measure, Partition, Project, Relationship, ReportPage, Table, Visual
+from .partition_support import detect_source, parse_partition_blocks
 
 _ID = r"(?:'(?:''|[^'])*'|[^.\s]+)"
 _ENDPOINT = re.compile(rf"^\s*(fromColumn|toColumn)\s*:\s*({_ID})\.({_ID})\s*$", re.I)
 _DECL = re.compile(r"^(\s*)(table|column|measure|relationship|expression)\s+(.+?)(?:\s*=\s*(.*))?$", re.I)
 _PROP = re.compile(r"^\s*([A-Za-z][A-Za-z0-9]*)\s*:\s*(.*?)\s*$")
-_COLUMN_REF = re.compile(r"(?:'((?:''|[^'])+)'|([A-Za-z_][\w ]*))\s*\[([^\]]+)\]")
-_MEASURE_REF = re.compile(r"(?<![\w'])\[([^\]]+)\]")
 
 class ProjectError(Exception): pass
 
@@ -51,33 +51,69 @@ def blocks(text: str):
       index += 1
     yield start + 1, lines[start:index], match
 
+# TMDL writes true booleans as a bare property name, e.g. a line with just `isHidden`.
+_FLAG = re.compile(r"^\s*([A-Za-z][A-Za-z0-9]*)\s*$")
+
+def _indent(line: str) -> int:
+  return len(line) - len(line.lstrip())
+
 def properties(block: list[str]) -> dict[str, str]:
+  """Read the object's own properties; nested objects' properties are ignored."""
+  # Skip /// lines: the next object's description sits inside this block.
+  lines = [line for line in block[1:] if line.strip() and not line.strip().startswith("///")]
+  if not lines: return {}
+  child_indent = min(_indent(line) for line in lines)
   output = {}
-  for line in block[1:]:
+  for line in lines:
+    if _indent(line) != child_indent: continue
     match = _PROP.match(line)
     if match: output[match.group(1).casefold()] = match.group(2).strip()
+    elif (flag := _FLAG.match(line)): output[flag.group(1).casefold()] = "true"
   return output
+
+def doc_comment(lines: list[str], index: int) -> str:
+  """Return the /// description lines written directly above lines[index]."""
+  comments = []
+  index -= 1
+  while index >= 0 and lines[index].strip().startswith("///"):
+    comments.insert(0, lines[index].strip()[3:].strip())
+    index -= 1
+  return " ".join(comments).strip()
 
 def expression_body(block: list[str], header_match) -> str:
   first = header_match.group(4) or ""
   body = [first] if first else []
   base = len(header_match.group(1))
   for line in block[1:]:
-    if _PROP.match(line) and len(line) - len(line.lstrip()) <= base + 2: break
+    indent = _indent(line)
+    if line.strip() and ((_PROP.match(line) and indent <= base + 2) or (_FLAG.match(line) and indent <= base + 1)): break
+    # The next object's /// description sits at this object's indent, before its declaration.
+    if line.strip().startswith("///") and indent <= base: break
     body.append(line[base + 2:] if len(line) >= base + 2 else line)
   return "\n".join(body).strip().strip("`")
 
+# These folders restate table/measure names (translations, perspective
+# membership, role permissions) without defining them.
+_NON_DEFINITION_FOLDERS = {"cultures", "perspectives", "roles"}
+
+def model_files(project: Project) -> list[Path]:
+  files = []
+  for path in project.semantic_root.rglob("*.tmdl"):
+    parts = {part.casefold() for part in path.relative_to(project.semantic_root).parts[:-1]}
+    if not parts & _NON_DEFINITION_FOLDERS: files.append(path)
+  return sorted(files, key=lambda p: str(p).casefold())
+
 def parse_tmdl(project: Project):
-  files = sorted(project.semantic_root.rglob("*.tmdl"), key=lambda p: str(p).casefold())
+  files = model_files(project)
   if not files: raise ProjectError("No TMDL files found.")
   for path in files:
-    text = read(path)
+    text = read(path); text_lines = text.splitlines()
     for line_number, block, match in blocks(text):
       kind, raw_name = match.group(2).casefold(), match.group(3)
       name = clean(raw_name)
       props = properties(block)
       if kind == "table":
-        project.tables.setdefault(name, Table(name=name, description=props.get("description", ""), is_hidden=props.get("ishidden", "false").casefold()=="true"))
+        project.tables.setdefault(name, Table(name=name, description=doc_comment(text_lines, line_number - 1) or props.get("description", ""), is_hidden=props.get("ishidden", "false").casefold()=="true"))
       elif kind == "relationship":
         ends = {}
         for line in block[1:]:
@@ -104,14 +140,14 @@ def parse_tmdl(project: Project):
           if nxt and len(nxt.group(1)) <= indent: break
           index += 1
         block = lines[start:index]; props = properties(block)
+        description = doc_comment(lines, start) or props.get("description", "")
         if kind == "column":
-          current_table.columns.append(Column(name=name, data_type=props.get("datatype",""), format_string=props.get("formatstring",""), description=props.get("description",""), summarize_by=props.get("summarizeby",""), sort_by=props.get("sortbycolumn",""), source_column=props.get("sourcecolumn",""), is_hidden=props.get("ishidden","false").casefold()=="true", is_key=props.get("iskey","false").casefold()=="true"))
+          current_table.columns.append(Column(name=name, data_type=props.get("datatype",""), format_string=props.get("formatstring",""), description=description, summarize_by=props.get("summarizeby",""), sort_by=props.get("sortbycolumn",""), source_column=props.get("sourcecolumn",""), is_hidden=props.get("ishidden","false").casefold()=="true", is_key=props.get("iskey","false").casefold()=="true"))
         else:
           dax = expression_body(block, match)
-          column_refs = sorted({f"{a or b}[{c}]" for a,b,c in _COLUMN_REF.findall(dax)})
-          all_brackets = set(_MEASURE_REF.findall(dax)); column_names = {c for _,_,c in _COLUMN_REF.findall(dax)}
-          measure_refs = sorted(all_brackets - column_names - {name})
-          current_table.measures.append(Measure(name=name, expression=dax, format_string=props.get("formatstring",""), display_folder=props.get("displayfolder",""), description=props.get("description",""), is_hidden=props.get("ishidden","false").casefold()=="true", column_refs=column_refs, measure_refs=measure_refs))
+          column_refs, bracket_refs = measure_references(dax)
+          measure_refs = [ref for ref in bracket_refs if ref.casefold() != name.casefold()]
+          current_table.measures.append(Measure(name=name, expression=dax, format_string=props.get("formatstring",""), display_folder=props.get("displayfolder",""), description=description, is_hidden=props.get("ishidden","false").casefold()=="true", column_refs=column_refs, measure_refs=measure_refs))
         continue
       index += 1
   model_file = project.semantic_root / "model.tmdl"
@@ -157,11 +193,58 @@ def parse_pbir(project: Project):
         page.visuals.append(Visual(page.display_name, data.get("name",vdir.name), visual.get("visualType",data.get("visualType","unknown")), float(pos.get("x",0) or 0), float(pos.get("y",0) or 0), float(pos.get("width",0) or 0), float(pos.get("height",0) or 0), parse_visual_fields(data)))
     project.pages.append(page)
 
+def parse_partitions(project: Project):
+  """Parse partitions, then classify them once all queries are known."""
+  for path in model_files(project):
+    text = read(path)
+    header = re.search(r"^\s*table\s+(.+?)\s*$", text, re.IGNORECASE | re.MULTILINE)
+    table = project.tables.get(clean(header.group(1))) if header else None
+    if table is None: continue
+    existing = {partition.name for partition in table.partitions}
+    for parsed in parse_partition_blocks(text):
+      if parsed["name"] in existing: continue
+      table.partitions.append(Partition(parsed["name"], parsed["mode"], parsed["source_type"], parsed["expression"]))
+      existing.add(parsed["name"])
+  # M references to staging queries, shared expressions, or other tables are
+  # followed to the connector they ultimately use.
+  queries = {expression.name: expression.expression for expression in project.expressions}
+  for table in project.tables.values():
+    m_partitions = [p for p in table.partitions if p.source_type.casefold() in {"", "m"}]
+    if m_partitions and table.name not in queries: queries[table.name] = m_partitions[0].expression
+  for table in project.tables.values():
+    for partition in table.partitions:
+      partition.source_kind, partition.source_arguments = detect_source(
+        partition.expression, partition.source_type, queries, table.name, partition.mode)
+
 def load_project(selected: Path) -> Project:
   semantic, report = discover(selected)
   project = Project(selected.resolve(), semantic, report, semantic.parent.name.removesuffix(".SemanticModel"))
-  parse_tmdl(project); parse_pbir(project)
+  parse_tmdl(project); parse_partitions(project); parse_pbir(project)
   return project
+
+# Connectors whose first two arguments are server and database.
+_SERVER_SOURCES = {
+  "SQL Server", "Oracle", "PostgreSQL", "MySQL", "Snowflake", "Google BigQuery",
+  "Amazon Redshift", "Teradata", "SAP HANA", "IBM Db2", "Sybase", "Analysis Services",
+  "Azure Data Explorer",
+}
+
+def data_sources(tables) -> list[DataSource]:
+  sources = []
+  for table in tables:
+    for partition in table.partitions:
+      arguments = partition.source_arguments
+      if partition.source_kind in _SERVER_SOURCES:
+        server, database, path = (arguments + ["", ""])[0], (arguments + ["", ""])[1], ""
+      else:
+        server, database, path = "", "", (arguments[0] if arguments else "")
+      sources.append(DataSource(partition.source_kind, server, database, path, table.name, partition.mode))
+  return sources
+
+def storage_mode(tables) -> str:
+  modes = sorted({partition.mode for table in tables for partition in table.partitions if partition.mode}, key=str.casefold)
+  if not modes: return "Unknown"
+  return modes[0] if len(modes) == 1 else "Mixed (" + ", ".join(modes) + ")"
 
 from .domain import SemanticModel
 
@@ -178,6 +261,8 @@ class TmdlParser:
             name=project.name,
             pbip_path=resolved_project.pbip_path,
             semantic_model_path=resolved_project.semantic_model_path,
+            storage_mode=storage_mode(project.tables.values()),
             tables=list(project.tables.values()),
             relationships=list(project.relationships),
+            data_sources=data_sources(project.tables.values()),
         )

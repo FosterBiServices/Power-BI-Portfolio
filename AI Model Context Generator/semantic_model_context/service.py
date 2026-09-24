@@ -22,6 +22,6 @@ class ContextService:
     resolved = resolve_pbip(pbip_path)
     model = self._parser.parse(resolved)
     safe_model = apply_privacy(model, privacy_options or PrivacyOptions())
-    validation = validate_model(safe_model)
+    validation = validate_model(safe_model, model)
     target = output_path or pbip_path.with_suffix(".semantic-context.md")
     return write_context(safe_model, validation, target)
