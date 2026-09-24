@@ -68,8 +68,19 @@ def expression_body(block: list[str], header_match) -> str:
     body.append(line[base + 2:] if len(line) >= base + 2 else line)
   return "\n".join(body).strip().strip("`")
 
+# These folders restate table/measure names (translations, perspective
+# membership, role permissions) without defining them.
+_NON_DEFINITION_FOLDERS = {"cultures", "perspectives", "roles"}
+
+def model_files(project: Project) -> list[Path]:
+  files = []
+  for path in project.semantic_root.rglob("*.tmdl"):
+    parts = {part.casefold() for part in path.relative_to(project.semantic_root).parts[:-1]}
+    if not parts & _NON_DEFINITION_FOLDERS: files.append(path)
+  return sorted(files, key=lambda p: str(p).casefold())
+
 def parse_tmdl(project: Project):
-  files = sorted(project.semantic_root.rglob("*.tmdl"), key=lambda p: str(p).casefold())
+  files = model_files(project)
   if not files: raise ProjectError("No TMDL files found.")
   for path in files:
     text = read(path)
@@ -160,7 +171,7 @@ def parse_pbir(project: Project):
 
 def parse_partitions(project: Project):
   """Parse M partition sources from each table TMDL file."""
-  files = sorted(project.semantic_root.rglob("*.tmdl"), key=lambda p: str(p).casefold())
+  files = model_files(project)
   for path in files:
     text = read(path)
     table_names = [
@@ -183,11 +194,22 @@ def parse_partitions(project: Project):
         mode=parsed["mode"],
         source_type=parsed["source_type"],
         expression=expression,
-        source_kind=detect_source_kind(expression),
         source_file=str(path),
         line_number=parsed["line_number"],
       ))
       existing.add(parsed["name"])
+  # Classify after every partition is loaded so M references to staging queries,
+  # shared expressions, or other tables can be followed to their connector.
+  queries = {expression.name: expression.expression for expression in project.expressions}
+  for table in project.tables.values():
+    m_partitions = [p for p in table.partitions if p.source_type.casefold() in {"", "m"}]
+    if m_partitions and table.name not in queries:
+      queries[table.name] = m_partitions[0].expression
+  for table in project.tables.values():
+    for partition in table.partitions:
+      partition.source_kind = detect_source_kind(
+        partition.expression, partition.source_type, queries, table.name, partition.mode,
+      )
 def discover_from_pbip(
     pbip_path: Path
 ) -> tuple[Path, Path | None]:

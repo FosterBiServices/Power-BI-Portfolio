@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 import html
 
+from .dax_checks import check_measure
 from .diagram_v21 import is_auto_date_table
 from .v26_lineage import build_measure_lineage
 
@@ -25,6 +26,23 @@ def _is_blank(value) -> bool:
   return not str(value or "").strip()
 
 
+def _relationship_label(relationship) -> str:
+  return (
+    f"{relationship.from_table}[{relationship.from_column}] -> "
+    f"{relationship.to_table}[{relationship.to_column}]"
+  )
+
+
+def _relationship_detail(relationship) -> str:
+  direction = "both directions" if "both" in relationship.cross_filtering.casefold() else "single direction"
+  state = "active" if relationship.is_active else "inactive"
+  return (
+    f" From {relationship.from_table}[{relationship.from_column}] "
+    f"({relationship.from_cardinality}) to {relationship.to_table}[{relationship.to_column}] "
+    f"({relationship.to_cardinality}); {direction}, {state}."
+  )
+
+
 def analyze_model(project, tables) -> list[ValidationFinding]:
   """Run conservative, evidence-based model quality checks.
 
@@ -34,27 +52,15 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
   findings: list[ValidationFinding] = []
   included_names = {table.name for table in tables}
 
-  # Documentation coverage.
+  # DAX errors. References resolve against the whole model, not just the
+  # selected scope, so hidden or excluded tables do not cause false errors.
+  model_tables = list(project.tables.values())
   for table in tables:
-    if _is_blank(table.description):
-      findings.append(ValidationFinding(
-        "Info", "Documentation", table.name,
-        "Table description is missing.",
-        "Add a concise business-purpose description when the table is user-facing.",
-      ))
-    for column in table.columns:
-      if _is_blank(column.description):
-        findings.append(ValidationFinding(
-          "Info", "Documentation", f"{table.name}[{column.name}]",
-          "Column description is missing.",
-          "Document the business meaning, especially for fields exposed to report authors.",
-        ))
     for measure in table.measures:
-      if _is_blank(measure.description):
+      for message in check_measure(measure.name, measure.expression, model_tables):
         findings.append(ValidationFinding(
-          "Info", "Documentation", f"{table.name}[{measure.name}]",
-          "Measure description is missing.",
-          "Document the calculation purpose and important filter-context behavior.",
+          "Error", "DAX Errors", f"{table.name}[{measure.name}]", message,
+          "Fix the measure expression; visuals using this measure will fail to render.",
         ))
       if _is_blank(measure.display_folder):
         findings.append(ValidationFinding(
@@ -70,14 +76,22 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
       connected.update((relationship.from_table, relationship.to_table))
   for table in tables:
     if table.name not in connected:
+      outside = [
+        _relationship_label(relationship) for relationship in project.relationships
+        if table.name in (relationship.from_table, relationship.to_table)
+      ]
+      message = "Table is disconnected in the selected documentation scope."
+      if outside:
+        message += " Relationships to tables outside the scope: " + "; ".join(outside) + "."
       findings.append(ValidationFinding(
         "Warning", "Relationships", table.name,
-        "Table is disconnected in the selected documentation scope.",
+        message,
         "Confirm that the table is intentionally standalone or used through measures only.",
       ))
 
   # Relationship review candidates.
   endpoint_counter = Counter()
+  endpoint_labels = {}
   for relationship in project.relationships:
     if relationship.from_table not in included_names or relationship.to_table not in included_names:
       continue
@@ -86,20 +100,19 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
       relationship.to_table.casefold(), relationship.to_column.casefold(),
     )
     endpoint_counter[endpoint_key] += 1
-    relationship_name = relationship.name or (
-      f"{relationship.from_table}[{relationship.from_column}] -> "
-      f"{relationship.to_table}[{relationship.to_column}]"
-    )
+    endpoint_labels.setdefault(endpoint_key, _relationship_label(relationship))
+    relationship_name = _relationship_label(relationship)
+    detail = _relationship_detail(relationship)
     if not relationship.is_active:
       findings.append(ValidationFinding(
         "Info", "Relationships", relationship_name,
-        "Relationship is inactive.",
+        "Relationship is inactive." + detail,
         "Confirm that DAX intentionally activates this relationship when needed.",
       ))
     if "both" in relationship.cross_filtering.casefold():
       findings.append(ValidationFinding(
         "Warning", "Relationships", relationship_name,
-        "Relationship uses bidirectional filtering.",
+        "Relationship uses bidirectional filtering." + detail,
         "Review filter propagation and ambiguity risk; retain only when intentional.",
       ))
     if (
@@ -108,14 +121,13 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
     ):
       findings.append(ValidationFinding(
         "Warning", "Relationships", relationship_name,
-        "Relationship is many-to-many.",
+        "Relationship is many-to-many." + detail,
         "Validate the grain and confirm that many-to-many behavior is required.",
       ))
   for endpoint_key, count in endpoint_counter.items():
     if count > 1:
-      display = f"{endpoint_key[0]}[{endpoint_key[1]}] -> {endpoint_key[2]}[{endpoint_key[3]}]"
       findings.append(ValidationFinding(
-        "Warning", "Relationships", display,
+        "Warning", "Relationships", endpoint_labels[endpoint_key],
         f"{count} relationship definitions use the same endpoints.",
         "Review whether each duplicate-endpoint relationship is necessary.",
       ))
@@ -156,7 +168,7 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
   cycle_members = {key for cycle in cycles for key in cycle}
   for cycle in cycles:
     findings.append(ValidationFinding(
-      "Error", "Measures", " -> ".join(cycle),
+      "Error", "DAX Errors", " -> ".join(cycle),
       "Circular measure dependency detected.",
       "Resolve the dependency cycle before model processing or deployment.",
     ))
@@ -166,12 +178,6 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
         "Warning", "Measures", node.key,
         "Measure is potentially unused by parsed measures and visuals.",
         "Review external usage before deprecating or deleting the measure.",
-      ))
-    if node.unresolved_references:
-      findings.append(ValidationFinding(
-        "Info", "Measures", node.key,
-        "Unresolved bracket references: " + ", ".join(sorted(node.unresolved_references)) + ".",
-        "Review duplicate measure names, variables, and unsupported DAX constructs.",
       ))
 
   return sorted(
@@ -183,31 +189,8 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
   )
 
 
-def _coverage(project, tables):
-  table_total = len(tables)
-  column_total = sum(len(table.columns) for table in tables)
-  measure_total = sum(len(table.measures) for table in tables)
-  table_documented = sum(not _is_blank(table.description) for table in tables)
-  column_documented = sum(
-    not _is_blank(column.description) for table in tables for column in table.columns
-  )
-  measure_documented = sum(
-    not _is_blank(measure.description) for table in tables for measure in table.measures
-  )
-
-  def percent(documented, total):
-    return round(documented / total * 100) if total else 100
-
-  return {
-    "Tables": (table_documented, table_total, percent(table_documented, table_total)),
-    "Columns": (column_documented, column_total, percent(column_documented, column_total)),
-    "Measures": (measure_documented, measure_total, percent(measure_documented, measure_total)),
-  }
-
-
 def build_validation_html(project, tables) -> str:
   findings = analyze_model(project, tables)
-  coverage = _coverage(project, tables)
   severity_counts = Counter(item.severity for item in findings)
   category_counts = Counter(item.category for item in findings)
 
@@ -218,11 +201,6 @@ def build_validation_html(project, tables) -> str:
     f'<div class="stat"><b>{severity_counts.get("Info", 0)}</b><span>Informational</span></div>'
     f'<div class="stat"><b>{len(findings)}</b><span>Total findings</span></div>'
     '</div>'
-  )
-  coverage_rows = ''.join(
-    f'<tr><td>{_escape(name)}</td><td>{documented}</td><td>{total}</td>'
-    f'<td>{percentage}%</td><td><div class="coverage-bar"><span style="width:{percentage}%"></span></div></td></tr>'
-    for name, (documented, total, percentage) in coverage.items()
   )
   category_summary = ', '.join(
     f'{category}: {count}' for category, count in sorted(category_counts.items())
@@ -245,9 +223,6 @@ def build_validation_html(project, tables) -> str:
     'the model is incorrect.</p>'
     + cards
     + f'<p><b>Findings by category:</b> {_escape(category_summary)}</p>'
-    + '<h3>Documentation Coverage</h3><table><thead><tr><th>Object Type</th>'
-      '<th>Documented</th><th>Total</th><th>Coverage</th><th>Progress</th>'
-      '</tr></thead><tbody>' + coverage_rows + '</tbody></table>'
     + '<h3>Validation Findings</h3>'
       '<div class="validation-controls"><input id="validation-filter" '
       'class="matrix-filter" type="search" placeholder="Filter validation findings" '
