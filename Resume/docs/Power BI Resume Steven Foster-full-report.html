@@ -1,0 +1,809 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Power BI Resume Steven Foster — Full Report</title><style>body{font-family:Segoe UI,Arial;max-width:1100px;margin:auto;padding:40px 24px;background:#fafaf8;color:#2c2c2c;line-height:1.5}h1,h2,h3{color:#1a3a5c}h2{margin-top:40px;border-bottom:3px solid #c89632;padding-bottom:8px}.toc{columns:2}.toc a{display:block;color:#1a3a5c;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.stat{background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center}.stat b{display:block;font-size:28px;color:#1a3a5c}.stat span{color:#666}table{width:100%;border-collapse:collapse;margin:12px 0 22px;font-size:13px}th{background:#1a3a5c;color:#fff;text-align:left;padding:9px}td{padding:8px;border-bottom:1px solid #ddd}details{margin:8px 0;border:1px solid #ddd;border-radius:6px}summary{cursor:pointer;padding:10px;background:#f5f2ed;color:#1a3a5c;font-weight:600}.inside{padding:12px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f2ed;border-left:4px solid #c89632;padding:12px;font:12px Consolas}.rel{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #ddd;border-radius:6px;margin:6px 0}.rel em{font-size:11px;background:#eef2f5;padding:2px 7px;border-radius:10px}.diagram{width:100%;border:1px solid #ddd;background:#fff}.page{position:relative;background:#f5f5f5;border:1px solid #bbb;margin:12px 0;overflow:hidden}.matrix-filter{width:100%;max-width:520px;padding:10px 12px;margin:8px 0 14px;border:1px solid #bbb;border-radius:6px;font:14px Segoe UI}.table-scroll{overflow-x:auto}.relationship-row:hover{background:#f4f7fa}.validation-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.validation-controls select{padding:10px;border:1px solid #bbb;border-radius:6px}.severity{font-weight:700;padding:3px 8px;border-radius:12px;font-size:11px}.severity.error{background:#fde2e2;color:#9b1c1c}.severity.warning{background:#fff3cd;color:#7a5200}.severity.info{background:#e8f1fb;color:#1f4e79}.coverage-bar{min-width:160px;height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden}.coverage-bar span{display:block;height:100%;background:#2f855a}.vbox{position:absolute;border:1px solid #6a1b9a;background:rgba(106,27,154,.10);font-size:9px;overflow:hidden;padding:2px}@media print{body{max-width:none}h2{break-before:page}details{break-inside:avoid}}</style></head><body><h1>Power BI Resume Steven Foster — Full Report</h1><p>Local documentation generated on 2026-09-24</p><h2>Table of Contents</h2><div class="toc"><a href="#overview">Model Overview</a><a href="#diagram">Relationship Diagram</a><a href="#tables">Table Inventory</a><a href="#measures">Measure Catalog</a><a href="#measure-lineage">Measure Lineage</a><a href="#relationships">Relationships</a><a href="#relationship-matrix">Relationship Matrix</a><a href="#source-inventory">Source Inventory</a><a href="#model-validation">Model Validation</a><a href="#pages">Report Pages</a><a href="#usage">Visual Usage</a><a href="#power-query">Power Query</a></div><h2 id="overview">Model Overview</h2><div class="grid"><div class="stat"><b>12</b><span>Tables</span></div><div class="stat"><b>52</b><span>Columns</span></div><div class="stat"><b>28</b><span>Measures</span></div><div class="stat"><b>7</b><span>Relationships</span></div><div class="stat"><b>3</b><span>Pages</span></div><div class="stat"><b>0</b><span>Visuals</span></div></div><table><tr><th>Property</th><th>Value</th></tr><tr><td>Compatibility Level</td><td></td></tr><tr><td>Culture</td><td>en-US</td></tr></table><h2 id="diagram">Relationship Diagram</h2><svg viewBox="0 0 1100 780" class="diagram" role="img" aria-label="Semantic model relationship diagram"><defs><marker id="arrow-end" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1a3a5c"/></marker><marker id="arrow-start" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto-start-reverse"><path d="M8,0 L0,4 L8,8 z" fill="#1a3a5c"/></marker></defs><style>.node-title{font:600 12px Segoe UI}.node-meta{font:11px Segoe UI;fill:#666}.cardinality{font:700 12px Segoe UI;fill:#1a3a5c;paint-order:stroke;stroke:#fff;stroke-width:3px}.standalone{font:600 13px Segoe UI;fill:#666}.note-svg{font:11px Segoe UI;fill:#666}</style><g class="relationship-edge"><title>Work Experience[End Date] -&gt; Date[Date] | many:one | oneDirection | Inactive</title><path d="M 1045 102.0 C 1140.0 90.0, 700.0 190.0, 795 202.0" fill="none" stroke="#c62828" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#arrow-end)"/><text x="1029" y="94.0" text-anchor="middle" class="cardinality">*</text><text x="811" y="194.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Work Experience[Start Date] -&gt; Date[Date] | many:one | oneDirection | Active</title><path d="M 1045 102.0 C 1140.0 102.0, 700.0 202.0, 795 202.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)"/><text x="1029" y="94.0" text-anchor="middle" class="cardinality">*</text><text x="811" y="194.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Achievements[JobId] -&gt; Work Experience[JobId] | many:one | oneDirection | Active</title><path d="M 305 202.0 C 491.2 190.0, 608.8 90.0, 795 102.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)"/><text x="321" y="194.0" text-anchor="middle" class="cardinality">*</text><text x="779" y="94.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Work Descriptions[JobId] -&gt; Work Experience[JobId] | many:one | oneDirection | Active</title><path d="M 305 402.0 C 491.2 390.0, 608.8 90.0, 795 102.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)"/><text x="321" y="394.0" text-anchor="middle" class="cardinality">*</text><text x="779" y="94.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Assets[ProjectId] -&gt; Projects[ProjectId] | many:one | oneDirection | Active</title><path d="M 305 302.0 C 491.2 290.0, 608.8 290.0, 795 302.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)"/><text x="321" y="294.0" text-anchor="middle" class="cardinality">*</text><text x="779" y="294.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Job Skills[JobId] -&gt; Work Experience[JobId] | many:one | oneDirection | Active</title><path d="M 305 102.0 C 491.2 90.0, 608.8 90.0, 795 102.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)"/><text x="321" y="94.0" text-anchor="middle" class="cardinality">*</text><text x="779" y="94.0" text-anchor="middle" class="cardinality">1</text></g><g class="relationship-edge"><title>Job Skills[SkillId] -&gt; Skills[SkillId] | many:one | bothDirections | Active</title><path d="M 305 102.0 C 491.2 90.0, 608.8 390.0, 795 402.0" fill="none" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow-end)" marker-start="url(#arrow-start)"/><text x="321" y="94.0" text-anchor="middle" class="cardinality">*</text><text x="779" y="394.0" text-anchor="middle" class="cardinality">1</text></g><text x="55" y="512" class="standalone">Standalone tables (4)</text><g class="table-node"><title>_Measures | Bridge / standalone</title><rect x="55" y="530" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="530" width="250" height="32" rx="7" fill="#6b7280"/><rect x="55" y="552" width="250" height="10" fill="#6b7280"/><text x="180.0" y="551" text-anchor="middle" fill="#fff" class="node-title">_Measures</text><text x="65" y="581" class="node-meta">0 columns · 28 measures</text></g><g class="table-node"><title>Achievements | Fact / many-side</title><rect x="55" y="170" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="170" width="250" height="32" rx="7" fill="#1f4e79"/><rect x="55" y="192" width="250" height="10" fill="#1f4e79"/><text x="180.0" y="191" text-anchor="middle" fill="#fff" class="node-title">Achievements</text><text x="65" y="221" class="node-meta">7 columns · 0 measures</text></g><g class="table-node"><title>Assets | Fact / many-side</title><rect x="55" y="270" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="270" width="250" height="32" rx="7" fill="#1f4e79"/><rect x="55" y="292" width="250" height="10" fill="#1f4e79"/><text x="180.0" y="291" text-anchor="middle" fill="#fff" class="node-title">Assets</text><text x="65" y="321" class="node-meta">4 columns · 0 measures</text></g><g class="table-node"><title>Certifications | Bridge / standalone</title><rect x="400" y="530" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="400" y="530" width="250" height="32" rx="7" fill="#6b7280"/><rect x="400" y="552" width="250" height="10" fill="#6b7280"/><text x="525.0" y="551" text-anchor="middle" fill="#fff" class="node-title">Certifications</text><text x="410" y="581" class="node-meta">6 columns · 0 measures</text></g><g class="table-node"><title>Date | Dimension / one-side</title><rect x="795" y="170" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="795" y="170" width="250" height="32" rx="7" fill="#2f855a"/><rect x="795" y="192" width="250" height="10" fill="#2f855a"/><text x="920.0" y="191" text-anchor="middle" fill="#fff" class="node-title">Date</text><text x="805" y="221" class="node-meta">5 columns · 0 measures</text></g><g class="table-node"><title>Job Nav | Bridge / standalone</title><rect x="745" y="530" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="745" y="530" width="250" height="32" rx="7" fill="#6b7280"/><rect x="745" y="552" width="250" height="10" fill="#6b7280"/><text x="870.0" y="551" text-anchor="middle" fill="#fff" class="node-title">Job Nav</text><text x="755" y="581" class="node-meta">1 columns · 0 measures</text></g><g class="table-node"><title>Job Skills | Fact / many-side</title><rect x="55" y="70" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="70" width="250" height="32" rx="7" fill="#1f4e79"/><rect x="55" y="92" width="250" height="10" fill="#1f4e79"/><text x="180.0" y="91" text-anchor="middle" fill="#fff" class="node-title">Job Skills</text><text x="65" y="121" class="node-meta">2 columns · 0 measures</text></g><g class="table-node"><title>Profile | Bridge / standalone</title><rect x="55" y="620" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="620" width="250" height="32" rx="7" fill="#6b7280"/><rect x="55" y="642" width="250" height="10" fill="#6b7280"/><text x="180.0" y="641" text-anchor="middle" fill="#fff" class="node-title">Profile</text><text x="65" y="671" class="node-meta">4 columns · 0 measures</text></g><g class="table-node"><title>Projects | Dimension / one-side</title><rect x="795" y="270" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="795" y="270" width="250" height="32" rx="7" fill="#2f855a"/><rect x="795" y="292" width="250" height="10" fill="#2f855a"/><text x="920.0" y="291" text-anchor="middle" fill="#fff" class="node-title">Projects</text><text x="805" y="321" class="node-meta">8 columns · 0 measures</text></g><g class="table-node"><title>Skills | Dimension / one-side</title><rect x="795" y="370" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="795" y="370" width="250" height="32" rx="7" fill="#2f855a"/><rect x="795" y="392" width="250" height="10" fill="#2f855a"/><text x="920.0" y="391" text-anchor="middle" fill="#fff" class="node-title">Skills</text><text x="805" y="421" class="node-meta">3 columns · 0 measures</text></g><g class="table-node"><title>Work Descriptions | Fact / many-side</title><rect x="55" y="370" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="55" y="370" width="250" height="32" rx="7" fill="#1f4e79"/><rect x="55" y="392" width="250" height="10" fill="#1f4e79"/><text x="180.0" y="391" text-anchor="middle" fill="#fff" class="node-title">Work Descriptions</text><text x="65" y="421" class="node-meta">3 columns · 0 measures</text></g><g class="table-node"><title>Work Experience | Dimension / one-side</title><rect x="795" y="70" width="250" height="64" rx="7" fill="#fff" stroke="#d0ccc4" stroke-width="1.5"/><rect x="795" y="70" width="250" height="32" rx="7" fill="#2f855a"/><rect x="795" y="92" width="250" height="10" fill="#2f855a"/><text x="920.0" y="91" text-anchor="middle" fill="#fff" class="node-title">Work Experience</text><text x="805" y="121" class="node-meta">9 columns · 0 measures</text></g><g transform="translate(55,736)"><line x1="0" y1="0" x2="30" y2="0" stroke="#1a3a5c" stroke-width="2"/><text x="38" y="4" class="node-meta">Active</text><line x1="100" y1="0" x2="130" y2="0" stroke="#c62828" stroke-width="2" stroke-dasharray="7,5"/><text x="138" y="4" class="node-meta">Inactive</text><text x="230" y="4" class="node-meta">1 = one · * = many · arrows = filter direction</text></g></svg><h2 id="tables">Table Inventory</h2><h3 id="measures">_Measures</h3><details><summary>Columns (0)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr></table></div></details><details><summary>Current Role</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>CALCULATE (
+    MAX ( &#x27;Work Experience&#x27;[JobTitle] ),
+    &#x27;Work Experience&#x27;[Status] = &quot;Current&quot;
+)</pre><p><b>Columns:</b> Work Experience[JobTitle], Work Experience[Status]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Current Company</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>CALCULATE (
+    MAX ( &#x27;Work Experience&#x27;[Company] ),
+    &#x27;Work Experience&#x27;[Status] = &quot;Current&quot;
+)</pre><p><b>Columns:</b> Work Experience[Company], Work Experience[Status]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Experience Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>COUNTROWS ( &#x27;Work Experience&#x27; )</pre><p><b>Columns:</b> None detected</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Description Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>COUNTROWS ( &#x27;Work Descriptions&#x27; )</pre><p><b>Columns:</b> None detected</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Skill Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>DISTINCTCOUNT ( Skills[SkillId] )</pre><p><b>Columns:</b> Skills[SkillId]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Skill Count</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> #,0</p><pre>DISTINCTCOUNT ( &#x27;Job Skills&#x27;[SkillId] )</pre><p><b>Columns:</b> Job Skills[SkillId]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Title</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>SELECTEDVALUE ( &#x27;Work Experience&#x27;[JobTitle], &quot;Professional Experience&quot; )</pre><p><b>Columns:</b> Work Experience[JobTitle]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Company</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>SELECTEDVALUE ( &#x27;Work Experience&#x27;[Company], &quot;Career Experience&quot; )</pre><p><b>Columns:</b> Work Experience[Company]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Description</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>CONCATENATEX (
+    &#x27;Work Descriptions&#x27;,
+    &quot;• &quot; &amp; &#x27;Work Descriptions&#x27;[Desc],
+    UNICHAR ( 10 ),
+    &#x27;Work Descriptions&#x27;[Desc Id], ASC
+)</pre><p><b>Columns:</b> Work Descriptions[Desc Id], Work Descriptions[Desc]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Skills</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>CALCULATE (
+    CONCATENATEX (
+        VALUES ( Skills[Skill] ),
+        Skills[Skill],
+        &quot; | &quot;,
+        Skills[Skill], ASC
+    )
+)</pre><p><b>Columns:</b> Skills[Skill]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Date Range</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>VAR StartDate =
+    MIN ( &#x27;Work Experience&#x27;[Start Date] )
+VAR EndDate =
+    MAXX (
+        &#x27;Work Experience&#x27;,
+        IF (
+            &#x27;Work Experience&#x27;[Status] = &quot;Current&quot;
+                || ISBLANK ( &#x27;Work Experience&#x27;[End Date] ),
+            TODAY (),
+            &#x27;Work Experience&#x27;[End Date]
+        )
+    )
+VAR IsCurrent =
+    SELECTEDVALUE ( &#x27;Work Experience&#x27;[Status] ) = &quot;Current&quot;
+RETURN
+    IF (
+        ISBLANK ( StartDate ),
+        BLANK (),
+        FORMAT ( StartDate, &quot;MMM yyyy&quot; ) &amp; &quot; – &quot;
+            &amp; IF ( IsCurrent, &quot;Present&quot;, FORMAT ( EndDate, &quot;MMM yyyy&quot; ) )
+    )</pre><p><b>Columns:</b> Work Experience[End Date], Work Experience[Start Date], Work Experience[Status]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Duration</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>VAR StartDate =
+    MIN ( &#x27;Work Experience&#x27;[Start Date] )
+VAR EndDate =
+    MAXX (
+        &#x27;Work Experience&#x27;,
+        IF (
+            &#x27;Work Experience&#x27;[Status] = &quot;Current&quot;
+                || ISBLANK ( &#x27;Work Experience&#x27;[End Date] ),
+            TODAY (),
+            &#x27;Work Experience&#x27;[End Date]
+        )
+    )
+VAR TotalMonths =
+    DATEDIFF ( StartDate, EndDate, MONTH )
+VAR Years =
+    QUOTIENT ( TotalMonths, 12 )
+VAR Months =
+    MOD ( TotalMonths, 12 )
+RETURN
+    SWITCH (
+        TRUE (),
+        Years &gt; 0 &amp;&amp; Months &gt; 0,
+            Years &amp; IF ( Years = 1, &quot; year &quot;, &quot; years &quot; )
+                &amp; Months &amp; IF ( Months = 1, &quot; month&quot;, &quot; months&quot; ),
+        Years &gt; 0, Years &amp; IF ( Years = 1, &quot; year&quot;, &quot; years&quot; ),
+        Months &gt; 0, Months &amp; IF ( Months = 1, &quot; month&quot;, &quot; months&quot; ),
+        &quot;&lt; 1 month&quot;
+    )</pre><p><b>Columns:</b> Work Experience[End Date], Work Experience[Start Date], Work Experience[Status]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Selected Job Header</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>VAR JobTitle =
+    SELECTEDVALUE ( &#x27;Work Experience&#x27;[JobTitle] )
+VAR Company =
+    SELECTEDVALUE ( &#x27;Work Experience&#x27;[Company] )
+RETURN
+    IF (
+        NOT ISBLANK ( JobTitle ) &amp;&amp; NOT ISBLANK ( Company ),
+        JobTitle &amp; &quot; | &quot; &amp; Company,
+        &quot;Professional Experience&quot;
+    )</pre><p><b>Columns:</b> Work Experience[Company], Work Experience[JobTitle]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Professional Experience HTML</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> </p><pre>VAR ScrollH = 480
+VAR TotalJobs = COUNTROWS ( ALL ( &#x27;Work Experience&#x27; ) )
+VAR HasSelection = COUNTROWS ( &#x27;Work Experience&#x27; ) &lt; TotalJobs
+VAR SelectedStarts = VALUES ( &#x27;Work Experience&#x27;[Start Date] )
+VAR PageYear =
+    SELECTEDVALUE (
+        &#x27;Job Nav&#x27;[Start Year],
+        MINX ( ALL ( &#x27;Job Nav&#x27; ), &#x27;Job Nav&#x27;[Start Year] )
+    )
+VAR PageNum =
+    COUNTROWS ( FILTER ( ALL ( &#x27;Job Nav&#x27; ), &#x27;Job Nav&#x27;[Start Year] &lt;= PageYear ) )
+
+// Timeline selection wins; otherwise show the role that starts in the selected year
+VAR ShowRows =
+    FILTER (
+        ALL ( &#x27;Work Experience&#x27; ),
+        IF (
+            HasSelection,
+            &#x27;Work Experience&#x27;[Start Date] IN SelectedStarts,
+            YEAR ( &#x27;Work Experience&#x27;[Start Date] ) = PageYear
+        )
+    )
+
+VAR StatusText =
+    IF (
+        HasSelection,
+        &quot;Showing selection from timeline&quot;,
+        &quot;Role &quot; &amp; PageNum &amp; &quot; of &quot; &amp; TotalJobs
+    )
+
+VAR Jobs =
+    CONCATENATEX (
+        ShowRows,
+
+        VAR Title =
+            SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( &#x27;Work Experience&#x27;[JobTitle] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+        VAR Company =
+            SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( &#x27;Work Experience&#x27;[Company] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+
+        VAR StartDate = &#x27;Work Experience&#x27;[Start Date]
+        VAR IsCurrent =
+            &#x27;Work Experience&#x27;[Status] = &quot;Current&quot; || ISBLANK ( &#x27;Work Experience&#x27;[End Date] )
+        VAR EndDate = IF ( IsCurrent, TODAY (), &#x27;Work Experience&#x27;[End Date] )
+        VAR DateRange =
+            FORMAT ( StartDate, &quot;mmm yyyy&quot; ) &amp; &quot; – &quot;
+                &amp; IF ( IsCurrent, &quot;Present&quot;, FORMAT ( EndDate, &quot;mmm yyyy&quot; ) )
+        VAR TotalMonths = DATEDIFF ( StartDate, EndDate, MONTH )
+        VAR Yrs = QUOTIENT ( TotalMonths, 12 )
+        VAR Mos = MOD ( TotalMonths, 12 )
+        VAR Duration =
+            SWITCH (
+                TRUE (),
+                Yrs &gt; 0 &amp;&amp; Mos &gt; 0,
+                    Yrs &amp; IF ( Yrs = 1, &quot; year &quot;, &quot; years &quot; ) &amp; Mos &amp; IF ( Mos = 1, &quot; month&quot;, &quot; months&quot; ),
+                Yrs &gt; 0, Yrs &amp; IF ( Yrs = 1, &quot; year&quot;, &quot; years&quot; ),
+                Mos &gt; 0, Mos &amp; IF ( Mos = 1, &quot; month&quot;, &quot; months&quot; ),
+                &quot;&lt; 1 month&quot;
+            )
+
+        VAR SkillChips =
+            CONCATENATEX (
+                RELATEDTABLE ( &#x27;Skills&#x27; ),
+                &quot;&lt;span class=&#x27;chip&#x27;&gt;&quot;
+                    &amp; SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( &#x27;Skills&#x27;[Skill] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+                    &amp; &quot;&lt;/span&gt;&quot;,
+                &quot;&quot;,
+                &#x27;Skills&#x27;[Skill], ASC
+            )
+        VAR Chips =
+            IF ( SkillChips = &quot;&quot;, &quot;&quot;, &quot;&lt;div class=&#x27;chips&#x27;&gt;&quot; &amp; SkillChips &amp; &quot;&lt;/div&gt;&quot; )
+
+        VAR BulletItems =
+            CONCATENATEX (
+                RELATEDTABLE ( &#x27;Work Descriptions&#x27; ),
+                IF (
+                    TRIM ( &#x27;Work Descriptions&#x27;[Desc] &amp; &quot;&quot; ) = &quot;&quot;,
+                    &quot;&quot;,
+                    &quot;&lt;li&gt;&quot;
+                        &amp; SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( &#x27;Work Descriptions&#x27;[Desc] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+                        &amp; &quot;&lt;/li&gt;&quot;
+                ),
+                &quot;&quot;,
+                &#x27;Work Descriptions&#x27;[Desc Id], DESC
+            )
+        VAR Bullets =
+            IF ( BulletItems = &quot;&quot;, &quot;&quot;, &quot;&lt;ul&gt;&quot; &amp; BulletItems &amp; &quot;&lt;/ul&gt;&quot; )
+
+        // Key results from the Achievements table: metrics first (big number, optional &quot;up to&quot;), then awards (trophy), then other results (star)
+        VAR AchItems =
+            CONCATENATEX (
+                RELATEDTABLE ( Achievements ),
+                VAR Val = Achievements[MetricValue]
+                VAR Unit = TRIM ( Achievements[MetricUnit] &amp; &quot;&quot; )
+                VAR Prefix = TRIM ( Achievements[MetricPrefix] &amp; &quot;&quot; )
+                VAR IsAward = Achievements[Type] = &quot;Award&quot;
+                VAR IsPct = LEFT ( Unit, 1 ) = &quot;%&quot;
+                VAR Num =
+                    SWITCH (
+                        TRUE (),
+                        NOT ISBLANK ( Val ),
+                            IF ( Prefix = &quot;&quot;, &quot;&quot;, &quot;&lt;small&gt;&quot; &amp; Prefix &amp; &quot; &lt;/small&gt;&quot; )
+                                &amp; IF ( IsPct, Val &amp; &quot;%&quot;, Val &amp; &quot;&quot; ),
+                        IsAward, &quot;&amp;#127942;&quot;,
+                        &quot;&amp;#9733;&quot;
+                    )
+                VAR UnitLbl = IF ( IsPct, TRIM ( MID ( Unit, 2, 200 ) ), Unit )
+                VAR Txt =
+                    SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( Achievements[Achievement] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+                RETURN
+                    &quot;&lt;div class=&#x27;ki&#x27;&gt;&lt;span class=&#x27;kn&quot; &amp; IF ( ISBLANK ( Val ), &quot; star&quot;, &quot;&quot; ) &amp; &quot;&#x27;&gt;&quot; &amp; Num &amp; &quot;&lt;/span&gt;&quot;
+                        &amp; &quot;&lt;span class=&#x27;kt&#x27;&gt;&quot; &amp; Txt
+                        &amp; IF ( ISBLANK ( Val ) || UnitLbl = &quot;&quot;, &quot;&quot;, &quot;&lt;span class=&#x27;ku&#x27;&gt; &amp;mdash; &quot; &amp; UnitLbl &amp; &quot;&lt;/span&gt;&quot; )
+                        &amp; &quot;&lt;/span&gt;&lt;/div&gt;&quot;,
+                &quot;&quot;,
+                IF ( NOT ISBLANK ( Achievements[MetricValue] ), 0, IF ( Achievements[Type] = &quot;Award&quot;, 1, 2 ) ), ASC,
+                Achievements[AchievementId], ASC
+            )
+        VAR Results =
+            IF ( AchItems = &quot;&quot;, &quot;&quot;, &quot;&lt;div class=&#x27;kr&#x27;&gt;&lt;div class=&#x27;krh&#x27;&gt;Key Results&lt;/div&gt;&quot; &amp; AchItems &amp; &quot;&lt;/div&gt;&quot; )
+
+        RETURN
+            &quot;&lt;div class=&#x27;job&#x27;&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;top&#x27;&gt;&quot;
+                &amp; &quot;&lt;div&gt;&lt;div class=&#x27;role&#x27;&gt;&quot; &amp; Title &amp; &quot;&lt;/div&gt;&lt;div class=&#x27;co&#x27;&gt;&quot; &amp; Company &amp; &quot;&lt;/div&gt;&lt;/div&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;meta&#x27;&gt;&lt;div class=&#x27;dates&#x27;&gt;&quot; &amp; DateRange &amp; &quot;&lt;/div&gt;&lt;div class=&#x27;dur&#x27;&gt;&quot; &amp; Duration &amp; &quot;&lt;/div&gt;&lt;/div&gt;&quot;
+                &amp; &quot;&lt;/div&gt;&quot;
+                &amp; Chips
+                &amp; Results
+                &amp; Bullets
+                &amp; &quot;&lt;/div&gt;&quot;,
+        &quot;&quot;,
+        &#x27;Work Experience&#x27;[Start Date], DESC
+    )
+
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.pe{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.hd{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.hd h2{font-size:20px;font-weight:600;margin:0}&quot;
+        &amp; &quot;.st{font-size:12px;color:#6b7f99}&quot;
+        &amp; &quot;.scroll{max-height:&quot; &amp; ScrollH &amp; &quot;px;overflow-y:auto;padding-right:10px}&quot;
+        &amp; &quot;.job{border-left:4px solid #f5a800;padding-left:14px;margin-bottom:22px}&quot;
+        &amp; &quot;.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}&quot;
+        &amp; &quot;.role{font-size:18px;font-weight:600;line-height:1.25}&quot;
+        &amp; &quot;.co{font-size:14px;color:#4a6a94;margin-top:2px}&quot;
+        &amp; &quot;.meta{text-align:right;white-space:nowrap}&quot;
+        &amp; &quot;.dates{font-size:13px}&quot;
+        &amp; &quot;.dur{font-size:12px;color:#6b7f99;margin-top:2px}&quot;
+        &amp; &quot;.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}&quot;
+        &amp; &quot;.chip{font-size:11px;padding:3px 10px;border:1px solid #c5d3e6;border-radius:12px;background:#f2f6fb}&quot;
+        &amp; &quot;.kr{background:#f2f6fb;border-radius:6px;padding:8px 12px;margin:0 0 12px}&quot;
+        &amp; &quot;.krh{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:#4a6a94;margin-bottom:4px}&quot;
+        &amp; &quot;.ki{display:flex;gap:10px;align-items:baseline;margin:3px 0}&quot;
+        &amp; &quot;.kn{min-width:46px;font-size:18px;font-weight:700;color:#f5a800;line-height:1.2;white-space:nowrap}&quot;
+        &amp; &quot;.kn small{font-size:10px;font-weight:600;color:#4a6a94;text-transform:uppercase;letter-spacing:.4px}&quot;
+        &amp; &quot;.kn.star{font-size:13px;text-align:center}&quot;
+        &amp; &quot;.kt{font-size:13px;font-weight:600;color:#1f3a5f;line-height:1.4}&quot;
+        &amp; &quot;.ku{font-weight:400;color:#4a6a94}&quot;
+        &amp; &quot;.pe ul{margin:0;padding-left:18px}&quot;
+        &amp; &quot;.pe li{font-size:13px;line-height:1.5;margin-bottom:4px;color:#1f3a5f}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    IF (
+        Jobs = &quot;&quot;,
+        BLANK (),
+        Css
+            &amp; &quot;&lt;div class=&#x27;pe&#x27;&gt;&quot;
+            &amp; &quot;&lt;div class=&#x27;hd&#x27;&gt;&lt;h2&gt;Professional Experience&lt;/h2&gt;&lt;span class=&#x27;st&#x27;&gt;&quot; &amp; StatusText &amp; &quot;&lt;/span&gt;&lt;/div&gt;&quot;
+            &amp; &quot;&lt;div class=&#x27;scroll&#x27;&gt;&quot; &amp; Jobs &amp; &quot;&lt;/div&gt;&lt;/div&gt;&quot;
+    )</pre><p><b>Columns:</b> Achievements[AchievementId], Achievements[Achievement], Achievements[MetricPrefix], Achievements[MetricUnit], Achievements[MetricValue], Achievements[Type], Job Nav[Start Year], Skills[Skill], Work Descriptions[Desc Id], Work Descriptions[Desc], Work Experience[Company], Work Experience[End Date], Work Experience[JobTitle], Work Experience[Start Date], Work Experience[Status]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>PagerYear</summary><div class="inside"><p><b>Folder:</b> Experience &nbsp; <b>Format:</b> 0</p><pre>SELECTEDVALUE (
+    &#x27;Job Nav&#x27;[Start Year],
+    MINX ( ALL ( &#x27;Job Nav&#x27; ), &#x27;Job Nav&#x27;[Start Year] )
+)</pre><p><b>Columns:</b> Job Nav[Start Year]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Current Project Id</summary><div class="inside"><p><b>Folder:</b> Portfolio &nbsp; <b>Format:</b> 0</p><pre>SELECTEDVALUE (
+    Projects[ProjectId],
+    MINX ( ALL ( Projects ), Projects[ProjectId] )
+)</pre><p><b>Columns:</b> Projects[ProjectId]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Project Gallery HTML</summary><div class="inside"><p><b>Folder:</b> Portfolio &nbsp; <b>Format:</b> </p><pre>VAR CurId = [Current Project Id]
+VAR P = FILTER ( ALL ( Projects ), Projects[ProjectId] = CurId )
+VAR ToolDelim = &quot;, &quot;
+
+VAR _Name =
+    SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( MAXX ( P, Projects[Name] ) &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+VAR Summary =
+    SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( MAXX ( P, Projects[Summary] ) &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+VAR BizValue =
+    SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( MAXX ( P, Projects[Business Value] ) &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+VAR Tools =
+    SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( MAXX ( P, Projects[Tools] ) &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+
+// Tools are comma-separated; a leading * marks a tool built by me (gold chip)
+VAR vChipItems =
+    SUBSTITUTE (
+        &quot;&lt;span class=&#x27;chip&#x27;&gt;&quot;
+            &amp; SUBSTITUTE ( Tools, ToolDelim, &quot;&lt;/span&gt;&lt;span class=&#x27;chip&#x27;&gt;&quot; )
+            &amp; &quot;&lt;/span&gt;&quot;,
+        &quot;&lt;span class=&#x27;chip&#x27;&gt;*&quot;,
+        &quot;&lt;span class=&#x27;chip mine&#x27;&gt;&quot;
+    )
+VAR vLegend =
+    IF (
+        CONTAINSSTRING ( Tools, &quot;*&quot; ),
+        &quot;&lt;span class=&#x27;legend&#x27;&gt;&lt;span class=&#x27;chip mine&#x27;&gt;Built by me&lt;/span&gt;&lt;/span&gt;&quot;,
+        &quot;&quot;
+    )
+VAR vChips =
+    IF (
+        Tools = &quot;&quot;,
+        &quot;&quot;,
+        &quot;&lt;div class=&#x27;chips&#x27;&gt;&quot; &amp; vChipItems &amp; vLegend &amp; &quot;&lt;/div&gt;&quot;
+    )
+
+VAR BizValueHtml =
+    IF ( BizValue = &quot;&quot;, &quot;&quot;, &quot;&lt;div class=&#x27;sum&#x27;&gt;&quot; &amp; BizValue &amp; &quot;&lt;/div&gt;&quot; )
+
+// Grid tiles (2 columns): each screenshot sits in a fixed 16:10 frame (object-fit: contain) and links to the full-size image
+VAR Shots =
+    CONCATENATEX (
+        FILTER ( ALL ( Assets ), Assets[ProjectId] = CurId ),
+        &quot;&lt;figure class=&#x27;shot&#x27;&gt;&lt;a class=&#x27;frame&#x27; href=&#x27;&quot; &amp; Assets[ScreenshotUrl] &amp; &quot;&#x27; target=&#x27;_blank&#x27;&gt;&lt;img src=&#x27;&quot; &amp; Assets[ScreenshotUrl] &amp; &quot;&#x27;/&gt;&lt;/a&gt;&quot;
+            &amp; IF (
+                TRIM ( Assets[Caption] &amp; &quot;&quot; ) = &quot;&quot;,
+                &quot;&quot;,
+                &quot;&lt;figcaption&gt;&quot;
+                    &amp; SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( Assets[Caption] &amp; &quot;&quot;, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ), &quot;&lt;&quot;, &quot;&amp;lt;&quot; ), &quot;&gt;&quot;, &quot;&amp;gt;&quot; )
+                    &amp; &quot;&lt;/figcaption&gt;&quot;
+            )
+            &amp; &quot;&lt;/figure&gt;&quot;,
+        &quot;&quot;,
+        Assets[ImageId], ASC
+    )
+
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.pg{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.hd{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.hd h2{font-size:20px;font-weight:600;margin:0}&quot;
+        &amp; &quot;.st{font-size:12px;color:#6b7f99}&quot;
+        &amp; &quot;.proj{border-left:4px solid #f5a800;padding-left:14px}&quot;
+        &amp; &quot;.pname{font-size:18px;font-weight:600;line-height:1.25}&quot;
+        &amp; &quot;.sum{font-size:13px;line-height:1.5;color:#1f3a5f;margin-top:6px}&quot;
+        &amp; &quot;.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}&quot;
+        &amp; &quot;.chip{font-size:11px;padding:3px 10px;border:1px solid #c5d3e6;border-radius:12px;background:#f2f6fb}&quot;
+        &amp; &quot;.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:4px 0 10px}&quot;
+        &amp; &quot;.shot{margin:0;min-width:0}&quot;
+        &amp; &quot;.shot .frame{display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;background:#f2f6fb;border:1px solid #d5dde8;border-radius:4px;overflow:hidden;padding:6px;box-sizing:border-box}&quot;
+        &amp; &quot;.shot .frame:hover{border-color:#f5a800}&quot;
+        &amp; &quot;.shot img{max-width:100%;max-height:100%;object-fit:contain;display:block}&quot;
+        &amp; &quot;.shot figcaption{font-size:12px;font-weight:600;color:#4a6a94;margin-top:6px;text-align:center}&quot;
+        &amp; &quot;.chip.mine{border-color:#f5a800;background:#fff8e6}&quot;
+        &amp; &quot;.legend{margin-left:auto}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    IF (
+        _Name = &quot;&quot;,
+        BLANK (),
+        Css
+            &amp; &quot;&lt;div class=&#x27;pg&#x27;&gt;&quot;
+            &amp; &quot;&lt;div class=&#x27;hd&#x27;&gt;&lt;h2&gt;Project Portfolio&lt;/h2&gt;&lt;span class=&#x27;st&#x27;&gt;Sample data - names and identifiers changed&lt;/span&gt;&lt;/div&gt;&quot;
+            &amp; &quot;&lt;div class=&#x27;proj&#x27;&gt;&lt;div class=&#x27;pname&#x27;&gt;&quot; &amp; _Name &amp; &quot;&lt;/div&gt;&quot;
+            &amp; &quot;&lt;div class=&#x27;sum&#x27;&gt;&quot; &amp; Summary &amp; &quot;&lt;/div&gt;&quot;
+            &amp; BizValueHtml
+            &amp; vChips
+            &amp; &quot;&lt;div class=&#x27;shots&#x27;&gt;&quot; &amp; Shots &amp; &quot;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&quot;
+    )</pre><p><b>Columns:</b> Assets[Caption], Assets[ImageId], Assets[ProjectId], Assets[ScreenshotUrl], Projects[Business Value], Projects[Name], Projects[ProjectId], Projects[Summary], Projects[Tools]</p><p><b>Measures:</b> Current Project Id</p></div></details><details><summary>Repo Link</summary><div class="inside"><p><b>Folder:</b> Portfolio &nbsp; <b>Format:</b> </p><pre>VAR CurId = [Current Project Id]
+RETURN
+    MAXX (
+        FILTER ( ALL ( Projects ), Projects[ProjectId] = CurId ),
+        Projects[RepoUrl]
+    )</pre><p><b>Columns:</b> Projects[ProjectId], Projects[RepoUrl]</p><p><b>Measures:</b> Current Project Id</p></div></details><details><summary>Report Link</summary><div class="inside"><p><b>Folder:</b> Portfolio &nbsp; <b>Format:</b> </p><pre>VAR CurId = [Current Project Id]
+RETURN
+    MAXX (
+        FILTER ( ALL ( Projects ), Projects[ProjectId] = CurId ),
+        Projects[FileUrl]
+    )</pre><p><b>Columns:</b> Projects[FileUrl], Projects[ProjectId]</p><p><b>Measures:</b> Current Project Id</p></div></details><details><summary>Years of Experience</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> 0.0</p><pre>VAR StartDate =
+    MINX ( ALL ( &#x27;Work Experience&#x27; ), &#x27;Work Experience&#x27;[Start Date] )
+VAR TotalMonths =
+    DATEDIFF ( StartDate, TODAY (), MONTH )
+RETURN
+    DIVIDE ( TotalMonths, 12 )</pre><p><b>Columns:</b> Work Experience[Start Date]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Certification Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>COUNTROWS ( Certifications )</pre><p><b>Columns:</b> None detected</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Active Certification Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>COUNTROWS (
+    FILTER (
+        Certifications,
+        NOT ISBLANK ( Certifications[IssueDate] )
+            &amp;&amp; (
+                ISBLANK ( Certifications[ExpirationDate] )
+                    || Certifications[ExpirationDate] &gt;= TODAY ()
+            )
+    )
+) + 0</pre><p><b>Columns:</b> Certifications[ExpirationDate], Certifications[IssueDate]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Expired Certification Count</summary><div class="inside"><p><b>Folder:</b> KPI &nbsp; <b>Format:</b> #,0</p><pre>COUNTROWS (
+    FILTER (
+        Certifications,
+        NOT ISBLANK ( Certifications[ExpirationDate] )
+            &amp;&amp; Certifications[ExpirationDate] &lt; TODAY ()
+    )
+) + 0</pre><p><b>Columns:</b> Certifications[ExpirationDate]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Profile Header HTML</summary><div class="inside"><p><b>Folder:</b> Profile &nbsp; <b>Format:</b> </p><pre>VAR Esc = &quot;&amp;amp;&quot;
+VAR Loc = SUBSTITUTE ( MAX ( Profile[Location] ), &quot;&amp;&quot;, Esc )
+VAR Summary = SUBSTITUTE ( MAX ( Profile[Summary] ), &quot;&amp;&quot;, Esc )
+VAR Email = &quot;fosterbiservices@gmail.com&quot;
+VAR RoleLine =
+    SUBSTITUTE ( [Current Role] &amp; &quot; at &quot; &amp; [Current Company], &quot;&amp;&quot;, Esc )
+
+// Name and headline live in the page header band (Header Band HTML); this card is the About section
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.ph{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.ph h2{font-size:18px;font-weight:600;margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.ph .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:#6b7f99}&quot;
+        &amp; &quot;.ph .meta b{color:#003f88;font-weight:600}&quot;
+        &amp; &quot;.ph .sum{border-left:4px solid #f5a800;padding:2px 0 2px 14px;margin-top:14px;font-size:14px;line-height:1.55;color:#1f3a5f}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    Css
+        &amp; &quot;&lt;div class=&#x27;ph&#x27;&gt;&quot;
+        &amp; &quot;&lt;h2&gt;About&lt;/h2&gt;&quot;
+        &amp; &quot;&lt;div class=&#x27;meta&#x27;&gt;&lt;span&gt;&lt;b&gt;Currently:&lt;/b&gt; &quot; &amp; RoleLine &amp; &quot;&lt;/span&gt;&lt;span&gt;&lt;b&gt;Location:&lt;/b&gt; &quot; &amp; Loc &amp; &quot;&lt;/span&gt;&lt;span&gt;&lt;b&gt;Email:&lt;/b&gt; &quot; &amp; Email &amp; &quot;&lt;/span&gt;&lt;/div&gt;&quot;
+        &amp; &quot;&lt;div class=&#x27;sum&#x27;&gt;&quot; &amp; Summary &amp; &quot;&lt;/div&gt;&quot;
+        &amp; &quot;&lt;/div&gt;&quot;</pre><p><b>Columns:</b> Profile[Location], Profile[Summary]</p><p><b>Measures:</b> Current Company, Current Role</p></div></details><details><summary>Key Achievements HTML</summary><div class="inside"><p><b>Folder:</b> Profile &nbsp; <b>Format:</b> </p><pre>VAR Items =
+    CONCATENATEX (
+        Achievements,
+        VAR Txt = SUBSTITUTE ( Achievements[Achievement], &quot;&amp;&quot;, &quot;&amp;amp;&quot; )
+        VAR Co = SUBSTITUTE ( RELATED ( &#x27;Work Experience&#x27;[Company] ), &quot;&amp;&quot;, &quot;&amp;amp;&quot; )
+        VAR Val = Achievements[MetricValue]
+        VAR Unit = TRIM ( Achievements[MetricUnit] &amp; &quot;&quot; )
+        VAR Prefix = TRIM ( Achievements[MetricPrefix] &amp; &quot;&quot; )
+        VAR IsAward = Achievements[Type] = &quot;Award&quot;
+        VAR IsPct = LEFT ( Unit, 1 ) = &quot;%&quot;
+        VAR BigNum = IF ( IsPct, Val &amp; &quot;%&quot;, Val &amp; &quot;&quot; )
+        // non-breaking hyphen keeps words like &quot;on-time&quot; together
+        VAR UnitLbl =
+            SUBSTITUTE ( IF ( IsPct, TRIM ( MID ( Unit, 2, 200 ) ), Unit ), &quot;-&quot;, &quot;&amp;#8209;&quot; )
+        VAR Metric =
+            SWITCH (
+                TRUE (),
+                NOT ISBLANK ( Val ),
+                    &quot;&lt;div class=&#x27;num&#x27;&gt;&quot;
+                        &amp; IF ( Prefix = &quot;&quot;, &quot;&quot;, &quot;&lt;span class=&#x27;pre&#x27;&gt;&quot; &amp; Prefix &amp; &quot;&lt;/span&gt;&quot; )
+                        &amp; BigNum &amp; &quot;&lt;/div&gt;&quot;,
+                IsAward, &quot;&lt;div class=&#x27;ico&#x27;&gt;&amp;#127942;&lt;/div&gt;&quot;,
+                &quot;&lt;div class=&#x27;ico&#x27;&gt;&amp;#9733;&lt;/div&gt;&quot;
+            )
+        VAR Detail =
+            IF ( ISBLANK ( Val ), &quot;&quot;, &quot; &lt;span class=&#x27;unit&#x27;&gt;&amp;mdash; &quot; &amp; UnitLbl &amp; &quot;&lt;/span&gt;&quot; )
+        RETURN
+            &quot;&lt;div class=&#x27;ach&#x27;&gt;&quot; &amp; Metric
+                &amp; &quot;&lt;div&gt;&lt;div class=&#x27;txt&#x27;&gt;&quot; &amp; Txt &amp; Detail &amp; &quot;&lt;/div&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;co&#x27;&gt;&quot; &amp; Co &amp; &quot;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&quot;,
+        &quot;&quot;,
+        // metrics first, then awards, then other results; newest role first within each group
+        IF ( NOT ISBLANK ( Achievements[MetricValue] ), 0, IF ( Achievements[Type] = &quot;Award&quot;, 1, 2 ) ), ASC,
+        Achievements[JobId], DESC
+    )
+
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.ka{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.ka h2{font-size:18px;font-weight:600;margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.ach{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px}&quot;
+        &amp; &quot;.num{min-width:56px;font-size:22px;font-weight:700;color:#f5a800;line-height:1.1}&quot;
+        &amp; &quot;.pre{display:block;font-size:9px;font-weight:600;color:#4a6a94;text-transform:uppercase;letter-spacing:.4px;line-height:1.1}&quot;
+        &amp; &quot;.ico{min-width:56px;font-size:16px;color:#f5a800;line-height:1.3;text-align:center}&quot;
+        &amp; &quot;.txt{font-size:13px;font-weight:600;line-height:1.35;color:#1f3a5f}&quot;
+        &amp; &quot;.unit{font-weight:400;color:#4a6a94}&quot;
+        &amp; &quot;.co{font-size:10px;color:#6b7f99;margin-top:1px;text-transform:uppercase;letter-spacing:.4px}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    IF (
+        Items = &quot;&quot;,
+        BLANK (),
+        Css &amp; &quot;&lt;div class=&#x27;ka&#x27;&gt;&lt;h2&gt;Key Achievements&lt;/h2&gt;&quot; &amp; Items &amp; &quot;&lt;/div&gt;&quot;
+    )</pre><p><b>Columns:</b> Achievements[Achievement], Achievements[JobId], Achievements[MetricPrefix], Achievements[MetricUnit], Achievements[MetricValue], Achievements[Type], Work Experience[Company]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Skills by Category HTML</summary><div class="inside"><p><b>Folder:</b> Profile &nbsp; <b>Format:</b> </p><pre>VAR Groups =
+    CONCATENATEX (
+        VALUES ( Skills[Category] ),
+        VAR Cat = Skills[Category]
+        VAR Chips =
+            CONCATENATEX (
+                FILTER ( ALL ( Skills ), Skills[Category] = Cat ),
+                &quot;&lt;span class=&#x27;chip&#x27;&gt;&quot; &amp; SUBSTITUTE ( Skills[Skill], &quot;&amp;&quot;, &quot;&amp;amp;&quot; ) &amp; &quot;&lt;/span&gt;&quot;,
+                &quot;&quot;,
+                Skills[SkillId], ASC
+            )
+        RETURN
+            &quot;&lt;div class=&#x27;grp&#x27;&gt;&lt;div class=&#x27;cat&#x27;&gt;&quot; &amp; SUBSTITUTE ( Cat, &quot;&amp;&quot;, &quot;&amp;amp;&quot; ) &amp; &quot;&lt;/div&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;chips&#x27;&gt;&quot; &amp; Chips &amp; &quot;&lt;/div&gt;&lt;/div&gt;&quot;,
+        &quot;&quot;,
+        CALCULATE ( MIN ( Skills[SkillId] ) ), ASC
+    )
+
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.sk{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.sk h2{font-size:18px;font-weight:600;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.grp{margin-bottom:12px}&quot;
+        &amp; &quot;.cat{font-size:11px;font-weight:600;color:#4a6a94;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}&quot;
+        &amp; &quot;.chips{display:flex;flex-wrap:wrap;gap:6px}&quot;
+        &amp; &quot;.chip{font-size:12px;padding:3px 10px;border:1px solid #c5d3e6;border-radius:12px;background:#f2f6fb;color:#003f88}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    IF (
+        Groups = &quot;&quot;,
+        BLANK (),
+        Css &amp; &quot;&lt;div class=&#x27;sk&#x27;&gt;&lt;h2&gt;Core Skills&lt;/h2&gt;&quot; &amp; Groups &amp; &quot;&lt;/div&gt;&quot;
+    )</pre><p><b>Columns:</b> Skills[Category], Skills[SkillId], Skills[Skill]</p><p><b>Measures:</b> None detected</p></div></details><details><summary>Certifications HTML</summary><div class="inside"><p><b>Folder:</b> Profile &nbsp; <b>Format:</b> </p><pre>VAR Today = TODAY ()
+VAR Items =
+    CONCATENATEX (
+        Certifications,
+        VAR Issued = Certifications[IssueDate]
+        VAR Expires = Certifications[ExpirationDate]
+        VAR IsExpired = NOT ISBLANK ( Expires ) &amp;&amp; Expires &lt; Today
+        VAR HasDates = NOT ISBLANK ( Issued ) || NOT ISBLANK ( Expires )
+        VAR Badge =
+            SWITCH (
+                TRUE (),
+                IsExpired, &quot;&lt;span class=&#x27;badge exp&#x27;&gt;Expired&lt;/span&gt;&quot;,
+                HasDates, &quot;&lt;span class=&#x27;badge act&#x27;&gt;Active&lt;/span&gt;&quot;,
+                &quot;&quot;
+            )
+        VAR IssuedTxt =
+            IF ( ISBLANK ( Issued ), &quot;&quot;, &quot;Issued &quot; &amp; FORMAT ( Issued, &quot;mmm yyyy&quot; ) )
+        VAR ExpTxt =
+            SWITCH (
+                TRUE (),
+                ISBLANK ( Expires ), IF ( ISBLANK ( Issued ), &quot;&quot;, &quot;No expiration&quot; ),
+                IsExpired, &quot;Expired &quot; &amp; FORMAT ( Expires, &quot;mmm yyyy&quot; ),
+                &quot;Expires &quot; &amp; FORMAT ( Expires, &quot;mmm yyyy&quot; )
+            )
+        VAR DateLine =
+            IssuedTxt &amp; IF ( IssuedTxt &lt;&gt; &quot;&quot; &amp;&amp; ExpTxt &lt;&gt; &quot;&quot;, &quot; &amp;middot; &quot;, &quot;&quot; ) &amp; ExpTxt
+        VAR CredLine =
+            IF (
+                Certifications[CredentialId] = &quot;&quot;,
+                &quot;&quot;,
+                &quot;&lt;div class=&#x27;cid&#x27;&gt;Credential ID &quot; &amp; Certifications[CredentialId] &amp; &quot;&lt;/div&gt;&quot;
+            )
+        RETURN
+            &quot;&lt;div class=&#x27;cert&quot; &amp; IF ( IsExpired, &quot; old&quot;, &quot;&quot; ) &amp; &quot;&#x27;&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;top&#x27;&gt;&lt;div class=&#x27;nm&#x27;&gt;&quot; &amp; SUBSTITUTE ( Certifications[Certification], &quot;&amp;&quot;, &quot;&amp;amp;&quot; ) &amp; &quot;&lt;/div&gt;&quot; &amp; Badge &amp; &quot;&lt;/div&gt;&quot;
+                &amp; &quot;&lt;div class=&#x27;iss&#x27;&gt;&quot; &amp; SUBSTITUTE ( Certifications[Issuer], &quot;&amp;&quot;, &quot;&amp;amp;&quot; ) &amp; &quot;&lt;/div&gt;&quot;
+                &amp; IF ( DateLine = &quot;&quot;, &quot;&quot;, &quot;&lt;div class=&#x27;dt&#x27;&gt;&quot; &amp; DateLine &amp; &quot;&lt;/div&gt;&quot; )
+                &amp; CredLine
+                &amp; &quot;&lt;/div&gt;&quot;,
+        &quot;&quot;,
+        IF ( NOT ISBLANK ( Certifications[ExpirationDate] ) &amp;&amp; Certifications[ExpirationDate] &lt; Today, 1, 0 ), ASC,
+        Certifications[IssueDate], DESC,
+        Certifications[CertId], ASC
+    )
+
+VAR StatusText =
+    [Certification Count] &amp; &quot; total &amp;middot; &quot;
+        &amp; [Active Certification Count] &amp; &quot; active &amp;middot; &quot;
+        &amp; [Expired Certification Count] &amp; &quot; expired&quot;
+
+VAR Css =
+    &quot;&lt;style&gt;&quot;
+        &amp; &quot;.ce{font-family:&#x27;Segoe UI&#x27;,Arial,sans-serif;color:#003f88;box-sizing:border-box;padding:0 4px}&quot;
+        &amp; &quot;.ce .hd{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid #d5dde8}&quot;
+        &amp; &quot;.ce h2{font-size:18px;font-weight:600;margin:0}&quot;
+        &amp; &quot;.ce .st{font-size:12px;color:#6b7f99}&quot;
+        &amp; &quot;.cert{border-left:4px solid #f5a800;padding:2px 0 2px 12px;margin-bottom:14px}&quot;
+        &amp; &quot;.cert.old{border-left-color:#c8c6c4}&quot;
+        &amp; &quot;.cert.old .nm,.cert.old .iss{color:#8a8886}&quot;
+        &amp; &quot;.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}&quot;
+        &amp; &quot;.nm{font-size:14px;font-weight:600;line-height:1.3;color:#1f3a5f}&quot;
+        &amp; &quot;.iss{font-size:13px;color:#4a6a94;margin-top:1px}&quot;
+        &amp; &quot;.dt,.cid{font-size:12px;color:#6b7f99;margin-top:1px}&quot;
+        &amp; &quot;.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}&quot;
+        &amp; &quot;.badge.act{background:#e3f4e8;color:#1b7a3a;border:1px solid #9fd5b0}&quot;
+        &amp; &quot;.badge.exp{background:#f3f2f1;color:#8a8886;border:1px solid #d2d0ce}&quot;
+        &amp; &quot;&lt;/style&gt;&quot;
+
+RETURN
+    IF (
+        Items = &quot;&quot;,
+        BLANK (),
+        Css
+            &amp; &quot;&lt;div class=&#x27;ce&#x27;&gt;&lt;div class=&#x27;hd&#x27;&gt;&lt;h2&gt;Licenses &amp;amp; Certifications&lt;/h2&gt;&lt;span class=&#x27;st&#x27;&gt;&quot; &amp; StatusText &amp; &quot;&lt;/span&gt;&lt;/div&gt;&quot;
+            &amp; Items &amp; &quot;&lt;/div&gt;&quot;
+    )</pre><p><b>Columns:</b> Certifications[CertId], Certifications[Certification], Certifications[CredentialId], Certifications[ExpirationDate], Certifications[IssueDate], Certifications[Issuer]</p><p><b>Measures:</b> Active Certification Count, Certification Count, Expired Certification Count</p></div></details><details><summary>Header Band HTML</summary><div class="inside"><p><b>Folder:</b> Layout &nbsp; <b>Format:</b> </p><pre>VAR FullName = SUBSTITUTE ( MAX ( Profile[Name] ), &quot;&amp;&quot;, &quot;&amp;amp;&quot; )
+VAR Headline = SUBSTITUTE ( MAX ( Profile[Headline] ), &quot;&amp;&quot;, &quot;&amp;amp;&quot; )
+RETURN
+    &quot;&lt;div style=&#x27;font-family:Segoe UI,Arial,sans-serif;display:flex;align-items:baseline;gap:14px;white-space:nowrap;padding-top:6px&#x27;&gt;&quot;
+        &amp; &quot;&lt;span style=&#x27;font-size:24px;font-weight:700;color:#FFFFFF;letter-spacing:.3px&#x27;&gt;&quot; &amp; FullName &amp; &quot;&lt;/span&gt;&quot;
+        &amp; &quot;&lt;span style=&#x27;font-size:14px;color:#c5d3e6&#x27;&gt;&quot; &amp; Headline &amp; &quot;&lt;/span&gt;&quot;
+        &amp; &quot;&lt;/div&gt;&quot;</pre><p><b>Columns:</b> Profile[Headline], Profile[Name]</p><p><b>Measures:</b> None detected</p></div></details><h3 id="achievements">Achievements</h3><details><summary>Columns (7)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>AchievementId</td><td></td><td></td><td>count</td><td>0</td><td></td></tr><tr><td>JobId</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Achievement</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>MetricValue</td><td></td><td></td><td>sum</td><td></td><td></td></tr><tr><td>MetricUnit</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>MetricPrefix</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Type</td><td></td><td></td><td></td><td></td><td></td></tr></table></div></details><h3 id="assets">Assets</h3><details><summary>Columns (4)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>ImageId</td><td>int64</td><td></td><td>count</td><td>0</td><td></td></tr><tr><td>ProjectId</td><td>int64</td><td></td><td>none</td><td>0</td><td></td></tr><tr><td>Caption</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>ScreenshotUrl</td><td>string</td><td>ImageId</td><td>none</td><td></td><td></td></tr></table></div></details><h3 id="certifications">Certifications</h3><details><summary>Columns (6)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>CertId</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Certification</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Issuer</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>IssueDate</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ExpirationDate</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>CredentialId</td><td></td><td></td><td></td><td></td><td></td></tr></table></div></details><h3 id="date">Date</h3><details><summary>Columns (5)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>Date</td><td></td><td></td><td>none</td><td>General Date</td><td></td></tr><tr><td>Year</td><td></td><td></td><td>none</td><td>0</td><td></td></tr><tr><td>Month Number</td><td></td><td></td><td>none</td><td>0</td><td></td></tr><tr><td>Month</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Year Month</td><td></td><td></td><td>none</td><td></td><td></td></tr></table></div></details><h3 id="job-nav">Job Nav</h3><details><summary>Columns (1)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>Start Year</td><td></td><td></td><td>sum</td><td>0</td><td></td></tr></table></div></details><h3 id="job-skills">Job Skills</h3><details><summary>Columns (2)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>JobId</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>SkillId</td><td></td><td></td><td>none</td><td>0</td><td></td></tr></table></div></details><h3 id="profile">Profile</h3><details><summary>Columns (4)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>Name</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Headline</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Location</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Summary</td><td></td><td></td><td></td><td></td><td></td></tr></table></div></details><h3 id="projects">Projects</h3><details><summary>Columns (8)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>ProjectId</td><td>int64</td><td></td><td>none</td><td>0</td><td></td></tr><tr><td>Name</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>RepoUrl</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>FileUrl</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>Summary</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>Business Value</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>Tools</td><td>string</td><td></td><td>none</td><td></td><td></td></tr><tr><td>JobId</td><td>int64</td><td></td><td>none</td><td>0</td><td></td></tr></table></div></details><h3 id="skills">Skills</h3><details><summary>Columns (3)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>SkillId</td><td></td><td></td><td>none</td><td>0</td><td></td></tr><tr><td>Skill</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Category</td><td></td><td></td><td>none</td><td></td><td></td></tr></table></div></details><h3 id="work-descriptions">Work Descriptions</h3><details><summary>Columns (3)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>JobId</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Desc Id</td><td></td><td></td><td>count</td><td>0</td><td></td></tr><tr><td>Desc</td><td></td><td></td><td>none</td><td></td><td></td></tr></table></div></details><h3 id="work-experience">Work Experience</h3><details><summary>Columns (9)</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr><tr><td>JobId</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>JobTitle</td><td></td><td>JobId</td><td>none</td><td></td><td></td></tr><tr><td>Company</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>StartDate</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>EndDate</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Status</td><td></td><td></td><td>none</td><td></td><td></td></tr><tr><td>Start Date</td><td></td><td></td><td>none</td><td>Date</td><td></td></tr><tr><td>End Date</td><td></td><td></td><td>none</td><td>Date</td><td></td></tr><tr><td>Start Year</td><td></td><td></td><td>none</td><td></td><td></td></tr></table></div></details><h2 id="measures">Measure Catalog</h2><table><tr><th>#</th><th>Measure</th><th>Table</th><th>Display Folder</th><th>Format</th></tr><tr><td>1</td><td>Current Role</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>2</td><td>Current Company</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>3</td><td>Experience Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>4</td><td>Description Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>5</td><td>Skill Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>6</td><td>Selected Job Skill Count</td><td>_Measures</td><td>Experience</td><td>#,0</td></tr><tr><td>7</td><td>Selected Job Title</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>8</td><td>Selected Company</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>9</td><td>Selected Job Description</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>10</td><td>Selected Job Skills</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>11</td><td>Selected Job Date Range</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>12</td><td>Selected Job Duration</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>13</td><td>Selected Job Header</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>14</td><td>Professional Experience HTML</td><td>_Measures</td><td>Experience</td><td></td></tr><tr><td>15</td><td>PagerYear</td><td>_Measures</td><td>Experience</td><td>0</td></tr><tr><td>16</td><td>Current Project Id</td><td>_Measures</td><td>Portfolio</td><td>0</td></tr><tr><td>17</td><td>Project Gallery HTML</td><td>_Measures</td><td>Portfolio</td><td></td></tr><tr><td>18</td><td>Repo Link</td><td>_Measures</td><td>Portfolio</td><td></td></tr><tr><td>19</td><td>Report Link</td><td>_Measures</td><td>Portfolio</td><td></td></tr><tr><td>20</td><td>Years of Experience</td><td>_Measures</td><td>KPI</td><td>0.0</td></tr><tr><td>21</td><td>Certification Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>22</td><td>Active Certification Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>23</td><td>Expired Certification Count</td><td>_Measures</td><td>KPI</td><td>#,0</td></tr><tr><td>24</td><td>Profile Header HTML</td><td>_Measures</td><td>Profile</td><td></td></tr><tr><td>25</td><td>Key Achievements HTML</td><td>_Measures</td><td>Profile</td><td></td></tr><tr><td>26</td><td>Skills by Category HTML</td><td>_Measures</td><td>Profile</td><td></td></tr><tr><td>27</td><td>Certifications HTML</td><td>_Measures</td><td>Profile</td><td></td></tr><tr><td>28</td><td>Header Band HTML</td><td>_Measures</td><td>Layout</td><td></td></tr></table><h2 id="measure-lineage">Measure Lineage and Impact Analysis</h2><p>Lineage is derived from exact bracket references in parsed DAX and exact Table[Field] references in parsed report visuals. Review unresolved references before using the results for deletion decisions.</p><div class="grid"><div class="stat"><b>28</b><span>Measures analyzed</span></div><div class="stat"><b>8</b><span>Measure dependencies</span></div><div class="stat"><b>22</b><span>Potentially unused</span></div><div class="stat"><b>0</b><span>Dependency cycles</span></div><div class="stat"><b>0</b><span>Unresolved references</span></div></div><input id="lineage-filter" class="matrix-filter" type="search" placeholder="Filter measures or dependencies" oninput="filterLineage()"><div class="table-scroll"><table id="measure-lineage-table"><thead><tr><th>Table</th><th>Measure</th><th>Depends On</th><th>Used By</th><th>Visuals</th><th>Status</th></tr></thead><tbody><tr class="lineage-row"><td>_Measures</td><td>Active Certification Count</td><td>None</td><td>_Measures[Certifications HTML]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Certification Count</td><td>None</td><td>_Measures[Certifications HTML]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Certifications HTML</td><td>_Measures[Active Certification Count], _Measures[Certification Count], _Measures[Expired Certification Count]</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Current Company</td><td>None</td><td>_Measures[Profile Header HTML]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Current Project Id</td><td>None</td><td>_Measures[Project Gallery HTML], _Measures[Repo Link], _Measures[Report Link]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Current Role</td><td>None</td><td>_Measures[Profile Header HTML]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Description Count</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Experience Count</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Expired Certification Count</td><td>None</td><td>_Measures[Certifications HTML]</td><td>0</td><td>Used</td></tr><tr class="lineage-row"><td>_Measures</td><td>Header Band HTML</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Key Achievements HTML</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>PagerYear</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Professional Experience HTML</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Profile Header HTML</td><td>_Measures[Current Company], _Measures[Current Role]</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Project Gallery HTML</td><td>_Measures[Current Project Id]</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Repo Link</td><td>_Measures[Current Project Id]</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Report Link</td><td>_Measures[Current Project Id]</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Company</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Date Range</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Description</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Duration</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Header</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Skill Count</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Skills</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Selected Job Title</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Skill Count</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Skills by Category HTML</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr><tr class="lineage-row"><td>_Measures</td><td>Years of Experience</td><td>None</td><td>None</td><td>0</td><td>Potentially unused</td></tr></tbody></table></div><h3>Potentially Unused Measures</h3><ul><li>_Measures[Certifications HTML]</li><li>_Measures[Description Count]</li><li>_Measures[Experience Count]</li><li>_Measures[Header Band HTML]</li><li>_Measures[Key Achievements HTML]</li><li>_Measures[PagerYear]</li><li>_Measures[Professional Experience HTML]</li><li>_Measures[Profile Header HTML]</li><li>_Measures[Project Gallery HTML]</li><li>_Measures[Repo Link]</li><li>_Measures[Report Link]</li><li>_Measures[Selected Company]</li><li>_Measures[Selected Job Date Range]</li><li>_Measures[Selected Job Description]</li><li>_Measures[Selected Job Duration]</li><li>_Measures[Selected Job Header]</li><li>_Measures[Selected Job Skill Count]</li><li>_Measures[Selected Job Skills]</li><li>_Measures[Selected Job Title]</li><li>_Measures[Skill Count]</li><li>_Measures[Skills by Category HTML]</li><li>_Measures[Years of Experience]</li></ul><h3>Measure Details</h3><details><summary>_Measures[Active Certification Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Certifications[ExpirationDate], Certifications[IssueDate]</p><p><b>Used by measures:</b> _Measures[Certifications HTML]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Certification Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> None detected</p><p><b>Used by measures:</b> _Measures[Certifications HTML]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Certifications HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> _Measures[Active Certification Count], _Measures[Certification Count], _Measures[Expired Certification Count]</p><p><b>All downstream dependencies:</b> _Measures[Active Certification Count], _Measures[Certification Count], _Measures[Expired Certification Count]</p><p><b>Column dependencies:</b> Certifications[CertId], Certifications[Certification], Certifications[CredentialId], Certifications[ExpirationDate], Certifications[IssueDate], Certifications[Issuer]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Current Company]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[Company], Work Experience[Status]</p><p><b>Used by measures:</b> _Measures[Profile Header HTML]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Current Project Id]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Projects[ProjectId]</p><p><b>Used by measures:</b> _Measures[Project Gallery HTML], _Measures[Repo Link], _Measures[Report Link]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Current Role]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[JobTitle], Work Experience[Status]</p><p><b>Used by measures:</b> _Measures[Profile Header HTML]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Description Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> None detected</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Experience Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> None detected</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Expired Certification Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Certifications[ExpirationDate]</p><p><b>Used by measures:</b> _Measures[Certifications HTML]</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Header Band HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Profile[Headline], Profile[Name]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Key Achievements HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Achievements[Achievement], Achievements[JobId], Achievements[MetricPrefix], Achievements[MetricUnit], Achievements[MetricValue], Achievements[Type], Work Experience[Company]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[PagerYear]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Job Nav[Start Year]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Professional Experience HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Achievements[AchievementId], Achievements[Achievement], Achievements[MetricPrefix], Achievements[MetricUnit], Achievements[MetricValue], Achievements[Type], Job Nav[Start Year], Skills[Skill], Work Descriptions[Desc Id], Work Descriptions[Desc], Work Experience[Company], Work Experience[End Date], Work Experience[JobTitle], Work Experience[Start Date], Work Experience[Status]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Profile Header HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> _Measures[Current Company], _Measures[Current Role]</p><p><b>All downstream dependencies:</b> _Measures[Current Company], _Measures[Current Role]</p><p><b>Column dependencies:</b> Profile[Location], Profile[Summary]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Project Gallery HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> _Measures[Current Project Id]</p><p><b>All downstream dependencies:</b> _Measures[Current Project Id]</p><p><b>Column dependencies:</b> Assets[Caption], Assets[ImageId], Assets[ProjectId], Assets[ScreenshotUrl], Projects[Business Value], Projects[Name], Projects[ProjectId], Projects[Summary], Projects[Tools]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Repo Link]</summary><div class="inside"><p><b>Direct measure dependencies:</b> _Measures[Current Project Id]</p><p><b>All downstream dependencies:</b> _Measures[Current Project Id]</p><p><b>Column dependencies:</b> Projects[ProjectId], Projects[RepoUrl]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Report Link]</summary><div class="inside"><p><b>Direct measure dependencies:</b> _Measures[Current Project Id]</p><p><b>All downstream dependencies:</b> _Measures[Current Project Id]</p><p><b>Column dependencies:</b> Projects[FileUrl], Projects[ProjectId]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Company]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[Company]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Date Range]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[End Date], Work Experience[Start Date], Work Experience[Status]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Description]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Descriptions[Desc Id], Work Descriptions[Desc]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Duration]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[End Date], Work Experience[Start Date], Work Experience[Status]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Header]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[Company], Work Experience[JobTitle]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Skill Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Job Skills[SkillId]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Skills]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Skills[Skill]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Selected Job Title]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[JobTitle]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Skill Count]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Skills[SkillId]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Skills by Category HTML]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Skills[Category], Skills[SkillId], Skills[Skill]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><details><summary>_Measures[Years of Experience]</summary><div class="inside"><p><b>Direct measure dependencies:</b> None</p><p><b>All downstream dependencies:</b> None</p><p><b>Column dependencies:</b> Work Experience[Start Date]</p><p><b>Used by measures:</b> None</p><p><b>Used by visuals:</b> None detected</p><p><b>Unresolved bracket references:</b> None</p></div></details><script>function filterLineage(){const q=document.getElementById("lineage-filter").value.toLowerCase();document.querySelectorAll("#measure-lineage-table tbody tr").forEach(row=>{row.style.display=row.innerText.toLowerCase().includes(q)?"":"none";});}</script><h2 id="model-validation">Model Validation</h2><p>Validation findings are review candidates generated from the selected documentation scope. Informational and warning findings do not prove that the model is incorrect.</p><div class="grid"><div class="stat"><b>0</b><span>Errors</span></div><div class="stat"><b>27</b><span>Warnings</span></div><div class="stat"><b>94</b><span>Informational</span></div><div class="stat"><b>121</b><span>Total findings</span></div></div><p><b>Findings by category:</b> Documentation: 92, Measures: 22, Relationships: 6, Sources: 1</p><h3>Documentation Coverage</h3><table><thead><tr><th>Object Type</th><th>Documented</th><th>Total</th><th>Coverage</th><th>Progress</th></tr></thead><tbody><tr><td>Tables</td><td>0</td><td>12</td><td>0%</td><td><div class="coverage-bar"><span style="width:0%"></span></div></td></tr><tr><td>Columns</td><td>0</td><td>52</td><td>0%</td><td><div class="coverage-bar"><span style="width:0%"></span></div></td></tr><tr><td>Measures</td><td>0</td><td>28</td><td>0%</td><td><div class="coverage-bar"><span style="width:0%"></span></div></td></tr></tbody></table><h3>Validation Findings</h3><div class="validation-controls"><input id="validation-filter" class="matrix-filter" type="search" placeholder="Filter validation findings" oninput="filterValidation()"><select id="validation-severity" onchange="filterValidation()"><option value="">All severities</option><option>Error</option><option>Warning</option><option>Info</option></select></div><div class="table-scroll"><table id="validation-table"><thead><tr><th>Severity</th><th>Category</th><th>Object</th><th>Finding</th><th>Recommendation</th></tr></thead><tbody><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Certifications HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Description Count]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Experience Count]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Header Band HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Key Achievements HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[PagerYear]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Professional Experience HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Profile Header HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Project Gallery HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Repo Link]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Report Link]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Company]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Date Range]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Description]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Duration]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Header]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Skill Count]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Skills]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Selected Job Title]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Skill Count]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Skills by Category HTML]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Measures</td><td>_Measures[Years of Experience]</td><td>Measure is potentially unused by parsed measures and visuals.</td><td>Review external usage before deprecating or deleting the measure.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Relationships</td><td>_Measures</td><td>Table is disconnected in the selected documentation scope.</td><td>Confirm that the table is intentionally standalone or used through measures only.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Relationships</td><td>c9ec3884-fe4a-c960-4375-3ce94b629907</td><td>Relationship uses bidirectional filtering.</td><td>Review filter propagation and ambiguity risk; retain only when intentional.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Relationships</td><td>Certifications</td><td>Table is disconnected in the selected documentation scope.</td><td>Confirm that the table is intentionally standalone or used through measures only.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Relationships</td><td>Job Nav</td><td>Table is disconnected in the selected documentation scope.</td><td>Confirm that the table is intentionally standalone or used through measures only.</td></tr><tr class="validation-row"><td><span class="severity warning">Warning</span></td><td>Relationships</td><td>Profile</td><td>Table is disconnected in the selected documentation scope.</td><td>Confirm that the table is intentionally standalone or used through measures only.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Active Certification Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Certification Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Certifications HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Current Company]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Current Project Id]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Current Role]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Description Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Experience Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Expired Certification Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Header Band HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Key Achievements HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[PagerYear]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Professional Experience HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Profile Header HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Project Gallery HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Repo Link]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Report Link]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Company]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Date Range]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Description]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Duration]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Header]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Skill Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Skills]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Selected Job Title]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Skill Count]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Skills by Category HTML]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>_Measures[Years of Experience]</td><td>Measure description is missing.</td><td>Document the calculation purpose and important filter-context behavior.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[Achievement]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[AchievementId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[JobId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[MetricPrefix]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[MetricUnit]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[MetricValue]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Achievements[Type]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Assets</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Assets[Caption]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Assets[ImageId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Assets[ProjectId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Assets[ScreenshotUrl]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[CertId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[Certification]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[CredentialId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[ExpirationDate]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[IssueDate]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Certifications[Issuer]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date[Date]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date[Month Number]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date[Month]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date[Year Month]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Date[Year]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Job Nav</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Job Nav[Start Year]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Job Skills</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Job Skills[JobId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Job Skills[SkillId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Profile</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Profile[Headline]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Profile[Location]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Profile[Name]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Profile[Summary]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[Business Value]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[FileUrl]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[JobId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[Name]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[ProjectId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[RepoUrl]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[Summary]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Projects[Tools]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Skills</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Skills[Category]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Skills[Skill]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Skills[SkillId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Descriptions</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Descriptions[Desc Id]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Descriptions[Desc]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Descriptions[JobId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience</td><td>Table description is missing.</td><td>Add a concise business-purpose description when the table is user-facing.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[Company]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[End Date]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[EndDate]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[JobId]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[JobTitle]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[Start Date]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[Start Year]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[StartDate]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Documentation</td><td>Work Experience[Status]</td><td>Column description is missing.</td><td>Document the business meaning, especially for fields exposed to report authors.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Relationships</td><td>14ec5331-d389-31e0-00da-f9ff78849627</td><td>Relationship is inactive.</td><td>Confirm that DAX intentionally activates this relationship when needed.</td></tr><tr class="validation-row"><td><span class="severity info">Info</span></td><td>Sources</td><td>Source Inventory</td><td>9 partition source(s) could not be classified by the current connector rules.</td><td>Review the Power Query section and extend connector detection when needed.</td></tr></tbody></table></div><script>function filterValidation(){const q=document.getElementById("validation-filter").value.toLowerCase();const s=document.getElementById("validation-severity").value.toLowerCase();document.querySelectorAll("#validation-table tbody tr").forEach(row=>{const text=row.innerText.toLowerCase();const severity=row.cells[0]?row.cells[0].innerText.toLowerCase():"";row.style.display=(text.includes(q)&&(!s||severity.includes(s)))?"":"none";});}</script><h2 id="relationships">Relationships</h2><div class="rel"><span>Work Experience[End Date]</span><b>→</b><span>Date[Date]</span><em>many:one</em><em>oneDirection</em><em>Inactive</em></div><div class="rel"><span>Work Experience[Start Date]</span><b>→</b><span>Date[Date]</span><em>many:one</em><em>oneDirection</em><em>Active</em></div><div class="rel"><span>Achievements[JobId]</span><b>→</b><span>Work Experience[JobId]</span><em>many:one</em><em>oneDirection</em><em>Active</em></div><div class="rel"><span>Work Descriptions[JobId]</span><b>→</b><span>Work Experience[JobId]</span><em>many:one</em><em>oneDirection</em><em>Active</em></div><div class="rel"><span>Assets[ProjectId]</span><b>→</b><span>Projects[ProjectId]</span><em>many:one</em><em>oneDirection</em><em>Active</em></div><div class="rel"><span>Job Skills[JobId]</span><b>→</b><span>Work Experience[JobId]</span><em>many:one</em><em>oneDirection</em><em>Active</em></div><div class="rel"><span>Job Skills[SkillId]</span><b>→</b><span>Skills[SkillId]</span><em>many:one</em><em>bothDirections</em><em>Active</em></div><h2 id="relationship-matrix">Relationship Matrix</h2><p>Use the field below to filter by table, column, relationship, cardinality, direction, or status.</p><input id="relationship-filter" class="matrix-filter" type="search" placeholder="Filter relationships" oninput="filterRelationshipMatrix()"><div class="table-scroll"><table id="relationship-matrix-table"><thead><tr><th>#</th><th>Relationship</th><th>From Table</th><th>From Column</th><th>To Table</th><th>To Column</th><th>Cardinality</th><th>Filter Direction</th><th>Status</th></tr></thead><tbody><tr class="relationship-row"><td>1</td><td>89000164-7b23-c3b2-d81d-8f022e7016a0</td><td>Achievements</td><td>JobId</td><td>Work Experience</td><td>JobId</td><td>many : one</td><td>oneDirection</td><td>Active</td></tr><tr class="relationship-row"><td>2</td><td>AutoDetected_422e1bf0-3d64-4980-b374-de04cca9804e</td><td>Assets</td><td>ProjectId</td><td>Projects</td><td>ProjectId</td><td>many : one</td><td>oneDirection</td><td>Active</td></tr><tr class="relationship-row"><td>3</td><td>c9ec3884-fe4a-c960-4375-3ce94b629907</td><td>Job Skills</td><td>SkillId</td><td>Skills</td><td>SkillId</td><td>many : one</td><td>bothDirections</td><td>Active</td></tr><tr class="relationship-row"><td>4</td><td>0383ee7a-327c-6f5e-ace8-05ccd9c2ff34</td><td>Job Skills</td><td>JobId</td><td>Work Experience</td><td>JobId</td><td>many : one</td><td>oneDirection</td><td>Active</td></tr><tr class="relationship-row"><td>5</td><td>bbfb4a2c-e182-3aa8-5cc7-887acd260f16</td><td>Work Descriptions</td><td>JobId</td><td>Work Experience</td><td>JobId</td><td>many : one</td><td>oneDirection</td><td>Active</td></tr><tr class="relationship-row"><td>6</td><td>14ec5331-d389-31e0-00da-f9ff78849627</td><td>Work Experience</td><td>End Date</td><td>Date</td><td>Date</td><td>many : one</td><td>oneDirection</td><td>Inactive</td></tr><tr class="relationship-row"><td>7</td><td>22c5ce7d-3f3b-72c8-c878-5be8b37bcb7d</td><td>Work Experience</td><td>Start Date</td><td>Date</td><td>Date</td><td>many : one</td><td>oneDirection</td><td>Active</td></tr></tbody></table></div><script>function filterRelationshipMatrix(){const q=document.getElementById("relationship-filter").value.toLowerCase();document.querySelectorAll("#relationship-matrix-table tbody tr").forEach(row=>{row.style.display=row.innerText.toLowerCase().includes(q)?"":"none";});}</script><h2 id="source-inventory">Source Inventory</h2><div class="grid"><div class="stat"><b>2</b><span>Excel Workbook</span></div><div class="stat"><b>1</b><span>JSON</span></div><div class="stat"><b>9</b><span>Other / not detected</span></div></div><p><b>Partition modes:</b> import: 12</p><table><thead><tr><th>Table</th><th>Partition</th><th>Mode</th><th>Partition Type</th><th>Detected Source</th></tr></thead><tbody><tr><td>_Measures</td><td>_Measures</td><td>import</td><td>m</td><td>JSON</td></tr><tr><td>Achievements</td><td>Achievements</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Assets</td><td>Assets</td><td>import</td><td>m</td><td>Excel Workbook</td></tr><tr><td>Certifications</td><td>Certifications</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Date</td><td>Date</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Job Nav</td><td>Job Nav</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Job Skills</td><td>Job Skills</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Profile</td><td>Profile</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Projects</td><td>Projects</td><td>import</td><td>m</td><td>Excel Workbook</td></tr><tr><td>Skills</td><td>Skills</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Work Descriptions</td><td>Work Descriptions</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr><tr><td>Work Experience</td><td>Work Experience</td><td>import</td><td>calculated</td><td>Other / not detected</td></tr></tbody></table><h2 id="power-query">Power Query</h2><p>12 table partition(s) documented.</p><details><summary>_Measures · _Measures</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> m &nbsp; <b>Detected source:</b> JSON</p><pre>let
+    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(&quot;i44FAA==&quot;, BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+    #&quot;Removed Columns&quot; = Table.RemoveColumns(Source, {&quot;Column1&quot;})
+in
+    #&quot;Removed Columns&quot;
+
+otation PBI_NavigationStepName = Navigation
+
+otation PBI_ResultType = Table</pre></div></details><details><summary>Achievements · Achievements</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE (
+    &quot;AchievementId&quot;, INT64,
+    &quot;JobId&quot;, STRING,
+    &quot;Achievement&quot;, STRING,
+    &quot;MetricValue&quot;, DOUBLE,
+    &quot;MetricUnit&quot;, STRING,
+    &quot;MetricPrefix&quot;, STRING,
+    &quot;Type&quot;, STRING,
+    {
+        { 1, &quot;3&quot;, &quot;Designed and maintained enterprise Power BI semantic models and reporting solutions&quot;, BLANK (), &quot;&quot;, &quot;&quot;, &quot;Result&quot; },
+        { 2, &quot;3&quot;, &quot;Implemented scalable, high-performance data pipelines and data warehouse solutions&quot;, BLANK (), &quot;&quot;, &quot;&quot;, &quot;Result&quot; },
+        { 3, &quot;2&quot;, &quot;Optimized a large Power BI semantic model&quot;, 75, &quot;% performance improvement&quot;, &quot;up to&quot;, &quot;Metric&quot; },
+        { 4, &quot;1&quot;, &quot;Established a standardized report repository&quot;, 50, &quot;% reduction in report development time&quot;, &quot;up to&quot;, &quot;Metric&quot; },
+        { 5, &quot;1&quot;, &quot;Led the transition from MicroStrategy to Power BI&quot;, BLANK (), &quot;&quot;, &quot;&quot;, &quot;Result&quot; },
+        { 6, &quot;0&quot;, &quot;Consistently delivered projects on schedule&quot;, 95, &quot;% on-time delivery&quot;, &quot;&quot;, &quot;Metric&quot; },
+        { 7, &quot;1&quot;, &quot;Took on an additional role developing internal web applications (VB) alongside Power BI duties&quot;, BLANK (), &quot;&quot;, &quot;&quot;, &quot;Result&quot; },
+        { 8, &quot;0&quot;, &quot;MicroStrategy World 2018 Dossier Contest Winner&quot;, BLANK (), &quot;&quot;, &quot;&quot;, &quot;Award&quot; }
+    }
+)
+
+otation PBI_Id = f48f86f69cae4bb98abd8e2b96fb6c81</pre></div></details><details><summary>Assets · Assets</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> m &nbsp; <b>Detected source:</b> Excel Workbook</p><pre>let
+    Source =
+        Excel.Workbook(
+            File.Contents(&quot;C:\Users\Foster\Desktop\Power-BI-Portfolio-Assets.xlsx&quot;),
+            true,
+            true
+        ),
+    #&quot;Assets Sheet&quot; = Source{[Item = &quot;Assets&quot;, Kind = &quot;Sheet&quot;]}[Data],
+    #&quot;Changed Type&quot; =
+        Table.TransformColumnTypes(
+            #&quot;Assets Sheet&quot;,
+            {
+                {&quot;ImageId&quot;, Int64.Type},
+                {&quot;ProjectId&quot;, Int64.Type}
+            }
+        )
+in
+    #&quot;Changed Type&quot;
+
+otation PBI_NavigationStepName = Navigation
+
+otation PBI_ResultType = Table</pre></div></details><details><summary>Certifications · Certifications</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE(
+    &quot;CertId&quot;, INT64,
+    &quot;Certification&quot;, STRING,
+    &quot;Issuer&quot;, STRING,
+    &quot;IssueDate&quot;, DATETIME,
+    &quot;ExpirationDate&quot;, DATETIME,
+    &quot;CredentialId&quot;, STRING,
+
+    {
+        { 1, &quot;HCHB Analytics Certified Builder&quot;, &quot;Homecare Homebase&quot;, &quot;2022-10-01&quot;, BLANK(), &quot;dmsd8iqpo3rc&quot; },
+        { 2, &quot;Alteryx Designer Core Certification&quot;, &quot;Alteryx&quot;, &quot;2022-01-01&quot;, &quot;2024-01-01&quot;, &quot;&quot; },
+        { 3, &quot;Analyzing and Visualizing Data with Microsoft Power BI&quot;, &quot;Microsoft&quot;, &quot;2021-12-01&quot;, &quot;2022-12-01&quot;, &quot;I094-8425&quot; },
+        { 4, &quot;MicroStrategy MCMA&quot;, &quot;Strategy&quot;, BLANK(), BLANK(), &quot;&quot; },
+        { 5, &quot;MicroStrategy MCA&quot;, &quot;Strategy&quot;, BLANK(), BLANK(), &quot;&quot; }
+    }
+)</pre></div></details><details><summary>Date · Date</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>ADDCOLUMNS(
+
+    CALENDAR(
+        DATE(2017, 1, 1),
+        TODAY()
+    ),
+
+    &quot;Year&quot;, YEAR([Date]),
+    &quot;Month Number&quot;, MONTH([Date]),
+    &quot;Month&quot;, FORMAT([Date], &quot;MMMM&quot;),
+    &quot;Year Month&quot;, FORMAT([Date], &quot;YYYY-MM&quot;)
+
+)
+
+otation PBI_Id = d496f324a20143088b39d4ac9c7d85f5</pre></div></details><details><summary>Job Nav · Job Nav</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>// SELECTCOLUMNS (
+//     GENERATESERIES ( 1, COUNTROWS ( &#x27;Work Experience&#x27; ), 1 ),
+//     &quot;Job #&quot;, [Value]
+// )
+DISTINCT (
+    SELECTCOLUMNS (
+        FILTER ( &#x27;Work Experience&#x27;, NOT ISBLANK ( &#x27;Work Experience&#x27;[Start Date] ) ),
+        &quot;Start Year&quot;, YEAR ( &#x27;Work Experience&#x27;[Start Date] )
+    )
+)
+
+otation PBI_Id = 2a6a622bee344cecb90318b001bab24d</pre></div></details><details><summary>Job Skills · Job Skills</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE (
+    &quot;JobId&quot;, STRING,
+    &quot;SkillId&quot;, INT64,
+    {
+        // 0 = Business Intelligence Analyst, Staples
+        { &quot;0&quot;, 1 }, { &quot;0&quot;, 2 }, { &quot;0&quot;, 3 }, { &quot;0&quot;, 6 }, { &quot;0&quot;, 10 }, { &quot;0&quot;, 21 },
+
+        // 1 = Sr. Business Intelligence Analyst, Staples
+        { &quot;1&quot;, 1 }, { &quot;1&quot;, 2 }, { &quot;1&quot;, 3 }, { &quot;1&quot;, 6 }, { &quot;1&quot;, 10 }, { &quot;1&quot;, 18 }, { &quot;1&quot;, 21 },
+
+        // 2 = Data Visualization Specialist, BrightSpring Health Services
+        { &quot;2&quot;, 1 }, { &quot;2&quot;, 2 }, { &quot;2&quot;, 3 }, { &quot;2&quot;, 4 }, { &quot;2&quot;, 5 }, { &quot;2&quot;, 6 }, { &quot;2&quot;, 7 }, { &quot;2&quot;, 8 }, { &quot;2&quot;, 15 },
+
+        // 3 = Analytics Engineer, Equus Workforce Solutions
+        { &quot;3&quot;, 1 }, { &quot;3&quot;, 2 }, { &quot;3&quot;, 3 }, { &quot;3&quot;, 4 }, { &quot;3&quot;, 5 }, { &quot;3&quot;, 6 }, { &quot;3&quot;, 7 }, { &quot;3&quot;, 9 },
+        { &quot;3&quot;, 11 }, { &quot;3&quot;, 12 }, { &quot;3&quot;, 13 }, { &quot;3&quot;, 19 }
+    }
+)
+
+otation PBI_Id = cda5485742274a449475428f07caafcc</pre></div></details><details><summary>Profile · Profile</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE (
+    &quot;Name&quot;, STRING,
+    &quot;Headline&quot;, STRING,
+    &quot;Location&quot;, STRING,
+    &quot;Summary&quot;, STRING,
+    {
+        {
+            &quot;Steven Foster&quot;,
+            &quot;Analytics Engineer | Power BI &amp; Semantic Modeling&quot;,
+            &quot;Indiana, USA&quot;,
+            &quot;Analytics engineer with 9+ years turning data into decisions across retail, healthcare and workforce services. I specialize in Power BI semantic modeling, DAX and performance tuning, backed by T-SQL, Azure Data Factory and Databricks pipelines. I led a MicroStrategy-to-Power BI migration, cut report development time by up to 50% with a standardized report repository, and improved a large semantic model&#x27;s performance by up to 75%.&quot;
+        }
+    }
+)</pre></div></details><details><summary>Projects · Projects</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> m &nbsp; <b>Detected source:</b> Excel Workbook</p><pre>let
+    Source =
+        Excel.Workbook(
+            File.Contents(&quot;C:\Users\Foster\Desktop\Power-BI-Portfolio-Projects.xlsx&quot;),
+            true,
+            true
+        ),
+    #&quot;Projects Sheet&quot; = Source{[Item = &quot;Projects&quot;, Kind = &quot;Sheet&quot;]}[Data],
+    #&quot;Changed Type&quot; =
+        Table.TransformColumnTypes(
+            #&quot;Projects Sheet&quot;,
+            {
+                {&quot;ProjectId&quot;, Int64.Type},
+                {&quot;JobId&quot;, Int64.Type}
+            }
+        )
+in
+    #&quot;Changed Type&quot;
+
+otation PBI_NavigationStepName = Navigation
+
+otation PBI_ResultType = Table</pre></div></details><details><summary>Skills · Skills</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE (
+    &quot;SkillId&quot;, INT64,
+    &quot;Skill&quot;, STRING,
+    &quot;Category&quot;, STRING,
+    {
+        { 1, &quot;Power BI&quot;, &quot;Power BI&quot; },
+        { 2, &quot;DAX&quot;, &quot;Power BI&quot; },
+        { 3, &quot;Power Query&quot;, &quot;Data Transformation&quot; },
+        { 4, &quot;Tabular Editor&quot;, &quot;Development Tools&quot; },
+        { 5, &quot;DAX Studio&quot;, &quot;Development Tools&quot; },
+        { 6, &quot;Semantic Modeling&quot;, &quot;Modeling&quot; },
+        { 7, &quot;Calculation Groups&quot;, &quot;Modeling&quot; },
+        { 8, &quot;Incremental Refresh&quot;, &quot;Power BI&quot; },
+        { 9, &quot;Dataflows&quot;, &quot;Power BI&quot; },
+        { 10, &quot;T-SQL&quot;, &quot;Data Engineering&quot; },
+        { 11, &quot;Azure Data Factory&quot;, &quot;Data Engineering&quot; },
+        { 12, &quot;Databricks&quot;, &quot;Data Engineering&quot; },
+        { 13, &quot;Python&quot;, &quot;Automation&quot; },
+        { 14, &quot;Power BI Service&quot;, &quot;Power BI&quot; },
+        { 15, &quot;Row-Level Security (RLS)&quot;, &quot;Power BI&quot; },
+        { 16, &quot;VertiPaq Analyzer&quot;, &quot;Development Tools&quot; },
+        { 17, &quot;C#&quot;, &quot;Automation&quot; },
+        { 18, &quot;SQL&quot;, &quot;Data Engineering&quot; },
+        { 19, &quot;Data Warehousing&quot;, &quot;Data Engineering&quot; },
+        { 20, &quot;ETL/ELT&quot;, &quot;Data Transformation&quot; },
+        { 21, &quot;MicroStrategy&quot;, &quot;BI Platforms&quot; }
+    }
+)
+
+otation PBI_Id = b89535fa5cb647459edd52455be8ea11</pre></div></details><details><summary>Work Descriptions · Work Descriptions</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE(
+    &quot;JobId&quot;, STRING,
+    &quot;Desc Id&quot;, INT64,
+    &quot;Desc&quot;, STRING,
+    {
+        {
+            &quot;0&quot;,
+            1,
+            &quot;Maintained a track record of delivering high-quality designs and solutions within established timelines, achieving over 95% project completion success and customer satisfaction.&quot;
+        },
+        {
+            &quot;0&quot;,
+            2,
+            &quot;Built scalable enterprise reporting solutions that improved data governance and data management.&quot;
+        },
+        {
+            &quot;1&quot;,
+            3,
+            &quot;Led the transition from MicroStrategy to Power BI.&quot;
+        },
+        {
+            &quot;1&quot;,
+            4,
+            &quot;Led data modeling and visualization efforts to improve reporting efficiency and stakeholder engagement.&quot;
+        },
+        {
+            &quot;1&quot;,
+            5,
+            &quot;Standardized the report repository, reducing report development time by up to 50%.&quot;
+        },
+        {
+            &quot;2&quot;,
+            6,
+            &quot;Mentored junior team members.&quot;
+        },
+        {
+            &quot;2&quot;,
+            7,
+            &quot;Led the design, development, and optimization of Power BI solutions, achieving up to 75% performance improvement and delivering actionable insights.&quot;
+        },
+        {
+            &quot;2&quot;,
+            8,
+            &quot;Designed advanced data models and reports to support robust analytics and data-driven decision-making.&quot;
+        },
+        {
+            &quot;3&quot;,
+            9,
+            &quot;Implemented scalable, high-performance data pipelines and data warehouse solutions using Azure Data Factory, Databricks, and other Azure technologies.&quot;
+        },
+        {
+            &quot;3&quot;,
+            10,
+            &quot;Designed and developed interactive Power BI reports.&quot;
+        },
+        {
+            &quot;3&quot;,
+            11,
+            &quot;Designed and optimized ETL/ELT processes for data transformation and integration.&quot;
+        }
+    }
+)
+
+otation PBI_Id = cd7df04af33c43168e04427d57f46db8</pre></div></details><details><summary>Work Experience · Work Experience</summary><div class="inside"><p><b>Mode:</b> import &nbsp; <b>Partition type:</b> calculated &nbsp; <b>Detected source:</b> Other / not detected</p><pre>DATATABLE(
+    &quot;JobId&quot;, STRING,
+    &quot;JobTitle&quot;, STRING,
+    &quot;Company&quot;, STRING,
+    &quot;StartDate&quot;, STRING,
+    &quot;EndDate&quot;, STRING,
+    &quot;Status&quot;, STRING,
+    {
+        { &quot;0&quot;, &quot;Business Intelligence Analyst&quot;, &quot;Staples&quot;, &quot;01/01/2017&quot;, &quot;08/01/2019&quot;, &quot;Previous&quot; },
+        { &quot;1&quot;, &quot;Sr. Business Intelligence Analyst&quot;, &quot;Staples&quot;, &quot;08/02/2019&quot;, &quot;02/01/2022&quot;, &quot;Previous&quot; },
+        { &quot;2&quot;, &quot;Data Visualization Specialist&quot;, &quot;BrightSpring Health Services&quot;, &quot;02/02/2022&quot;, &quot;03/01/2025&quot;, &quot;Previous&quot; },
+        { &quot;3&quot;, &quot;Analytics Engineer&quot;, &quot;Equus Workforce Solutions&quot;, &quot;03/02/2025&quot;, &quot;&quot;, &quot;Current&quot; }
+    }
+)
+
+otation PBI_Id = 2de54e91237743e5b267e588a1eeae6e</pre></div></details><h2 id="pages">Report Pages</h2><h3>.pbi (0 visuals)</h3><div class="page" style="width:700.0px;height:393.75px"></div><h3>definition (0 visuals)</h3><div class="page" style="width:700.0px;height:393.75px"></div><h3>StaticResources (0 visuals)</h3><div class="page" style="width:700.0px;height:393.75px"></div><h2 id="usage">Visual Usage</h2><table><tr><th>Field</th><th>Used In</th></tr></table><footer><p>Generated locally by Local TMDL Documenter V2.</p></footer></body></html>
