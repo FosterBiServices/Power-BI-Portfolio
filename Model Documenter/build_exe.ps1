@@ -1,4 +1,23 @@
+# Builds a single-file, windowed ModelDocumenter.exe into .\dist
+# Usage:  .\build_exe.ps1                      (uses "python" on PATH)
+#         .\build_exe.ps1 -Python C:\Users\<you>\anaconda3\python.exe
+
+param(
+  [string]$Python = "python"
+)
+
 $ErrorActionPreference = "Stop"
+
+# Runs a native command and fails on a non-zero exit code. Native tools (pip, PyInstaller) write
+# progress to stderr, which Windows PowerShell 5.1 would otherwise treat as a terminating error.
+function Invoke-Native {
+  param([string]$Exe, [string[]]$Arguments)
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try { & $Exe @Arguments 2>&1 | ForEach-Object { "$_" } }
+  finally { $ErrorActionPreference = $previous }
+  if ($LASTEXITCODE -ne 0) { throw "'$Exe $($Arguments -join ' ')' failed with exit code $LASTEXITCODE" }
+}
 
 $ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $ProjectRoot
@@ -6,30 +25,40 @@ Set-Location $ProjectRoot
 if (-not (Test-Path ".\local_tmdl_documenter\app.py")) {
   throw "local_tmdl_documenter\app.py was not found. Run this script from the project root."
 }
-
-$PythonCommand = Get-Command python -ErrorAction SilentlyContinue
-if (-not $PythonCommand) {
-  throw "Python was not found on PATH. Install standard Python or run from an environment that provides python.exe."
+if (-not (Get-Command $Python -ErrorAction SilentlyContinue)) {
+  throw "Python was not found ('$Python'). Pass -Python with the full path to python.exe (for example your Anaconda python.exe)."
 }
 
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt pyinstaller
+# Isolated build environment keeps the exe small (Anaconda base would pull in unrelated libraries)
+$Venv = Join-Path $ProjectRoot ".venv"
+if (-not (Test-Path "$Venv\Scripts\python.exe")) {
+  Invoke-Native $Python @("-m", "venv", $Venv)
+}
+$VenvPython = "$Venv\Scripts\python.exe"
 
-@'
-from local_tmdl_documenter.app import main
+Invoke-Native $VenvPython @("-m", "pip", "install", "--upgrade", "pip")
+Invoke-Native $VenvPython @("-m", "pip", "install", "-r", "requirements.txt", "pyinstaller")
 
-raise SystemExit(main())
-'@ | Set-Content -Path ".\launcher.py" -Encoding UTF8
+$Version = (& $VenvPython -c "import local_tmdl_documenter as m; print(m.__version__)").Trim()
 
-python -m PyInstaller --noconfirm --clean ".\LocalTmdlDocumenter.spec"
+# --specpath keeps the generated .spec inside build\ so it doesn't clutter the repo
+Invoke-Native $VenvPython @(
+  "-m", "PyInstaller",
+  "--noconfirm", "--clean",
+  "--onefile", "--windowed",
+  "--name", "ModelDocumenter",
+  "--specpath", "build",
+  "--exclude-module", "tkinter",
+  "launcher.py"
+)
 
-$ExePath = Join-Path $ProjectRoot "dist\LocalTmdlDocumenter\LocalTmdlDocumenter.exe"
+$ExePath = Join-Path $ProjectRoot "dist\ModelDocumenter.exe"
 if (-not (Test-Path $ExePath)) {
   throw "Build completed without the expected executable: $ExePath"
 }
 
+$SizeMb = [math]::Round((Get-Item $ExePath).Length / 1MB, 1)
 Write-Host ""
-Write-Host "Standalone application created:" -ForegroundColor Green
+Write-Host "Model Documenter v$Version built ($SizeMb MB):" -ForegroundColor Green
 Write-Host $ExePath
-Write-Host ""
-Write-Host "Copy the entire dist\LocalTmdlDocumenter folder when distributing the application."
+Write-Host "Single file - share ModelDocumenter.exe on its own."
