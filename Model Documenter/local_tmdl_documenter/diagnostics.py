@@ -13,7 +13,7 @@ from .reliability import application_folder, logs_folder
 from .settings import load_settings, settings_path
 
 APPLICATION_NAME = "Local TMDL Documenter"
-APPLICATION_VERSION = "2.9.1"
+APPLICATION_VERSION = "2.10.0"
 
 
 def diagnostics_folder() -> Path:
