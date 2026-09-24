@@ -1,3 +1,8 @@
+"""Partition parsing and source detection.
+
+Shared by Model Documenter and AI Model Context Generator; keep both copies identical.
+"""
+
 from __future__ import annotations
 
 import re
@@ -227,14 +232,37 @@ def _classify_dax(expression: str) -> str:
   return "Calculated Table (DAX)"
 
 
-def _classify_m(expression, queries, self_name, visited) -> str:
+def _call_arguments(code: str, match) -> list[str]:
+  """Return up to two string literals passed to the matched connector call."""
+  if not match.group(0).rstrip().endswith("("):
+    # Matched inside a string literal (e.g. a quickbase.com URL): return that literal.
+    start = code.rfind('"', 0, match.start())
+    end = code.find('"', match.end())
+    return [code[start + 1:end]] if start != -1 and end != -1 else []
+  literals, depth, index = [], 1, match.end()
+  while index < len(code) and depth and len(literals) < 2:
+    char = code[index]
+    if char == '"':
+      end = index + 1
+      while end < len(code) and not (code[end] == '"' and code[end + 1:end + 2] != '"'):
+        end += 2 if code[end:end + 2] == '""' else 1
+      literals.append(code[index + 1:end].replace('""', '"'))
+      index = end + 1
+      continue
+    depth += {"(": 1, ")": -1}.get(char, 0)
+    index += 1
+  return literals
+
+
+def _classify_m(expression, queries, self_name, visited) -> tuple[str, list[str]]:
   code = strip_comments(expression)
   # Enter Data tables embed rows via Json.Document(Binary.Decompress(...)).
   if _ENTERED_DATA.search(code):
-    return "Entered Data (Power Query)"
+    return "Entered Data (Power Query)", []
   for pattern, label in _M_CONNECTORS:
-    if re.search(pattern, code, re.IGNORECASE):
-      return label
+    match = re.search(pattern, code, re.IGNORECASE)
+    if match:
+      return label, _call_arguments(code, match)
 
   # Follow references to other queries (staging queries, shared expressions,
   # or other tables) back to the connector they ultimately use.
@@ -245,21 +273,23 @@ def _classify_m(expression, queries, self_name, visited) -> str:
     if name and name in queries and name not in steps and name not in referenced:
       referenced.append(name)
   kinds = set()
+  arguments: list[str] = []
   for name in referenced:
     if name in visited:
       continue
     target = queries[name]
     if _PARAMETER_QUERY.search(target):
       continue
-    kind = _classify_m(target, queries, name, visited | {name})
+    kind, target_arguments = _classify_m(target, queries, name, visited | {name})
     if kind != UNDETECTED:
       kinds.add(kind)
+      arguments = arguments or target_arguments
   if kinds:
     specific = kinds - {"Generated in Power Query"}
-    return " + ".join(sorted(specific or kinds))
+    return " + ".join(sorted(specific or kinds)), arguments
   if _GENERATED_M.search(code) or re.search(r"#date\s*\(", code, re.IGNORECASE):
-    return "Generated in Power Query"
-  return UNDETECTED
+    return "Generated in Power Query", []
+  return UNDETECTED, []
 
 
 def _unquote_identifier(token: str) -> str:
@@ -270,23 +300,29 @@ def _unquote_identifier(token: str) -> str:
 
 def detect_source_kind(expression: str, source_type: str = "", queries=None,
                        self_name: str = "", mode: str = "") -> str:
+  return detect_source(expression, source_type, queries, self_name, mode)[0]
+
+
+def detect_source(expression: str, source_type: str = "", queries=None,
+                  self_name: str = "", mode: str = "") -> tuple[str, list[str]]:
   """Return a descriptive source family for a partition.
 
   DAX calculated partitions are classified by their table constructor. M
   partitions are classified by explicit connector calls; when a query only
   references other queries, those references are followed (cycle-safe) until a
-  connector is found.
+  connector is found. Also returns up to two string arguments of that connector
+  call (server/database, file path, or URL).
   """
   kind = (source_type or "").strip().casefold()
   if kind == "calculated":
-    return _classify_dax(expression or "")
+    return _classify_dax(expression or ""), []
   if kind == "entity" or (mode or "").casefold() == "directlake":
-    return "Direct Lake"
+    return "Direct Lake", []
   if kind == "calculationgroup":
-    return "Calculation Group"
+    return "Calculation Group", []
   if kind == "query":
-    return "Legacy Provider Query"
+    return "Legacy Provider Query", []
   if not (expression or "").strip():
-    return UNDETECTED
+    return UNDETECTED, []
   queries = queries or {}
   return _classify_m(expression, queries, self_name, {self_name})

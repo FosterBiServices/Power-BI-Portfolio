@@ -61,7 +61,11 @@ def apply_privacy(model: SemanticModel, options: PrivacyOptions) -> SemanticMode
     for source in model.data_sources
     if not source.table or source.table in included_tables
   ]
-  return replace(model, tables=tables, data_sources=sources)
+  relationships = [
+    relationship for relationship in model.relationships
+    if relationship.from_table in included_tables and relationship.to_table in included_tables
+  ]
+  return replace(model, tables=tables, relationships=relationships, data_sources=sources)
 
 
 def _is_local_path(value: str) -> bool:

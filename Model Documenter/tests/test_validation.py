@@ -84,3 +84,30 @@ def test_dax_checks():
   assert check_measure("M", "CALCULATE([Total]", tables) == ["DAX syntax error: 1 unclosed '('."]
   assert check_measure("M", "[Totl]", tables) == ["References unknown measure(s)/column(s): [Totl]."]
   assert check_measure("M", "SUM(Returns[Qty])", tables) == ["References table(s) not in the model: Returns."]
+
+
+def test_bare_flags_and_descriptions(tmp_path: Path):
+  definition = tmp_path / "definition" / "tables"
+  definition.mkdir(parents=True)
+  (definition / "Sales.tmdl").write_text(
+    "/// Sales transactions.\n"
+    "table Sales\n"
+    "\t/// Units sold.\n\tcolumn Qty\n\t\tdataType: int64\n\n"
+    "\tcolumn Secret\n\t\tdataType: string\n\t\tisHidden\n\n"
+    "\t/// Total units.\n\tmeasure Total =\n\t\t\tVAR x = 1\n\t\t\tRETURN\n\t\t\t\tSUM(Sales[Qty])\n\t\tisHidden\n\n"
+    "\t/// Next measure.\n\tmeasure Other = [Total]\n",
+    encoding="utf-8",
+  )
+  (definition / "LocalDateTable_1.tmdl").write_text(
+    "table LocalDateTable_1\n\tisHidden\n\n\tcolumn Date\n\t\tdataType: dateTime\n", encoding="utf-8")
+  project = Project(tmp_path / "definition", tmp_path / "definition", None)
+  parse_tmdl(project)
+  sales = project.tables["Sales"]
+  assert project.tables["LocalDateTable_1"].is_hidden and not sales.is_hidden
+  assert sales.description == "Sales transactions."
+  assert [(c.name, c.is_hidden, c.data_type, c.description) for c in sales.columns] == [
+    ("Qty", False, "int64", "Units sold."), ("Secret", True, "string", "")]
+  total = sales.measures[0]
+  assert total.is_hidden and total.description == "Total units."
+  assert "isHidden" not in total.expression and "///" not in total.expression
+  assert total.column_refs == ["Sales[Qty]"] and total.measure_refs == []

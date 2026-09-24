@@ -1,4 +1,7 @@
-"""Static DAX checks and reference extraction (adapted from Model Documenter)."""
+"""Static DAX checks and reference extraction.
+
+Shared by Model Documenter and AI Model Context Generator; keep both copies identical.
+"""
 
 from __future__ import annotations
 

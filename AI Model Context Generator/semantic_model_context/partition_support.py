@@ -1,4 +1,7 @@
-"""Partition parsing and source detection (adapted from Model Documenter)."""
+"""Partition parsing and source detection.
+
+Shared by Model Documenter and AI Model Context Generator; keep both copies identical.
+"""
 
 from __future__ import annotations
 
