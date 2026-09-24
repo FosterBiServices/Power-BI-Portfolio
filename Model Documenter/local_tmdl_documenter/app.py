@@ -1,0 +1,333 @@
+from __future__ import annotations
+
+import sys
+import webbrowser
+from pathlib import Path
+
+from PySide6.QtCore import Qt, QObject, QEvent, QTimer
+from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtWidgets import (
+  QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox,
+  QFileDialog, QFormLayout, QLabel, QMainWindow, QMenu, QMessageBox,
+  QPlainTextEdit, QTabWidget, QToolBar, QTreeWidget, QTreeWidgetItem,
+)
+
+from .documentation import DocumentationOptions, write_documentation
+from .diagnostics import export_diagnostics, open_diagnostics_folder
+from .parser import ProjectError, load_project_from_pbip
+from .reliability import (
+  configure_logging, log_exception, log_info, open_logs_folder,
+)
+from .settings import (
+  add_recent_project, default_settings, load_settings, open_settings_folder,
+  reset_settings, save_settings,
+)
+
+
+class ClipboardGuard(QObject):
+  def eventFilter(self, obj, event):
+    return bool(
+      event.type() == QEvent.KeyPress
+      and event.matches(QKeySequence.Copy)
+    )
+
+
+class OptionsDialog(QDialog):
+  def __init__(self, parent=None, saved_settings: dict | None = None):
+    super().__init__(parent)
+    self.setWindowTitle("Documentation options")
+    layout = QFormLayout(self)
+    self.preset = QComboBox()
+    self.preset.addItems([
+      "Business Documentation", "Developer Documentation", "Custom",
+    ])
+    self.preset.currentTextChanged.connect(self.apply_preset)
+    layout.addRow("Documentation preset", self.preset)
+    self.report = QCheckBox(); self.hidden = QCheckBox()
+    self.dax = QCheckBox(); self.power = QCheckBox()
+    self.sources = QCheckBox(); self.auto_dates = QCheckBox()
+    self.measures_tables = QCheckBox()
+    layout.addRow("Include report pages and visual usage", self.report)
+    layout.addRow("Include hidden objects", self.hidden)
+    layout.addRow("Show auto date tables in relationship diagram", self.auto_dates)
+    layout.addRow("Include dedicated measures tables and their measures", self.measures_tables)
+    layout.addRow("Include DAX expressions", self.dax)
+    layout.addRow("Include Power Query expressions", self.power)
+    layout.addRow("Include source details", self.sources)
+    note = QLabel(
+      "Sensitive expression content is opt-in. Common credential patterns are redacted."
+    )
+    note.setWordWrap(True); layout.addRow(note)
+    for control in (
+      self.report, self.hidden, self.auto_dates, self.measures_tables,
+      self.dax, self.power, self.sources,
+    ):
+      control.toggled.connect(self.mark_custom)
+    buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject)
+    layout.addRow(buttons)
+    self.apply_saved_settings(saved_settings or default_settings())
+
+  def set_checked(self, control, value):
+    blocked = control.blockSignals(True); control.setChecked(bool(value)); control.blockSignals(blocked)
+
+  def apply_preset(self, preset):
+    if preset == "Business Documentation":
+      values = (False, False, False, False, False, False, False)
+    elif preset == "Developer Documentation":
+      values = (True, True, True, True, True, True, False)
+    else:
+      return
+    for control, value in zip((
+      self.report, self.hidden, self.auto_dates, self.measures_tables,
+      self.dax, self.power, self.sources,
+    ), values):
+      self.set_checked(control, value)
+
+  def mark_custom(self):
+    if self.preset.currentText() != "Custom":
+      blocked = self.preset.blockSignals(True)
+      self.preset.setCurrentText("Custom")
+      self.preset.blockSignals(blocked)
+
+  def apply_saved_settings(self, settings):
+    profile = settings.get("Profile", "Business Documentation")
+    blocked = self.preset.blockSignals(True); self.preset.setCurrentText(profile); self.preset.blockSignals(blocked)
+    self.apply_preset(profile)
+    mapping = (
+      (self.report, "IncludeReport"), (self.hidden, "IncludeHidden"),
+      (self.dax, "IncludeDax"), (self.power, "IncludePowerQuery"),
+      (self.sources, "IncludeSources"), (self.auto_dates, "ShowAutoDateTables"),
+      (self.measures_tables, "IncludeMeasuresTable"),
+    )
+    for control, key in mapping:
+      self.set_checked(control, settings.get(key, False))
+
+  def options(self):
+    return DocumentationOptions(
+      self.dax.isChecked(), self.power.isChecked(), self.sources.isChecked(),
+      self.hidden.isChecked(), self.report.isChecked(), self.auto_dates.isChecked(),
+      self.measures_tables.isChecked(), profile=self.preset.currentText(),
+    )
+
+  def settings_values(self):
+    return {
+      "Profile": self.preset.currentText(), "IncludeReport": self.report.isChecked(),
+      "IncludeHidden": self.hidden.isChecked(), "IncludeDax": self.dax.isChecked(),
+      "IncludePowerQuery": self.power.isChecked(), "IncludeSources": self.sources.isChecked(),
+      "ShowAutoDateTables": self.auto_dates.isChecked(),
+      "IncludeMeasuresTable": self.measures_tables.isChecked(),
+    }
+
+
+class MainWindow(QMainWindow):
+  def __init__(self):
+    super().__init__()
+    self.setWindowTitle("Local TMDL Documenter V2.9.1")
+    self.log_path = configure_logging()
+    self.settings = load_settings()
+    self.resize(self.settings.get("WindowWidth", 1250), self.settings.get("WindowHeight", 800))
+    self.project = None
+    self.setAcceptDrops(True)
+    self.guard = ClipboardGuard(self)
+    current_app = QApplication.instance()
+    if current_app is not None:
+      current_app.installEventFilter(self.guard); current_app.clipboard().clear()
+
+    bar = QToolBar(); self.addToolBar(bar)
+    open_action = QAction("Open PBIP file", self); open_action.triggered.connect(self.open_project); bar.addAction(open_action)
+    doc_action = QAction("Generate documentation", self); doc_action.triggered.connect(self.generate_docs); bar.addAction(doc_action)
+
+    file_menu = self.menuBar().addMenu("File")
+    file_menu.addAction(open_action)
+    self.recent_menu = QMenu("Recent Projects", self); file_menu.addMenu(self.recent_menu)
+    self.open_last_action = QAction("Open Last Project on Startup", self, checkable=True)
+    self.open_last_action.setChecked(self.settings.get("OpenLastProject", False))
+    self.open_last_action.toggled.connect(self.set_open_last_project)
+    file_menu.addAction(self.open_last_action)
+    file_menu.addSeparator()
+    exit_action = QAction("Exit", self); exit_action.triggered.connect(self.close); file_menu.addAction(exit_action)
+
+    settings_menu = self.menuBar().addMenu("Settings")
+    open_settings_action = QAction("Open Settings Folder", self); open_settings_action.triggered.connect(open_settings_folder); settings_menu.addAction(open_settings_action)
+    reset_action = QAction("Reset Saved Settings", self); reset_action.triggered.connect(self.reset_saved_settings); settings_menu.addAction(reset_action)
+
+    help_menu = self.menuBar().addMenu("Help")
+    open_logs_action = QAction("Open Logs Folder", self); open_logs_action.triggered.connect(open_logs_folder); help_menu.addAction(open_logs_action)
+    export_diagnostics_action = QAction("Export Diagnostics Package", self)
+    export_diagnostics_action.triggered.connect(self.export_diagnostics_package)
+    help_menu.addAction(export_diagnostics_action)
+    open_diagnostics_action = QAction("Open Diagnostics Folder", self)
+    open_diagnostics_action.triggered.connect(open_diagnostics_folder)
+    help_menu.addAction(open_diagnostics_action)
+
+    self.tree = QTreeWidget(); self.tree.setHeaderLabels(["Project objects"]); self.tree.setContextMenuPolicy(Qt.NoContextMenu)
+    self.summary = QPlainTextEdit(); self.summary.setReadOnly(True); self.summary.setContextMenuPolicy(Qt.NoContextMenu)
+    tabs = QTabWidget(); tabs.addTab(self.tree, "Explorer"); tabs.addTab(self.summary, "Summary"); self.setCentralWidget(tabs)
+    self.statusBar().showMessage("Open or drop a PBIP project, semantic model, or definition folder.")
+    self.refresh_recent_menu()
+
+    last_project = self.settings.get("LastProject", "")
+    if self.settings.get("OpenLastProject") and last_project and Path(last_project).exists():
+      QTimer.singleShot(0, lambda: self.load_project_path(Path(last_project)))
+
+  def refresh_recent_menu(self):
+    self.recent_menu.clear()
+    valid = []
+    for value in self.settings.get("RecentProjects", []):
+      path = Path(value)
+      if path.exists():
+        valid.append(str(path))
+        action = QAction(path.name or str(path), self)
+        action.setToolTip(str(path))
+        action.triggered.connect(lambda checked=False, p=path: self.load_project_path(p))
+        self.recent_menu.addAction(action)
+    self.settings["RecentProjects"] = valid
+    if not valid:
+      empty = QAction("No recent projects", self); empty.setEnabled(False); self.recent_menu.addAction(empty)
+    else:
+      self.recent_menu.addSeparator()
+      clear_action = QAction("Clear Recent Projects", self); clear_action.triggered.connect(self.clear_recent_projects); self.recent_menu.addAction(clear_action)
+
+  def clear_recent_projects(self):
+    self.settings["RecentProjects"] = []; self.settings["LastProject"] = ""
+    self.save_current_settings(); self.refresh_recent_menu()
+
+  def set_open_last_project(self, enabled):
+    self.settings["OpenLastProject"] = bool(enabled); self.save_current_settings()
+
+  def open_project(self):
+
+      pbip_file, _ = QFileDialog.getOpenFileName(
+          self,
+          "Select PBIP File",
+          "",
+          "PBIP Files (*.pbip)"
+      )
+
+      if not pbip_file:
+          return
+
+      self.load_project_path(
+          Path(pbip_file) 
+        )
+
+  def load_project_path(self, pbip_path: Path):
+    try:
+      log_info("Opening PBIP | %s", pbip_path)
+      self.project = load_project_from_pbip(pbip_path)
+      add_recent_project(self.settings,pbip_path)
+      self.save_current_settings(); self.refresh_recent_menu(); self.populate()
+      log_info("Project loaded | %s", pbip_path)
+    except ProjectError as error:
+      log_path = log_exception(
+          f"Project error while opening {pbip_path}",
+          error
+      )
+      QMessageBox.critical(self, "Cannot Open Project", f"{error}\n\nDetails were written to:\n{log_path}")
+    except Exception as error:
+      log_path = log_exception(f"Unexpected error while opening {pbip_path}", error)
+      QMessageBox.critical(self, "Unexpected Error", f"{error}\n\nDetails were written to:\n{log_path}")
+
+  def populate(self):
+    self.tree.clear(); project = self.project
+    tables = QTreeWidgetItem([f"Tables ({len(project.tables)})"])
+    for table in sorted(project.tables.values(), key=lambda value: value.name.casefold()):
+      item = QTreeWidgetItem([table.name]); item.addChild(QTreeWidgetItem([f"Columns ({len(table.columns)})"])); item.addChild(QTreeWidgetItem([f"Measures ({len(table.measures)})"])); tables.addChild(item)
+    pages = QTreeWidgetItem([f"Report pages ({len(project.pages)})"])
+    for page in project.pages:
+      pages.addChild(QTreeWidgetItem([f"{page.display_name} ({len(page.visuals)} visuals)"]))
+    self.tree.addTopLevelItems([tables, QTreeWidgetItem([f"Relationships ({len(project.relationships)})"]), QTreeWidgetItem([f"Expressions ({len(project.expressions)})"]), pages]); self.tree.expandToDepth(0)
+    self.summary.setPlainText(
+      f"Model: {project.name}\nSemantic model: {project.semantic_root}\nReport: {project.report_root or 'Not found'}\n\n"
+      f"Tables: {len(project.tables)}\nColumns: {sum(len(t.columns) for t in project.tables.values())}\n"
+      f"Measures: {sum(len(t.measures) for t in project.tables.values())}\nPartitions: {sum(len(t.partitions) for t in project.tables.values())}\n"
+      f"Relationships: {len(project.relationships)}\nPages: {len(project.pages)}\nVisuals: {sum(len(p.visuals) for p in project.pages)}\nWarnings: {len(project.warnings)}"
+    )
+    self.statusBar().showMessage(f"Loaded {project.name}")
+
+  def generate_docs(self):
+    if not self.project:
+      QMessageBox.information(self, "No project", "Open a project first."); return
+    dialog = OptionsDialog(self, self.settings)
+    if dialog.exec() != QDialog.Accepted:
+      return
+    options = dialog.options(); self.settings.update(dialog.settings_values()); self.save_current_settings()
+    default = str(self.project.selected_root / f"{self.project.name}-full-report.html")
+    output, _ = QFileDialog.getSaveFileName(self, "Save local documentation", default, "HTML files (*.html)")
+    if not output:
+      return
+    try:
+      log_info("Generating documentation | %s", output)
+      write_documentation(self.project, Path(output), options)
+      log_info("Documentation created | %s", output)
+      QMessageBox.information(self, "Documentation created", f"Created:\n{output}")
+      webbrowser.open(Path(output).resolve().as_uri())
+    except Exception as error:
+      log_path = log_exception(f"Documentation generation failed for {output}", error)
+      QMessageBox.critical(self, "Cannot Create Documentation", f"{error}\n\nDetails were written to:\n{log_path}")
+
+  def dragEnterEvent(self, event):
+    urls = event.mimeData().urls() if event.mimeData().hasUrls() else []
+    if len(urls) == 1 and urls[0].isLocalFile() and Path(urls[0].toLocalFile()).is_dir():
+      event.acceptProposedAction()
+    else:
+      event.ignore()
+
+  def dropEvent(self, event):
+    urls = event.mimeData().urls() if event.mimeData().hasUrls() else []
+    if len(urls) == 1:
+      path = Path(urls[0].toLocalFile())
+      if path.is_dir():
+        self.load_project_path(path); event.acceptProposedAction(); return
+    event.ignore()
+
+  def save_current_settings(self):
+    self.settings["WindowWidth"] = self.width(); self.settings["WindowHeight"] = self.height()
+    try:
+      save_settings(self.settings)
+    except OSError as error:
+      log_exception("Settings could not be saved", error)
+
+  def reset_saved_settings(self):
+    answer = QMessageBox.question(self, "Reset Saved Settings", "Reset preferences, recent projects, and window size?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+    if answer != QMessageBox.Yes:
+      return
+    try:
+      reset_settings(); self.settings = default_settings(); self.open_last_action.setChecked(False); self.refresh_recent_menu()
+      QMessageBox.information(self, "Settings Reset", "Saved settings were removed. Defaults are active.")
+    except OSError as error:
+      log_path = log_exception("Settings reset failed", error)
+      QMessageBox.critical(self, "Settings Reset Failed", f"{error}\n\nLog: {log_path}")
+
+  def export_diagnostics_package(self):
+    try:
+      package = export_diagnostics()
+      log_info("Diagnostics package created | %s", package)
+      QMessageBox.information(
+        self,
+        "Diagnostics Package Created",
+        f"Created:\n{package}\n\nReview the ZIP before sharing because it contains local paths and log details.",
+      )
+      open_diagnostics_folder()
+    except Exception as error:
+      log_path = log_exception("Diagnostics export failed", error)
+      QMessageBox.critical(
+        self,
+        "Diagnostics Export Failed",
+        f"{error}\n\nDetails were written to:\n{log_path}",
+      )
+
+  def closeEvent(self, event):
+    self.save_current_settings()
+    app = QApplication.instance()
+    if app is not None:
+      app.clipboard().clear()
+    self.project = None
+    log_info("Application closed")
+    event.accept()
+
+
+def main():
+  app = QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2.9.1")
+  window = MainWindow(); window.show(); return app.exec()
