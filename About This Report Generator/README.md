@@ -4,13 +4,28 @@ This standalone PySide6 application analyzes a PBIP project locally, generates a
 
 The application does not call an external AI service and does not upload model metadata. Copy the generated prompt into your approved AI tool, then paste the JSON response back into this application.
 
-## Launch through Anaconda
+## Download
+
+**[AboutThisReportGenerator.exe](https://github.com/FosterBiServices/Power-BI-Portfolio/releases/latest/download/AboutThisReportGenerator.exe)**: a single-file Windows app with no install or Python needed. See [Releases](https://github.com/FosterBiServices/Power-BI-Portfolio/releases) for all versions.
+
+> The app is not code-signed, so Windows may show *"Windows protected your PC"* on first run. Select **More info → Run anyway**.
+
+## Run from source (Anaconda)
 
 ```cmd
-cd /d "C:\Projects\About This Report Generator"
+cd /d "<repo>\About This Report Generator"
 python -m pip install -e .
 python -m about_report_generator
 ```
+
+## Build the .exe
+
+```powershell
+cd "<repo>\About This Report Generator"
+powershell -ExecutionPolicy Bypass -File .\build_exe.ps1 -Python "$env:USERPROFILE\anaconda3\python.exe"
+```
+
+Creates `dist\AboutThisReportGenerator.exe` using an isolated `.venv` (PySide6 + PyInstaller).
 
 ## Workflow
 
