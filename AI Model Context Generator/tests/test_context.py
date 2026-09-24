@@ -34,6 +34,8 @@ def _project(tmp_path: Path) -> Path:
   _write(definition / "tables" / "LocalDateTable_1.tmdl",
          "table LocalDateTable_1\n\tisHidden\n\n\tcolumn Date\n\t\tdataType: dateTime\n\t\tisHidden\n\n"
          "\tpartition LocalDateTable_1 = calculated\n\t\tmode: import\n\t\tsource = Calendar(Date(2015,1,1), Date(2015,1,1))\n")
+  _write(definition / "relationships.tmdl",
+         "relationship abc\n\tfromColumn: Sales.Qty\n\ttoColumn: LocalDateTable_1.Date\n")
   _write(definition / "cultures" / "en-US.tmdl",
          "cultureInfo en-US\n\ttranslations\n\t\tmodel Model\n\t\t\ttable Sales\n\t\t\t\tmeasure Total\n")
   return tmp_path / "Demo.pbip"

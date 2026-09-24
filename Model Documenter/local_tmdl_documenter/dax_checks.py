@@ -1,3 +1,8 @@
+"""Static DAX checks and reference extraction.
+
+Shared by Model Documenter and AI Model Context Generator; keep both copies identical.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -97,6 +102,48 @@ def _nesting_error(tokens: list[_Token]) -> str | None:
   return None
 
 
+def _qualifier(tokens: list[_Token], position: int, variables: set[str]) -> str | None:
+  """Return the table qualifying the bracket token at `position`, if any."""
+  previous = tokens[position - 1] if position else None
+  if previous and previous.kind == "table":
+    return previous.text
+  if (
+    previous and previous.kind == "ident" and previous.end == tokens[position].start
+    and previous.text.casefold() not in _KEYWORDS
+    and previous.text.casefold() not in variables
+  ):
+    return previous.text
+  return None
+
+
+def measure_references(expression: str) -> tuple[list[str], list[str]]:
+  """Return (qualified Table[Column] references, unqualified [Name] references).
+
+  Comments, strings, hierarchy levels, and names defined inside the expression
+  (ADDCOLUMNS aliases, GENERATESERIES [Value]) are excluded.
+  """
+  try:
+    tokens = tokenize(expression or "")
+  except DaxSyntaxError:
+    return [], []
+  local_names = {token.text.casefold() for token in tokens if token.kind == "string"}
+  variables = {name.casefold() for name in _VAR_NAME.findall(expression)}
+  qualified, unqualified = set(), set()
+  for position, token in enumerate(tokens):
+    if token.kind != "bracket":
+      continue
+    previous = tokens[position - 1] if position else None
+    if previous and previous.kind == "punct" and previous.text == ".":
+      continue
+    qualifier = _qualifier(tokens, position, variables)
+    name = token.text.strip()
+    if qualifier is not None:
+      qualified.add(f"{qualifier}[{name}]")
+    elif name.casefold() not in local_names and not re.fullmatch(r"value\d*", name.casefold()):
+      unqualified.add(name)
+  return sorted(qualified, key=str.casefold), sorted(unqualified, key=str.casefold)
+
+
 def check_measure(measure_name: str, expression: str, model_tables) -> list[str]:
   """Return error messages for one measure, resolving names against the whole model.
 
@@ -138,15 +185,7 @@ def check_measure(measure_name: str, expression: str, model_tables) -> list[str]
     key = name.casefold()
     if previous and previous.kind == "punct" and previous.text == ".":
       continue  # Date hierarchy level, e.g. 'Date'[Date].[Year]
-    qualifier = None
-    if previous and previous.kind == "table":
-      qualifier = previous.text
-    elif (
-      previous and previous.kind == "ident" and previous.end == token.start
-      and previous.text.casefold() not in _KEYWORDS
-      and previous.text.casefold() not in variables
-    ):
-      qualifier = previous.text
+    qualifier = _qualifier(tokens, position, variables)
     if qualifier is not None:
       table_key = qualifier.casefold()
       if table_key not in tables:

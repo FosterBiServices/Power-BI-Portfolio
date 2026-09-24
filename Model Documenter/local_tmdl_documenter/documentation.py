@@ -81,6 +81,9 @@ def generate_html(project: Project, options: DocumentationOptions) -> str:
   tables=[t for t in project.tables.values() if (options.include_hidden or not t.is_hidden) and (options.include_measures_tables or not is_dedicated_measures_table(t))]
   measures=[(t,m) for t in tables for m in t.measures if options.include_hidden or not m.is_hidden]
   visuals=[v for p in project.pages for v in p.visuals if not v.is_group]
+  included_table_names = {table.name for table in tables}
+  # Only relationships between documented tables (hidden/excluded tables stay out).
+  scoped_relationships=[r for r in project.relationships if r.from_table in included_table_names and r.to_table in included_table_names]
   toc=['<a href="#overview">Model Overview</a>','<a href="#diagram">Relationship Diagram</a>','<a href="#tables">Table Inventory</a>','<a href="#measures">Measure Catalog</a>','<a href="#measure-lineage">Measure Lineage</a>','<a href="#relationships">Relationships</a>','<a href="#relationship-matrix">Relationship Matrix</a>','<a href="#source-inventory">Source Inventory</a>']
   if show_validation:
     toc += ['<a href="#model-validation">Model Validation</a>']
@@ -89,23 +92,25 @@ def generate_html(project: Project, options: DocumentationOptions) -> str:
   if show_power_query and (partition_count or project.expressions):
     toc += ['<a href="#power-query">Power Query</a>']
   sections=[]
-  cards=f'<div class="grid">'+''.join(f'<div class="stat"><b>{value}</b><span>{label}</span></div>' for value,label in [(len(tables),'Tables'),(sum(len(t.columns) for t in tables),'Columns'),(len(measures),'Measures'),(len(project.relationships),'Relationships'),(len(project.pages),'Pages'),(len(visuals),'Visuals')])+f'</div>'
+  cards=f'<div class="grid">'+''.join(f'<div class="stat"><b>{value}</b><span>{label}</span></div>' for value,label in [(len(tables),'Tables'),(sum(options.include_hidden or not c.is_hidden for t in tables for c in t.columns),'Columns'),(len(measures),'Measures'),(len(scoped_relationships),'Relationships'),(len(project.pages),'Pages'),(len(visuals),'Visuals')])+f'</div>'
   sections.append(f'<h2 id="overview">Model Overview</h2>{cards}<table><tr><th>Property</th><th>Value</th></tr><tr><td>Compatibility Level</td><td>{esc(project.compatibility_level)}</td></tr><tr><td>Culture</td><td>{esc(project.culture)}</td></tr></table>')
   sections.append(f'<h2 id="diagram">Relationship Diagram</h2>{diagram_v21(project, options.show_auto_date_tables, options.include_measures_tables)}')
   table_html=[]
   for table in sorted(tables,key=lambda t:t.name.casefold()):
-    rows=''.join(f'<tr><td>{esc(c.name)}</td><td>{esc(c.data_type)}</td><td>{esc(c.sort_by)}</td><td>{esc(c.summarize_by)}</td><td>{esc(c.format_string)}</td><td>{"Hidden" if c.is_hidden else ""}</td></tr>' for c in table.columns if options.include_hidden or not c.is_hidden)
-    measure_cards=''.join(f'<details><summary>{esc(m.name)}</summary><div class="inside"><p><b>Folder:</b> {esc(m.display_folder)} &nbsp; <b>Format:</b> {esc(m.format_string)}</p>{f"<pre>{esc(redact(m.expression))}</pre>" if options.include_dax else ""}<p><b>Columns:</b> {esc(", ".join(m.column_refs) or "None detected")}</p><p><b>Measures:</b> {esc(", ".join(m.measure_refs) or "None detected")}</p></div></details>' for m in table.measures if options.include_hidden or not m.is_hidden)
-    table_html.append(f'<h3 id="{slug(table.name)}">{esc(table.name)}</h3><details><summary>Columns ({len(table.columns)})</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th></tr>{rows}</table></div></details>{measure_cards}')
+    columns=[c for c in table.columns if options.include_hidden or not c.is_hidden]
+    # Descriptions come from /// comments; show them only where they exist.
+    has_descriptions=any(c.description for c in columns)
+    rows=''.join(f'<tr><td>{esc(c.name)}</td><td>{esc(c.data_type)}</td><td>{esc(c.sort_by)}</td><td>{esc(c.summarize_by)}</td><td>{esc(c.format_string)}</td><td>{"Hidden" if c.is_hidden else ""}</td>{f"<td>{esc(c.description)}</td>" if has_descriptions else ""}</tr>' for c in columns)
+    measure_cards=''.join(f'<details><summary>{esc(m.name)}</summary><div class="inside">{f"<p>{esc(m.description)}</p>" if m.description else ""}<p><b>Folder:</b> {esc(m.display_folder)} &nbsp; <b>Format:</b> {esc(m.format_string)}</p>{f"<pre>{esc(redact(m.expression))}</pre>" if options.include_dax else ""}<p><b>Columns:</b> {esc(", ".join(m.column_refs) or "None detected")}</p><p><b>Measures:</b> {esc(", ".join(m.measure_refs) or "None detected")}</p></div></details>' for m in table.measures if options.include_hidden or not m.is_hidden)
+    table_html.append(f'<h3 id="{slug(table.name)}">{esc(table.name)}</h3>{f"<p>{esc(table.description)}</p>" if table.description else ""}<details><summary>Columns ({len(columns)})</summary><div class="inside"><table><tr><th>Column</th><th>Data Type</th><th>Sort By</th><th>Summarize</th><th>Format</th><th>Status</th>{"<th>Description</th>" if has_descriptions else ""}</tr>{rows}</table></div></details>{measure_cards}')
   sections.append('<h2 id="tables">Table Inventory</h2>'+''.join(table_html))
   measure_rows=''.join(f'<tr><td>{i}</td><td>{esc(m.name)}</td><td>{esc(t.name)}</td><td>{esc(m.display_folder)}</td><td>{esc(m.format_string)}</td></tr>' for i,(t,m) in enumerate(measures,1))
   sections.append(f'<h2 id="measures">Measure Catalog</h2><table><tr><th>#</th><th>Measure</th><th>Table</th><th>Display Folder</th><th>Format</th></tr>{measure_rows}</table>')
   sections.append(build_measure_lineage_html(project, tables))
   if show_validation:
     sections.append(build_validation_html(project, tables))
-  relationships=''.join(f'<div class="rel"><span>{esc(r.from_table)}[{esc(r.from_column)}]</span><b>→</b><span>{esc(r.to_table)}[{esc(r.to_column)}]</span><em>{esc(r.from_cardinality)}:{esc(r.to_cardinality)}</em><em>{esc(r.cross_filtering)}</em><em>{"Active" if r.is_active else "Inactive"}</em></div>' for r in project.relationships)
+  relationships=''.join(f'<div class="rel"><span>{esc(r.from_table)}[{esc(r.from_column)}]</span><b>→</b><span>{esc(r.to_table)}[{esc(r.to_column)}]</span><em>{esc(r.from_cardinality)}:{esc(r.to_cardinality)}</em><em>{esc(r.cross_filtering)}</em><em>{"Active" if r.is_active else "Inactive"}</em></div>' for r in scoped_relationships)
   sections.append(f'<h2 id="relationships">Relationships</h2>{relationships}')
-  included_table_names = {table.name for table in tables}
   sections.append(build_relationship_matrix(project, included_table_names))
   sections.append(build_source_inventory(project, tables))
   if show_power_query and (partition_count or project.expressions):

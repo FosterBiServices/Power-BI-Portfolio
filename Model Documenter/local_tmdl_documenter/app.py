@@ -123,7 +123,7 @@ class OptionsDialog(QDialog):
 class MainWindow(QMainWindow):
   def __init__(self):
     super().__init__()
-    self.setWindowTitle("Local TMDL Documenter V2.11.0")
+    self.setWindowTitle("Local TMDL Documenter V2.11.1")
     self.log_path = configure_logging()
     self.settings = load_settings()
     self.resize(self.settings.get("WindowWidth", 1250), self.settings.get("WindowHeight", 800))
@@ -330,5 +330,5 @@ class MainWindow(QMainWindow):
 
 
 def main():
-  app = QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2.11.0")
+  app = QApplication(sys.argv); app.setApplicationName("Local TMDL Documenter V2.11.1")
   window = MainWindow(); window.show(); return app.exec()
