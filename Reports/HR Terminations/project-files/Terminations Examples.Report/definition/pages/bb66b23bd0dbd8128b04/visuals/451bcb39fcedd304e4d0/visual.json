@@ -6,7 +6,8 @@
     "y": 108,
     "z": 2000,
     "height": 592,
-    "width": 1256
+    "width": 1256,
+    "tabOrder": 9000
   },
   "visualGroup": {
     "displayName": "All Tenure Visuals",
