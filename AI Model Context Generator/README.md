@@ -2,6 +2,12 @@
 
 Version 1.0 project scaffold for a local Python application that reads a Power BI PBIP file and writes one AI-readable semantic model context file.
 
+## Download
+
+**[AIModelContextGenerator.exe](https://github.com/FosterBiServices/Power-BI-Portfolio/releases/latest/download/AIModelContextGenerator.exe)**: a single-file Windows app (the desktop interface) with no install or Python needed. See [Releases](https://github.com/FosterBiServices/Power-BI-Portfolio/releases) for all versions.
+
+> The app is not code-signed, so Windows may show *"Windows protected your PC"* on first run. Select **More info → Run anyway**.
+
 ## Version 1.0 scope
 
 - Select an actual `.pbip` file.
@@ -12,26 +18,32 @@ Version 1.0 project scaffold for a local Python application that reads a Power B
 - Write one `.semantic-context.md` file.
 - Support both a PySide6 desktop interface and a CLI.
 
-## Install for development
+## Run from source (Anaconda)
 
 ```powershell
-py -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
-pip install -e ".[dev]"
+cd "<repo>\AI Model Context Generator"
+pip install "PySide6>=6.7,<6.10"
+python -m semantic_model_context
 ```
 
-## Run
+or the command-line interface:
 
 ```powershell
-semantic-context-gui
+python -m semantic_model_context.cli build "C:\Projects\Sales\Sales.pbip" --output "C:\Temp\Sales.semantic-context.md"
 ```
 
-or:
+Options: `--include-hidden`, `--exclude-dax`, `--include-source-locations`.
+
+> `pyproject.toml` still expects the package under `src\`, so `pip install -e .` and the `semantic-context` / `semantic-context-gui` commands won't work until that is updated. The commands above run the package in place.
+
+## Build the .exe
 
 ```powershell
-semantic-context build "C:\Projects\WeCARE\WeCARE.pbip"
+cd "<repo>\AI Model Context Generator"
+powershell -ExecutionPolicy Bypass -File .\build_exe.ps1 -Python "$env:USERPROFILE\anaconda3\python.exe"
 ```
+
+Creates `dist\AIModelContextGenerator.exe` using an isolated `.venv` (PySide6 + PyInstaller). Settings and logs are stored in `%APPDATA%\SemanticModelContextBuilder`.
 
 ## Validate
 

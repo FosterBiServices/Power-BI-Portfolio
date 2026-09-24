@@ -4,6 +4,22 @@ A centralized collection of reusable analytics resources, code patterns, standar
 
 The Analytics Toolkit is intended to reduce duplicate effort, promote consistency, and provide proven solutions that can be reused across projects.
 
+## 🧰 Desktop Tools
+
+Standalone Windows apps for Power BI projects (PBIP / TMDL). No install and no Python needed: download the `.exe` and run it. Everything runs locally and nothing is uploaded.
+
+| Tool | What it does | Download |
+|------|--------------|----------|
+| [Model Documenter](./Model%20Documenter/) | Generates a standalone HTML document of a semantic model and its report pages: tables, measures, relationships, lineage and validation | [ModelDocumenter.exe](https://github.com/FosterBiServices/Power-BI-Portfolio/releases/latest/download/ModelDocumenter.exe) |
+| [AI Model Context Generator](./AI%20Model%20Context%20Generator/) | Writes one AI-ready `.semantic-context.md` file describing a model, with privacy controls for DAX, hidden objects and source locations | [AIModelContextGenerator.exe](https://github.com/FosterBiServices/Power-BI-Portfolio/releases/latest/download/AIModelContextGenerator.exe) |
+| [About This Report Generator](./About%20This%20Report%20Generator/) | Builds an AI prompt from a report, validates the AI's JSON response against the model and turns it into an "About This Report" HTML DAX measure | [AboutThisReportGenerator.exe](https://github.com/FosterBiServices/Power-BI-Portfolio/releases/latest/download/AboutThisReportGenerator.exe) |
+
+All versions and release notes: [Releases](https://github.com/FosterBiServices/Power-BI-Portfolio/releases)
+
+> **First run:** the apps are not code-signed, so Windows may show *"Windows protected your PC"*. Select **More info → Run anyway**.
+
+---
+
 ## 🔥 Most Used Resources
 
 | Resource | Description |
