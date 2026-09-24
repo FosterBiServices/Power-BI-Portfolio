@@ -22,10 +22,6 @@ def _escape(value) -> str:
   return html.escape(str(value or ""))
 
 
-def _is_blank(value) -> bool:
-  return not str(value or "").strip()
-
-
 def _relationship_label(relationship) -> str:
   return (
     f"{relationship.from_table}[{relationship.from_column}] -> "
@@ -61,12 +57,6 @@ def analyze_model(project, tables) -> list[ValidationFinding]:
         findings.append(ValidationFinding(
           "Error", "DAX Errors", f"{table.name}[{measure.name}]", message,
           "Fix the measure expression; visuals using this measure will fail to render.",
-        ))
-      if _is_blank(measure.display_folder):
-        findings.append(ValidationFinding(
-          "Info", "Organization", f"{table.name}[{measure.name}]",
-          "Measure has no display folder.",
-          "Consider a display folder when the table contains many measures.",
         ))
 
   # Table connectivity within selected scope.

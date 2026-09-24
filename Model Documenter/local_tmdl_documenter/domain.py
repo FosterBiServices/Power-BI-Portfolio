@@ -71,6 +71,11 @@ class Visual:
   width: float = 0
   height: float = 0
   fields: list[str] = field(default_factory=list)
+  z: float = 0
+  is_hidden: bool = False
+  is_group: bool = False
+  parent_group: str = ""
+  title: str = ""
 
 @dataclass
 class ReportPage:
@@ -79,6 +84,7 @@ class ReportPage:
   width: float = 1280
   height: float = 720
   visuals: list[Visual] = field(default_factory=list)
+  is_hidden: bool = False
 
 @dataclass
 class Project:
