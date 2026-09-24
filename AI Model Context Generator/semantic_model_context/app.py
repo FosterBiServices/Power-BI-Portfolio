@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
   def __init__(self) -> None:
     super().__init__()
     self._worker: BuildWorker | None = None
-    self.setWindowTitle("Semantic Model Context Builder 1.0")
+    self.setWindowTitle("Semantic Model Context Builder 1.1")
     self.resize(760, 360)
 
     self.pbip_edit = QLineEdit()

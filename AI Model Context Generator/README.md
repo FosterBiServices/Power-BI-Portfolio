@@ -1,6 +1,6 @@
 # Semantic Model Context Builder
 
-Version 1.0 project scaffold for a local Python application that reads a Power BI PBIP file and writes one AI-readable semantic model context file.
+A local Python application that reads a Power BI PBIP file and writes one AI-readable semantic model context file.
 
 ## Download
 
@@ -8,13 +8,14 @@ Version 1.0 project scaffold for a local Python application that reads a Power B
 
 > The app is not code-signed, so Windows may show *"Windows protected your PC"* on first run. Select **More info → Run anyway**.
 
-## Version 1.0 scope
+## Scope
 
 - Select an actual `.pbip` file.
 - Resolve the referenced report and semantic model paths.
-- Read TMDL table, column, measure, and relationship metadata.
-- Apply privacy controls before export.
-- Validate relationship endpoints and duplicate object names.
+- Read TMDL table, column, measure, and relationship metadata, including `///` descriptions.
+- Detect each table's data source (SQL Server, Excel, Quickbase, SharePoint, Lakehouse, DAX calculated tables, and more), following staging-query references to the real connector.
+- Apply privacy controls before export. Source locations are included only when requested.
+- Validate relationship endpoints, duplicate names, and DAX (syntax errors and references to objects that don't exist).
 - Write one `.semantic-context.md` file.
 - Support both a PySide6 desktop interface and a CLI.
 
@@ -34,7 +35,7 @@ python -m semantic_model_context.cli build "C:\Projects\Sales\Sales.pbip" --outp
 
 Options: `--include-hidden`, `--exclude-dax`, `--include-source-locations`.
 
-> `pyproject.toml` still expects the package under `src\`, so `pip install -e .` and the `semantic-context` / `semantic-context-gui` commands won't work until that is updated. The commands above run the package in place.
+Or install it (`pip install -e .`) to get the `semantic-context` and `semantic-context-gui` commands.
 
 ## Build the .exe
 
@@ -50,7 +51,7 @@ Creates `dist\AIModelContextGenerator.exe` using an isolated `.venv` (PySide6 + 
 ```powershell
 pytest
 ruff check .
-mypy src
+mypy semantic_model_context
 ```
 
 ## Design

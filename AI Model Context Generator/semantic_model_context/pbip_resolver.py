@@ -66,7 +66,7 @@ def resolve_pbip(pbip_path: Path) -> ResolvedProject:
     raise PbipResolutionError("The report does not contain a datasetReference.")
   by_path = dataset_reference.get("byPath")
   if not isinstance(by_path, dict) or not isinstance(by_path.get("path"), str):
-    raise PbipResolutionError("Only datasetReference.byPath is supported in Version 1.0.")
+    raise PbipResolutionError("Only datasetReference.byPath is supported.")
 
   semantic_model_path = (report_path / by_path["path"]).resolve()
   definition_pbism = semantic_model_path / "definition.pbism"

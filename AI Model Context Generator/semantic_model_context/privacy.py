@@ -1,5 +1,6 @@
 """Privacy options and metadata minimization."""
 
+import re
 from dataclasses import dataclass, replace
 
 from .domain import Column, DataSource, Measure, SemanticModel, Table
@@ -45,13 +46,30 @@ def apply_privacy(model: SemanticModel, options: PrivacyOptions) -> SemanticMode
     ]
     tables.append(replace(table, columns=columns, measures=measures))
 
+  included_tables = {table.name for table in tables}
   sources = [
-    DataSource(
-      source_type=source.source_type,
-      server=source.server if options.include_data_source_locations else "[Redacted]",
-      database=source.database if options.include_data_source_locations else "[Redacted]",
-      path=source.path if options.include_local_paths else "[Redacted]",
+    replace(
+      source,
+      server=_location(source.server, options.include_data_source_locations),
+      database=_location(source.database, options.include_data_source_locations),
+      path=_location(
+        source.path,
+        options.include_local_paths if _is_local_path(source.path)
+        else options.include_data_source_locations,
+      ),
     )
     for source in model.data_sources
+    if not source.table or source.table in included_tables
   ]
   return replace(model, tables=tables, data_sources=sources)
+
+
+def _is_local_path(value: str) -> bool:
+  """Drive-letter or UNC paths; URLs and server names are data-source locations."""
+  return bool(re.match(r"^(?:[A-Za-z]:[\\/]|\\\\)", value or ""))
+
+
+def _location(value: str, include: bool) -> str:
+  if not value:
+    return ""
+  return value if include else "[Redacted]"

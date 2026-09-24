@@ -38,10 +38,21 @@ class Measure:
 
 
 @dataclass
+class Partition:
+  name: str
+  mode: str = ""
+  source_type: str = ""
+  expression: str = ""
+  source_kind: str = "Other / not detected"
+  source_arguments: list[str] = field(default_factory=list)
+
+
+@dataclass
 class Table:
   name: str
   columns: list[Column] = field(default_factory=list)
   measures: list[Measure] = field(default_factory=list)
+  partitions: list[Partition] = field(default_factory=list)
   description: str = ""
   is_hidden: bool = False
   table_type: str = "Regular"
@@ -124,6 +135,8 @@ class DataSource:
   server: str = ""
   database: str = ""
   path: str = ""
+  table: str = ""
+  mode: str = ""
 
 
 @dataclass
