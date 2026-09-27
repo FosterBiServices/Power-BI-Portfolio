@@ -1227,8 +1227,12 @@ function parseResponse(text){
 }
 function oneLineKeepBreaks(s){ return (s || '').replace(/\r/g, '').split('\n').map(x => x.trim()).filter(Boolean).join('\n'); }
 
+// Remove comments without touching "//" or "--" inside string literals (URLs, SVG namespaces)
+function stripComments(e){
+  return (e || '').replace(/"(?:[^"]|"")*"|\/\*[\s\S]*?\*\/|\/\/[^\n]*|--[^\n]*/g, m => m[0] === '"' ? m : ' ');
+}
 function stripDax(e){
-  return e.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(\/\/|--)[^\n]*/g, ' ').replace(/"(?:[^"]|"")*"/g, '""');
+  return stripComments(e).replace(/"(?:[^"]|"")*"/g, '""');
 }
 
 function validate(measures, model, opts){
@@ -1312,7 +1316,7 @@ function validate(measures, model, opts){
     }
     const kvs = opts && opts.knownValues;
     if (kvs && kvs.size && m.expression) {
-      const code = m.expression.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(\/\/|--)[^\n]*/g, ' ');
+      const code = stripComments(m.expression);
       const rx = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       for (const kv of kvs.values()) {
         if (kv.distinct !== null && kv.distinct > kv.values.length) continue; // incomplete list: can't judge
