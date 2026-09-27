@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Power Query Explainer</title>
-<meta name="description" content="Explain a Power Query (M) query step by step with Copilot, or get a cleaner version checked against the original.">
+<meta name="description" content="Explain Power Query (M) queries step by step with Copilot, one query or the whole model, or get a cleaner version checked against the original.">
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -228,8 +228,53 @@ details.extra summary:focus-visible{outline:2px solid var(--accent);outline-offs
 .tip{font-size:13.5px;color:var(--ink);background:var(--surface-2);border-radius:8px;padding:9px 12px;max-width:none}
 .tip b{color:var(--accent)}
 .stat.limited{background:var(--warn-soft);color:var(--warn)}
+/* ---------- Measure Describer ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end}
+.field.grow{flex:1 1 220px}
+.field.grow input{width:100%}
+.chk{display:flex;gap:7px;align-items:center;font-size:14px;padding-bottom:7px}
+.list-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;margin-bottom:-6px}
+.list-actions{display:flex;gap:14px;flex-wrap:wrap}
+.mlist{border:1px solid var(--line);border-radius:8px;max-height:320px;overflow:auto;background:var(--surface)}
+.mrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px}
+.mrow:last-child{border-bottom:0}
+.mrow:hover{background:var(--surface-2)}
+.mname{font-family:var(--mono);font-size:13px;overflow-wrap:anywhere}
+.mmeta{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.mdesc{font-size:11px;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 8px}
+@media (max-width:560px){.mrow{grid-template-columns:auto minmax(0,1fr)}.mmeta,.mdesc{grid-column:2}}
+.style-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label.lab{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:500;color:var(--ink)}
+label.lab .hint{font-weight:400;color:var(--muted)}
+#houseRules{font-family:var(--sans);font-size:14px;min-height:64px}
+.batchnav{display:inline-flex;gap:6px;align-items:center}
+.btn:disabled{opacity:.4;cursor:default}
+.coverage{display:flex;flex-direction:column;gap:9px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface)}
+.cov-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.cov-num{font-family:var(--cond);font-size:30px;line-height:1;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.cov-label{font-size:14px;color:var(--muted)}
+.cov-bar{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.cov-bar span{display:block;height:100%;background:var(--gold);border-radius:999px}
+.review-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+.review td.ck,.review th.ck{width:34px;text-align:center}
+.review td{vertical-align:top}
+.review .nm .sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);white-space:normal}
+.review .dcell{min-width:260px;width:62%}
+.review textarea{font-family:var(--sans);font-size:14px;min-height:54px;padding:7px 9px}
+.review textarea:disabled{opacity:.6}
+.review .dcell ul{margin-top:6px;font-size:12.5px;color:var(--muted)}
+.edited{display:inline-block;margin-top:4px;font-size:11.5px;color:var(--info)}
+.pill.new{background:var(--ok-soft);color:var(--ok)}
+.pill.same{background:var(--surface-2);color:var(--muted)}
+.progress{display:flex;flex-direction:column;gap:6px}
+.progress .cov-bar span{background:var(--accent)}
+.reply-actions{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
 .msg.info{background:var(--info-soft);color:var(--info)}
 .msg + .msg{margin-top:6px}
+.mdesc.drafted{color:var(--info);background:var(--info-soft)}
+.mdesc.skip{color:var(--muted);background:var(--surface-2);border:1px dashed var(--line)}
+.review .again{display:block;margin-top:6px;font-size:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tabbar{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tabbar button{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 16px;cursor:pointer}
 .tabbar button .tn{font-family:var(--cond);font-weight:600;font-size:18px}
@@ -251,10 +296,26 @@ details.extra summary:focus-visible{outline:2px solid var(--accent);outline-offs
 @media (max-width:520px){.brandbar{flex-wrap:wrap}.clear-btn{margin-left:0}}
 /* ---------- Power Query Explainer ---------- */
 .tok-qid{color:var(--info)}
-.smap td.n{color:var(--muted);font-variant-numeric:tabular-nums;width:1%}
+.modebar{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modebar button{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 16px;cursor:pointer}
+.modebar button .tn{font-family:var(--cond);font-weight:600;font-size:18px}
+.modebar button .td{font-size:13px;color:var(--muted)}
+.modebar button[aria-selected="true"]{border:2px solid var(--accent);padding:11px 15px;background:var(--accent-soft);box-shadow:inset 0 -4px 0 var(--gold)}
+.modebar button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.modebar{grid-template-columns:1fr}}
+.mode{display:flex;flex-direction:column;gap:22px}
+.mode[hidden]{display:none!important}
+.smap td.n,.smap td.num{color:var(--muted);font-variant-numeric:tabular-nums;width:1%}
 .smap td.uses{font-family:var(--mono);font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
 .smap tr.flagged td.nm{color:var(--warn)}
 .smap td .pill{margin:1px 0}
+.mtable td.ck,.mtable th.ck{width:56px;text-align:center}
+.mtable td.nm{white-space:normal;overflow-wrap:anywhere}
+.mtable td.uses{overflow-wrap:normal;min-width:110px}
+.mtable .why{display:block;font-family:var(--sans);font-size:11.5px;color:var(--muted)}
+.mtable td.act{width:1%;text-align:right}
+.mtable .btn{padding:3px 10px;font-size:12.5px}
+.mcheck{display:flex;flex-direction:column;gap:14px}
 .findings h3,.params h3,#clChanges h3{margin-bottom:8px}
 .flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .flist li{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;align-items:start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--surface);font-size:14px}
@@ -265,8 +326,12 @@ details.extra summary:focus-visible{outline:2px solid var(--accent);outline-offs
 .more{display:flex;flex-direction:column;gap:10px}
 .more .lab{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:500}
 .more .lab .hint{font-weight:400;color:var(--muted)}
-#exOut,#clOut{display:flex;flex-direction:column;gap:14px}
-#exOut[hidden],#clOut[hidden]{display:none!important}
+#exOut,#clOut,.mresults{display:flex;flex-direction:column;gap:14px}
+#exOut[hidden],#clOut[hidden],.mresults[hidden]{display:none!important}
+.mlist2{display:flex;flex-direction:column;gap:8px}
+details.mq summary{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+details.mq .mqn{font-family:var(--mono);font-size:13.5px;font-weight:500}
+details.mq .codebox-bar .linkbtn{margin-right:4px}
 .params{display:flex;flex-direction:column;gap:10px}
 .changes{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:3px;font-size:14px}
 pre.diff{padding:8px 0}
@@ -288,7 +353,7 @@ pre.diff{padding:8px 0}
       <div class="txt">
         <span class="eyebrow">Power BI toolkit</span>
         <h1>Power Query Explainer</h1>
-        <p class="lede">Paste a query from the Advanced Editor. Get a comment on every step, or a cleaner version that returns the same data, checked before you paste it back.</p>
+        <p class="lede">Get a comment on every step of your Power Query queries, or a cleaner version that returns the same data, checked before you paste it back. One query at a time, or the whole model at once.</p>
       </div>
       <button type="button" class="clear-btn" id="clearEntries" aria-controls="clearConfirm" aria-expanded="false">Clear entries</button>
     </div>
@@ -296,12 +361,19 @@ pre.diff{padding:8px 0}
       <span id="clearMsg"><b>Clear all entries?</b> This empties every box on this page and removes what this page saved in your browser. It can&rsquo;t be undone.</span>
       <span class="btns"><button type="button" class="btn danger" id="clearYes">Clear entries</button><button type="button" class="btn" id="clearNo">Cancel</button></span>
     </div>
-    <div class="clear-done msg ok" id="clearDone" role="status" hidden>Entries cleared. Paste a query in Step 1 to start again.</div>
+    <div class="clear-done msg ok" id="clearDone" role="status" hidden>Entries cleared. Paste your own in Step 1 to start again.</div>
     <div class="banner" id="exampleBanner" hidden>
-      <span><strong>Example loaded.</strong> The query and Copilot replies below are samples. Paste your own query in Step 1 to start.</span>
+      <span><strong>Example loaded.</strong> The queries and Copilot replies on this page are samples. Paste your own in Step 1 to start.</span>
       <span class="btns"><button class="btn" id="clearAll" type="button">Clear entries</button></span>
     </div>
   </header>
+
+  <div class="modebar" role="tablist" aria-label="How many queries">
+    <button type="button" role="tab" id="modeOneBtn" aria-selected="true" aria-controls="modeOne"><span class="tn">One query</span><span class="td">Paste from the Advanced Editor. Explain it or clean it up.</span></button>
+    <button type="button" role="tab" id="modeModelBtn" aria-selected="false" aria-controls="modeModel"><span class="tn">Whole model</span><span class="td">Export every query at once. Check them all and explain them in batches.</span></button>
+  </div>
+
+  <div id="modeOne" role="tabpanel" aria-labelledby="modeOneBtn" class="mode">
 
   <!-- STEP 1 -->
   <section class="step" aria-labelledby="s1">
@@ -471,7 +543,108 @@ pre.diff{padding:8px 0}
     </section>
   </div>
 
-  <footer>Everything runs in this page. Your query and inputs are saved only in this browser.</footer>
+  </div>
+  <!-- end one query -->
+
+  <!-- ================= WHOLE MODEL ================= -->
+  <div id="modeModel" role="tabpanel" aria-labelledby="modeModelBtn" class="mode" hidden>
+    <section class="step" aria-labelledby="m1">
+      <div class="step-num">Step<b>1</b></div>
+      <div class="step-body">
+        <div class="step-head">
+          <h2 id="m1">Export every query from Power BI Desktop</h2>
+          <p>This query returns the Power Query code behind every loaded table, plus queries that aren&rsquo;t loaded, functions and parameters.</p>
+        </div>
+        <ol class="how">
+          <li>Open your report in Power BI Desktop and select <b>DAX query view</b> on the left rail.</li>
+          <li>Paste the query below into a new query tab and select <b>Run</b>.</li>
+          <li>Above the results grid, select <b>Copy</b>. It copies every row with the column headers.</li>
+        </ol>
+        <div class="codebox">
+          <div class="codebox-bar"><span class="t">DAX query</span><span class="r"><button class="btn primary" type="button" data-copy="mExport">Copy query</button></span></div>
+          <pre class="short" id="mExportView"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="m2">
+      <div class="step-num">Step<b>2</b></div>
+      <div class="step-body">
+        <div class="step-head">
+          <h2 id="m2">Paste the results and check every query</h2>
+          <p>These checks run without AI, across all queries at once. To clean up a query, select <b>Open</b> on its row.</p>
+        </div>
+        <textarea id="mInput" class="big" spellcheck="false" aria-label="Query results" placeholder="Paste the results here (tab-separated, with headers)"></textarea>
+        <div id="mMsg"></div>
+        <div id="mCheck" class="mcheck" hidden>
+          <div class="stats" id="mStats"></div>
+          <div id="mFindings" class="findings"></div>
+          <div class="list-head"><h3>Queries</h3><span class="list-actions"><button type="button" class="linkbtn" id="mAllOn">Tick all except functions</button><button type="button" class="linkbtn" id="mAllOff">Untick all</button></span></div>
+          <div id="mFnNote"></div>
+          <div class="tablewrap"><table class="smap mtable">
+            <thead><tr><th class="ck"><span class="sr">Explain</span>Explain</th><th>Query</th><th>Type</th><th>Steps</th><th>Uses</th><th>Used by</th><th>Findings</th><th><span class="sr">Actions</span></th></tr></thead>
+            <tbody id="mBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="m3" id="mStep3" hidden>
+      <div class="step-num">Step<b>3</b></div>
+      <div class="step-body">
+        <div class="step-head">
+          <h2 id="m3">Explain them in batches</h2>
+          <p>Each prompt covers the next few ticked queries that still need comments. Copy it, send it in Copilot, then paste the reply in Step 4. Repeat until the bar is full.</p>
+        </div>
+        <div class="filters">
+          <span class="seg" role="radiogroup" aria-label="Audience">
+            <label><input type="radio" name="maud" value="business"><span>Report authors</span></label>
+            <label><input type="radio" name="maud" value="mixed" checked><span>People who maintain it</span></label>
+          </span>
+          <div class="field"><label for="mBatch">Queries per prompt</label><select id="mBatch"><option>1</option><option>2</option><option selected>3</option><option>5</option><option>8</option></select></div>
+        </div>
+        <div class="progress" id="mProgress"></div>
+        <div id="mQueueMsg"></div>
+        <div class="codebox" id="mPromptBox">
+          <div class="codebox-bar"><span class="t" id="mPromptTitle">Prompt for Copilot</span><span class="r"><span class="count" id="mCount"></span><button class="btn primary" type="button" data-copy="mPrompt">Copy prompt</button></span></div>
+          <pre class="short" id="mPromptView"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="m4" id="mStep4" hidden>
+      <div class="step-num">Step<b>4</b></div>
+      <div class="step-body">
+        <div class="step-head">
+          <h2 id="m4">Paste each reply</h2>
+          <p>Each reply adds to the comments you already have; nothing is replaced. Steps Copilot leaves out go back in the queue.</p>
+        </div>
+        <textarea id="mReply" class="mid" spellcheck="false" aria-label="Copilot reply" placeholder="Paste Copilot's reply here. It's added as soon as you paste."></textarea>
+        <div class="reply-actions"><button type="button" class="btn" id="mAdd">Add reply</button></div>
+        <div id="mReplyMsg"></div>
+        <div id="mResults" class="mresults" hidden>
+          <div class="out-head">
+            <div class="opts">
+              <label><input type="checkbox" id="mNotes" checked> Include notes about risky steps</label>
+              <label><input type="checkbox" id="mSummary" checked> Add each summary at the top</label>
+            </div>
+            <button type="button" class="btn" data-copy="mAll">Copy all as one document</button>
+          </div>
+          <div class="apply">
+            <b>Put the comments back in Power BI</b>
+            <ol>
+              <li>Select <b>Home &gt; Transform data</b>, then for each query: select it, open <b>Advanced Editor</b>, press <b>Ctrl+A</b> and paste its commented code.</li>
+              <li>Select <b>Done</b>. Only <code>//</code> comment lines were added, so the data doesn&rsquo;t change.</li>
+              <li><b>Copy all as one document</b> is for keeping a record; don&rsquo;t paste it into a query.</li>
+            </ol>
+          </div>
+          <div id="mList" class="mlist2"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Everything runs in this page. Your queries and inputs are saved only in this browser.</footer>
 </div>
 
 <script>
@@ -535,7 +708,7 @@ function parseM(src){
     else if (t.t === 'punct' && ')]}'.includes(t.v)) depth--;
     else if (t.t === 'id' && t.v === 'let' && depth === 0) { letIdx = k; break; }
   }
-  if (letIdx < 0) { res.error = 'No "let ... in" block was found. Paste the whole query from the Advanced Editor, starting with "let".'; return res; }
+  if (letIdx < 0) { res.noLet = true; res.error = 'No "let ... in" block was found. Paste the whole query from the Advanced Editor, starting with "let".'; return res; }
   res.hasLet = true;
   res.header = src.slice(0, toks[letIdx].s);
   depth = 0; let letDepth = 1, start = letIdx + 1, inIdx = -1;
@@ -886,6 +1059,246 @@ function lineDiff(a, b){
   while (j < m) out.push({ t: '+', v: B[j++] });
   return out;
 }
+
+/* ---------- whole model: export every query ---------- */
+const NL_MARK = '↵';
+const M_CLEAN = col => 'SUBSTITUTE ( SUBSTITUTE ( SUBSTITUTE ( ' + col + ', UNICHAR ( 13 ), "" ), UNICHAR ( 10 ), UNICHAR ( 8629 ) ), UNICHAR ( 9 ), "    " )';
+const M_EXPORT_QUERY = [
+'// Power Query Explainer: export every Power Query query in the model',
+'// Run in DAX query view, then select Copy above the results grid.',
+'EVALUATE',
+'VAR _tables = SELECTCOLUMNS ( INFO.TABLES (), "TID", [ID], "TName", [Name] )',
+'// What each query returns, as Power BI records it (Table, Function, Text...)',
+'VAR _types = SELECTCOLUMNS ( FILTER ( INFO.ANNOTATIONS (), [Name] = "PBI_ResultType" ), "AID", [ObjectID], "AValue", [Value] )',
+'// Loaded tables: the query behind each table (M partitions only)',
+'VAR _loaded =',
+'\tSELECTCOLUMNS (',
+'\t\tFILTER ( INFO.PARTITIONS (), [Type] = 4 ),',
+'\t\t"Kind", "Table",',
+'\t\t"Name",',
+'\t\t\tVAR _tid = [TableID]',
+'\t\t\tRETURN MAXX ( FILTER ( _tables, [TID] = _tid ), [TName] ),',
+'\t\t"ResultType", "Table",',
+'\t\t"Code", ' + M_CLEAN('[QueryDefinition]'),
+'\t)',
+'// Queries that aren’t loaded, parameters and functions',
+'VAR _other =',
+'\tSELECTCOLUMNS (',
+'\t\tFILTER ( INFO.EXPRESSIONS (), [Kind] = 0 ),',
+'\t\t"Kind", "Query",',
+'\t\t"Name", [Name],',
+'\t\t"ResultType",',
+'\t\t\tVAR _eid = [ID]',
+'\t\t\tRETURN CONCATENATEX ( FILTER ( _types, [AID] = _eid ), [AValue], ", " ),',
+'\t\t"Code", ' + M_CLEAN('[Expression]'),
+'\t)',
+'RETURN UNION ( _loaded, _other )',
+'ORDER BY [Kind], [Name]'].join('\n');
+
+function mUnquoteCell(s){
+  if (s.length >= 2 && s[0] === '"' && s[s.length - 1] === '"') {
+    const inner = s.slice(1, -1);
+    if (!/(^|[^"])"([^"]|$)/.test(inner.replace(/""/g, ''))) return inner.replace(/""/g, '"');
+  }
+  return s;
+}
+function parseMExport(text){
+  const res = { queries: [], error: null };
+  const raw = (text || '').replace(/\r/g, '');
+  if (!raw.trim()) return res;
+  const lines = raw.split('\n');
+  let h = -1, map = {};
+  for (let i = 0; i < Math.min(lines.length, 10); i++) {
+    const cells = lines[i].split('\t').map(c => lc(mUnquoteCell(c.trim())).replace(/^.*\[|\]$/g, ''));
+    if (cells.includes('kind') && cells.includes('name') && cells.includes('code')) { h = i; cells.forEach((c, j) => { map[c] = j; }); break; }
+  }
+  if (h < 0) {
+    res.error = /\bkind\b.*\btable\b.*\bname\b/i.test(lines[0] || '')
+      ? 'This looks like the model export from the other toolkit pages. Run the query from Step 1 on this page instead; it returns the Power Query code.'
+      : 'The header row (Kind, Name, Code) wasn’t found. Use the Copy button above the results grid so the column names come along.';
+    return res;
+  }
+  const seen = new Set();
+  for (let i = h + 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const c = lines[i].split('\t');
+    const get = k => map[k] === undefined ? '' : mUnquoteCell((c[map[k]] || '').trim());
+    const name = get('name'), code = get('code').split(NL_MARK).join('\n');
+    if (!name || !code.trim() || seen.has(lc(name))) continue;
+    seen.add(lc(name));
+    res.queries.push({ name, loaded: lc(get('kind')) === 'table', code, resultType: get('resulttype') });
+  }
+  if (!res.queries.length) res.error = 'No queries were found under the header row.';
+  return res;
+}
+
+function stripMComments(code){
+  const tk = mTokenize(code);
+  return tk.error ? code : tk.toks.filter(t => t.t !== 'comment').map(t => t.v).join('');
+}
+// Does the code (tokens from k, comments and spaces skipped) start with a function: (params) [as type] => or each
+function startsFunction(toks, k){
+  const sig = toks.filter((t, i) => i >= k && t.t !== 'ws' && t.t !== 'comment');
+  if (!sig.length) return false;
+  if (sig[0].t === 'id' && sig[0].v === 'each') return true;
+  if (sig[0].v !== '(') return false;
+  let d = 0, j = 0;
+  for (; j < sig.length; j++) { if (sig[j].v === '(') d++; else if (sig[j].v === ')' && --d === 0) break; }
+  j++;
+  if (sig[j] && sig[j].v === 'as') { j++; if (sig[j] && sig[j].v === 'nullable') j++; j++; }
+  return !!(sig[j] && sig[j].v === '=>');
+}
+// How a query was recognised as a function: 'model' (Power BI's own record), 'code', 'name' or ''
+function functionReason(code, name, resultType){
+  if (/\bfunction\b/i.test(resultType || '')) return 'model';
+  const tk = mTokenize(code);
+  if (!tk.error) {
+    if (startsFunction(tk.toks, 0)) return 'code';
+    const q = parseM(code);
+    if (!q.error && q.resultRefs.length === 1) {
+      const s = q.steps.find(x => x.name === q.resultRefs[0]);
+      const st = s && mTokenize(s.expr);
+      if (st && !st.error && startsFunction(st.toks, 0)) return 'code';
+    }
+  }
+  if (/^f[nx]([A-Z0-9_ .-]|$)/.test(name || '')) return 'name';
+  return '';
+}
+function queryType(code, loaded, name, resultType){
+  if (loaded) return 'table';
+  const s = stripMComments(code).trim();
+  if (/\bIsParameterQuery\s*=\s*true/i.test(s)) return 'parameter';
+  if (functionReason(code, name, resultType)) return 'function';
+  return 'query';
+}
+const TYPE_LABEL = { table: 'Loaded table', query: 'Not loaded', function: 'Function', parameter: 'Parameter' };
+
+// Literal values a query's source step depends on (paths, URLs, servers)
+function sourceLiterals(q){
+  const out = [];
+  q.steps.forEach(s => {
+    if (DB_SOURCES.test(s.fn)) { const p = s.strings.slice(0, 2); if (p.length) out.push({ v: p.join(' / '), parts: p, db: true }); }
+    else if (FILE_FNS.test(s.fn) || /File\.Contents|Web\.Contents|Folder\.Files/.test(s.expr))
+      s.strings.filter(v => /^[A-Za-z]:\\|^\\\\|^https?:\/\/|\.(xlsx|xlsm|xls|csv|txt|json|parquet)$/i.test(v)).forEach(v => out.push({ v, parts: [v], db: false }));
+  });
+  return out;
+}
+
+function analyzeModel(list){
+  const names = new Map(list.map(x => [x.name, x]));
+  const items = list.map(x => {
+    const type = queryType(x.code, x.loaded, x.name, x.resultType);
+    const it = { name: x.name, code: x.code, loaded: x.loaded, type, fnWhy: type === 'function' ? functionReason(x.code, x.name, x.resultType) : '', q: null, error: null, checks: [], deps: [], usedBy: [], literals: [], paramValue: '' };
+    if (type === 'parameter') {
+      const tk = mTokenize(x.code); const s = !tk.error && tk.toks.find(t => t.t === 'str');
+      it.paramValue = s ? s.v.slice(1, -1).replace(/""/g, '"') : '';
+    } else {
+      const q = parseM(x.code);
+      if (q.error && !q.noLet) it.error = q.error;
+      else if (!q.error) { it.q = q; it.checks = healthChecks(q); it.literals = sourceLiterals(q); }
+    }
+    // references to other queries
+    const tk = mTokenize(x.code);
+    if (!tk.error) {
+      const own = new Set(it.q ? it.q.steps.map(s => s.name) : []);
+      const toks = tk.toks;
+      toks.forEach((t, k) => {
+        let nm = null;
+        if (t.t === 'qid') nm = qidName(t.v);
+        else if (t.t === 'id') {
+          let p = k - 1; while (p >= 0 && toks[p].t === 'ws') p--;
+          let n = k + 1; while (n < toks.length && toks[n].t === 'ws') n++;
+          if (toks[p] && toks[p].v === '[' && toks[n] && toks[n].v === ']') return;
+          nm = t.v;
+        }
+        if (nm && nm !== x.name && names.has(nm) && !own.has(nm) && !it.deps.includes(nm)) it.deps.push(nm);
+      });
+    }
+    return it;
+  });
+  const byName = new Map(items.map(i => [i.name, i]));
+  items.forEach(i => i.deps.forEach(d => byName.get(d).usedBy.push(i.name)));
+
+  // model-wide findings
+  const findings = [];
+  const add = (level, title, detail, queries) => findings.push({ level, title, detail, queries: queries || [] });
+  items.filter(i => i.error).forEach(i => add('err', 'Couldn’t read “' + i.name + '”', i.error + ' If the code looks cut off, open this query in the Advanced Editor and use One query mode.', [i.name]));
+  const lits = new Map();
+  items.forEach(i => i.literals.forEach(l => { const k = l.v; if (!lits.has(k)) lits.set(k, { v: k, parts: l.parts, db: l.db, qs: [] }); if (!lits.get(k).qs.includes(i.name)) lits.get(k).qs.push(i.name); }));
+  const params = items.filter(i => i.type === 'parameter');
+  [...lits.values()].filter(l => l.qs.length > 1).forEach(l => {
+    const p = params.find(x => l.parts.includes(x.paramValue));
+    add('warn', (l.db ? 'Same server or database' : 'Same file path or URL') + ' in ' + l.qs.length + ' queries',
+      l.parts.map(x => '“' + x + '”').join(' / ') + ' is typed into each of them: ' + l.qs.join(', ') + '. ' + (p ? 'The parameter “' + p.name + '” already holds ' + (l.db ? 'part of this' : 'this value') + '; use it in these queries.' : 'Parameters would let you repoint them all in one place.'), l.qs);
+  });
+  items.filter(i => i.type === 'query' && !i.usedBy.length && !i.error).forEach(i => add('info', '“' + i.name + '” isn’t loaded or used', 'Nothing loads it and no other query refers to it, so it only adds clutter. Check it isn’t needed, then delete it.', [i.name]));
+  items.filter(i => i.type === 'function' && !i.usedBy.length).forEach(i => add('info', 'Function “' + i.name + '” isn’t used', 'No query calls it.', [i.name]));
+  items.filter(i => i.type === 'parameter' && !i.usedBy.length).forEach(i => add('info', 'Parameter “' + i.name + '” isn’t used', 'No query refers to it.', [i.name]));
+  const order = { table: 0, query: 1, function: 2, parameter: 3 };
+  items.sort((a, b) => order[a.type] - order[b.type] || a.name.localeCompare(b.name));
+  return { items, findings };
+}
+
+/* ---------- whole model: batched explain prompt ---------- */
+// batch: [{ name, type, code, q, steps: [names to comment], summary: bool }]
+function modelExplainPrompt(batch, o){
+  const opts = Object.assign({ audience: 'mixed' }, o || {});
+  const L = [];
+  L.push('You are explaining Power Query (M) queries from one Power BI model. For each query below, write a short comment for each listed step' + (batch.some(b => b.summary) ? ', and a summary where asked' : '') + '.');
+  L.push('');
+  L.push('## How to write the comments');
+  if (opts.audience === 'business') L.push('- Audience: report authors who don’t read M. Say what the step does to the data in plain words, not how the function works.');
+  else L.push('- Audience: people who maintain the queries. Say what the step does and, where it isn’t obvious, why it matters.');
+  L.push('- One sentence per step, at most 120 characters. Start with a verb: "Keeps rows where...", "Renames...".');
+  L.push('- Be specific: name the columns, values and conditions from the code. When a step uses another query, name it.');
+  L.push('- If a step looks wrong, unnecessary or risky, add a NOTE line saying why, briefly. Otherwise leave NOTE out.');
+  L.push('- SUMMARY: 2 to 4 sentences: where the data comes from, the main changes, and what one row of the result is.');
+  L.push('');
+  L.push('## Output format');
+  L.push('Put your ENTIRE answer inside ONE code block. Write nothing before or after the code block. Every block starts with the QUERY line, using the query name exactly as given. Use each step name exactly as listed:');
+  L.push('');
+  L.push('@@@ SUMMARY @@@');
+  L.push('QUERY: Query name');
+  L.push('TEXT: Two to four sentences.');
+  L.push('@@@ END @@@');
+  L.push('@@@ STEP @@@');
+  L.push('QUERY: Query name');
+  L.push('NAME: Step name');
+  L.push('COMMENT: One sentence.');
+  L.push('NOTE: Only if the step looks wrong or risky.');
+  L.push('@@@ END @@@');
+  batch.forEach((b, i) => {
+    L.push('');
+    L.push('## Query ' + (i + 1) + ': ' + b.name + ' (' + (TYPE_LABEL[b.type] || 'query').toLowerCase() + ')');
+    L.push(b.summary ? 'Write a SUMMARY for this query.' : 'No summary needed.');
+    L.push('Steps to comment:');
+    b.steps.forEach((n, k) => { const s = b.q.steps.find(x => x.name === n); L.push((k + 1) + '. ' + n + (s && s.fn ? ' (' + s.fn + ')' : '')); });
+    L.push('Code:');
+    L.push(b.code.trim());
+  });
+  L.push('');
+  L.push('=== END OF PROMPT ===');
+  return L.join('\n');
+}
+function parseModelExplain(text){
+  const t = cleanReply(text).replace(/[‘’]/g, "'");
+  const res = { summaries: [], steps: [], error: null };
+  if (!t.trim()) return res;
+  const bs = blocks(t);
+  const L = ['QUERY', 'NAME', 'COMMENT', 'NOTE', 'TEXT'];
+  const qn = b => field(b.body, 'QUERY', L).replace(/^#"(.*)"$/s, '$1').replace(/^"(.*)"$/s, '$1').replace(/""/g, '"').trim();
+  bs.forEach(b => {
+    if (b.kind === 'STEP') {
+      const name = field(b.body, 'NAME', L).replace(/^#"(.*)"$/s, '$1').replace(/^"(.*)"$/s, '$1').replace(/""/g, '"').trim();
+      if (name) res.steps.push({ query: qn(b), name, comment: oneLine(field(b.body, 'COMMENT', L)), note: oneLine(field(b.body, 'NOTE', L)) });
+    } else if (b.kind === 'SUMMARY') {
+      const text = oneLine(field(b.body, 'TEXT', L) || b.body.replace(/(^|\n)[ \t]*QUERY[ \t]*:.*/i, '').replace(/^[ \t]*```[\w-]*[ \t]*$/gm, ''));
+      if (text) res.summaries.push({ query: qn(b), text });
+    }
+  });
+  if (!res.steps.length && !res.summaries.length) res.error = 'No @@@ STEP @@@ blocks were found. Make sure Copilot answered inside one code block, and paste its whole answer.';
+  return res;
+}
 /*MQ-CORE-END*/
 
 
@@ -936,6 +1349,61 @@ const EX_CLEAN = '```\n@@@ CODE @@@\n' + [
  + '\n@@@ END @@@\n@@@ PARAMETER @@@\nNAME: SalesFilePath\nTYPE: Text\nVALUE: C:\\Users\\jsmith\\Documents\\Sales\\Sales 2025.xlsx\n@@@ END @@@\n'
  + '@@@ CHANGES @@@\n- Replaced the file path with the SalesFilePath parameter.\n- Renamed default steps to say what they do.\n- Combined the two row filters into one step.\n- Set the Net Amount type inside Table.AddColumn and removed the second type step.\n- Removed the unused Duplicated Column step and the sort, which doesn\'t affect the loaded table.\n- Suggestion (not applied): Table.SelectColumns would keep an explicit column list instead of removing Notes by name.\n@@@ END @@@\n```';
 
+const EX_MODEL_QUERIES = [
+ { name: 'Customers', loaded: true, code: ['let',
+ '    Source = Sql.Database("sql01", "Retail"),',
+ '    dbo_Customer = Source{[Schema="dbo",Item="Customer"]}[Data],',
+ '    #"Removed Other Columns" = Table.SelectColumns(dbo_Customer,{"CustomerKey", "Name", "RegionKey", "Segment"}),',
+ '    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"RegionKey"}, Regions, {"RegionKey"}, "Regions", JoinKind.LeftOuter),',
+ '    #"Expanded Regions" = Table.ExpandTableColumn(#"Merged Queries", "Regions", {"Region"}, {"Region"}),',
+ '    #"Cleaned Names" = Table.TransformColumns(#"Expanded Regions", {{"Name", fnCleanText, type text}})',
+ 'in',
+ '    #"Cleaned Names"'].join('\n') },
+ { name: 'Returns', loaded: true, code: ['let',
+ '    Source = Excel.Workbook(File.Contents("C:\\Users\\jsmith\\Documents\\Sales\\Sales 2025.xlsx"), null, true),',
+ '    Returns_Sheet = Source{[Item="Returns",Kind="Sheet"]}[Data],',
+ '    #"Promoted Headers" = Table.PromoteHeaders(Returns_Sheet, [PromoteAllScalars=true]),',
+ '    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Order ID", type text}, {"Return Date", type date}, {"Quantity", Int64.Type}, {"Reason", type text}}),',
+ '    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each [Return Date] >= ReportStartDate)',
+ 'in',
+ '    #"Filtered Rows"'].join('\n') },
+ { name: 'Sales', loaded: true, code: EX_QUERY },
+ { name: 'Regions', loaded: false, code: ['let',
+ '    Source = Sql.Database("sql01", "Retail"),',
+ '    dbo_Region = Source{[Schema="dbo",Item="Region"]}[Data]',
+ 'in',
+ '    dbo_Region'].join('\n') },
+ { name: 'Sales Old Extract', loaded: false, code: ['let',
+ '    Source = Csv.Document(File.Contents("C:\\Users\\jsmith\\Downloads\\sales_old.csv"),[Delimiter=",", Encoding=65001]),',
+ '    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true])',
+ 'in',
+ '    #"Promoted Headers"'].join('\n') },
+ { name: 'fnCleanText', loaded: false, code: ['(txt as nullable text) as nullable text =>',
+ 'let',
+ '    Trimmed = if txt = null then null else Text.Trim(txt),',
+ '    Proper = if Trimmed = null then null else Text.Proper(Trimmed)',
+ 'in',
+ '    Proper'].join('\n') },
+ { name: 'ReportStartDate', loaded: false, code: '#date(2024, 2, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]' }
+];
+const EX_MODEL_EXPORT = 'Kind\tName\tCode\n' + EX_MODEL_QUERIES.map(x => [x.loaded ? 'Table' : 'Query', x.name, x.code.split('\n').join('\u21B5')].join('\t')).join('\n');
+const EX_MODEL_REPLY = '```\n'
+ + '@@@ SUMMARY @@@\nQUERY: Customers\nTEXT: Loads customers from the Retail database, keeps four columns, adds each customer\'s region name from the Regions query, and tidies the names. One row is one customer.\n@@@ END @@@\n'
+ + [['Customers', 'Source', 'Connects to the Retail database on server sql01.', ''],
+    ['Customers', 'dbo_Customer', 'Picks the dbo.Customer table.', ''],
+    ['Customers', 'Removed Other Columns', 'Keeps only CustomerKey, Name, RegionKey and Segment.', ''],
+    ['Customers', 'Merged Queries', 'Looks up each customer\'s region in the Regions query by RegionKey.', ''],
+    ['Customers', 'Expanded Regions', 'Adds the Region name from the lookup.', ''],
+    ['Customers', 'Cleaned Names', 'Trims customer names and capitalizes each word using fnCleanText.', '']]
+   .map(([q, n, c, x]) => '@@@ STEP @@@\nQUERY: ' + q + '\nNAME: ' + n + '\nCOMMENT: ' + c + (x ? '\nNOTE: ' + x : '') + '\n@@@ END @@@').join('\n')
+ + '\n@@@ SUMMARY @@@\nQUERY: Returns\nTEXT: Loads returned order lines from the Returns sheet of the Sales 2025 workbook and keeps returns from the report start date on. One row is one returned order line.\n@@@ END @@@\n'
+ + [['Returns', 'Source', 'Opens the Sales 2025 workbook from a personal Documents folder.', 'The same path is typed into the Sales query; a shared parameter is safer.'],
+    ['Returns', 'Returns_Sheet', 'Picks the Returns sheet.', ''],
+    ['Returns', 'Promoted Headers', 'Uses the first row as column names.', ''],
+    ['Returns', 'Changed Type', 'Sets Order ID and Reason to text, Return Date to date and Quantity to whole number.', ''],
+    ['Returns', 'Filtered Rows', 'Keeps returns on or after the ReportStartDate parameter.', '']]
+   .map(([q, n, c, x]) => '@@@ STEP @@@\nQUERY: ' + q + '\nNAME: ' + n + '\nCOMMENT: ' + c + (x ? '\nNOTE: ' + x : '') + '\n@@@ END @@@').join('\n') + '\n```';
+
 /* ---------- state + UI ---------- */
 const $ = id => document.getElementById(id);
 const PREFIX = 'kpq.';
@@ -947,7 +1415,8 @@ const DEFAULT_OPTS = () => ({ rename: true, merge: true, unused: true, params: t
 const state = {
   example: false, tab: 'ex', audience: 'mixed', opts: DEFAULT_OPTS(), exNotes: true, exSummary: true,
   exReply: '', clReply: '', q: null, checks: [],
-  out: { exPrompt: '', exFollow: '', commented: '', clPrompt: '', clean: '' }
+  mode: 'one', m: null, mDone: {}, mAsked: {}, mPick: {}, mLastBatch: [], mBatch: '3', mNotes: true, mSummary: true,
+  out: { exPrompt: '', exFollow: '', commented: '', clPrompt: '', clean: '', mExport: '', mPrompt: '', mAll: '' }
 };
 const LONG_PROMPT = 14000;
 
@@ -981,7 +1450,9 @@ function leaveExample(){ if (state.example) { setExample(false); persist(); } }
 function persist(){
   if (state.example) return;
   store.set('query', $('qInput').value);
-  store.set('state', JSON.stringify({ name: $('qName').value, tab: state.tab, audience: state.audience, opts: state.opts, exNotes: state.exNotes, exSummary: state.exSummary, exReply: state.exReply, clReply: state.clReply }));
+  store.set('model', $('mInput').value);
+  store.set('state', JSON.stringify({ name: $('qName').value, tab: state.tab, audience: state.audience, opts: state.opts, exNotes: state.exNotes, exSummary: state.exSummary, exReply: state.exReply, clReply: state.clReply,
+    mode: state.mode, mDone: state.mDone, mAsked: state.mAsked, mPick: state.mPick, mLastBatch: state.mLastBatch, mBatch: state.mBatch, mNotes: state.mNotes, mSummary: state.mSummary }));
 }
 function src(){ return $('qInput').value; }
 function optName(){ return $('qName').value.trim(); }
@@ -997,7 +1468,7 @@ function renderQuery(){
     if (q.error) m = msg('err', '<b>This query can&rsquo;t be read.</b> ' + esc(q.error));
     else if (!q.steps.length) m = msg('err', 'No steps were found between <code>let</code> and <code>in</code>.');
     else { state.q = q; state.checks = healthChecks(q); }
-    if (state.q && q.header.trim()) m = msg('info', 'This query is a function (it starts with <code>' + esc(oneLine(q.header).slice(0, 80)) + '</code>). The steps inside it are explained as usual.');
+    if (state.q && functionReason(text, optName(), '')) m = msg('info', 'This query is a function. Its steps are explained as usual; the Step 2 findings are written for queries that load data, so some may not apply.');
   }
   $('qMsg').innerHTML = m;
   const ok = !!state.q;
@@ -1110,45 +1581,216 @@ function setTab(t){
   $('tabEx').setAttribute('aria-selected', t === 'ex'); $('tabCl').setAttribute('aria-selected', t === 'cl');
   if (state.q) { $('paneEx').hidden = t !== 'ex'; $('paneCl').hidden = t !== 'cl'; }
 }
+/* ---------- whole model ---------- */
+function codeHash(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+function mPickable(i){ return !!(i.q && i.q.steps.length); }
+function mPicked(i){ const p = state.mPick[i.name]; return mPickable(i) && (typeof p === 'boolean' ? p : i.type !== 'function'); }
+function mDoneFor(i){
+  const d = state.mDone[i.name];
+  return d && d.h === codeHash(i.code) ? d : null;
+}
+function mStatus(i){
+  const d = mDoneFor(i) || { summary: '', steps: {} };
+  const missing = i.q ? i.q.steps.filter(s => !d.steps[lc(s.name)]).map(s => s.name) : [];
+  const needSummary = !d.summary;
+  const complete = !missing.length && !needSummary;
+  const gaveUp = !complete && (state.mAsked[i.name] || 0) >= 2;
+  return { d, missing, needSummary, complete, gaveUp, started: !!(d.summary || Object.keys(d.steps).length) };
+}
+function mBatchList(){
+  if (!state.m) return [];
+  const queue = state.m.items.filter(i => mPicked(i)).filter(i => { const s = mStatus(i); return !s.complete && !s.gaveUp; });
+  const max = +state.mBatch || 3, out = [];
+  for (const i of queue) {
+    const s = mStatus(i);
+    const b = { name: i.name, type: i.type, code: i.code, q: i.q, steps: s.missing, summary: s.needSummary };
+    if (out.length && (out.length >= max || modelExplainPrompt(out.concat(b), { audience: state.audience }).length > LONG_PROMPT)) break;
+    out.push(b);
+  }
+  return out;
+}
+const FN_WHY = { model: 'Power BI says so', code: 'from its code', name: 'from its name' };
+function renderModel(){
+  const text = $('mInput').value;
+  const ex = parseMExport(text);
+  state.m = null;
+  $('mMsg').innerHTML = ex.error ? msg('err', esc(ex.error)) : '';
+  if (!ex.error && ex.queries.length) state.m = analyzeModel(ex.queries);
+  const ok = !!state.m;
+  $('mCheck').hidden = !ok; $('mStep3').hidden = !ok; $('mStep4').hidden = !ok;
+  if (!ok) return;
+  const m = state.m, it = m.items;
+  const cnt = t => it.filter(i => i.type === t).length;
+  const warns = m.findings.filter(f => f.level !== 'info').length + it.reduce((n, i) => n + i.checks.filter(c => c.level === 'warn').length, 0);
+  $('mStats').innerHTML = '<span class="stat"><b>' + cnt('table') + '</b> loaded tables</span><span class="stat"><b>' + cnt('query') + '</b> not loaded</span>'
+    + (cnt('function') ? '<span class="stat"><b>' + cnt('function') + '</b> function' + (cnt('function') > 1 ? 's' : '') + '</span>' : '')
+    + (cnt('parameter') ? '<span class="stat"><b>' + cnt('parameter') + '</b> parameter' + (cnt('parameter') > 1 ? 's' : '') + '</span>' : '')
+    + '<span class="stat' + (warns ? ' limited' : '') + '"><b>' + warns + '</b> to fix</span>';
+  const lvl = f => f.level === 'err' ? 'err' : f.level === 'warn' ? 'warn' : 'replace';
+  const lbl = f => f.level === 'err' ? 'Error' : f.level === 'warn' ? 'Fix' : 'Consider';
+  $('mFindings').innerHTML = m.findings.length
+    ? '<h3>Across the model</h3><ul class="flist">' + m.findings.map(f => '<li><span class="pill ' + lvl(f) + '">' + lbl(f) + '</span><div><b>' + esc(f.title) + '</b><p>' + esc(f.detail) + '</p></div></li>').join('') + '</ul>'
+    : msg('ok', 'No model-wide findings: no repeated hard-coded sources and no unused queries.');
+  const fns = it.filter(i => i.type === 'function').length;
+  $('mFnNote').innerHTML = fns ? '<p class="note">' + (fns === 1 ? '1 function is' : fns + ' functions are') + ' left out of the explanations automatically. Tick one to include it.</p>' : '';
+  $('mBody').innerHTML = it.map((i, k) => {
+    const w = i.checks.filter(c => c.level === 'warn').length, n = i.checks.length - w;
+    const find = i.error ? '<span class="pill err">Can&rsquo;t read</span>' : (w ? '<span class="pill warn">' + w + ' to fix</span> ' : '') + (n ? '<span class="pill replace">' + n + ' to consider</span>' : '') + (!w && !n && i.q ? '<span class="muted">&ndash;</span>' : '');
+    const st = mPickable(i) ? mStatus(i) : null;
+    return '<tr data-k="' + k + '"><td class="ck">' + (mPickable(i) ? '<input type="checkbox" data-act="pick" aria-label="Explain ' + esc(i.name) + '"' + (mPicked(i) ? ' checked' : '') + '>' : '') + '</td>'
+      + '<td class="nm">' + esc(i.name) + (st && st.complete ? ' <span class="mdesc">commented</span>' : '') + '</td><td class="fmt">' + TYPE_LABEL[i.type] + (i.fnWhy ? '<span class="why">' + FN_WHY[i.fnWhy] + '</span>' : '') + '</td>'
+      + '<td class="num">' + (i.q ? i.q.steps.length : '<span class="muted">&ndash;</span>') + '</td>'
+      + '<td class="uses">' + (i.deps.length ? i.deps.map(esc).join(', ') : '<span class="muted">&ndash;</span>') + '</td>'
+      + '<td class="uses">' + (i.usedBy.length ? i.usedBy.map(esc).join(', ') : '<span class="muted">&ndash;</span>') + '</td>'
+      + '<td>' + find + '</td>'
+      + '<td class="act">' + (i.type !== 'parameter' ? '<button type="button" class="btn" data-act="open">Open</button>' : '') + '</td></tr>';
+  }).join('');
+  renderMQueue(); renderMResults();
+}
+function renderMQueue(){
+  if (!state.m) return;
+  const picked = state.m.items.filter(mPicked);
+  const done = picked.filter(i => mStatus(i).complete).length;
+  const pct = picked.length ? Math.round(done / picked.length * 100) : 0;
+  $('mProgress').innerHTML = '<div class="cov-head"><span class="cov-num">' + done + ' of ' + picked.length + '</span><span class="cov-label">ticked queries fully commented</span></div><div class="cov-bar"><span style="width:' + pct + '%"></span></div>';
+  const batch = mBatchList();
+  state.mLastBatch = batch.map(b => b.name);
+  const gaveUp = picked.filter(i => mStatus(i).gaveUp);
+  const notes = [];
+  if (gaveUp.length) notes.push(msg('warn', 'Copilot was asked twice and still left steps without a comment in ' + gaveUp.map(i => '<code>' + esc(i.name) + '</code>').join(', ') + '. They&rsquo;re out of the queue; use <b>Ask again</b> in Step 4 to retry.'));
+  if (!batch.length) {
+    state.out.mPrompt = '';
+    $('mPromptBox').hidden = true;
+    notes.push(picked.length ? msg('ok', 'Every ticked query has comments. Copy them from Step 4.') : msg('info', 'Tick at least one query in Step 2.'));
+  } else {
+    state.out.mPrompt = modelExplainPrompt(batch, { audience: state.audience });
+    $('mPromptBox').hidden = false;
+    $('mPromptTitle').textContent = 'Prompt for ' + batch.map(b => b.name).join(', ');
+    $('mPromptView').textContent = state.out.mPrompt;
+    $('mCount').textContent = state.out.mPrompt.length.toLocaleString() + ' characters';
+    if (state.out.mPrompt.length > LONG_PROMPT) notes.push(msg('warn', 'This query alone makes a long prompt. If Copilot stops early, paste what it wrote; the missing steps come back in the next prompt.'));
+  }
+  $('mQueueMsg').innerHTML = notes.join('');
+}
+function addMReply(text){
+  const r = parseModelExplain(text);
+  if (r.error) { $('mReplyMsg').innerHTML = msg('err', esc(r.error)); return false; }
+  const byName = new Map(state.m.items.map(i => [lc(i.name), i]));
+  const lone = state.mLastBatch.length === 1 ? state.mLastBatch[0] : '';
+  const unknownQ = new Set(); let added = 0; const touched = new Set();
+  const slot = i => { let d = mDoneFor(i); if (!d) { d = { h: codeHash(i.code), summary: '', steps: {} }; state.mDone[i.name] = d; } return d; };
+  const find = q => byName.get(lc(q || lone));
+  r.summaries.forEach(s => { const i = find(s.query); if (!i || !i.q) { unknownQ.add(s.query || '(no query name)'); return; } slot(i).summary = s.text; touched.add(i.name); });
+  r.steps.forEach(s => {
+    const i = find(s.query); if (!i || !i.q) { unknownQ.add(s.query || '(no query name)'); return; }
+    const st = i.q.steps.find(x => lc(x.name) === lc(s.name)); if (!st || !s.comment) return;
+    slot(i).steps[lc(st.name)] = { name: st.name, comment: s.comment, note: s.note }; added++; touched.add(i.name);
+  });
+  state.mLastBatch.forEach(n => { state.mAsked[n] = (state.mAsked[n] || 0) + 1; });
+  const m = [];
+  if (added || touched.size) m.push(msg('ok', 'Added ' + added + ' step comment' + (added === 1 ? '' : 's') + ' across ' + touched.size + ' quer' + (touched.size === 1 ? 'y' : 'ies') + '.'));
+  else m.push(msg('warn', 'Nothing in this reply matched the queries in this model.'));
+  if (unknownQ.size) m.push(msg('info', 'Skipped blocks for queries that aren&rsquo;t in this model: ' + [...unknownQ].map(n => '<code>' + esc(n) + '</code>').join(', ') + '.'));
+  $('mReplyMsg').innerHTML = m.join('');
+  return true;
+}
+function renderMResults(){
+  if (!state.m) return;
+  const list = state.m.items.filter(i => i.q && mStatus(i).started);
+  $('mResults').hidden = !list.length;
+  const all = [];
+  $('mList').innerHTML = list.map(i => {
+    const s = mStatus(i), k = state.m.items.indexOf(i);
+    const ex = { summary: s.d.summary, steps: Object.values(s.d.steps) };
+    const cc = commentedCode(i.code, i.q, ex, { notes: state.mNotes, summary: state.mSummary });
+    state.out['mq' + k] = cc.code;
+    all.push('// ===== ' + i.name + ' (' + TYPE_LABEL[i.type].toLowerCase() + ') =====\n' + cc.code.trim());
+    const pill = s.complete ? '<span class="pill ok">All ' + cc.total + ' steps</span>'
+      : s.gaveUp ? '<span class="pill warn">' + cc.matched + ' of ' + cc.total + ' steps</span>'
+      : '<span class="pill replace">' + cc.matched + ' of ' + cc.total + ' steps' + (s.needSummary ? ', no summary yet' : '') + '</span>';
+    return '<details class="extra mq" data-k="' + k + '"><summary><span class="mqn">' + esc(i.name) + '</span> ' + pill + '</summary><div class="extra-body">'
+      + (s.d.summary ? '<p class="note"><b>Summary.</b> ' + esc(s.d.summary) + '</p>' : '')
+      + (s.missing.length ? '<p class="note">No comment yet: ' + s.missing.map(n => '<code>' + esc(n) + '</code>').join(', ') + '</p>' : '')
+      + '<div class="codebox"><div class="codebox-bar"><span class="t">Commented query</span><span class="r"><button type="button" class="linkbtn" data-act="again">Ask again</button><button type="button" class="btn" data-act="open">Open</button><button type="button" class="btn primary" data-copy="mq' + k + '">Copy query</button></span></div><pre class="tall">' + hlM(cc.code) + '</pre></div>'
+      + '</div></details>';
+  }).join('');
+  state.out.mAll = all.join('\n\n');
+}
+function openInOne(i){
+  leaveExample();
+  $('qInput').value = i.code; $('qName').value = i.name;
+  state.exReply = ''; state.clReply = ''; $('exAdd').value = '';
+  syncControls(); setMode('one'); renderAll(); persist();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function setMode(m){
+  state.mode = m;
+  $('modeOneBtn').setAttribute('aria-selected', m === 'one'); $('modeModelBtn').setAttribute('aria-selected', m === 'model');
+  $('modeOne').hidden = m !== 'one'; $('modeModel').hidden = m !== 'model';
+}
+
 function renderAll(){ renderQuery(); renderExplain(); renderClean(); }
 function syncControls(){
-  document.querySelectorAll('input[name=aud]').forEach(r => { r.checked = r.value === state.audience; });
+  document.querySelectorAll('input[name=aud], input[name=maud]').forEach(r => { r.checked = r.value === state.audience; });
   document.querySelectorAll('#clOpts [data-opt]').forEach(c => { c.checked = !!state.opts[c.dataset.opt]; });
   $('exNotes').checked = state.exNotes; $('exSummary').checked = state.exSummary;
+  $('mNotes').checked = state.mNotes; $('mSummary').checked = state.mSummary; $('mBatch').value = state.mBatch;
   $('exReply').value = state.exReply; $('clReply').value = state.clReply;
 }
 function loadExample(){
   $('qInput').value = EX_QUERY; $('qName').value = EX_NAME;
   state.exReply = EX_EXPLAIN; state.clReply = EX_CLEAN;
+  $('mInput').value = EX_MODEL_EXPORT;
+  state.m = analyzeModel(parseMExport(EX_MODEL_EXPORT).queries);
+  state.mLastBatch = ['Customers', 'Returns'];
+  addMReply(EX_MODEL_REPLY); $('mReplyMsg').innerHTML = '';
   setExample(true);
 }
+// Drop every sample value except the one the person just typed into
+function dropExample(){
+  if (!state.example) return;
+  if ($('qInput').value === EX_QUERY) $('qInput').value = '';
+  if ($('qName').value === EX_NAME) $('qName').value = '';
+  if ($('mInput').value === EX_MODEL_EXPORT) $('mInput').value = '';
+  Object.assign(state, { exReply: '', clReply: '', mDone: {}, mAsked: {}, mPick: {}, mLastBatch: [] });
+  $('mReplyMsg').innerHTML = '';
+  setExample(false); syncControls();
+}
 function resetAll(){
-  Object.assign(state, { tab: 'ex', audience: 'mixed', opts: DEFAULT_OPTS(), exNotes: true, exSummary: true, exReply: '', clReply: '' });
-  $('qInput').value = ''; $('qName').value = ''; $('exAdd').value = '';
-  setExample(false); syncControls(); setTab('ex'); renderAll();
+  Object.assign(state, { tab: 'ex', audience: 'mixed', opts: DEFAULT_OPTS(), exNotes: true, exSummary: true, exReply: '', clReply: '',
+    mDone: {}, mAsked: {}, mPick: {}, mLastBatch: [], mBatch: '3', mNotes: true, mSummary: true });
+  ['qInput', 'qName', 'exAdd', 'mInput', 'mReply'].forEach(id => { $(id).value = ''; });
+  $('mReplyMsg').innerHTML = '';
+  setExample(false); syncControls(); setTab('ex'); renderAll(); renderModel();
 }
 
 function init(){
-  const saved = store.get('query');
+  $('mExportView').textContent = M_EXPORT_QUERY;
+  state.out.mExport = M_EXPORT_QUERY;
+  const saved = store.get('query'), savedModel = store.get('model');
   let st = null; try { st = JSON.parse(store.get('state') || 'null'); } catch (e) {}
-  if (saved && saved.trim()) {
-    $('qInput').value = saved;
+  if ((saved && saved.trim()) || (savedModel && savedModel.trim())) {
+    $('qInput').value = saved || ''; $('mInput').value = savedModel || '';
     if (st) {
       $('qName').value = st.name || '';
-      ['tab', 'audience', 'exReply', 'clReply'].forEach(k => { if (typeof st[k] === 'string') state[k] = st[k]; });
+      ['tab', 'audience', 'exReply', 'clReply', 'mode', 'mBatch'].forEach(k => { if (typeof st[k] === 'string') state[k] = st[k]; });
+      ['mDone', 'mAsked', 'mPick'].forEach(k => { if (st[k] && typeof st[k] === 'object') state[k] = st[k]; });
+      if (Array.isArray(st.mLastBatch)) state.mLastBatch = st.mLastBatch;
       if (st.opts) state.opts = Object.assign(DEFAULT_OPTS(), st.opts);
-      if (typeof st.exNotes === 'boolean') state.exNotes = st.exNotes;
-      if (typeof st.exSummary === 'boolean') state.exSummary = st.exSummary;
+      ['exNotes', 'exSummary', 'mNotes', 'mSummary'].forEach(k => { if (typeof st[k] === 'boolean') state[k] = st[k]; });
     }
     // never carry the sample replies into real work
-    if (saved.trim() !== EX_QUERY) { if (state.exReply === EX_EXPLAIN) state.exReply = ''; if (state.clReply === EX_CLEAN) state.clReply = ''; }
+    if ((saved || '').trim() !== EX_QUERY) { if (state.exReply === EX_EXPLAIN) state.exReply = ''; if (state.clReply === EX_CLEAN) state.clReply = ''; }
+    if (savedModel !== EX_MODEL_EXPORT) { EX_MODEL_QUERIES.forEach(x => { const d = state.mDone[x.name]; if (d && d.h === codeHash(x.code)) delete state.mDone[x.name]; }); }
   } else if (store.get('blank') !== '1') loadExample();
-  syncControls(); setTab(state.tab); renderAll();
+  syncControls(); setTab(state.tab); setMode(state.mode); renderAll(); renderModel();
 
+  const unblank = () => { try { localStorage.removeItem(PREFIX + 'blank'); } catch (e) {} };
   $('qInput').addEventListener('input', () => {
-    if (state.example) { state.exReply = ''; state.clReply = ''; $('exReply').value = ''; $('clReply').value = ''; if ($('qName').value === EX_NAME) $('qName').value = ''; setExample(false); }
-    try { localStorage.removeItem(PREFIX + 'blank'); } catch (e) {}
-    renderAll(); persist();
+    dropExample();
+    if (state.exReply === EX_EXPLAIN) state.exReply = '';
+    if (state.clReply === EX_CLEAN) state.clReply = '';
+    syncControls(); unblank(); renderAll(); persist();
   });
   $('qName').addEventListener('input', () => { leaveExample(); renderExplain(); renderClean(); persist(); });
   $('tabEx').addEventListener('click', () => { setTab('ex'); persist(); });
@@ -1157,7 +1799,13 @@ function init(){
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     const t = state.tab === 'ex' ? 'cl' : 'ex'; setTab(t); $(t === 'ex' ? 'tabEx' : 'tabCl').focus(); persist();
   });
-  document.querySelectorAll('input[name=aud]').forEach(r => r.addEventListener('change', () => { state.audience = r.value; leaveExample(); renderExplain(); persist(); }));
+  $('modeOneBtn').addEventListener('click', () => { setMode('one'); persist(); });
+  $('modeModelBtn').addEventListener('click', () => { setMode('model'); persist(); });
+  document.querySelector('.modebar').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const m = state.mode === 'one' ? 'model' : 'one'; setMode(m); $(m === 'one' ? 'modeOneBtn' : 'modeModelBtn').focus(); persist();
+  });
+  document.querySelectorAll('input[name=aud], input[name=maud]').forEach(r => r.addEventListener('change', () => { state.audience = r.value; leaveExample(); syncControls(); renderExplain(); renderMQueue(); persist(); }));
   document.querySelectorAll('#clOpts [data-opt]').forEach(c => c.addEventListener('change', () => { state.opts[c.dataset.opt] = c.checked; leaveExample(); renderClean(); persist(); }));
   $('exNotes').addEventListener('change', () => { state.exNotes = $('exNotes').checked; renderExplain(); persist(); });
   $('exSummary').addEventListener('change', () => { state.exSummary = $('exSummary').checked; renderExplain(); persist(); });
@@ -1173,7 +1821,38 @@ function init(){
   };
   $('exAdd').addEventListener('paste', () => setTimeout(addFollow, 0));
   $('exAdd').addEventListener('change', addFollow);
-  $('clearAll').addEventListener('click', () => { resetAll(); try { localStorage.setItem(PREFIX + 'blank', '1'); } catch (e) {} persist(); $('qInput').focus(); });
+
+  // whole model
+  $('mInput').addEventListener('input', () => { dropExample(); unblank(); $('mReplyMsg').innerHTML = ''; renderModel(); persist(); });
+  $('mBody').addEventListener('change', e => {
+    const cb = e.target.closest('[data-act=pick]'); if (!cb) return;
+    const i = state.m.items[+cb.closest('tr').dataset.k];
+    leaveExample(); state.mPick[i.name] = cb.checked; renderMQueue(); persist();
+  });
+  const itemFrom = el => state.m.items[+el.closest('[data-k]').dataset.k];
+  $('mBody').addEventListener('click', e => { const b = e.target.closest('[data-act=open]'); if (b) openInOne(itemFrom(b)); });
+  $('mList').addEventListener('click', e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const i = itemFrom(b);
+    if (b.dataset.act === 'open') openInOne(i);
+    if (b.dataset.act === 'again') { leaveExample(); delete state.mDone[i.name]; state.mAsked[i.name] = 0; state.mPick[i.name] = true; renderModel(); persist(); }
+  });
+  const pickAll = on => { leaveExample(); state.m.items.filter(i => mPickable(i) && i.type !== 'function').forEach(i => { state.mPick[i.name] = on; }); renderModel(); persist(); };
+  $('mAllOn').addEventListener('click', () => pickAll(true));
+  $('mAllOff').addEventListener('click', () => pickAll(false));
+  $('mBatch').addEventListener('change', () => { state.mBatch = $('mBatch').value; renderMQueue(); persist(); });
+  $('mNotes').addEventListener('change', () => { state.mNotes = $('mNotes').checked; renderMResults(); persist(); });
+  $('mSummary').addEventListener('change', () => { state.mSummary = $('mSummary').checked; renderMResults(); persist(); });
+  const submitM = () => {
+    const t = $('mReply').value; if (!t.trim() || !state.m) return;
+    leaveExample();
+    if (addMReply(t)) $('mReply').value = '';
+    renderModel(); persist();
+  };
+  $('mAdd').addEventListener('click', submitM);
+  $('mReply').addEventListener('paste', () => setTimeout(submitM, 0));
+
+  $('clearAll').addEventListener('click', () => { resetAll(); try { localStorage.setItem(PREFIX + 'blank', '1'); } catch (e) {} persist(); });
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-copy]'); if (!b) return;
     const v = state.out[b.dataset.copy]; if (v) copyText(v, b);
