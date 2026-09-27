@@ -220,6 +220,17 @@ td ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:2px}
 .small{font-size:13px}
 footer{font-size:12.5px;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* ---------- Clear entries ---------- */
+.clear-btn{margin-left:auto;align-self:flex-start;flex:none;font-family:var(--sans);font-size:13.5px;font-weight:500;color:var(--band-ink);background:transparent;border:1px solid rgba(255,255,255,.55);border-radius:6px;padding:6px 12px;cursor:pointer}
+.clear-btn:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.clear-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.clear-confirm{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--err-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--err) 35%,transparent);border-radius:10px;padding:10px 14px;font-size:14px}
+.clear-confirm b{color:var(--err)}
+.clear-confirm .btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn.danger{background:var(--err);border-color:var(--err);color:#fff}
+.btn.danger:hover{filter:brightness(1.08);color:#fff}
+@media (max-width:520px){.brandbar{flex-wrap:wrap}.clear-btn{margin-left:0}}
 </style>
 </head>
 <body>
@@ -233,7 +244,13 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
         <h1>KPI Measure Builder</h1>
         <p class="lede">Export your model, build a Copilot prompt, then paste Copilot's answer back to get TMDL with correct tab indentation and your display folder applied.</p>
       </div>
+      <button type="button" class="clear-btn" id="clearEntries" aria-controls="clearConfirm" aria-expanded="false">Clear entries</button>
     </div>
+    <div class="clear-confirm" id="clearConfirm" role="alertdialog" aria-labelledby="clearMsg" hidden>
+      <span id="clearMsg"><b>Clear all entries?</b> This empties every box on this page and removes what this page saved in your browser. It can&rsquo;t be undone.</span>
+      <span class="btns"><button type="button" class="btn danger" id="clearYes">Clear entries</button><button type="button" class="btn" id="clearNo">Cancel</button></span>
+    </div>
+    <div class="clear-done msg ok" id="clearDone" role="status" hidden>Entries cleared. Paste a model export in Step 2 to start again.</div>
     <div class="dest" role="group" aria-labelledby="destLbl">
       <span class="lbl" id="destLbl">Where new measures go</span>
       <div class="field">
@@ -247,7 +264,7 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
     </div>
     <div class="banner" id="exampleBanner" hidden>
       <span><strong>Example data loaded.</strong> The model, requests and Copilot response below are samples. Replace each box with your own.</span>
-      <span class="btns"><button class="btn" id="clearAll" type="button">Clear all boxes</button></span>
+      <span class="btns"><button class="btn" id="clearAll" type="button">Clear entries</button></span>
     </div>
   </header>
 
@@ -303,7 +320,7 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
         <p>One measure per line, in plain English. Mention the grain or filter if it matters, for example "excluding returns" or "for the selected fiscal year".</p>
       </div>
       <textarea id="requests" class="req" aria-label="Measures you want"></textarea>
-      <p class="tip"><b>Copilot sees names, not data.</b> It knows a column called <span class="mono">[Gender]</span> exists, not that its values are Male and Female. When a measure filters on specific values, name them in the request (<i>&ldquo;Terminations for each Gender for Insurance Coverage: Male, Female, Unknown&rdquo;</i>) or load them under Column values below.</p>
+      <p class="tip"><b>Copilot sees names, not data.</b> It knows a column called <span class="mono">[Segment]</span> exists, not that its values are Consumer and Corporate. When a measure filters on specific values, name them in the request (<i>&ldquo;Sales for each customer Segment: Consumer, Corporate, Home Office&rdquo;</i>) or load them under Column values below.</p>
 
       <div class="details-head">
         <h3>Detailed measures</h3>
@@ -320,7 +337,7 @@ footer{font-size:12.5px;color:var(--muted);text-align:center}
             <h3>Columns</h3>
             <button type="button" class="btn" id="valFind">Find columns in my requests</button>
           </div>
-          <textarea id="valCols" class="mid" spellcheck="false" aria-label="Columns to list values for" placeholder="'Terms for TO details'[Gender for Insurance Coverage]"></textarea>
+          <textarea id="valCols" class="mid" spellcheck="false" aria-label="Columns to list values for" placeholder="'Customer'[Segment]"></textarea>
           <div id="valColsMsg"></div>
           <div class="codebox" id="valQueryBox" hidden>
             <div class="codebox-bar"><span class="t">Values query</span><span class="r"><button class="btn primary" type="button" data-copy="valQuery">Copy query</button></span></div>
@@ -947,7 +964,7 @@ function buildPrompt(model, requestsText, opts){
   if (o.descriptions) L.push('- DESCRIPTION is one plain-English sentence a report user would understand.');
   L.push('- You can see table and column names, not the data. When a filter needs specific text values, use only values listed under "Known column values" or written in the request, spelled exactly as given.');
   L.push('- If a request needs text values you were not given, do not guess them, and do not replace them with a generic filter such as VALUES() or KEEPFILTERS(VALUES()). Write a SKIPPED block whose REASON names the column whose values are needed.');
-  L.push('- When a one-line request asks for a separate measure "for each" value of a column, write one measure per value, named with the value, for example "Terminations - Female". This does not apply to detailed measures, where "iterate over each value" means one measure that loops.');
+  L.push('- When a one-line request asks for a separate measure "for each" value of a column, write one measure per value, named with the value, for example "Sales - Consumer". This does not apply to detailed measures, where "iterate over each value" means one measure that loops.');
   if (model.composite) {
     L.push('');
     L.push('## Composite model rules');
@@ -1649,7 +1666,7 @@ function renderDetails(){
       + '<input type="text" id="d' + i + '-name" data-f="name" value="' + esc(d.name) + '" placeholder="Measure name (optional)" aria-label="Measure name">'
       + '<button type="button" class="linkbtn" data-act="remove">Remove</button></div>'
       + '<label class="lab" for="d' + i + '-goal">Goal <span class="hint">What should the measure return, in plain words?</span>'
-      + '<textarea id="d' + i + '-goal" data-f="goal" placeholder="Number of terminations from each project’s contract cycle start up to the selected date">' + esc(d.goal) + '</textarea></label>'
+      + '<textarea id="d' + i + '-goal" data-f="goal" placeholder="Sales from each customer’s first order date up to the selected date">' + esc(d.goal) + '</textarea></label>'
       + '<div class="dgrid">'
       + '<div class="dbox"><span class="t">Tables involved</span><div class="tchips">'
       + d.tables.map(t => '<span class="tchip">' + esc(t) + '<button type="button" data-act="rmTable" data-t="' + esc(t) + '" aria-label="Remove ' + esc(t) + '">×</button></span>').join('')
@@ -1663,11 +1680,11 @@ function renderDetails(){
       + '</div>'
       + '<div class="dpaths" id="d' + i + '-paths"></div>'
       + '<label class="lab" for="d' + i + '-filters">Filters to keep or ignore <span class="hint">Which slicers should still apply, and which should not?</span>'
-      + '<textarea id="d' + i + '-filters" data-f="filters" placeholder="Ignore the start of the date slicer. Keep project and location filters.">' + esc(d.filters) + '</textarea></label>'
+      + '<textarea id="d' + i + '-filters" data-f="filters" placeholder="Ignore the start of the date slicer. Keep region and product filters.">' + esc(d.filters) + '</textarea></label>'
       + '<label class="lab" for="d' + i + '-example">Worked example <span class="hint">The most useful field: real-looking numbers and dates, and the answer you expect.</span>'
-      + '<textarea id="d' + i + '-example" data-f="example" placeholder="Project A starts 2025-07-01, selected date 2025-09-15: count A’s terms from Jul 1 to Sep 15. Project B starts after the selected date: counts 0.">' + esc(d.example) + '</textarea></label>'
+      + '<textarea id="d' + i + '-example" data-f="example" placeholder="Customer A’s first order was 2025-07-01 and the selected date is 2025-09-15: add up A’s sales from Jul 1 to Sep 15. Customer B’s first order is after the selected date: adds 0.">' + esc(d.example) + '</textarea></label>'
       + '<label class="lab" for="d' + i + '-edge">Edge cases <span class="hint">Blanks, missing dates, dates in the future, totals</span>'
-      + '<textarea id="d' + i + '-edge" data-f="edge" placeholder="Projects without a start date are skipped.">' + esc(d.edge) + '</textarea></label>'
+      + '<textarea id="d' + i + '-edge" data-f="edge" placeholder="Customers with no orders are skipped.">' + esc(d.edge) + '</textarea></label>'
       + '<label class="lab" for="d' + i + '-other">Anything else <span class="hint">Existing measures to build on, business rules</span>'
       + '<textarea id="d' + i + '-other" data-f="other" placeholder="Build on an existing measure, for example [Total Sales].">' + esc(d.other) + '</textarea></label>'
       + '</div>';
@@ -1804,7 +1821,7 @@ function init(){
   if (f) $('targetFolder').value = f;
   if (mode === 'pbip') $('modePbip').checked = true;
   const saved = store.get('model');
-  if (saved !== null && (saved || store.get('requests') || store.get('response'))) {
+  if (store.get('blank') || (saved !== null && (saved || store.get('requests') || store.get('response')))) {
     $('modelInput').value = saved || '';
     $('requests').value = store.get('requests') || '';
     $('response').value = store.get('response') || '';
@@ -1918,6 +1935,30 @@ function init(){
   });
 }
 init();
+
+/* ---------- Clear entries ---------- */
+(function(){
+  const PREFIX = 'kmb.';
+  const btn = $('clearEntries'), box = $('clearConfirm'), done = $('clearDone');
+  const show = on => { box.hidden = !on; btn.setAttribute('aria-expanded', on); if (on) { done.hidden = true; $('clearNo').focus(); } };
+  btn.addEventListener('click', () => show(box.hidden));
+  $('clearNo').addEventListener('click', () => { show(false); btn.focus(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) { show(false); btn.focus(); } });
+  $('clearYes').addEventListener('click', () => {
+    try { Object.keys(localStorage).filter(k => k.startsWith(PREFIX)).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  // reset settings to their defaults
+  $('targetTable').value = '_Measures'; $('targetFolder').value = 'KPIs\\ai_generated'; $('modeScript').checked = true;
+  ['optHidden', 'optFormulas', 'optDesc'].forEach(id => { $(id).checked = true; }); $('showWs').checked = false;
+  $('modelInput').value = ''; $('requests').value = ''; $('response').value = ''; $('extraMeasures').value = ''; $('valCols').value = ''; $('valResults').value = '';
+  state.details = []; state.selected = null; state.autoPick = false; state.reasons = null;
+  setExample(false); renderAll();
+    try { localStorage.setItem(PREFIX + 'blank', '1'); } catch (e) {}
+    persist();
+    show(false); done.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => { done.hidden = true; }, 6000);
+  });
+})();
 </script>
 
 </body>

@@ -268,6 +268,17 @@ label.lab .hint{font-weight:400;color:var(--muted)}
 .mdesc.skip{color:var(--muted);background:var(--surface-2);border:1px dashed var(--line)}
 .review .again{display:block;margin-top:6px;font-size:12px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Clear entries ---------- */
+.clear-btn{margin-left:auto;align-self:flex-start;flex:none;font-family:var(--sans);font-size:13.5px;font-weight:500;color:var(--band-ink);background:transparent;border:1px solid rgba(255,255,255,.55);border-radius:6px;padding:6px 12px;cursor:pointer}
+.clear-btn:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.clear-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.clear-confirm{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--err-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--err) 35%,transparent);border-radius:10px;padding:10px 14px;font-size:14px}
+.clear-confirm b{color:var(--err)}
+.clear-confirm .btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn.danger{background:var(--err);border-color:var(--err);color:#fff}
+.btn.danger:hover{filter:brightness(1.08);color:#fff}
+@media (max-width:520px){.brandbar{flex-wrap:wrap}.clear-btn{margin-left:0}}
 </style>
 </head>
 <body>
@@ -281,10 +292,16 @@ label.lab .hint{font-weight:400;color:var(--muted)}
         <h1>Measure Describer</h1>
         <p class="lede">Copilot writes plain-English descriptions for your measures; you review and edit them here, then save them to the model from DAX query view.</p>
       </div>
+      <button type="button" class="clear-btn" id="clearEntries" aria-controls="clearConfirm" aria-expanded="false">Clear entries</button>
     </div>
+    <div class="clear-confirm" id="clearConfirm" role="alertdialog" aria-labelledby="clearMsg" hidden>
+      <span id="clearMsg"><b>Clear all entries?</b> This empties every box on this page and removes what this page saved in your browser. It can&rsquo;t be undone.</span>
+      <span class="btns"><button type="button" class="btn danger" id="clearYes">Clear entries</button><button type="button" class="btn" id="clearNo">Cancel</button></span>
+    </div>
+    <div class="clear-done msg ok" id="clearDone" role="status" hidden>Entries cleared. Paste a model export in Step 2 to start again.</div>
     <div class="banner" id="exampleBanner" hidden>
       <span><strong>Example data loaded.</strong> The model and Copilot reply below are samples. Paste your own export in Step 2 to start.</span>
-      <span class="btns"><button class="btn" id="clearAll" type="button">Clear all boxes</button></span>
+      <span class="btns"><button class="btn" id="clearAll" type="button">Clear entries</button></span>
     </div>
   </header>
 
@@ -967,7 +984,7 @@ function buildPrompt(model, requestsText, opts){
   if (o.descriptions) L.push('- DESCRIPTION is one plain-English sentence a report user would understand.');
   L.push('- You can see table and column names, not the data. When a filter needs specific text values, use only values listed under "Known column values" or written in the request, spelled exactly as given.');
   L.push('- If a request needs text values you were not given, do not guess them, and do not replace them with a generic filter such as VALUES() or KEEPFILTERS(VALUES()). Write a SKIPPED block whose REASON names the column whose values are needed.');
-  L.push('- When a one-line request asks for a separate measure "for each" value of a column, write one measure per value, named with the value, for example "Terminations - Female". This does not apply to detailed measures, where "iterate over each value" means one measure that loops.');
+  L.push('- When a one-line request asks for a separate measure "for each" value of a column, write one measure per value, named with the value, for example "Sales - Consumer". This does not apply to detailed measures, where "iterate over each value" means one measure that loops.');
   if (model.composite) {
     L.push('');
     L.push('## Composite model rules');
@@ -1937,7 +1954,7 @@ function init(){
   if (o.length === 'three') $('lenThree').checked = true;
   if (o.batchSize) $('batchSize').value = o.batchSize;
   const saved = store.get('model');
-  if (saved) {
+  if (saved || store.get('blank')) {
     $('modelInput').value = saved;
     $('houseRules').value = store.get('rules') || '';
     try { state.collected = JSON.parse(store.get('collected') || '{}') || {}; } catch (e) {}
@@ -2030,6 +2047,28 @@ function init(){
   });
 }
 init();
+
+/* ---------- Clear entries ---------- */
+(function(){
+  const PREFIX = 'kmd.';
+  const btn = $('clearEntries'), box = $('clearConfirm'), done = $('clearDone');
+  const show = on => { box.hidden = !on; btn.setAttribute('aria-expanded', on); if (on) { done.hidden = true; $('clearNo').focus(); } };
+  btn.addEventListener('click', () => show(box.hidden));
+  $('clearNo').addEventListener('click', () => { show(false); btn.focus(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) { show(false); btn.focus(); } });
+  $('clearYes').addEventListener('click', () => {
+    try { Object.keys(localStorage).filter(k => k.startsWith(PREFIX)).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  $('modelInput').value = ''; $('houseRules').value = ''; $('reply').value = ''; $('fSearch').value = ''; $('fGroup').value = '';
+  $('fMissing').checked = true; $('fHidden').checked = false; $('audUsers').checked = true; $('lenOne').checked = true; $('batchSize').value = '15';
+  state.collected = {}; state.skipped = {}; state.edits = {}; state.excluded = new Set(); state.selected = new Set(); state.lastAdd = null;
+  setExample(false); renderModel(); renderFilters(); refresh();
+    try { localStorage.setItem(PREFIX + 'blank', '1'); } catch (e) {}
+    persist();
+    show(false); done.hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => { done.hidden = true; }, 6000);
+  });
+})();
 </script>
 
 </body>
