@@ -1812,6 +1812,10 @@ function init(){
     $('valCols').value = store.get('valCols') || '';
     $('valResults').value = store.get('valResults') || '';
     try { state.details = (JSON.parse(store.get('details') || '[]') || []).map(d => Object.assign(blankDetail(), d)); } catch (e) { state.details = []; }
+    // clean up example content that earlier versions left behind in saved work
+    [['requests', EX_REQUESTS], ['response', EX_RESPONSE], ['extraMeasures', EX_EXTRA], ['valCols', EX_VAL_COLS], ['valResults', EX_VAL_RESULTS]].forEach(([id, ex]) => { if ($(id).value === ex) $(id).value = ''; });
+    state.details = state.details.filter(d => !EX_DETAILS.some(x => x.name === d.name && x.goal === d.goal));
+    if ($('modelInput').value === EX_MODEL) $('modelInput').value = '';
     setExample(false);
   } else {
     $('modelInput').value = EX_MODEL;
@@ -1826,7 +1830,15 @@ function init(){
   renderAll();
 
   const onEdit = (fn) => () => { if (state.example) { setExample(false); } persist(); fn(); };
-  $('modelInput').addEventListener('input', onEdit(() => { state.selected = null; store.del('tables'); renderAll(); }));
+  // Pasting your own model while the example is showing clears every piece of example content
+  $('modelInput').addEventListener('input', () => {
+    if (state.example) {
+      ['requests', 'response', 'extraMeasures', 'valCols', 'valResults'].forEach(id => { $(id).value = ''; });
+      state.details = [];
+      setExample(false);
+    }
+    persist(); state.selected = null; store.del('tables'); renderAll();
+  });
   $('extraMeasures').addEventListener('input', onEdit(renderAll));
   const onValues = onEdit(() => { renderValues(); renderPrompt(); renderOutput(); });
   const leaveExample = () => { if (state.example) { setExample(false); persist(); } };

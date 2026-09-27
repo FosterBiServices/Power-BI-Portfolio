@@ -1883,7 +1883,7 @@ function renderReview(){
     if (a.missed.length) msg.innerHTML += '<div class="msg info">Copilot’s reply didn’t include ' + esc(a.missed.map(bracket).join(', ')) + '. Nothing is lost: ' + (a.missed.length === 1 ? 'it stays' : 'they stay') + ' in the queue and will be in the next prompt.</div>';
   }
   const items = Object.values(state.collected);
-  if (!m || !m.measures.length || !items.length) { $('reviewWrap').hidden = true; $('outWrap').hidden = true; return; }
+  if (!m || !m.measures.length || !items.length) { $('reviewBody').innerHTML = ''; $('reviewWrap').hidden = true; $('outWrap').hidden = true; state.query = ''; state.tsv = ''; return; }
   const checked = checkDescriptions(items, m, opts());
   const label = { new: 'New', replace: 'Replaces', same: 'Unchanged', warn: 'Check', err: 'Can’t apply' };
   $('reviewBody').innerHTML = checked.map(r => {
@@ -1945,6 +1945,13 @@ function init(){
     try { state.excluded = new Set(JSON.parse(store.get('excluded') || '[]') || []); } catch (e) {}
     try { state.skipped = JSON.parse(store.get('skipped') || '{}') || {}; } catch (e) {}
     renderModel();
+    // drop saved descriptions for measures that aren't in this model (including leftovers from the example)
+    const exNames = new Set(parseDescriptions(EX_REPLY).items.map(i => lc(i.name)));
+    for (const k of Object.keys(state.collected)) {
+      const x = state.model.measures.find(mm => lc(mm.name) === k);
+      const exItem = parseDescriptions(EX_REPLY).items.find(i => lc(i.name) === k);
+      if (!x || (exNames.has(k) && exItem && state.collected[k].description === exItem.description)) delete state.collected[k];
+    }
     let sel = null; try { sel = JSON.parse(store.get('selected') || 'null'); } catch (e) {}
     if (sel) state.selected = new Set(sel); else defaultSelection();
     setExample(false);
@@ -1957,6 +1964,8 @@ function init(){
   renderFilters(); refresh();
 
   $('modelInput').addEventListener('input', () => {
+    // pasting your own model while the example is showing clears the example's descriptions
+    if (state.example) { state.collected = {}; state.edits = {}; state.excluded = new Set(); state.skipped = {}; $('reply').value = ''; }
     leaveExample(); renderModel(); defaultSelection();
     // keep collected descriptions only for measures that still need one
     for (const k of Object.keys(state.collected)) { const x = state.model.measures.find(mm => lc(mm.name) === k); if (!x || hasDesc(x)) delete state.collected[k]; }
