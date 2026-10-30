@@ -1,3 +1,0 @@
-    Columns("A:B").Select
-    Selection.NumberFormat = "mm/dd/yyyy hh:mm:ss"
-    Columns("A:B").EntireColumn.AutoFit
