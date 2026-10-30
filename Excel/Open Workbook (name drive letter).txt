@@ -1,8 +1,0 @@
-Sub openaudit()
-Workbooks.Open ("\\flofile1\BPO_Audit\Sitel Audit Form - Combine.xlsm")
-End Sub
-
-
-TicketInfofile = ThisWorkbook.Path & "\" & "AddAgentsWorkbook.xlsx"
-
-Workbooks.Open (TicketInfofile)

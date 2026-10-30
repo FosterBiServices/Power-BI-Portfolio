@@ -1,6 +1,0 @@
-     If howmanymail > 1 Then
-        For Each cell In Columns("L").Cells.SpecialCells(xlCellTypeVisible)
-        If cell.Value Like "*@*" Then
-            PhRec = PhRec & ";" & cell.Value
-        End If
-    Next
