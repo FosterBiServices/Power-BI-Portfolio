@@ -4,7 +4,7 @@ C# scripts for [Tabular Editor](https://tabulareditor.com/) (2 or 3) that automa
 
 ## Model hygiene and formatting
 
-Clean-up and best-practice scripts I run on every model.
+Clean-up and best-practice scripts run on every Foster BI Services model.
 
 - [CREATE Table Groups](model/MODEL%20-%20CREATE%20Table%20Groups.csx)
 - [Clean Up Columns Measures](model/MODEL%20-%20Clean%20Up%20Columns%20Measures.cs)
@@ -68,3 +68,7 @@ Export model metadata for documentation and review.
 - [Export All Partition Expressions](documentation/DOCUMENTATION%20-%20Export%20All%20Partition%20Expressions.cs)
 - [Export Measures](documentation/DOCUMENTATION%20-%20Export%20Measures.cs)
 - [Export Objects and Descriptions](documentation/DOCUMENTATION%20-%20Export%20Objects%20and%20Descriptions.cs)
+
+---
+
+<sub><img src="../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../README.md">Portfolio home</a></sub>

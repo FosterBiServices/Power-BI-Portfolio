@@ -83,3 +83,7 @@ has special characters.
 | [Previous Row Value by Group](transformations/Previous%20Row%20Value%20by%20Group.pq) | LAG/LEAD within groups while keeping column types |
 | [Name Formatting](transformations/Name%20Formatting.pq) | "Last, First" for one or many name pairs; names from email; DAX UPN version |
 | [Compare Tables](transformations/Compare%20Tables.pq) | Added / removed / changed rows between two tables |
+
+---
+
+<sub><img src="../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../README.md">Portfolio home</a></sub>

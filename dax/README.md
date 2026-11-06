@@ -1,6 +1,6 @@
 # DAX
 
-Reusable DAX I use across models, organised from the most general to the most specialised.
+Reusable DAX that Foster BI Services uses across client models, organised from the most general to the most specialised.
 
 | Folder | What's inside |
 |---|---|
@@ -42,3 +42,7 @@ Each file starts with a header listing its purpose and the placeholders to repla
 | Svg Icons | [`notification_icon.dax`](patterns/svg-icons/notification_icon.dax) | Returns an SVG notification bell with a badge showing the number of actionable groups. |
 | Svg Icons | [`period_change_icon.dax`](patterns/svg-icons/period_change_icon.dax) | Compares current MTD to prior month and returns an icon. |
 | Svg Icons | [`star_rating_svg.dax`](patterns/svg-icons/star_rating_svg.dax) | Returns an SVG rating made from full, half, and empty stars. |
+
+---
+
+<sub><img src="../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../README.md">Portfolio home</a></sub>

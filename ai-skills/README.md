@@ -9,3 +9,7 @@ Agent skills (for Claude, Copilot and similar assistants) that add specific, har
 | [highlight-time-window-linechart](highlight-time-window-linechart/) | Add a "Between" date-range slicer that shades a highlighted time window on a Power BI line chart. |
 | [stacked-bar-pagination](stacked-bar-pagination/) | Add a "top N per page" stacked bar chart with Next/page-number pagination. |
 | [stacked-bar-percent-of-total](stacked-bar-percent-of-total/) | Add a stacked bar/column chart where each bar reads as a single solid-color segment carrying a "% of total" label in blended headroom. |
+
+---
+
+<sub><img src="../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../README.md">Portfolio home</a></sub>

@@ -2,6 +2,10 @@
 
 Generate a reusable Power BI theme from a single JSON template by updating its color palette and running the included Python script.
 
+## Ready-made: Foster BI Services theme
+
+[`foster-bi-services-theme.json`](foster-bi-services-theme.json) is this template run with the Foster BI Services palette (navy `#0A2D5A`, gold `#F2A900`). Import it in Power BI Desktop via **View → Themes → Browse for themes**, or use it as a worked example of the generator's output.
+
 ## Included Files
 
 - `Power BI - Dynamic Template Updates.py`: Opens the template, replaces theme color placeholders, and saves the completed theme as a new JSON file.
@@ -155,3 +159,7 @@ The generator performs the following steps:
 ## File Safety
 
 Keep the original template unchanged as a reusable source. Update a copy for each company, report, or design variation, then save the generated theme under a descriptive name.
+
+---
+
+<sub><img src="../../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../../README.md">Portfolio home</a></sub>

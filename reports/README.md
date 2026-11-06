@@ -9,6 +9,12 @@ Production Power BI reports rebuilt as shareable samples. Each one keeps the ori
 | [CEDAR HOLLOW - IWP](./cedar-hollow-iwp/) | An operations report for a county interim housing (hotel-based) program. It covers activations, client demographics, room nights, staffing, financials, call-centre activity and data-quality checks across the program's systems. |
 | [DVR LJC Collaboration](./dvr-ljc-collaboration/) | A grant-collaboration report between a state vocational rehabilitation agency (DVR) and its local job centers (LJC). It tracks enrollments, services, exits to employment, and partner readiness and partnership surveys across workforce board regions. |
 | [Workforce Pathway](./workforce-pathway/) | Product analytics for a mobile career-coaching app used by workforce programs. It follows members from enrollment through engagement, learning content, job readiness (résumés) and self-assessments, alongside coach caseloads. |
-| [Power BI Résumé](./power-bi-resume/) | My résumé as an interactive Power BI report. |
+| [Power BI Résumé](./power-bi-resume/) | The founder's résumé as an interactive Power BI report. |
+
+Want a report like these for your team? [Start a project with Foster BI Services](https://fosterbiservices.com/contact).
 
 **To view:** download any `.pbix` and open it in a recent Power BI Desktop. The data is imported, so no refresh or credentials are needed.
+
+---
+
+<sub><img src="../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../README.md">Portfolio home</a></sub>

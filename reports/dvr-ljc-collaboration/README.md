@@ -55,3 +55,7 @@ Any resemblance to real people or organisations is coincidental.
 3. The data is already imported, so every page works without refreshing.
 
 Refreshing needs access to the original SharePoint source folders, so **Refresh** will fail outside that environment. That's expected; the sample data travels with the file.
+
+---
+
+<sub><img src="../../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../../README.md">Portfolio home</a></sub>

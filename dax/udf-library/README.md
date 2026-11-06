@@ -48,3 +48,7 @@ CPT Code Distribution Value PP =
 3. Run the checks in `docs/testing.md`.
 4. Update `CHANGELOG.md` and `VERSION` for released behavior changes.
 5. Submit a pull request with expected and actual test results.
+
+---
+
+<sub><img src="../../assets/brand/foster-bi-icon.svg" alt="" height="14"> <b>Foster BI Services</b> · Power BI consulting · <a href="https://fosterbiservices.com">fosterbiservices.com</a> · <a href="https://fosterbiservices.com/contact">Start a project</a> · <a href="../../README.md">Portfolio home</a></sub>
