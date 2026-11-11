@@ -388,7 +388,7 @@
           "Version": 2,
           "From": [
             {
-              "Name": "f",
+              "Name": "cp14",
               "Entity": "CapEx Projects",
               "Type": 0
             }
@@ -404,7 +404,7 @@
                           "Column": {
                             "Expression": {
                               "SourceRef": {
-                                "Source": "f"
+                                "Source": "cp14"
                               }
                             },
                             "Property": "ProjectKey"

@@ -420,7 +420,7 @@
           "Version": 2,
           "From": [
             {
-              "Name": "f",
+              "Name": "l9",
               "Entity": "Locations",
               "Type": 0
             }
@@ -434,7 +434,7 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Source": "f"
+                            "Source": "l9"
                           }
                         },
                         "Property": "Location Type"

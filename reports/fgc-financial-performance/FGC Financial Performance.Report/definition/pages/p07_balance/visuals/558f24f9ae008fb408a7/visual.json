@@ -591,7 +591,7 @@
           "Version": 2,
           "From": [
             {
-              "Name": "f",
+              "Name": "c9",
               "Entity": "Customers",
               "Type": 0
             }
@@ -605,7 +605,7 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Source": "f"
+                            "Source": "c9"
                           }
                         },
                         "Property": "Customer Type"
@@ -645,7 +645,7 @@
           "Version": 2,
           "From": [
             {
-              "Name": "f",
+              "Name": "ab13",
               "Entity": "Aging Buckets",
               "Type": 0
             }
@@ -661,7 +661,7 @@
                           "Column": {
                             "Expression": {
                               "SourceRef": {
-                                "Source": "f"
+                                "Source": "ab13"
                               }
                             },
                             "Property": "Aging Bucket"

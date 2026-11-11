@@ -452,7 +452,7 @@
           "Version": 2,
           "From": [
             {
-              "Name": "f",
+              "Name": "p8",
               "Entity": "Products",
               "Type": 0
             }
@@ -468,7 +468,7 @@
                           "Column": {
                             "Expression": {
                               "SourceRef": {
-                                "Source": "f"
+                                "Source": "p8"
                               }
                             },
                             "Property": "Category"
