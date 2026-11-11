@@ -1,0 +1,92 @@
+/// Dimension: the golfers who answered the survey (3,200 fictional people), with age band, gender, handicap band, rewards tier and home region. One respondent can send back several surveys. Also called: golfers, customers, people, participants, survey takers.
+table Respondents
+	lineageTag: b662c0b0-36cb-44ec-8a57-fa383e128d24
+
+	/// Unique key for a golfer. Links to Responses[RespondentKey]. Not for display.
+	column RespondentKey
+		formatString: 0
+		lineageTag: 75e40758-43b7-49ce-8718-5f1c13c02470
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RespondentKey]
+
+	/// Full name of the golfer (fictional). Also called: golfer, customer, customer name, name.
+	column Respondent
+		lineageTag: 38e9ea05-ba87-4ece-a5e1-d90e995ee237
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Respondent]
+
+	/// Female or Male. Also called: sex.
+	column Gender
+		lineageTag: a5de7d16-fe4d-4b1e-824c-8e8e9fcc9159
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Gender]
+
+	/// Age group: 18-24, 25-34, 35-49, 50-64 or 65+. Also called: age group, age range, age.
+	column 'Age Band'
+		lineageTag: 184ae016-7753-4125-bd3d-ea6d5f10abe2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Age Band]
+
+	/// Golf handicap group: No handicap yet, 20+, 10-19, 0-9 or Plus (better than scratch). Also called: handicap, skill level, ability.
+	column 'Handicap Band'
+		lineageTag: 50d919e2-b74b-449a-9af3-d2f4c828f7ad
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Handicap Band]
+
+	/// Foster Golf Rewards loyalty tier: None, Birdie, Eagle or Albatross (highest). Also called: loyalty tier, membership level, rewards level.
+	column 'Rewards Tier'
+		lineageTag: 4f9d3c42-25b1-42a7-ab80-b716262f84d6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Rewards Tier]
+
+	/// Golfer's home region: North, South, East, West or Central. For the store's region use Stores[Region]. Also called: home region, customer region.
+	column Region
+		lineageTag: da97a08b-09ce-43ab-b4f7-dabe7a9963c3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Region]
+
+	partition Respondents = calculated
+		mode: import
+		source =
+				-- Golfers who answered the Foster Golf Co survey, with age band, gender, handicap band, rewards tier and region.
+				VAR __RespondentCount = 3200
+				VAR __EndDate = DATE( 2026, 10, 31 )
+				VAR __RandomSeed = 2026
+				VAR __BaseRows =
+				    SELECTCOLUMNS( GENERATESERIES( 1, __RespondentCount, 1 ), "__RowNumber", [Value] )
+				VAR __WithProfile =
+				    ADDCOLUMNS(
+				        __BaseRows,
+				        "RespondentKey", [__RowNumber],
+				        "__NameIndex", MOD( ( [__RowNumber] * 1201 ) + ( __RandomSeed * 97 ), 3600 ),
+				        "__Age", 18 + INT( POWER( MOD( SIN( [__RowNumber] * 12.9898 + 1 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ), 1.1 ) * 70 ),
+				        "Handicap Band", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.22, "No handicap yet", MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.5, "20+", MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.82, "10-19", MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.97, "0-9", "Plus" ),
+				        "Rewards Tier", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 5 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.38, "None", MOD( SIN( [__RowNumber] * 12.9898 + 5 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.7, "Birdie", MOD( SIN( [__RowNumber] * 12.9898 + 5 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.91, "Eagle", "Albatross" ),
+				        "Region", SWITCH( INT( MOD( SIN( [__RowNumber] * 12.9898 + 4 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 5 ), 0, "North", 1, "South", 2, "East", 3, "West", "Central" )
+				    )
+				VAR __WithNameGenderAndAge =
+				    ADDCOLUMNS(
+				        __WithProfile,
+				        "Respondent", SWITCH( INT( [__NameIndex] / 60 ), 0, "Ava", 1, "Olivia", 2, "Emma", 3, "Sophia", 4, "Isabella", 5, "Mia", 6, "Amelia", 7, "Harper", 8, "Evelyn", 9, "Aria", 10, "Chloe", 11, "Layla", 12, "Nora", 13, "Zoe", 14, "Hannah", 15, "Priya", 16, "Elena", 17, "Grace", 18, "Leah", 19, "Maya", 20, "Ruby", 21, "Clara", 22, "Ines", 23, "Sara", 24, "Lucia", 25, "Amara", 26, "Yara", 27, "Naomi", 28, "Freya", 29, "Mei", 30, "Liam", 31, "Noah", 32, "Mateo", 33, "Lucas", 34, "Ethan", 35, "Aiden", 36, "Leo", 37, "James", 38, "Omar", 39, "Daniel", 40, "Kai", 41, "Samuel", 42, "Ravi", 43, "Diego", 44, "Felix", 45, "Jonah", 46, "Marcus", 47, "Tariq", 48, "Andre", 49, "Victor", 50, "Kenji", 51, "Hugo", 52, "Theo", 53, "Malik", 54, "Oscar", 55, "Elias", 56, "Arjun", 57, "Tomas", 58, "Ivan", "Kwame" ) & " " & SWITCH( MOD( ( MOD( [__NameIndex], 60 ) * 7 ) + INT( [__NameIndex] / 60 ), 60 ), 0, "Smith", 1, "Garcia", 2, "Chen", 3, "Patel", 4, "Johnson", 5, "Nguyen", 6, "Kim", 7, "Lopez", 8, "Brown", 9, "Silva", 10, "Martin", 11, "Rossi", 12, "Novak", 13, "Cohen", 14, "Okafor", 15, "Haddad", 16, "Ivanova", 17, "Larsen", 18, "Moreau", 19, "Tanaka", 20, "Walker", 21, "Hughes", 22, "Reyes", 23, "Fischer", 24, "Kowalski", 25, "Andersen", 26, "Murphy", 27, "Bianchi", 28, "Costa", 29, "Sato", 30, "Wright", 31, "Mensah", 32, "Dubois", 33, "Jensen", 34, "Ortiz", 35, "Shah", 36, "Park", 37, "Nash", 38, "Bennett", 39, "Price", 40, "Ward", 41, "Gray", 42, "Hayes", 43, "Rivera", 44, "Ali", 45, "Byrne", 46, "Clarke", 47, "Doyle", 48, "Ellis", 49, "Grant", 50, "Holt", 51, "Khan", 52, "Lund", 53, "Meyer", 54, "Owens", 55, "Quinn", 56, "Reid", 57, "Stone", 58, "Vargas", "Young" ),
+				        "Gender", IF( INT( [__NameIndex] / 60 ) < 30, "Female", "Male" ),
+				        "Age Band", IF( [__Age] < 25, "18-24", IF( [__Age] < 35, "25-34", IF( [__Age] < 50, "35-49", IF( [__Age] < 65, "50-64", "65+" ) ) ) )
+				    )
+				RETURN
+				    SELECTCOLUMNS(
+				        __WithNameGenderAndAge,
+				        "RespondentKey", [RespondentKey],
+				        "Respondent", [Respondent],
+				        "Gender", [Gender],
+				        "Age Band", [Age Band],
+				        "Handicap Band", [Handicap Band],
+				        "Rewards Tier", [Rewards Tier],
+				        "Region", [Region]
+				    )
+

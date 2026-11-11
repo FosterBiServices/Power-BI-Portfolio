@@ -1,0 +1,3140 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "responses": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responses": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey responses": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "surveys": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "submissions": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "feedback": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey returns": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "answers": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Answers"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "answers": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "question answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "scores": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "ratings": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "replies": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "questions": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey questions": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "question list": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "items": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey items": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "respondents": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "golfers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "customers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "people": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "participants": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey takers": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "stores": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stores"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stores": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "locations": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "shops": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "branches": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "store locations": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "calendar": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "dates": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "time": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "report_dates": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Report Dates"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "report dates": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "as of date table": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "period": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Period"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "period": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "time period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "date range": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "reporting period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "timeframe": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "time_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Time Window"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "time window": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "time intelligence": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "period shift": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "comparison": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Comparison"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "comparison": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "month over month": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "MoM": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "YoY": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "trend_metric": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trend Metric"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trend metric": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "metric picker": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "measure selector": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "score_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Score Band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "score band": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "rating band": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "score label": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "_measures": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "measures": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "metrics": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "KPIs": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.responsekey": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "ResponseKey"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responsekey": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "response key": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.response_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Response ID"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "response id": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey id": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "response number": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "submission id": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.response_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Response Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "response date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey date": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "submitted date": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "response day": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Date": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "responses.survey_channel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Survey Channel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "survey channel": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "channel": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey method": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "source": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.visit_type": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Visit Type"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "visit type": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "visit": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "interaction type": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "touchpoint": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "service type": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.category": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Category"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "category": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "product category": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "department": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.completed": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Completed"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "completed": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "finished": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "complete": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "fully answered": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.questions_answered": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "Questions Answered"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "questions answered": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "progress": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "questions reached": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.nps_score": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "NPS Score"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps score": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "recommend score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "likelihood to recommend": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "LTR": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "responses.nps_group": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Responses",
+			          "ConceptualProperty": "NPS Group"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps group": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "NPS category": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "promoter group": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "NPS segment": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "answers.score": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Answers",
+			          "ConceptualProperty": "Score"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "score": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "rating": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "answer score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "value": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "answers.answer": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Answers",
+			          "ConceptualProperty": "Answer"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "answer": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "response text": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "comment": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "verbatim": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "answer text": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "answers.sentiment": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Answers",
+			          "ConceptualProperty": "Sentiment"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "sentiment": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "tone": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "comment sentiment": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "feeling": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.questionkey": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "QuestionKey"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "questionkey": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "question number": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.short_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "Short Name"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "short name": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "question": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "question name": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "topic": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.question": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "Question"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "question": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "question text": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "wording": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.section": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "Section"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "section": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey section": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "theme": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "driver": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.question_type": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "Question Type"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "question type": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "type": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "answer type": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "questions.scale": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Questions",
+			          "ConceptualProperty": "Scale"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "scale": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "answer scale": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "range": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.respondent": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Respondent"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "respondent": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "golfer": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "customer": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "customer name": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "name": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.gender": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Gender"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "gender": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "sex": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.age_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Age Band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "age band": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "age group": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "age range": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "age": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.handicap_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Handicap Band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "handicap band": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "handicap": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "skill level": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "ability": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.rewards_tier": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Rewards Tier"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "rewards tier": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "loyalty tier": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "membership level": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "rewards level": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "respondents.region": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Respondents",
+			          "ConceptualProperty": "Region"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "region": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "home region": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "customer region": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "stores.store": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stores",
+			          "ConceptualProperty": "Store"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "store": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "store name": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "location": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "shop": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "branch": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "stores.city": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stores",
+			          "ConceptualProperty": "City"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "city": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "town": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "store city": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "stores.region": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stores",
+			          "ConceptualProperty": "Region"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "region": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "store region": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "sales region": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "area": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "territory": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "stores.store_type": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stores",
+			          "ConceptualProperty": "Store Type"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "store type": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "format": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "store format": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "channel type": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "day": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "calendar date": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.year": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Year"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "year": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "calendar year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.quarter": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Quarter"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "quarter": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "qtr": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "calendar quarter": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.month": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Month"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "month": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "month name": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.month_year": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Month Year"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "month year": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year month": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "month of year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Month": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "date.weekday": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Weekday"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "weekday": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "day of week": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "day name": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "date.month_start": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date",
+			          "ConceptualProperty": "Month Start"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "month start": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "month": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "month beginning": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "period.period": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Period",
+			          "ConceptualProperty": "Period"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "period": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "time period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "date range": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "timeframe": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "trend_metric.trend_metric": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trend Metric",
+			          "ConceptualProperty": "Trend Metric"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trend metric": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "metric": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "measure": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "score_band.rating": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Score Band",
+			          "ConceptualProperty": "Rating"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "rating": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "score label": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Score": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.response_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Response Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "response count": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "responses": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "surveys": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey count": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of surveys": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "response volume": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.respondent_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Respondent Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "respondent count": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "respondents": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "golfers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "unique customers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "people surveyed": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.completion_rate": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Completion Rate %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "completion rate %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "completion rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "finish rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "completion %": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.promoters": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Promoters %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "promoters %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "promoters": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "promoter share": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "% promoters": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.passives": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Passives %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "passives %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "passives": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "passive share": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "% passives": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.detractors": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Detractors %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "detractors %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "detractors": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "detractor share": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "% detractors": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.nps": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "NPS"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "net promoter score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "recommend score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "loyalty": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "likelihood to recommend": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.answer_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Answer Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "answer count": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of answers": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.average_score": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Average Score"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "average score": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "average rating": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "mean score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "avg score": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.top_2_box": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Top 2 Box %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "top 2 box %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "top 2 box": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "T2B": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "positive answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "favorable %": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "positive %": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.bottom_2_box": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Bottom 2 Box %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "bottom 2 box %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "bottom 2 box": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "B2B": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "negative answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "unfavorable %": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.yes": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Yes %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "yes %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "yes rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "in stock %": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.comment_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Comment Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "comment count": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "comments": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of comments": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "verbatims": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.negative_comments": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Negative Comments %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "negative comments %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "negative comments": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "negative sentiment": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "complaint rate": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.positive_comments": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Positive Comments %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "positive comments %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "positive comments": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "positive sentiment": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "praise rate": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.overall_satisfaction": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Overall Satisfaction %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "overall satisfaction %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "satisfaction": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "CSAT": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "overall satisfaction": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "satisfied customers": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.answer_share": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Answer Share %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "answer share %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "answer distribution": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "score share": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.as_of_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "As Of Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "as of date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "as of": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "reporting date": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "data through": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.window_start": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Window Start"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "window start": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "period start": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "start date": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.window_end": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Window End"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "window end": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "period end": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "end date": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.window_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Window Name"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "window name": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "period name": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.min_responses": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Min Responses"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "min responses": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "minimum sample": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "sample size threshold": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.too_few_responses": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Too Few Responses"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "too few responses": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "low sample flag": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.top_2_box_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Top 2 Box (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "top 2 box (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "positive answers": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "top 2 box this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Positive": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.average_score_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Average Score (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "average score (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "average rating this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Average score": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Avg score": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.top_2_box_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Top 2 Box Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "top 2 box change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "vs prior": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "change in positive answers": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.responses_of_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses % of Total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responses % of total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "share of responses": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "mix": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "percent of total": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Share of total": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.store_rank": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Store Rank"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "store rank": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "store ranking": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "rank": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.comment_text": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Comment Text"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "comment text": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "comment": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "verbatim": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.comments_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Comments (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "comments (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "comments this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Comments": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.data_as_of": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Data As Of"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "data as of": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "data through": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "last updated": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.nps_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "NPS (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "net promoter score this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "NPS this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "net promoter score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "NPS": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "recommend score": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "loyalty score": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.nps_prior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "NPS (Prior)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps (prior)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "net promoter score last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "NPS last year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.nps_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "NPS Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nps change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "net promoter score change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "vs last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year change": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.satisfaction_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Satisfaction (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "satisfaction (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "satisfaction this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "CSAT this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "satisfaction": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "CSAT": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "overall satisfaction": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "happy customers": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.satisfaction_prior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Satisfaction (Prior)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "satisfaction (prior)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "satisfaction last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "CSAT last year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.satisfaction_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Satisfaction Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "satisfaction change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "CSAT change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "vs last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year change": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.responses_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responses (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey count this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of responses this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey count": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of responses": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "response volume": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "surveys": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "Responses": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "measures.responses_prior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses (Prior)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responses (prior)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey count last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of responses last year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.responses_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "responses change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "survey count change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "number of responses change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "vs last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year change": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.completion_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Completion (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "completion (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "completion rate this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "finish rate this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "completion rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "finish rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "survey completion": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.completion_prior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Completion (Prior)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "completion (prior)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "completion rate last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "finish rate last year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.completion_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Completion Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "completion change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "completion rate change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "finish rate change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "vs last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year change": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.negative_comments_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Negative Comments (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "negative comments (window)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "negative comments this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "complaints rate this period": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "negative comments": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "complaints rate": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "negative feedback": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "negative sentiment": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.negative_comments_prior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Negative Comments (Prior)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "negative comments (prior)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "negative comments last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "complaints rate last year": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "measures.negative_comments_change": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Negative Comments Change"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "negative comments change": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "complaints rate change": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "vs last year": {
+			            "Type": "Noun"
+			          }
+			        },
+			        {
+			          "year over year change": {
+			            "Type": "Noun"
+			          }
+			        }
+			      ]
+			    },
+			    "table_measures.answers_window": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Answers (Window)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Answers": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measures.responses_bubble_position": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses Bubble Position"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Bubble": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measures.responses_bubble_label": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Responses Bubble Label"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Bubble label": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measures.store_rank_badge": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Store Rank Badge"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Rank": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

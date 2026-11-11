@@ -1,0 +1,146 @@
+/// Calculation group that moves any measure into the selected period (Selected window), the period its change is measured against (Comparison window: the same months a year earlier, or the 12 months before for Last 12M) or the second-line context period (Context window). Used by the (Window), (Prior) and (Context) measures. Also called: time intelligence, period shift.
+table 'Time Window'
+	lineageTag: 5f1c54b5-ac97-4307-a89a-6b5300f63c10
+
+	calculationGroup
+		precedence: 20
+
+		/// The period picked on the Period buttons (for LCM: the last completed month).
+		calculationItem 'Selected window' =
+				VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+				VAR __PeriodKey = SELECTEDVALUE ( Period[Key], "LCM" )
+				VAR __LastQuarterEnd = EOMONTH ( __AsOfDate, - MOD ( MONTH ( __AsOfDate ), 3 ) )
+				VAR __PeriodStart =
+				    SWITCH (
+				        __PeriodKey,
+				        "LCM", EOMONTH ( __AsOfDate, -1 ) + 1,
+				        "LM", EOMONTH ( __AsOfDate, -2 ) + 1,
+				        "LCQ", EOMONTH ( __LastQuarterEnd, -3 ) + 1,
+				        "L3M", EOMONTH ( __AsOfDate, -3 ) + 1,
+				        "YTD", DATE ( YEAR ( __AsOfDate ), 1, 1 ),
+				        "L12M", EOMONTH ( __AsOfDate, -12 ) + 1
+				    )
+				VAR __PeriodEnd =
+				    SWITCH (
+				        __PeriodKey,
+				        "LM", EOMONTH ( __AsOfDate, -1 ),
+				        "LCQ", __LastQuarterEnd,
+				        __AsOfDate
+				    )
+				VAR __CompareStart = EDATE ( __PeriodStart, -12 )
+				VAR __CompareEnd = EOMONTH ( __PeriodEnd, -12 )
+				VAR __MonthsBack = SWITCH ( __PeriodKey, "LCM", 1, "LM", 1, "LCQ", 3, "L3M", 3, 0 )
+				VAR __ContextStart =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, EDATE ( __PeriodStart, - __MonthsBack ),
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 1, 1 )
+				    )
+				VAR __ContextEnd =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, __PeriodStart - 1,
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 12, 31 )
+				    )
+				RETURN
+				    CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], __PeriodStart, __PeriodEnd ) )
+
+		/// The period the change on each card is measured against: the same months a year earlier, or the 12 months before for Last 12M.
+		calculationItem 'Comparison window' =
+				VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+				VAR __PeriodKey = SELECTEDVALUE ( Period[Key], "LCM" )
+				VAR __LastQuarterEnd = EOMONTH ( __AsOfDate, - MOD ( MONTH ( __AsOfDate ), 3 ) )
+				VAR __PeriodStart =
+				    SWITCH (
+				        __PeriodKey,
+				        "LCM", EOMONTH ( __AsOfDate, -1 ) + 1,
+				        "LM", EOMONTH ( __AsOfDate, -2 ) + 1,
+				        "LCQ", EOMONTH ( __LastQuarterEnd, -3 ) + 1,
+				        "L3M", EOMONTH ( __AsOfDate, -3 ) + 1,
+				        "YTD", DATE ( YEAR ( __AsOfDate ), 1, 1 ),
+				        "L12M", EOMONTH ( __AsOfDate, -12 ) + 1
+				    )
+				VAR __PeriodEnd =
+				    SWITCH (
+				        __PeriodKey,
+				        "LM", EOMONTH ( __AsOfDate, -1 ),
+				        "LCQ", __LastQuarterEnd,
+				        __AsOfDate
+				    )
+				VAR __CompareStart = EDATE ( __PeriodStart, -12 )
+				VAR __CompareEnd = EOMONTH ( __PeriodEnd, -12 )
+				VAR __MonthsBack = SWITCH ( __PeriodKey, "LCM", 1, "LM", 1, "LCQ", 3, "L3M", 3, 0 )
+				VAR __ContextStart =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, EDATE ( __PeriodStart, - __MonthsBack ),
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 1, 1 )
+				    )
+				VAR __ContextEnd =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, __PeriodStart - 1,
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 12, 31 )
+				    )
+				RETURN
+				    CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], __CompareStart, __CompareEnd ) )
+
+		/// The period on the cards' second line: the month before (LCM, Prior month), the quarter before (LCQ), the 3 months before (Last 3M) or all of last year (YTD). Blank for Last 12M.
+		calculationItem 'Context window' =
+				VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+				VAR __PeriodKey = SELECTEDVALUE ( Period[Key], "LCM" )
+				VAR __LastQuarterEnd = EOMONTH ( __AsOfDate, - MOD ( MONTH ( __AsOfDate ), 3 ) )
+				VAR __PeriodStart =
+				    SWITCH (
+				        __PeriodKey,
+				        "LCM", EOMONTH ( __AsOfDate, -1 ) + 1,
+				        "LM", EOMONTH ( __AsOfDate, -2 ) + 1,
+				        "LCQ", EOMONTH ( __LastQuarterEnd, -3 ) + 1,
+				        "L3M", EOMONTH ( __AsOfDate, -3 ) + 1,
+				        "YTD", DATE ( YEAR ( __AsOfDate ), 1, 1 ),
+				        "L12M", EOMONTH ( __AsOfDate, -12 ) + 1
+				    )
+				VAR __PeriodEnd =
+				    SWITCH (
+				        __PeriodKey,
+				        "LM", EOMONTH ( __AsOfDate, -1 ),
+				        "LCQ", __LastQuarterEnd,
+				        __AsOfDate
+				    )
+				VAR __CompareStart = EDATE ( __PeriodStart, -12 )
+				VAR __CompareEnd = EOMONTH ( __PeriodEnd, -12 )
+				VAR __MonthsBack = SWITCH ( __PeriodKey, "LCM", 1, "LM", 1, "LCQ", 3, "L3M", 3, 0 )
+				VAR __ContextStart =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, EDATE ( __PeriodStart, - __MonthsBack ),
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 1, 1 )
+				    )
+				VAR __ContextEnd =
+				    SWITCH (
+				        TRUE (),
+				        __MonthsBack > 0, __PeriodStart - 1,
+				        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 12, 31 )
+				    )
+				RETURN
+				    IF ( NOT ISBLANK ( __ContextStart ), CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], __ContextStart, __ContextEnd ) ) )
+
+	/// Calculation item name: Selected window, Comparison window or Context window.
+	column Window
+		dataType: string
+		lineageTag: 8c199932-17ef-444f-bc53-6711619de249
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+	/// Calculation item order.
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 36904b63-885f-43ba-952f-37acdc35a865
+		summarizeBy: sum
+		sourceColumn: Ordinal
+
+	partition 'Time Window' = calculationGroup
+

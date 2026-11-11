@@ -1,0 +1,78 @@
+/// Dimension: the 12 Foster Golf Co stores, the same as in the FGC Financials report, with city, sales region and store type. For online orders this is the store that shipped the order. Also called: locations, shops, branches, store locations.
+table Stores
+	lineageTag: ef59ffb0-e3cf-472c-a2fc-8498897d829f
+
+	/// Unique key for a store. Links to Responses[StoreKey]. Not for display.
+	column StoreKey
+		isHidden
+		formatString: 0
+		lineageTag: cfa37493-d66e-4909-82cf-b910b2ac9fda
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [StoreKey]
+
+	/// Store name with its number and city, such as Store 06 Fairview. Also called: store name, location, shop, branch.
+	column Store
+		lineageTag: af44a213-7766-4ae2-bcfb-0bdc73699938
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Store]
+
+	/// City the store is in. Also called: town, store city.
+	column City
+		lineageTag: 45cd23e9-a4c1-4744-b886-a26afa9e5568
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [City]
+
+	/// Sales region the store belongs to: North, South, East, West or Central. Drives the Region slicer. Also called: store region, sales region, area, territory.
+	column Region
+		lineageTag: 32567f44-b3d1-4310-9994-c8765e50d52c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Region]
+
+	/// Store format: Mall, High street, Outlet or Online. Also called: format, store format, channel type.
+	column 'Store Type'
+		lineageTag: 3e656e05-d809-40ec-8dbc-e5790594be6c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Store Type]
+
+	partition Stores = calculated
+		mode: import
+		source =
+				-- Stores with city, region and type.
+				VAR __StoreCount = 12
+				VAR __RandomSeed = 2012
+				RETURN
+				    VAR __BaseRows =
+				        SELECTCOLUMNS( GENERATESERIES( 1, __StoreCount, 1 ), "__RowNumber", [Value] )
+				    VAR __WithCityIndexAndType =
+				        ADDCOLUMNS(
+				            __BaseRows,
+				            "StoreKey", [__RowNumber],
+				            "__CityIndex", INT( MOD( SIN( [__RowNumber] * 12.9898 + 1 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 25 ),
+				            "Store Type", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.35, "Mall", MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.7, "High street", MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.9, "Outlet", "Online" )
+				        )
+				    VAR __WithCityAndRegion =
+				        ADDCOLUMNS(
+				            __WithCityIndexAndType,
+				            "City", SWITCH( [__CityIndex], 0, "Springfield", 1, "Riverton", 2, "Lakewood", 3, "Fairview", 4, "Greenville", 5, "Madison", 6, "Clinton", 7, "Georgetown", 8, "Franklin", 9, "Arlington", 10, "Salem", 11, "Bristol", 12, "Ashland", 13, "Milton", 14, "Oxford", 15, "Dover", 16, "Burlington", 17, "Kingston", 18, "Newport", 19, "Clayton", 20, "Hudson", 21, "Marion", 22, "Auburn", 23, "Dayton", "Glendale" ),
+				            "Region", SWITCH( MOD( [__CityIndex], 5 ), 0, "North", 1, "South", 2, "East", 3, "West", "Central" )
+				        )
+				    VAR __WithStoreName =
+				        ADDCOLUMNS(
+				            __WithCityAndRegion,
+				            "Store", "Store " & FORMAT( [__RowNumber], "00" ) & " " & [City]
+				        )
+				    RETURN
+				        SELECTCOLUMNS(
+				            __WithStoreName,
+				            "StoreKey", [StoreKey],
+				            "Store", [Store],
+				            "City", [City],
+				            "Region", [Region],
+				            "Store Type", [Store Type]
+				        )
+

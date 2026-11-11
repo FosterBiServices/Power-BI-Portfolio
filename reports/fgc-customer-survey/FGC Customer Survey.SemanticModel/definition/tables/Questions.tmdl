@@ -1,0 +1,85 @@
+/// Dimension: the 10 survey questions, in the order they are asked, with a short label, the full wording, the survey section, the question type and the answer scale. Also called: survey questions, question list, items, survey items.
+table Questions
+	lineageTag: 7475ef04-d012-42dd-bc05-1bae336a1789
+
+	/// Question number, 1 to 10, in the order asked. Links to Answers[QuestionKey]. Also called: question number.
+	column QuestionKey
+		formatString: 0
+		lineageTag: 8febf8ab-4428-4b16-b8dd-0f25958d895e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [QuestionKey]
+
+	/// Short label for the question used in visuals, such as Staff knowledge or Value for money. Also called: question, question name, topic.
+	column 'Short Name'
+		lineageTag: ce421341-db56-4edb-86a8-a33ae1532a46
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Short Name]
+		sortByColumn: QuestionKey
+
+	/// Full question wording as the respondent saw it. Also called: question text, wording.
+	column Question
+		lineageTag: 7fd98535-6d94-40b8-98fa-238430c2be3b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Question]
+		sortByColumn: QuestionKey
+
+	/// Part of the survey the question belongs to: Overall, Staff, Shopping, Price, Fitting, Checkout, Product, Loyalty or Comments. Also called: survey section, theme, driver.
+	column Section
+		lineageTag: 93db01d2-2695-4079-9763-399b62ad4a4a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Section]
+
+	/// Rating, Agreement or Ease (1 to 5), NPS (0 to 10), Yes/No or Comment (free text). Also called: type, answer type.
+	column 'Question Type'
+		lineageTag: 2cf72e03-39a2-432c-aacb-ae346090b44a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Question Type]
+
+	/// Answer scale: 1 to 5, 0 to 10, Yes/No or Text. Also called: answer scale, range.
+	column Scale
+		lineageTag: 4a5600ef-373e-4769-ba07-00b30746fc61
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scale]
+
+	partition Questions = calculated
+		mode: import
+		source =
+				-- The survey: one row per question, with its section, type and answer scale.
+				VAR __QuestionList =
+				    DATATABLE(
+				        "QuestionKey", INTEGER,
+				        "Short Name", STRING,
+				        "Question", STRING,
+				        "Section", STRING,
+				        "Question Type", STRING,
+				        "Scale", STRING,
+				        {
+				            { 1, "Overall experience", "Overall, how would you rate your experience with Foster Golf Co?", "Overall", "Rating", "1 to 5" },
+				            { 2, "Staff knowledge", "Our staff knew the equipment and gave good advice.", "Staff", "Agreement", "1 to 5" },
+				            { 3, "Easy to find", "It was easy to find what I was looking for.", "Shopping", "Agreement", "1 to 5" },
+				            { 4, "Value for money", "What I bought was good value for money.", "Price", "Agreement", "1 to 5" },
+				            { 5, "Fitting & demo", "How would you rate the fitting, demo or lesson bay?", "Fitting", "Rating", "1 to 5" },
+				            { 6, "Checkout", "How easy was checkout?", "Checkout", "Ease", "1 to 5" },
+				            { 7, "In stock", "Was everything you wanted in stock?", "Product", "Yes/No", "Yes/No" },
+				            { 8, "Shop again", "I will shop with Foster Golf Co again.", "Loyalty", "Agreement", "1 to 5" },
+				            { 9, "Recommend", "How likely are you to recommend Foster Golf Co to a playing partner?", "Overall", "NPS", "0 to 10" },
+				            { 10, "Comments", "Is there anything we could do better?", "Comments", "Comment", "Text" }
+				        }
+				    )
+				RETURN
+				    SELECTCOLUMNS(
+				        __QuestionList,
+				        "QuestionKey", [QuestionKey],
+				        "Short Name", [Short Name],
+				        "Question", [Question],
+				        "Section", [Section],
+				        "Question Type", [Question Type],
+				        "Scale", [Scale]
+				    )
+

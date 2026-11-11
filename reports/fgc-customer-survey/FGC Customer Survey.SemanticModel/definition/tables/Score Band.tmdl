@@ -1,0 +1,35 @@
+/// Labels for answer scores 1 to 5, used as the legend of the answer-distribution chart. Links to Answers[Score]. Also called: rating band, score label.
+table 'Score Band'
+	lineageTag: d9b9ebb8-0c60-4497-942b-04e969be9f27
+
+	/// Answer score 1 to 5. Links to Answers[Score].
+	column Score
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 52ad6dbc-e74b-4483-be87-49fedd3e121b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Score]
+
+	/// Legend label for a score: 1 (low) to 5 (high). Also called: rating, score label.
+	column Rating
+		dataType: string
+		lineageTag: b85e1180-cda6-4c36-a3da-ae7868f992ff
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Rating]
+		sortByColumn: Score
+
+	partition 'Score Band' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Score", INTEGER,
+				    "Rating", STRING,
+				    {
+				        { 0, "0" }, { 1, "1 Lowest" }, { 2, "2" }, { 3, "3" }, { 4, "4" }, { 5, "5 Highest" },
+				        { 6, "6" }, { 7, "7" }, { 8, "8" }, { 9, "9" }, { 10, "10" }
+				    }
+				)
+

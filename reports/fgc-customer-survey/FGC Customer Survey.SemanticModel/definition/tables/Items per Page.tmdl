@@ -1,0 +1,16 @@
+/// Slicer values for how many stores the ranked store chart shows per page (Chart Patterns, Top N per page). Helper for a visual, not for analysis.
+table 'Items per Page'
+	lineageTag: e0181f68-fe57-4100-ace0-5837816f17b4
+
+	/// Stores shown per page on the ranked store chart (1 to 12; the buttons offer 4, 6 and 12). Helper for a visual, not for analysis.
+	column 'Items per Page'
+		dataType: int64
+		formatString: 0
+		lineageTag: f22bf199-4f12-4645-b24f-3379b77a5543
+		summarizeBy: none
+		sourceColumn: [Value]
+
+	partition 'Items per Page' = calculated
+		mode: import
+		source = GENERATESERIES ( 1, 12, 1 )
+

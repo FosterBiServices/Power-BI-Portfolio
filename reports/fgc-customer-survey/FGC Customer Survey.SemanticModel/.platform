@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "FGC Customer Survey"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7d6c1737-d2b1-5529-8f36-d9eb33d62591"
+  }
+}

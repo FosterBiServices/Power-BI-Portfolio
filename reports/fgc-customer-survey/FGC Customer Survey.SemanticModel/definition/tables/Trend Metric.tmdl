@@ -1,0 +1,49 @@
+/// Field parameter for the Trends page: lets the reader pick which survey metric the 12-month chart and table show. Also called: metric picker, measure selector.
+table 'Trend Metric'
+	lineageTag: 5f0b65d4-83b7-4a81-826c-6cb124956599
+
+	/// Metric name shown on the Trends page picker: NPS, Overall satisfaction, Average score, Top 2 box, Responses, Completion rate or Negative comments. Also called: metric, measure.
+	column 'Trend Metric'
+		lineageTag: 9aecbc6e-c9ee-4781-bf85-6c8285d3f4c1
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Trend Metric Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Trend Metric Fields'
+
+	/// Field parameter reference to the measure for each metric.
+	column 'Trend Metric Fields'
+		isHidden
+		lineageTag: dd0bd844-c3db-49bd-bb89-9603e898ba86
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Trend Metric Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	/// Picker order.
+	column 'Trend Metric Order'
+		isHidden
+		formatString: 0
+		lineageTag: a1c57991-b5ec-4cca-9672-c77e00a1656b
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	partition 'Trend Metric' = calculated
+		mode: import
+		source =
+				{
+				    ("NPS", NAMEOF ( '_Measures'[NPS] ), 0),
+				    ("Overall satisfaction", NAMEOF ( '_Measures'[Overall Satisfaction %] ), 1),
+				    ("Average score", NAMEOF ( '_Measures'[Average Score] ), 2),
+				    ("Top 2 box", NAMEOF ( '_Measures'[Top 2 Box %] ), 3),
+				    ("Responses", NAMEOF ( '_Measures'[Response Count] ), 4),
+				    ("Completion rate", NAMEOF ( '_Measures'[Completion Rate %] ), 5),
+				    ("Negative comments", NAMEOF ( '_Measures'[Negative Comments %] ), 6)
+				}
+

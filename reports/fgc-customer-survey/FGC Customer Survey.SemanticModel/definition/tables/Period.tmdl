@@ -1,0 +1,83 @@
+/// Disconnected table behind the Period buttons. Each row is a calendar period anchored on the last completed month in the data, with its names and comparison labels: LCM (last completed month), Prior month, LCQ (last completed quarter), Last 3M, YTD and Last 12M. Also called: time period, date range, reporting period, timeframe.
+table Period
+	lineageTag: 72d3a621-dc54-4bba-b1a2-ad547a34bb59
+
+	/// Period button label: LCM, Prior month, LCQ, Last 3M, YTD or Last 12M. Sorted by Order. Also called: time period, date range, timeframe.
+	column Period
+		dataType: string
+		lineageTag: 125fd539-9331-46f1-8914-71cc49661f6c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period]
+		sortByColumn: Order
+
+	/// Code the period measures switch on: LCM, LM, LCQ, L3M, YTD or L12M.
+	column Key
+		dataType: string
+		isHidden
+		lineageTag: 279144a7-ec55-4cb3-8280-2c5586fe4b29
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Key]
+
+	/// Button order, 1 to 6.
+	column Order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d3b61e3b-d0d7-4909-9157-742bd1ba6305
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Order]
+
+	/// The period in words, such as Last completed month or Last completed quarter.
+	column 'Window Name'
+		dataType: string
+		isHidden
+		lineageTag: b8d4f533-d7bd-4759-90a7-de932173fefd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Window Name]
+
+	/// What the change on the cards is measured against, in words, such as same month last year.
+	column 'Compare Name'
+		dataType: string
+		isHidden
+		lineageTag: 83a0a043-6d3a-426e-80a7-38d11f974d86
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Compare Name]
+
+	/// Short name of the comparison period on the cards' second line: Last year or Prior 12M.
+	column 'Compare Short'
+		dataType: string
+		isHidden
+		lineageTag: 85eb14e4-0644-499b-9018-b37d561da20c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Compare Short]
+
+	/// Short name of the context period on the cards' second line, where a fixed name applies (Prior 3M); other periods name the month or quarter in the Context Short measure.
+	column 'Context Short'
+		dataType: string
+		isHidden
+		lineageTag: 4a73bd59-5da3-4e2a-83cd-046ff22d5847
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Context Short]
+
+	partition Period = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Period", STRING, "Key", STRING, "Order", INTEGER, "Window Name", STRING, "Compare Name", STRING, "Compare Short", STRING, "Context Short", STRING,
+				    {
+				        { "LCM", "LCM", 1, "Last completed month", "same month last year", "Last year", "" },
+				        { "Prior month", "LM", 2, "Prior month", "same month last year", "Last year", "" },
+				        { "LCQ", "LCQ", 3, "Last completed quarter", "same quarter last year", "Last year", "" },
+				        { "Last 3M", "L3M", 4, "Last 3 months", "same 3 months last year", "Last year", "Prior 3M" },
+				        { "YTD", "YTD", 5, "Year to date", "same months last year", "Last year", "" },
+				        { "Last 12M", "L12M", 6, "Last 12 months", "prior 12 months", "Prior 12M", "" }
+				    }
+				)
+

@@ -1,0 +1,751 @@
+createOrReplace
+
+	/// Seeded random number from 0 up to 1. Used by every FosterBIServices.SampleData table function.
+	function 'FosterBIServices.SampleData.Random' = ```
+			-- Seeded random number from 0 up to 1. Used by every FosterBIServices.SampleData table function.
+			( row_key, stream, seed )
+			=>
+			    -- One seeded random number from 0 up to 1 for each key and stream (the same inputs always give the same number)
+			    MOD( SIN( row_key * 12.9898 + stream * 78.233 + seed * 37.719 ) * 43758.5453, 1 )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// Golfers who answered the Foster Golf Co survey, with age band, gender, handicap band, rewards tier and region.
+	function 'FosterBIServices.SampleData.GolfSurvey.Respondents' = ```
+			-- Golfers who answered the Foster Golf Co survey, with age band, gender, handicap band, rewards tier and region.
+			( num_respondents : INT64, end_date : DATETIME, seed : INT64 )
+			=>
+			    VAR _Rows =
+			        SELECTCOLUMNS( GENERATESERIES( 1, num_respondents, 1 ), "_k", [Value] )
+			    VAR _Step1 =
+			        ADDCOLUMNS(
+			            _Rows,
+			            "RespondentKey", [_k],
+			            "_ni", MOD( ( [_k] * 1201 ) + ( seed * 97 ), 3600 ),
+			            "_age", 18 + INT( POWER( FosterBIServices.SampleData.Random( [_k], 1, seed ), 1.1 ) * 70 ),
+			            "Handicap Band", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 3, seed ) < 0.22, "No handicap yet", FosterBIServices.SampleData.Random( [_k], 3, seed ) < 0.5, "20+", FosterBIServices.SampleData.Random( [_k], 3, seed ) < 0.82, "10-19", FosterBIServices.SampleData.Random( [_k], 3, seed ) < 0.97, "0-9", "Plus" ),
+			            "Rewards Tier", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 5, seed ) < 0.38, "None", FosterBIServices.SampleData.Random( [_k], 5, seed ) < 0.7, "Birdie", FosterBIServices.SampleData.Random( [_k], 5, seed ) < 0.91, "Eagle", "Albatross" ),
+			            "Region", SWITCH( INT( FosterBIServices.SampleData.Random( [_k], 4, seed ) * 5 ), 0, "North", 1, "South", 2, "East", 3, "West", "Central" )
+			        )
+			    VAR _Step2 =
+			        ADDCOLUMNS(
+			            _Step1,
+			            "Respondent", SWITCH( INT( [_ni] / 60 ), 0, "Ava", 1, "Olivia", 2, "Emma", 3, "Sophia", 4, "Isabella", 5, "Mia", 6, "Amelia", 7, "Harper", 8, "Evelyn", 9, "Aria", 10, "Chloe", 11, "Layla", 12, "Nora", 13, "Zoe", 14, "Hannah", 15, "Priya", 16, "Elena", 17, "Grace", 18, "Leah", 19, "Maya", 20, "Ruby", 21, "Clara", 22, "Ines", 23, "Sara", 24, "Lucia", 25, "Amara", 26, "Yara", 27, "Naomi", 28, "Freya", 29, "Mei", 30, "Liam", 31, "Noah", 32, "Mateo", 33, "Lucas", 34, "Ethan", 35, "Aiden", 36, "Leo", 37, "James", 38, "Omar", 39, "Daniel", 40, "Kai", 41, "Samuel", 42, "Ravi", 43, "Diego", 44, "Felix", 45, "Jonah", 46, "Marcus", 47, "Tariq", 48, "Andre", 49, "Victor", 50, "Kenji", 51, "Hugo", 52, "Theo", 53, "Malik", 54, "Oscar", 55, "Elias", 56, "Arjun", 57, "Tomas", 58, "Ivan", "Kwame" ) & " " & SWITCH( MOD( ( MOD( [_ni], 60 ) * 7 ) + INT( [_ni] / 60 ), 60 ), 0, "Smith", 1, "Garcia", 2, "Chen", 3, "Patel", 4, "Johnson", 5, "Nguyen", 6, "Kim", 7, "Lopez", 8, "Brown", 9, "Silva", 10, "Martin", 11, "Rossi", 12, "Novak", 13, "Cohen", 14, "Okafor", 15, "Haddad", 16, "Ivanova", 17, "Larsen", 18, "Moreau", 19, "Tanaka", 20, "Walker", 21, "Hughes", 22, "Reyes", 23, "Fischer", 24, "Kowalski", 25, "Andersen", 26, "Murphy", 27, "Bianchi", 28, "Costa", 29, "Sato", 30, "Wright", 31, "Mensah", 32, "Dubois", 33, "Jensen", 34, "Ortiz", 35, "Shah", 36, "Park", 37, "Nash", 38, "Bennett", 39, "Price", 40, "Ward", 41, "Gray", 42, "Hayes", 43, "Rivera", 44, "Ali", 45, "Byrne", 46, "Clarke", 47, "Doyle", 48, "Ellis", 49, "Grant", 50, "Holt", 51, "Khan", 52, "Lund", 53, "Meyer", 54, "Owens", 55, "Quinn", 56, "Reid", 57, "Stone", 58, "Vargas", "Young" ),
+			            "Gender", IF( INT( [_ni] / 60 ) < 30, "Female", "Male" ),
+			            "Age Band", IF( [_age] < 25, "18-24", IF( [_age] < 35, "25-34", IF( [_age] < 50, "35-49", IF( [_age] < 65, "50-64", "65+" ) ) ) )
+			        )
+			    RETURN
+			        SELECTCOLUMNS(
+			            _Step2,
+			            "RespondentKey", [RespondentKey],
+			            "Respondent", [Respondent],
+			            "Gender", [Gender],
+			            "Age Band", [Age Band],
+			            "Handicap Band", [Handicap Band],
+			            "Rewards Tier", [Rewards Tier],
+			            "Region", [Region]
+			        )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// The survey: one row per question, with its section, type and answer scale.
+	function 'FosterBIServices.SampleData.GolfSurvey.Questions' = ```
+			-- The survey: one row per question, with its section, type and answer scale.
+			()
+			=>
+			    VAR _Rows =
+			        DATATABLE(
+			            "QuestionKey", INTEGER,
+			            "Short Name", STRING,
+			            "Question", STRING,
+			            "Section", STRING,
+			            "Question Type", STRING,
+			            "Scale", STRING,
+			            {
+			                { 1, "Overall experience", "Overall, how would you rate your experience with Foster Golf Co?", "Overall", "Rating", "1 to 5" },
+			                { 2, "Staff knowledge", "Our staff knew the equipment and gave good advice.", "Staff", "Agreement", "1 to 5" },
+			                { 3, "Easy to find", "It was easy to find what I was looking for.", "Shopping", "Agreement", "1 to 5" },
+			                { 4, "Value for money", "What I bought was good value for money.", "Price", "Agreement", "1 to 5" },
+			                { 5, "Fitting & demo", "How would you rate the fitting, demo or lesson bay?", "Fitting", "Rating", "1 to 5" },
+			                { 6, "Checkout", "How easy was checkout?", "Checkout", "Ease", "1 to 5" },
+			                { 7, "In stock", "Was everything you wanted in stock?", "Product", "Yes/No", "Yes/No" },
+			                { 8, "Shop again", "I will shop with Foster Golf Co again.", "Loyalty", "Agreement", "1 to 5" },
+			                { 9, "Recommend", "How likely are you to recommend Foster Golf Co to a playing partner?", "Overall", "NPS", "0 to 10" },
+			                { 10, "Comments", "Is there anything we could do better?", "Comments", "Comment", "Text" }
+			            }
+			        )
+			    RETURN
+			        SELECTCOLUMNS(
+			            _Rows,
+			            "QuestionKey", [QuestionKey],
+			            "Short Name", [Short Name],
+			            "Question", [Question],
+			            "Section", [Section],
+			            "Question Type", [Question Type],
+			            "Scale", [Scale]
+			        )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// Survey responses: one row per survey sent back, with when, how, whether it was finished and the NPS score.
+	function 'FosterBIServices.SampleData.GolfSurvey.Responses' = ```
+			-- Survey responses: one row per survey sent back, with when, how, whether it was finished and the NPS score.
+			( num_responses : INT64, start_date : DATETIME, end_date : DATETIME, num_respondents : INT64, seed : INT64 )
+			=>
+			    VAR _Rows =
+			        SELECTCOLUMNS( GENERATESERIES( 1, num_responses, 1 ), "_k", [Value] )
+			    VAR _Step1 =
+			        ADDCOLUMNS(
+			            _Rows,
+			            "_d", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.48, 1, FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.75, 2, FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.9, 3, 4 ),
+			            "Category", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 7, seed ) < 0.34, "Clubs", FosterBIServices.SampleData.Random( [_k], 7, seed ) < 0.52, "Balls", FosterBIServices.SampleData.Random( [_k], 7, seed ) < 0.72, "Apparel", FosterBIServices.SampleData.Random( [_k], 7, seed ) < 0.82, "Bags & Carts", "Accessories" ),
+			            "StoreKey", INT( FosterBIServices.SampleData.Random( [_k], 8, seed ) * 12 ) + 1,
+			            "Completed", FosterBIServices.SampleData.Random( [_k], 5, seed ) >= 0.12
+			        )
+			    VAR _Step2 =
+			        ADDCOLUMNS(
+			            _Step1,
+			            "Visit Type", SWITCH( [_d] - 1, 0, "In-store purchase", 1, "Online order", 2, "Club fitting", "Lesson" ),
+			            "_sat", ( POWER( FosterBIServices.SampleData.Random( [_k], 11, seed ), 0.45 ) + SWITCH( [_d] - 1, 0, 0, 1, -0.07, 2, 0.08, 0.03 ) ) + ( ( ( FosterBIServices.SampleData.Random( [_k], 3, seed ) - 0.5 ) * 0.12 ) + ( SIN( FosterBIServices.SampleData.Random( [_k], 3, seed ) * 12.566 ) * 0.05 ) ),
+			            "_answered", IF( [Completed], 10, 1 + INT( FosterBIServices.SampleData.Random( [_k], 6, seed ) * 9 ) )
+			        )
+			    VAR _Step3 =
+			        ADDCOLUMNS(
+			            _Step2,
+			            "_nps", MIN( 10, MAX( 0, INT( ( ( ( [_sat] * 0.85 ) + ( FosterBIServices.SampleData.Random( [_k], 12, seed ) * 0.3 ) ) + 0.01 ) * 11 ) ) )
+			        )
+			    VAR _Step4 =
+			        ADDCOLUMNS(
+			            _Step3,
+			            "ResponseKey", [_k],
+			            "Response ID", "R-" & FORMAT( 100000 + [_k], "000000" ),
+			            "RespondentKey", INT( POWER( FosterBIServices.SampleData.Random( [_k], 1, seed ), 1.3 ) * num_respondents ) + 1,
+			            "Response Date", start_date + INT( POWER( FosterBIServices.SampleData.Random( [_k], 3, seed ), 0.95 ) * ( INT( end_date - start_date ) + 1 ) ),
+			            "Survey Channel", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 4, seed ) < 0.42, "Email", FosterBIServices.SampleData.Random( [_k], 4, seed ) < 0.7, "Receipt QR code", FosterBIServices.SampleData.Random( [_k], 4, seed ) < 0.9, "Mobile app", "Text message" ),
+			            "Questions Answered", [_answered],
+			            "NPS Score", IF( [_answered] >= 9, [_nps], BLANK() ),
+			            "NPS Group", IF( [_answered] < 9, BLANK(), IF( [_nps] >= 9, "Promoter", IF( [_nps] >= 7, "Passive", "Detractor" ) ) )
+			        )
+			    RETURN
+			        SELECTCOLUMNS(
+			            _Step4,
+			            "ResponseKey", [ResponseKey],
+			            "Response ID", [Response ID],
+			            "RespondentKey", [RespondentKey],
+			            "Response Date", [Response Date],
+			            "Survey Channel", [Survey Channel],
+			            "Visit Type", [Visit Type],
+			            "Category", [Category],
+			            "StoreKey", [StoreKey],
+			            "Completed", [Completed],
+			            "Questions Answered", [Questions Answered],
+			            "NPS Score", [NPS Score],
+			            "NPS Group", [NPS Group]
+			        )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// Answers: one row per question answered on a response, with the score and the answer as text (comments included).
+	function 'FosterBIServices.SampleData.GolfSurvey.Answers' = ```
+			-- Answers: one row per question answered on a response, with the score and the answer as text (comments included).
+			( num_responses : INT64, seed : INT64 )
+			=>
+			    VAR _Rows =
+			        SELECTCOLUMNS( GENERATESERIES( 1, num_responses, 1 ), "_k", [Value] )
+			    VAR _Step1 =
+			        ADDCOLUMNS(
+			            _Rows,
+			            "_d", SWITCH( TRUE(), FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.48, 1, FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.75, 2, FosterBIServices.SampleData.Random( [_k], 2, seed ) < 0.9, 3, 4 ),
+			            "Completed", FosterBIServices.SampleData.Random( [_k], 5, seed ) >= 0.12
+			        )
+			    VAR _Step2 =
+			        ADDCOLUMNS(
+			            _Step1,
+			            "_sat", ( POWER( FosterBIServices.SampleData.Random( [_k], 11, seed ), 0.45 ) + SWITCH( [_d] - 1, 0, 0, 1, -0.07, 2, 0.08, 0.03 ) ) + ( ( ( FosterBIServices.SampleData.Random( [_k], 3, seed ) - 0.5 ) * 0.12 ) + ( SIN( FosterBIServices.SampleData.Random( [_k], 3, seed ) * 12.566 ) * 0.05 ) ),
+			            "_answered", IF( [Completed], 10, 1 + INT( FosterBIServices.SampleData.Random( [_k], 6, seed ) * 9 ) )
+			        )
+			    VAR _Step3 =
+			        ADDCOLUMNS(
+			            _Step2,
+			            "_nps", MIN( 10, MAX( 0, INT( ( ( ( [_sat] * 0.85 ) + ( FosterBIServices.SampleData.Random( [_k], 12, seed ) * 0.3 ) ) + 0.01 ) * 11 ) ) )
+			        )
+			    VAR _Step4 =
+			        GENERATE(
+			            _Step3,
+			            SELECTCOLUMNS( GENERATESERIES( 1, 10, 1 ), "Question Number", [Value] )
+			        )
+			    VAR _Step5 =
+			        ADDCOLUMNS(
+			            _Step4,
+			            "_ak", ( [_k] * 100 ) + [Question Number],
+			            "_t", SWITCH( [Question Number] - 1, 0, "Rating", 1, "Agreement", 2, "Agreement", 3, "Agreement", 4, "Rating", 5, "Ease", 6, "Yes/No", 7, "Agreement", 8, "NPS", "Comment" )
+			        )
+			    VAR _Step6 =
+			        ADDCOLUMNS(
+			            _Step5,
+			            "_v", ( ( [_sat] * 0.7 ) + ( FosterBIServices.SampleData.Random( [_ak], 1, seed ) * 0.3 ) ) + SWITCH( [Question Number] - 1, 0, 0, 1, 0.08, 2, -0.04, 3, -0.16, 4, 0.06, 5, 0.02, 6, -0.12, 7, 0.05, 8, 0, 0 )
+			        )
+			    VAR _Step7 =
+			        FILTER( _Step6, ( [Question Number] <= [_answered] ) && ( FosterBIServices.SampleData.Random( [_ak], 2, seed ) >= SWITCH( [Question Number] - 1, 0, 0, 1, 0.04, 2, 0.03, 3, 0.03, 4, 0.3, 5, 0.03, 6, 0.04, 7, 0.03, 8, 0, 0.62 ) ) )
+			    VAR _Step8 =
+			        ADDCOLUMNS(
+			            _Step7,
+			            "AnswerKey", [_ak],
+			            "ResponseKey", [_k],
+			            "QuestionKey", [Question Number],
+			            "Score", IF( [_t] = "NPS", [_nps], IF( [_t] = "Yes/No", IF( [_v] > 0.42, 1, 0 ), IF( [_t] = "Comment", BLANK(), MAX( 1, MIN( 5, 1 + INT( [_v] * 5 ) ) ) ) ) ),
+			            "Sentiment", IF( [_t] = "Comment", IF( [_v] >= 0.68, "Positive", IF( [_v] >= 0.45, "Neutral", "Negative" ) ), BLANK() )
+			        )
+			    VAR _Step9 =
+			        ADDCOLUMNS(
+			            _Step8,
+			            "Answer", IF( [_t] = "Comment", IF( [Sentiment] = "Positive", SWITCH( INT( FosterBIServices.SampleData.Random( [_ak], 3, seed ) * 6 ), 0, "The fitter found me fifteen extra yards with the new driver.", 1, "Staff knew their stuff and never pushed the priciest club.", 2, "Launch monitor session was brilliant, worth every minute.", 3, "Order arrived two days early, perfectly packed.", 4, "Great range of left-handed clubs, finally.", "Lesson pro fixed my slice in one session." ), IF( [Sentiment] = "Neutral", SWITCH( INT( FosterBIServices.SampleData.Random( [_ak], 3, seed ) * 5 ), 0, "Good selection, but prices are a little high.", 1, "Fitting was useful, I had to wait for a bay though.", 2, "Website works fine, filtering by shaft flex could be better.", 3, "Store was busy on Saturday morning, staff were stretched.", "Fine visit, nothing special." ), SWITCH( INT( FosterBIServices.SampleData.Random( [_ak], 3, seed ) * 6 ), 0, "The irons I wanted were out of stock again.", 1, "Waited 30 minutes for someone to help in the club section.", 2, "Checkout line was far too long.", 3, "Grips were installed crooked and I had to come back.", 4, "My online order was late and nobody told me.", "Prices on balls have gone up a lot." ) ) ), IF( [_t] = "NPS", "" & [Score], IF( [_t] = "Yes/No", IF( [Score] = 1, "Yes", "No" ), IF( [_t] = "Rating", SWITCH( [Score] - 1, 0, "Very poor", 1, "Poor", 2, "Fair", 3, "Good", "Excellent" ), IF( [_t] = "Agreement", SWITCH( [Score] - 1, 0, "Strongly disagree", 1, "Disagree", 2, "Neutral", 3, "Agree", "Strongly agree" ), SWITCH( [Score] - 1, 0, "Very difficult", 1, "Difficult", 2, "Neither easy nor difficult", 3, "Easy", "Very easy" ) ) ) ) ) )
+			        )
+			    RETURN
+			        SELECTCOLUMNS(
+			            _Step9,
+			            "AnswerKey", [AnswerKey],
+			            "ResponseKey", [ResponseKey],
+			            "QuestionKey", [QuestionKey],
+			            "Score", [Score],
+			            "Answer", [Answer],
+			            "Sentiment", [Sentiment]
+			        )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// One row per day, in whole years from the start date to the end date. Marked as the date table.
+	function 'FosterBIServices.SampleData.Dates' = ```
+			-- One row per day, in whole years from the start date to the end date. Marked as the date table.
+			( start_date : DATETIME, end_date : DATETIME )
+			=>
+			    VAR _Rows =
+			        CALENDAR( DATE( YEAR( start_date ), 1, 1 ), DATE( YEAR( end_date ), 12, 31 ) )
+			    VAR _Step1 =
+			        ADDCOLUMNS(
+			            _Rows,
+			            "Year", YEAR( [Date] ),
+			            "Quarter", "Q" & QUARTER( [Date] ),
+			            "Month Number", MONTH( [Date] ),
+			            "Month", FORMAT( [Date], "mmm" ),
+			            "Month Year", FORMAT( [Date], "mmm yyyy" ),
+			            "Month Year Sort", ( YEAR( [Date] ) * 100 ) + MONTH( [Date] ),
+			            "Weekday", FORMAT( [Date], "ddd" ),
+			            "Weekday Number", WEEKDAY( [Date], 2 )
+			        )
+			    RETURN
+			        SELECTCOLUMNS(
+			            _Step1,
+			            "Date", [Date],
+			            "Year", [Year],
+			            "Quarter", [Quarter],
+			            "Month Number", [Month Number],
+			            "Month", [Month],
+			            "Month Year", [Month Year],
+			            "Month Year Sort", [Month Year Sort],
+			            "Weekday", [Weekday],
+			            "Weekday Number", [Weekday Number]
+			        )
+			```
+
+		annotation DAXLIB_PackageId = FosterBIServices.SampleData
+
+		annotation DAXLIB_PackageVersion = 1.0.0
+
+	/// Golfers who answered the Foster Golf Co survey, with age band, gender, handicap band, rewards tier and region.
+	table Respondents
+
+		/// Key that links to Responses.
+		column RespondentKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [RespondentKey]
+
+		/// Full name of the golfer.
+		column Respondent
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Respondent]
+
+		/// Female or Male.
+		column Gender
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Gender]
+
+		/// 18-24, 25-34, 35-49, 50-64 or 65+.
+		column 'Age Band'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Age Band]
+
+		/// No handicap yet, 20+, 10-19, 0-9 or Plus.
+		column 'Handicap Band'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Handicap Band]
+
+		/// Foster Golf Rewards tier: None, Birdie, Eagle or Albatross.
+		column 'Rewards Tier'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Rewards Tier]
+
+		/// North, South, East, West or Central.
+		column Region
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Region]
+
+		partition Respondents = calculated
+			mode: import
+			source = FosterBIServices.SampleData.GolfSurvey.Respondents( 3200, DATE( 2026, 10, 31 ), 2026 )
+
+	/// The survey: one row per question, with its section, type and answer scale.
+	table Questions
+
+		/// Key that links to Answers. Also the order the questions are asked in.
+		column QuestionKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [QuestionKey]
+
+		/// A short label for visuals.
+		column 'Short Name'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Short Name]
+			sortByColumn: QuestionKey
+
+		/// The question as the respondent saw it.
+		column Question
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Question]
+			sortByColumn: QuestionKey
+
+		/// Part of the survey the question is in.
+		column Section
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Section]
+
+		/// Rating, Agreement, Ease (1 to 5), NPS (0 to 10), Yes/No or Comment.
+		column 'Question Type'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Question Type]
+
+		/// 1 to 5, 0 to 10, Yes/No or Text.
+		column Scale
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Scale]
+
+		partition Questions = calculated
+			mode: import
+			source = FosterBIServices.SampleData.GolfSurvey.Questions()
+
+	/// Survey responses: one row per survey sent back, with when, how, whether it was finished and the NPS score.
+	table Responses
+
+		/// Key that links to Answers.
+		column ResponseKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [ResponseKey]
+
+		/// Response number.
+		column 'Response ID'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Response ID]
+
+		/// Links to Respondents.
+		column RespondentKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [RespondentKey]
+
+		/// When the survey was sent back. Links to Date.
+		column 'Response Date'
+			dataType: dateTime
+			isDataTypeInferred
+			formatString: Short Date
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Response Date]
+
+		/// How the survey was answered.
+		column 'Survey Channel'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Survey Channel]
+
+		/// In-store purchase, Online order, Club fitting or Lesson: what the survey was about.
+		column 'Visit Type'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Visit Type]
+
+		/// Clubs, Balls, Apparel, Bags & Carts or Accessories: what they bought or were fitted for.
+		column Category
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Category]
+
+		/// Store the visit, fitting or lesson was at; for online orders, the store that shipped it. Links to Stores.
+		column StoreKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [StoreKey]
+
+		/// TRUE when every question was reached; FALSE when the respondent stopped part way.
+		column Completed
+			dataType: boolean
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Completed]
+
+		/// How far the respondent got, in questions (1 to 10).
+		column 'Questions Answered'
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Questions Answered]
+
+		/// Likelihood to recommend, 0 to 10. Blank when they stopped before that question.
+		column 'NPS Score'
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [NPS Score]
+
+		/// Promoter (9-10), Passive (7-8) or Detractor (0-6).
+		column 'NPS Group'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [NPS Group]
+
+		partition Responses = calculated
+			mode: import
+			source = FosterBIServices.SampleData.GolfSurvey.Responses( 7200, DATE( 2024, 11, 1 ), DATE( 2026, 10, 31 ), 3200, 2026 )
+
+	/// Answers: one row per question answered on a response, with the score and the answer as text (comments included).
+	table Answers
+
+		/// Answer number.
+		column AnswerKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [AnswerKey]
+
+		/// Links to Responses.
+		column ResponseKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [ResponseKey]
+
+		/// Links to Questions.
+		column QuestionKey
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [QuestionKey]
+
+		/// 1 to 5 (5 is best), 0 to 10 for NPS, 1 or 0 for Yes or No. Blank for comments.
+		column Score
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Score]
+
+		/// The answer as the respondent picked it, or their comment.
+		column Answer
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Answer]
+
+		/// Positive, Neutral or Negative, for comments. Blank for other questions.
+		column Sentiment
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Sentiment]
+
+		partition Answers = calculated
+			mode: import
+			source = FosterBIServices.SampleData.GolfSurvey.Answers( 7200, 2026 )
+
+	/// One row per day, in whole years from the start date to the end date. Marked as the date table.
+	table Date
+		dataCategory: Time
+
+		/// The day.
+		column Date
+			dataType: dateTime
+			isDataTypeInferred
+			isKey
+			formatString: Short Date
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Date]
+
+		/// Calendar year.
+		column Year
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Year]
+
+		/// Calendar quarter, Q1 to Q4.
+		column Quarter
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Quarter]
+
+		/// Month of the year, 1 to 12.
+		column 'Month Number'
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			isHidden
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Month Number]
+
+		/// Short month name.
+		column Month
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Month]
+			sortByColumn: 'Month Number'
+
+		/// Month and year, such as Jan 2025.
+		column 'Month Year'
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Month Year]
+			sortByColumn: 'Month Year Sort'
+
+		/// Sorts Month Year in date order.
+		column 'Month Year Sort'
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			isHidden
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Month Year Sort]
+
+		/// Short day name.
+		column Weekday
+			dataType: string
+			isDataTypeInferred
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Weekday]
+			sortByColumn: 'Weekday Number'
+
+		/// Day of the week, Monday = 1.
+		column 'Weekday Number'
+			dataType: int64
+			isDataTypeInferred
+			formatString: 0
+			isHidden
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Weekday Number]
+
+		partition Date = calculated
+			mode: import
+			source = FosterBIServices.SampleData.Dates( DATE( 2024, 11, 1 ), DATE( 2026, 10, 31 ) )
+
+	/// Measures for the sample data, in a folder for each table.
+	table _Measures
+
+		/// Surveys sent back.
+		measure 'Response Count' = COUNTROWS( Responses )
+			formatString: #,0
+			displayFolder: Responses
+
+		/// Different people who answered.
+		measure 'Respondent Count' = DISTINCTCOUNT( Responses[RespondentKey] )
+			formatString: #,0
+			displayFolder: Responses
+
+		/// Responses where every question was reached.
+		measure 'Completion Rate %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[Completed] = TRUE() ), [Response Count] )
+			formatString: 0.0%
+			displayFolder: Responses
+
+		/// Share of NPS answers that scored 9 or 10.
+		measure 'Promoters %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[NPS Group] = "Promoter" ), CALCULATE( COUNTROWS( Responses ), NOT ISBLANK( Responses[NPS Score] ) ) )
+			formatString: 0.0%
+			displayFolder: Responses
+
+		/// Share of NPS answers that scored 0 to 6.
+		measure 'Detractors %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[NPS Group] = "Detractor" ), CALCULATE( COUNTROWS( Responses ), NOT ISBLANK( Responses[NPS Score] ) ) )
+			formatString: 0.0%
+			displayFolder: Responses
+
+		/// Net Promoter Score: promoters less detractors, from -100 to 100.
+		measure NPS = ( [Promoters %] - [Detractors %] ) * 100
+			formatString: 0
+			displayFolder: Responses
+
+		/// Questions answered.
+		measure 'Answer Count' = COUNTROWS( Answers )
+			formatString: #,0
+			displayFolder: Answers
+
+		/// Average of the 1 to 5 answers (5 is best).
+		measure 'Average Score' = CALCULATE( AVERAGE( Answers[Score] ), Questions[Scale] = "1 to 5" )
+			formatString: 0.00
+			displayFolder: Answers
+
+		/// Share of 1 to 5 answers that were a 4 or 5.
+		measure 'Top 2 Box %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5", Answers[Score] >= 4 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5" ) )
+			formatString: 0.0%
+			displayFolder: Answers
+
+		/// Share of 1 to 5 answers that were a 1 or 2.
+		measure 'Bottom 2 Box %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5", Answers[Score] <= 2 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5" ) )
+			formatString: 0.0%
+			displayFolder: Answers
+
+		/// Share of Yes or No answers that were Yes.
+		measure 'Yes %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "Yes/No", Answers[Score] = 1 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "Yes/No" ) )
+			formatString: 0.0%
+			displayFolder: Answers
+
+		/// Comments left.
+		measure 'Comment Count' = CALCULATE( COUNTROWS( Answers ), Questions[Question Type] = "Comment" )
+			formatString: #,0
+			displayFolder: Answers
+
+		/// Share of comments that were negative.
+		measure 'Negative Comments %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Answers[Sentiment] = "Negative" ), [Comment Count] )
+			formatString: 0.0%
+			displayFolder: Answers
+
+		/// Share of golfers who rated their overall experience Good or Excellent.
+		measure 'Overall Satisfaction %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Answers[QuestionKey] = 1, Answers[Score] >= 4 ), CALCULATE( COUNTROWS( Answers ), Answers[QuestionKey] = 1 ) )
+			formatString: 0.0%
+			displayFolder: Answers
+
+		column Value
+			dataType: int64
+			isDataTypeInferred
+			isHidden
+			summarizeBy: none
+			isNameInferred
+			sourceColumn: [Value]
+
+		partition _Measures = calculated
+			mode: import
+			source = { 1 }
+
+	relationship afd95c8c-4577-46b4-aacc-26f029f40bd2
+		fromColumn: Responses.RespondentKey
+		toColumn: Respondents.RespondentKey
+
+	relationship 09f14270-1392-4db4-a2c7-cb768ac23922
+		fromColumn: Answers.ResponseKey
+		toColumn: Responses.ResponseKey
+
+	relationship 80451f01-7c5c-44b4-ae49-f4d385c77512
+		fromColumn: Answers.QuestionKey
+		toColumn: Questions.QuestionKey
+
+	relationship e3ef8a2a-7b81-46d4-a3ed-c58a8aaa55d6
+		fromColumn: Responses.'Response Date'
+		toColumn: Date.Date

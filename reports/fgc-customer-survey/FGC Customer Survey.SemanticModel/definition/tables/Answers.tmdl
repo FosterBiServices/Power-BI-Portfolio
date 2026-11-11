@@ -1,0 +1,118 @@
+/// Fact table: one row per question answered on a survey response, with the numeric score and the answer as text. Comment answers carry a sentiment (Positive, Neutral or Negative) instead of a score. Links to Responses on ResponseKey and to Questions on QuestionKey. Also called: survey answers, question answers, scores, ratings, replies.
+table Answers
+	lineageTag: 67408b3a-68bc-4ce4-9db0-4263f9ecbffe
+
+	/// Unique key for an answer (response number x 100 + question number). Not for display.
+	column AnswerKey
+		formatString: 0
+		lineageTag: 4f79ae50-a29b-4a0c-a144-502e3e6f5d42
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [AnswerKey]
+
+	/// Response the answer belongs to. Links to Responses[ResponseKey].
+	column ResponseKey
+		formatString: 0
+		lineageTag: 826c2fb2-2deb-4c6f-b03f-b98ec6f61fd0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ResponseKey]
+
+	/// Question the answer is for. Links to Questions[QuestionKey].
+	column QuestionKey
+		formatString: 0
+		lineageTag: fee9e939-c8c0-4707-bd91-cfb301da9688
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [QuestionKey]
+
+	/// Numeric answer: 1 to 5 (5 is best) for Rating, Agreement and Ease questions, 0 to 10 for NPS, 1 (Yes) or 0 (No) for Yes/No. Blank for comments. Also called: rating, answer score, value.
+	column Score
+		formatString: 0
+		lineageTag: d826f076-53ca-4f29-9e4f-14cd41ba625d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Score]
+
+	/// The answer as the respondent picked it (such as Agree or Excellent), or the text of their comment. Also called: response text, comment, verbatim, answer text.
+	column Answer
+		lineageTag: cefd8612-6351-4a74-8a68-7533381c2562
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Answer]
+
+	/// Tone of a comment: Positive, Neutral or Negative. Blank for other questions. Also called: tone, comment sentiment, feeling.
+	column Sentiment
+		lineageTag: 4c4237b9-4cfd-47cf-b7a7-0bc537dbfd0d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Sentiment]
+
+	partition Answers = calculated
+		mode: import
+		source =
+				-- Answers: one row per question answered on a response, with the score and the answer as text (comments included).
+				VAR __ResponseCount = 7200
+				VAR __RandomSeed = 2026
+				VAR __BaseRows =
+				    SELECTCOLUMNS( GENERATESERIES( 1, __ResponseCount, 1 ), "__RowNumber", [Value] )
+				VAR __WithVisitTypeAndCompletion =
+				    ADDCOLUMNS(
+				        __BaseRows,
+				        "__VisitTypeIndex", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.48, 1, MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.75, 2, MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.9, 3, 4 ),
+				        "Completed", MOD( SIN( [__RowNumber] * 12.9898 + 5 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) >= 0.12
+				    )
+				VAR __WithSatisfaction =
+				    ADDCOLUMNS(
+				        __WithVisitTypeAndCompletion,
+				        "__Satisfaction", ( POWER( MOD( SIN( [__RowNumber] * 12.9898 + 11 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ), 0.45 ) + SWITCH( [__VisitTypeIndex] - 1, 0, 0, 1, -0.07, 2, 0.08, 0.03 ) ) + ( ( ( MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) - 0.5 ) * 0.12 ) + ( SIN( MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 12.566 ) * 0.05 ) ),
+				        "__QuestionsAnswered", IF( [Completed], 10, 1 + INT( MOD( SIN( [__RowNumber] * 12.9898 + 6 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 9 ) )
+				    )
+				VAR __WithNpsScore =
+				    ADDCOLUMNS(
+				        __WithSatisfaction,
+				        "__NpsScore", MIN( 10, MAX( 0, INT( ( ( ( [__Satisfaction] * 0.85 ) + ( MOD( SIN( [__RowNumber] * 12.9898 + 12 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 0.3 ) ) + 0.01 ) * 11 ) ) )
+				    )
+				VAR __OneRowPerQuestion =
+				    GENERATE(
+				        __WithNpsScore,
+				        SELECTCOLUMNS( GENERATESERIES( 1, 10, 1 ), "Question Number", [Value] )
+				    )
+				VAR __WithAnswerKeyAndType =
+				    ADDCOLUMNS(
+				        __OneRowPerQuestion,
+				        "__AnswerKey", ( [__RowNumber] * 100 ) + [Question Number],
+				        "__QuestionType", SWITCH( [Question Number] - 1, 0, "Rating", 1, "Agreement", 2, "Agreement", 3, "Agreement", 4, "Rating", 5, "Ease", 6, "Yes/No", 7, "Agreement", 8, "NPS", "Comment" )
+				    )
+				VAR __WithAnswerValue =
+				    ADDCOLUMNS(
+				        __WithAnswerKeyAndType,
+				        "__AnswerValue", ( ( [__Satisfaction] * 0.7 ) + ( MOD( SIN( [__AnswerKey] * 12.9898 + 1 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 0.3 ) ) + SWITCH( [Question Number] - 1, 0, 0, 1, 0.08, 2, -0.04, 3, -0.16, 4, 0.06, 5, 0.02, 6, -0.12, 7, 0.05, 8, 0, 0 )
+				    )
+				VAR __AnsweredQuestionsOnly =
+				    FILTER( __WithAnswerValue, ( [Question Number] <= [__QuestionsAnswered] ) && ( MOD( SIN( [__AnswerKey] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) >= SWITCH( [Question Number] - 1, 0, 0, 1, 0.04, 2, 0.03, 3, 0.03, 4, 0.3, 5, 0.03, 6, 0.04, 7, 0.03, 8, 0, 0.62 ) ) )
+				VAR __WithScoreAndSentiment =
+				    ADDCOLUMNS(
+				        __AnsweredQuestionsOnly,
+				        "AnswerKey", [__AnswerKey],
+				        "ResponseKey", [__RowNumber],
+				        "QuestionKey", [Question Number],
+				        "Score", IF( [__QuestionType] = "NPS", [__NpsScore], IF( [__QuestionType] = "Yes/No", IF( [__AnswerValue] > 0.42, 1, 0 ), IF( [__QuestionType] = "Comment", BLANK(), MAX( 1, MIN( 5, 1 + INT( [__AnswerValue] * 5 ) ) ) ) ) ),
+				        "Sentiment", IF( [__QuestionType] = "Comment", IF( [__AnswerValue] >= 0.68, "Positive", IF( [__AnswerValue] >= 0.45, "Neutral", "Negative" ) ), BLANK() )
+				    )
+				VAR __WithAnswerText =
+				    ADDCOLUMNS(
+				        __WithScoreAndSentiment,
+				        "Answer", IF( [__QuestionType] = "Comment", IF( [Sentiment] = "Positive", SWITCH( INT( MOD( SIN( [__AnswerKey] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 6 ), 0, "The fitter found me fifteen extra yards with the new driver.", 1, "Staff knew their stuff and never pushed the priciest club.", 2, "Launch monitor session was brilliant, worth every minute.", 3, "Order arrived two days early, perfectly packed.", 4, "Great range of left-handed clubs, finally.", "Lesson pro fixed my slice in one session." ), IF( [Sentiment] = "Neutral", SWITCH( INT( MOD( SIN( [__AnswerKey] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 5 ), 0, "Good selection, but prices are a little high.", 1, "Fitting was useful, I had to wait for a bay though.", 2, "Website works fine, filtering by shaft flex could be better.", 3, "Store was busy on Saturday morning, staff were stretched.", "Fine visit, nothing special." ), SWITCH( INT( MOD( SIN( [__AnswerKey] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 6 ), 0, "The irons I wanted were out of stock again.", 1, "Waited 30 minutes for someone to help in the club section.", 2, "Checkout line was far too long.", 3, "Grips were installed crooked and I had to come back.", 4, "My online order was late and nobody told me.", "Prices on balls have gone up a lot." ) ) ), IF( [__QuestionType] = "NPS", "" & [Score], IF( [__QuestionType] = "Yes/No", IF( [Score] = 1, "Yes", "No" ), IF( [__QuestionType] = "Rating", SWITCH( [Score] - 1, 0, "Very poor", 1, "Poor", 2, "Fair", 3, "Good", "Excellent" ), IF( [__QuestionType] = "Agreement", SWITCH( [Score] - 1, 0, "Strongly disagree", 1, "Disagree", 2, "Neutral", 3, "Agree", "Strongly agree" ), SWITCH( [Score] - 1, 0, "Very difficult", 1, "Difficult", 2, "Neither easy nor difficult", 3, "Easy", "Very easy" ) ) ) ) ) )
+				    )
+				RETURN
+				    SELECTCOLUMNS(
+				        __WithAnswerText,
+				        "AnswerKey", [AnswerKey],
+				        "ResponseKey", [ResponseKey],
+				        "QuestionKey", [QuestionKey],
+				        "Score", [Score],
+				        "Answer", [Answer],
+				        "Sentiment", [Sentiment]
+				    )
+

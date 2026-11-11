@@ -1,0 +1,16 @@
+/// Slicer values for which page of the ranked store chart is shown (Chart Patterns, Top N per page). Helper for a visual, not for analysis.
+table 'Page Number'
+	lineageTag: 9958550a-6a17-4c77-913a-19d8d3b711e3
+
+	/// Page of the ranked store chart to show. Helper for a visual, not for analysis.
+	column 'Page Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a3dd956-dea2-45a7-9d4d-6264753baace
+		summarizeBy: none
+		sourceColumn: [Value]
+
+	partition 'Page Number' = calculated
+		mode: import
+		source = GENERATESERIES ( 1, 12, 1 )
+

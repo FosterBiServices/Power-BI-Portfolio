@@ -1,0 +1,17 @@
+/// Disconnected list of every day from the first to the last survey response. Not related to any table, so slicers and filters never move it. The end of its last completed month is the as-of date that anchors the periods and the 12-month charts. Not for analysis. Also called: as of date table.
+table 'Report Dates'
+	lineageTag: 385029d7-eae6-4e8a-8712-1ecbfd2c7b04
+
+	/// Every day from the first to the last survey response. Its last date sets the as-of date. Not related to other tables.
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 08c5a0e7-0202-43f8-83d4-ac05eb5c4f67
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+	partition 'Report Dates' = calculated
+		mode: import
+		source = CALENDAR( MIN( Responses[Response Date] ), MAX( Responses[Response Date] ) )
+

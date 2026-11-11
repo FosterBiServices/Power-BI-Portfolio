@@ -1,0 +1,154 @@
+/// Fact table: one row per survey sent back by a Foster Golf Co customer after a visit (in-store purchase, online order, club fitting or lesson). Holds the date, channel, visit type, store, whether every question was reached, and the 0 to 10 likelihood-to-recommend (NPS) score. Fictional data from the Foster BI Toolkit Sample Data Maker, Nov 2024 to Oct 2026, completed months only. Also called: survey responses, surveys, submissions, feedback, survey returns.
+table Responses
+	lineageTag: a86f9944-dd50-43cd-bf2d-ad6c21cf1081
+
+	/// Unique key for a survey response. Links to Answers[ResponseKey]. Not for display. Also called: response key.
+	column ResponseKey
+		formatString: 0
+		lineageTag: 4cbef8cc-2585-4292-b3cc-a8f9f54be928
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ResponseKey]
+
+	/// Survey response number shown to people, such as R-100042. Also called: survey id, response number, submission id.
+	column 'Response ID'
+		lineageTag: 253137c9-31c1-44b6-bb78-6bba5cb7b928
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Response ID]
+
+	/// Key of the golfer who sent the survey back. Links to Respondents[RespondentKey].
+	column RespondentKey
+		formatString: 0
+		lineageTag: a66d098b-aa1d-46bf-ab57-8f0e421d3759
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RespondentKey]
+
+	/// Date the survey was sent back. Links to Date[Date]. Also called: survey date, submitted date, response day.
+	column 'Response Date'
+		formatString: Short Date
+		lineageTag: 988fcf56-e45e-4b43-94b5-0112ae1112ea
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Response Date]
+
+	/// How the survey was answered: Email, Receipt QR code, Text message or Mobile app. Also called: channel, survey method, source.
+	column 'Survey Channel'
+		lineageTag: 7abf471f-c2b9-45ef-a386-b88ea69d0f15
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Survey Channel]
+
+	/// What the survey was about: In-store purchase, Online order, Club fitting or Lesson. Also called: visit, interaction type, touchpoint, service type.
+	column 'Visit Type'
+		lineageTag: 3dfc3f56-aed8-4f84-9b34-9a9b9965c3a6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Visit Type]
+
+	/// Product category bought or fitted: Clubs, Balls, Apparel, Bags & Carts or Accessories. Also called: product category, department.
+	column Category
+		lineageTag: 648b3e25-3e75-4e46-8b13-9a37d560f9c1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Category]
+
+	/// Store the visit, fitting or lesson was at; for online orders, the store that shipped it. Links to Stores[StoreKey].
+	column StoreKey
+		formatString: 0
+		lineageTag: 09233038-b8ca-44ff-9fbb-53995d4daaf4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [StoreKey]
+
+	/// TRUE when the respondent reached every question; FALSE when they stopped part way. Also called: finished, complete, fully answered.
+	column Completed
+		lineageTag: e27d78f3-5a06-4937-a7ae-709ee517cffe
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Completed]
+
+	/// How far the respondent got, in questions (1 to 10). Also called: progress, questions reached.
+	column 'Questions Answered'
+		formatString: 0
+		lineageTag: 14929818-af65-4426-bd4d-b7c2ba0b5a50
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Questions Answered]
+
+	/// Likelihood to recommend Foster Golf Co, 0 (not at all) to 10 (extremely likely). Blank when the respondent stopped before that question. Also called: recommend score, likelihood to recommend, LTR.
+	column 'NPS Score'
+		formatString: 0
+		lineageTag: 5e7969b9-aeda-4521-967a-78f11f15dffd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [NPS Score]
+
+	/// Net Promoter group from the NPS score: Promoter (9-10), Passive (7-8) or Detractor (0-6). Blank when not answered. Also called: NPS category, promoter group, NPS segment.
+	column 'NPS Group'
+		lineageTag: fa1b1458-623b-4c80-9bd0-b5fc85cb3bab
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [NPS Group]
+
+	partition Responses = calculated
+		mode: import
+		source =
+				-- Survey responses: one row per survey sent back, with when, how, whether it was finished and the NPS score.
+				VAR __ResponseCount = 7200
+				VAR __StartDate = DATE( 2024, 11, 1 )
+				VAR __EndDate = DATE( 2026, 10, 31 )
+				VAR __RespondentCount = 3200
+				VAR __RandomSeed = 2026
+				VAR __BaseRows =
+				    SELECTCOLUMNS( GENERATESERIES( 1, __ResponseCount, 1 ), "__RowNumber", [Value] )
+				VAR __WithVisitStoreAndCompletion =
+				    ADDCOLUMNS(
+				        __BaseRows,
+				        "__VisitTypeIndex", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.48, 1, MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.75, 2, MOD( SIN( [__RowNumber] * 12.9898 + 2 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.9, 3, 4 ),
+				        "Category", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 7 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.34, "Clubs", MOD( SIN( [__RowNumber] * 12.9898 + 7 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.52, "Balls", MOD( SIN( [__RowNumber] * 12.9898 + 7 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.72, "Apparel", MOD( SIN( [__RowNumber] * 12.9898 + 7 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.82, "Bags & Carts", "Accessories" ),
+				        "StoreKey", INT( MOD( SIN( [__RowNumber] * 12.9898 + 8 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 12 ) + 1,
+				        "Completed", MOD( SIN( [__RowNumber] * 12.9898 + 5 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) >= 0.12
+				    )
+				VAR __WithVisitTypeAndSatisfaction =
+				    ADDCOLUMNS(
+				        __WithVisitStoreAndCompletion,
+				        "Visit Type", SWITCH( [__VisitTypeIndex] - 1, 0, "In-store purchase", 1, "Online order", 2, "Club fitting", "Lesson" ),
+				        "__Satisfaction", ( POWER( MOD( SIN( [__RowNumber] * 12.9898 + 11 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ), 0.45 ) + SWITCH( [__VisitTypeIndex] - 1, 0, 0, 1, -0.07, 2, 0.08, 0.03 ) ) + ( ( ( MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) - 0.5 ) * 0.12 ) + ( SIN( MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 12.566 ) * 0.05 ) ),
+				        "__QuestionsAnswered", IF( [Completed], 10, 1 + INT( MOD( SIN( [__RowNumber] * 12.9898 + 6 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 9 ) )
+				    )
+				VAR __WithNpsScore =
+				    ADDCOLUMNS(
+				        __WithVisitTypeAndSatisfaction,
+				        "__NpsScore", MIN( 10, MAX( 0, INT( ( ( ( [__Satisfaction] * 0.85 ) + ( MOD( SIN( [__RowNumber] * 12.9898 + 12 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) * 0.3 ) ) + 0.01 ) * 11 ) ) )
+				    )
+				VAR __WithOutputColumns =
+				    ADDCOLUMNS(
+				        __WithNpsScore,
+				        "ResponseKey", [__RowNumber],
+				        "Response ID", "R-" & FORMAT( 100000 + [__RowNumber], "000000" ),
+				        "RespondentKey", INT( POWER( MOD( SIN( [__RowNumber] * 12.9898 + 1 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ), 1.3 ) * __RespondentCount ) + 1,
+				        "Response Date", __StartDate + INT( POWER( MOD( SIN( [__RowNumber] * 12.9898 + 3 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ), 0.95 ) * ( INT( __EndDate - __StartDate ) + 1 ) ),
+				        "Survey Channel", SWITCH( TRUE(), MOD( SIN( [__RowNumber] * 12.9898 + 4 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.42, "Email", MOD( SIN( [__RowNumber] * 12.9898 + 4 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.7, "Receipt QR code", MOD( SIN( [__RowNumber] * 12.9898 + 4 * 78.233 + __RandomSeed * 37.719 ) * 43758.5453, 1 ) < 0.9, "Mobile app", "Text message" ),
+				        "Questions Answered", [__QuestionsAnswered],
+				        "NPS Score", IF( [__QuestionsAnswered] >= 9, [__NpsScore], BLANK() ),
+				        "NPS Group", IF( [__QuestionsAnswered] < 9, BLANK(), IF( [__NpsScore] >= 9, "Promoter", IF( [__NpsScore] >= 7, "Passive", "Detractor" ) ) )
+				    )
+				RETURN
+				    SELECTCOLUMNS(
+				        __WithOutputColumns,
+				        "ResponseKey", [ResponseKey],
+				        "Response ID", [Response ID],
+				        "RespondentKey", [RespondentKey],
+				        "Response Date", [Response Date],
+				        "Survey Channel", [Survey Channel],
+				        "Visit Type", [Visit Type],
+				        "Category", [Category],
+				        "StoreKey", [StoreKey],
+				        "Completed", [Completed],
+				        "Questions Answered", [Questions Answered],
+				        "NPS Score", [NPS Score],
+				        "NPS Group", [NPS Group]
+				    )
+

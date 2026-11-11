@@ -1,0 +1,100 @@
+createOrReplace
+
+	ref table _Measures
+
+		/// First day of the selected period.
+		measure 'Window Start' =
+				
+				VAR _AsOf =
+				    EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+				
+				VAR _P =
+				    SELECTEDVALUE ( Period[Key], "LM" )
+				
+				VAR _EndFull =
+				    EOMONTH ( _AsOf, -1 )
+				
+				VAR _LastQuarterEnd =
+				    EOMONTH (
+				        DATE (
+				            YEAR ( _AsOf ),
+				            ( ROUNDUP ( MONTH ( _AsOf ) / 3, 0 ) - 1 ) * 3 + 1,
+				            1
+				        ),
+				        -1
+				    )
+				
+				VAR _S =
+				    SWITCH (
+				        _P,
+				        "MTD", DATE ( YEAR ( _AsOf ), MONTH ( _AsOf ), 1 ),
+				
+				        "QTD",
+				            DATE (
+				                YEAR ( _LastQuarterEnd ),
+				                ( ROUNDUP ( MONTH ( _LastQuarterEnd ) / 3, 0 ) - 1 ) * 3 + 1,
+				                1
+				            ),
+				
+				        "L3M", EOMONTH ( _AsOf, -3 ) + 1,
+				        "YTD", DATE ( YEAR ( _AsOf ), 1, 1 ),
+				        "L12M", EOMONTH ( _AsOf, -12 ) + 1,
+				        EOMONTH ( _EndFull, -1 ) + 1
+				    )
+				
+				VAR _E =
+				    SWITCH (
+				        TRUE (),
+				        _P = "LM", _EndFull,
+				        _P = "QTD", _LastQuarterEnd,
+				        EOMONTH ( _AsOf, 0 )
+				    )
+				
+				VAR _Shift =
+				    SWITCH (
+				        _P,
+				        "MTD", -1,
+				        "QTD", -3,
+				        -12
+				    )
+				
+				VAR _CS =
+				    EDATE ( _S, _Shift )
+				
+				VAR _CE =
+				    IF (
+				        _E = EOMONTH ( _E, 0 ),
+				        EOMONTH ( _E, _Shift ),
+				        EDATE ( _E, _Shift )
+				    )
+				
+				VAR _XS =
+				    SWITCH (
+				        _P,
+				        "LM", EDATE ( _S, -1 ),
+				        "L3M", EDATE ( _S, -3 ),
+				        "YTD", DATE ( YEAR ( _AsOf ) - 1, 1, 1 ),
+				        "L12M", BLANK (),
+				        EDATE ( _S, -12 )
+				    )
+				
+				VAR _XE =
+				    SWITCH (
+				        _P,
+				        "LM", _S - 1,
+				        "L3M", _S - 1,
+				        "YTD", DATE ( YEAR ( _AsOf ) - 1, 12, 31 ),
+				        "L12M", BLANK (),
+				        IF (
+				            _E = EOMONTH ( _E, 0 ),
+				            EOMONTH ( _E, -12 ),
+				            EDATE ( _E, -12 )
+				        )
+				    )
+				
+				RETURN
+				    _S
+			formatString: mmm d, yyyy
+			displayFolder: Date window
+			lineageTag: 7de9c402-b409-47f1-8b78-11bca456cb6e
+

@@ -1,0 +1,228 @@
+createOrReplace
+
+	/// Moves any measure into the selected calendar period, the period it is compared with, or an extra context period.
+	/// The period comes from the Period buttons, anchored on the last completed month: MTD, QTD, YTD, Last 3M and Last 12M include it; Last month is the completed month before it.
+	table 'Time Window'
+		lineageTag: fd813fe5-33e2-454a-abf1-9c527098cc94
+
+		calculationGroup
+			precedence: 20
+
+			/// The period picked on the Window buttons.
+			calculationItem 'Selected window' =
+					VAR _AsOf =
+						EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+
+					VAR _P =
+						SELECTEDVALUE ( Period[Key], "LM" )
+
+					VAR _EndFull =
+						EOMONTH ( _AsOf, -1 )
+
+					VAR _LastQuarterEnd =
+						EOMONTH (
+							DATE (
+								YEAR ( _AsOf ),
+								( ROUNDUP ( MONTH ( _AsOf ) / 3, 0 ) - 1 ) * 3 + 1,
+								1
+							),
+							-1
+						)
+
+					VAR _S =
+						SWITCH (
+							_P,
+							"MTD",
+								DATE ( YEAR ( _AsOf ), MONTH ( _AsOf ), 1 ),
+
+							"QTD",
+								DATE (
+									YEAR ( _LastQuarterEnd ),
+									( ROUNDUP ( MONTH ( _LastQuarterEnd ) / 3, 0 ) - 1 ) * 3 + 1,
+									1
+								),
+
+							"L3M",
+								EOMONTH ( _AsOf, -3 ) + 1,
+
+							"YTD",
+								DATE ( YEAR ( _AsOf ), 1, 1 ),
+
+							"L12M",
+								EOMONTH ( _AsOf, -12 ) + 1,
+
+							EOMONTH ( _EndFull, -1 ) + 1
+						)
+
+					VAR _E =
+						SWITCH (
+							TRUE (),
+							_P = "LM", _EndFull,
+							_P = "QTD", _LastQuarterEnd,
+							EOMONTH ( _AsOf, 0 )
+						)
+					VAR _Shift = SWITCH ( _P, "MTD", -1, "QTD", -3, -12 )
+					VAR _CS = EDATE ( _S, _Shift )
+					VAR _CE = IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, _Shift ), EDATE ( _E, _Shift ) )
+					VAR _XS =
+					    SWITCH (
+					        _P,
+					        "LM", EDATE ( _S, -1 ),
+					        "L3M", EDATE ( _S, -3 ),
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 1, 1 ),
+					        "L12M", BLANK (),
+					        EDATE ( _S, -12 )
+					    )
+					VAR _XE =
+					    SWITCH (
+					        _P,
+					        "LM", _S - 1,
+					        "L3M", _S - 1,
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 12, 31 ),
+					        "L12M", BLANK (),
+					        IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, -12 ), EDATE ( _E, -12 ) )
+					    )
+					RETURN
+					    CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], _S, _E ) )
+
+			/// What the change is measured against: same days last month (MTD), same point last quarter (QTD), prior 12 months (Last 12M), otherwise the same period last year.
+			calculationItem 'Comparison window' =
+					VAR _AsOf =
+						EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+
+					VAR _P =
+						SELECTEDVALUE ( Period[Key], "LM" )
+
+					VAR _EndFull =
+						EOMONTH ( _AsOf, -1 )
+
+					VAR _LastQuarterEnd =
+						EOMONTH (
+							DATE (
+								YEAR ( _AsOf ),
+								( ROUNDUP ( MONTH ( _AsOf ) / 3, 0 ) - 1 ) * 3 + 1,
+								1
+							),
+							-1
+						)
+
+					VAR _S =
+						SWITCH (
+							_P,
+							"MTD",
+								DATE ( YEAR ( _AsOf ), MONTH ( _AsOf ), 1 ),
+
+							"QTD",
+								DATE (
+									YEAR ( _LastQuarterEnd ),
+									( ROUNDUP ( MONTH ( _LastQuarterEnd ) / 3, 0 ) - 1 ) * 3 + 1,
+									1
+								),
+
+							"L3M",
+								EOMONTH ( _AsOf, -3 ) + 1,
+
+							"YTD",
+								DATE ( YEAR ( _AsOf ), 1, 1 ),
+
+							"L12M",
+								EOMONTH ( _AsOf, -12 ) + 1,
+
+							EOMONTH ( _EndFull, -1 ) + 1
+						)
+
+					VAR _E =
+						SWITCH (
+							TRUE (),
+							_P = "LM", _EndFull,
+							_P = "QTD", _LastQuarterEnd,
+							EOMONTH ( _AsOf, 0 )
+						)
+					VAR _Shift = SWITCH ( _P, "MTD", -1, "QTD", -3, -12 )
+					VAR _CS = EDATE ( _S, _Shift )
+					VAR _CE = IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, _Shift ), EDATE ( _E, _Shift ) )
+					VAR _XS =
+					    SWITCH (
+					        _P,
+					        "LM", EDATE ( _S, -1 ),
+					        "L3M", EDATE ( _S, -3 ),
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 1, 1 ),
+					        "L12M", BLANK (),
+					        EDATE ( _S, -12 )
+					    )
+					VAR _XE =
+					    SWITCH (
+					        _P,
+					        "LM", _S - 1,
+					        "L3M", _S - 1,
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 12, 31 ),
+					        "L12M", BLANK (),
+					        IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, -12 ), EDATE ( _E, -12 ) )
+					    )
+					RETURN
+					    CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], _CS, _CE ) )
+
+			/// Extra context on the cards: last year (MTD, QTD), the month before (Last month), the previous 3 months (Last 3M), all of last year (YTD). None for Last 12M.
+			calculationItem 'Context window' =
+					VAR _AsOf = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR _P = SELECTEDVALUE ( Period[Key], "LM" )
+					VAR _EndFull = EOMONTH ( _AsOf, -1 )
+					VAR _S =
+					    SWITCH (
+					        _P,
+					        "MTD", DATE ( YEAR ( _AsOf ), MONTH ( _AsOf ), 1 ),
+					        "QTD", EOMONTH (
+									DATE (
+										YEAR ( _AsOf ),
+										( ROUNDUP ( MONTH ( _AsOf ) / 3, 0 ) - 1 ) * 3 + 1,
+										1
+									),
+									-1
+								),
+					        "L3M", EOMONTH ( _AsOf, -3 ) + 1,
+					        "YTD", DATE ( YEAR ( _AsOf ), 1, 1 ),
+					        "L12M", EOMONTH ( _AsOf, -12 ) + 1,
+					        EOMONTH ( _EndFull, -1 ) + 1
+					    )
+					VAR _E = IF ( _P = "LM", _EndFull, EOMONTH ( _AsOf, 0 ) )
+					VAR _Shift = SWITCH ( _P, "MTD", -1, "QTD", -3, -12 )
+					VAR _CS = EDATE ( _S, _Shift )
+					VAR _CE = IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, _Shift ), EDATE ( _E, _Shift ) )
+					VAR _XS =
+					    SWITCH (
+					        _P,
+					        "LM", EDATE ( _S, -1 ),
+					        "L3M", EDATE ( _S, -3 ),
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 1, 1 ),
+					        "L12M", BLANK (),
+					        EDATE ( _S, -12 )
+					    )
+					VAR _XE =
+					    SWITCH (
+					        _P,
+					        "LM", _S - 1,
+					        "L3M", _S - 1,
+					        "YTD", DATE ( YEAR ( _AsOf ) - 1, 12, 31 ),
+					        "L12M", BLANK (),
+					        IF ( _E = EOMONTH ( _E, 0 ), EOMONTH ( _E, -12 ), EDATE ( _E, -12 ) )
+					    )
+					RETURN
+					    IF ( NOT ISBLANK ( _XS ), CALCULATE ( SELECTEDMEASURE (), DATESBETWEEN ( 'Date'[Date], _XS, _XE ) ) )
+
+		column Window
+			dataType: string
+			lineageTag: dda2b5db-bc9a-463f-b7ca-768cc831f5e7
+			summarizeBy: none
+			sourceColumn: Name
+			sortByColumn: Ordinal
+
+		column Ordinal
+			dataType: int64
+			isHidden
+			formatString: 0
+			lineageTag: 51a1b5d5-c5f8-4ea3-aa16-fa241a65ae1a
+			summarizeBy: sum
+			sourceColumn: Ordinal
+
+		partition 'Time Window' = calculationGroup
+

@@ -1,0 +1,102 @@
+/// Calculation group for the month-by-month table on the Trends page: the metric for each month, the month before, the same month last year, and the changes between them. Months outside the 12-month frame are blank. Also called: month over month, year over year, MoM, YoY.
+table Comparison
+	lineageTag: 2eb3305a-9aa2-49a9-9865-917299d58049
+
+	calculationGroup
+		precedence: 10
+
+		/// The metric for the month in the row.
+		calculationItem Value =
+				IF (
+					ISSELECTEDMEASURE ( [In Trend Frame], [In Window], [Trend Bar Color], [Trend Label Color] ),
+					SELECTEDMEASURE (),
+					VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR __IsInTwelveMonthFrame = MIN ( 'Date'[Date] ) >= EOMONTH ( __AsOfDate, -12 ) + 1 && MAX ( 'Date'[Date] ) <= EOMONTH ( __AsOfDate, 0 )
+					RETURN
+					IF (
+						__IsInTwelveMonthFrame,
+						SELECTEDMEASURE ()
+					)
+				)
+
+		/// The metric for the month before the month in the row.
+		calculationItem 'Last month' =
+				IF (
+					ISSELECTEDMEASURE ( [In Trend Frame], [In Window], [Trend Bar Color], [Trend Label Color] ),
+					SELECTEDMEASURE (),
+					VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR __IsInTwelveMonthFrame = MIN ( 'Date'[Date] ) >= EOMONTH ( __AsOfDate, -12 ) + 1 && MAX ( 'Date'[Date] ) <= EOMONTH ( __AsOfDate, 0 )
+					RETURN
+					IF (
+						__IsInTwelveMonthFrame,
+						CALCULATE ( SELECTEDMEASURE (), DATEADD ( 'Date'[Date], -1, MONTH ) )
+					)
+				)
+
+		/// The month in the row less the month before (points, percentage points or count).
+		calculationItem 'Change vs last month' =
+				IF (
+					ISSELECTEDMEASURE ( [In Trend Frame], [In Window], [Trend Bar Color], [Trend Label Color] ),
+					SELECTEDMEASURE (),
+					VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR __IsInTwelveMonthFrame = MIN ( 'Date'[Date] ) >= EOMONTH ( __AsOfDate, -12 ) + 1 && MAX ( 'Date'[Date] ) <= EOMONTH ( __AsOfDate, 0 )
+					RETURN
+					IF (
+						__IsInTwelveMonthFrame,
+						VAR __CurrentValue = SELECTEDMEASURE ()
+						VAR __PriorValue = CALCULATE ( SELECTEDMEASURE (), DATEADD ( 'Date'[Date], -1, MONTH ) )
+						RETURN
+							IF ( NOT ISBLANK ( __CurrentValue ) && NOT ISBLANK ( __PriorValue ), __CurrentValue - __PriorValue )
+					)
+				)
+
+		/// The metric for the same month a year earlier.
+		calculationItem 'Last year' =
+				IF (
+					ISSELECTEDMEASURE ( [In Trend Frame], [In Window], [Trend Bar Color], [Trend Label Color] ),
+					SELECTEDMEASURE (),
+					VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR __IsInTwelveMonthFrame = MIN ( 'Date'[Date] ) >= EOMONTH ( __AsOfDate, -12 ) + 1 && MAX ( 'Date'[Date] ) <= EOMONTH ( __AsOfDate, 0 )
+					RETURN
+					IF (
+						__IsInTwelveMonthFrame,
+						CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+					)
+				)
+
+		/// The month in the row less the same month a year earlier.
+		calculationItem 'Change vs last year' =
+				IF (
+					ISSELECTEDMEASURE ( [In Trend Frame], [In Window], [Trend Bar Color], [Trend Label Color] ),
+					SELECTEDMEASURE (),
+					VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+					VAR __IsInTwelveMonthFrame = MIN ( 'Date'[Date] ) >= EOMONTH ( __AsOfDate, -12 ) + 1 && MAX ( 'Date'[Date] ) <= EOMONTH ( __AsOfDate, 0 )
+					RETURN
+					IF (
+						__IsInTwelveMonthFrame,
+						VAR __CurrentValue = SELECTEDMEASURE ()
+						VAR __PriorValue = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+						RETURN
+							IF ( NOT ISBLANK ( __CurrentValue ) && NOT ISBLANK ( __PriorValue ), __CurrentValue - __PriorValue )
+					)
+				)
+
+	/// Column header in the Trends month-by-month table: Value, Last month, Change vs last month, Last year or Change vs last year.
+	column Comparison
+		dataType: string
+		lineageTag: 0f40ce8f-442c-4f2b-9e8a-5e6ce9ba1056
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+	/// Calculation item order.
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8d773f06-1f53-460b-a169-a7c9507ef37f
+		summarizeBy: sum
+		sourceColumn: Ordinal
+
+	partition Comparison = calculationGroup
+

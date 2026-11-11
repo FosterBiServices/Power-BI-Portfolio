@@ -1,0 +1,128 @@
+/// Calendar dimension marked as the date table: one row per day for whole calendar years 2024 to 2026. Links to Responses on Response Date. Also called: calendar, dates, time.
+table Date
+	lineageTag: 3b5fdb5c-2f0c-445f-84b3-5d5048054bc6
+	dataCategory: Time
+
+	/// Calendar day. The date table's key; links to Responses[Response Date]. Also called: day, calendar date.
+	column Date
+		isKey
+		formatString: Short Date
+		lineageTag: e9acf1ab-c81a-4fc9-8355-fcf474061b56
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+	/// Calendar year, such as 2026. Also called: calendar year.
+	column Year
+		formatString: 0
+		lineageTag: 89735fee-5c3e-4ebf-958a-a756c5ecd1fa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+	/// Calendar quarter, Q1 to Q4. Also called: qtr, calendar quarter.
+	column Quarter
+		lineageTag: d83087e2-d958-472d-9ceb-eba5ba9afe20
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+	/// Month of the year, 1 (January) to 12 (December). Sort helper.
+	column 'Month Number'
+		isHidden
+		formatString: 0
+		lineageTag: f9a27f73-b3f7-40c9-9295-261ec6984522
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+	/// Short month name, Jan to Dec. Sorted by Month Number. Also called: month name.
+	column Month
+		lineageTag: 7c383933-7668-43fa-84b7-fac156526420
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+	/// Month and year, such as Jan 2026. Sorted by Month Year Sort. Also called: period, year month, month of year.
+	column 'Month Year'
+		lineageTag: d4db88b4-5e5f-425a-85cc-67539b7fe025
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: 'Month Year Sort'
+
+	/// Year x 100 + month (such as 202601). Sorts Month Year and Month Label in date order. Sort helper.
+	column 'Month Year Sort'
+		isHidden
+		formatString: 0
+		lineageTag: 64495c60-055a-49c1-8166-b96cc06fba88
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year Sort]
+
+	/// Short day name, Mon to Sun. Sorted by Weekday Number. Also called: day of week, day name.
+	column Weekday
+		lineageTag: a5d7f29b-5137-44c8-af49-ebb82aca7e83
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday]
+		sortByColumn: 'Weekday Number'
+
+	/// Day of the week, Monday = 1 to Sunday = 7. Sort helper.
+	column 'Weekday Number'
+		isHidden
+		formatString: 0
+		lineageTag: e8f9a419-ae5a-4879-b052-86dddf1e6024
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+	/// First day of the month, shown as a 3-letter month (Nov) on the 12-month charts. Sorts by date. Also called: month, month beginning.
+	column 'Month Start' = DATE( YEAR( 'Date'[Date] ), MONTH( 'Date'[Date] ), 1 )
+		dataType: dateTime
+		formatString: mmm
+		lineageTag: 7c600d91-f8bb-4223-9080-03021286df3c
+		summarizeBy: none
+
+	/// Month and 2-digit year, such as Nov 25, for chart labels. Sorted by Month Year Sort.
+	column 'Month Label' = FORMAT( 'Date'[Date], "mmm yy" )
+		dataType: string
+		lineageTag: be3d29d8-01b4-4f06-aa67-9cdf94e01b5d
+		summarizeBy: none
+		sortByColumn: 'Month Year Sort'
+
+	partition Date = calculated
+		mode: import
+		source =
+				-- One row per day, in whole years from the start date to the end date. Marked as the date table.
+				VAR __StartDate = DATE( 2024, 11, 1 )
+				VAR __EndDate = DATE( 2026, 10, 31 )
+				VAR __AllDays =
+				    CALENDAR( DATE( YEAR( __StartDate ), 1, 1 ), DATE( YEAR( __EndDate ), 12, 31 ) )
+				VAR __WithCalendarColumns =
+				    ADDCOLUMNS(
+				        __AllDays,
+				        "Year", YEAR( [Date] ),
+				        "Quarter", "Q" & QUARTER( [Date] ),
+				        "Month Number", MONTH( [Date] ),
+				        "Month", FORMAT( [Date], "mmm" ),
+				        "Month Year", FORMAT( [Date], "mmm yyyy" ),
+				        "Month Year Sort", ( YEAR( [Date] ) * 100 ) + MONTH( [Date] ),
+				        "Weekday", FORMAT( [Date], "ddd" ),
+				        "Weekday Number", WEEKDAY( [Date], 2 )
+				    )
+				RETURN
+				    SELECTCOLUMNS(
+				        __WithCalendarColumns,
+				        "Date", [Date],
+				        "Year", [Year],
+				        "Quarter", [Quarter],
+				        "Month Number", [Month Number],
+				        "Month", [Month],
+				        "Month Year", [Month Year],
+				        "Month Year Sort", [Month Year Sort],
+				        "Weekday", [Weekday],
+				        "Weekday Number", [Weekday Number]
+				    )
+

@@ -1,0 +1,781 @@
+/// Home table for every measure, grouped in display folders: Survey (core survey metrics), KPI cards, Questions, Comments, Date window, Chart patterns and Header. The Survey folder holds the measures to use for analysis; the others drive specific visuals. Also called: measures, metrics, KPIs.
+table _Measures
+	lineageTag: af99adb8-c6b4-42ff-93c3-c7fbcdd62699
+
+	/// Number of surveys sent back (rows in Responses) in the current filter context. Use this for survey volume. Also called: responses, surveys, survey count, number of surveys, response volume.
+	measure 'Response Count' = COUNTROWS( Responses )
+		formatString: #,0
+		displayFolder: Survey
+		lineageTag: c8bec5c8-9c49-478b-8f20-78e325247958
+
+	/// Number of different golfers who sent back at least one survey. Also called: respondents, golfers, unique customers, people surveyed.
+	measure 'Respondent Count' = DISTINCTCOUNT( Responses[RespondentKey] )
+		formatString: #,0
+		displayFolder: Survey
+		lineageTag: 46d0a579-30c8-4cc9-9d43-846fbc9816bc
+
+	/// Share of responses where the respondent reached every question. 0% to 100%, higher is better. Also called: completion rate, finish rate, completion %.
+	measure 'Completion Rate %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[Completed] = TRUE() ), [Response Count] )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: a4703fff-aab5-4d13-94cc-64cb161e96b8
+
+	/// Share of NPS answers that scored 9 or 10. Higher is better. Also called: promoters, promoter share, % promoters.
+	measure 'Promoters %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[NPS Group] = "Promoter" ), CALCULATE( COUNTROWS( Responses ), NOT ISBLANK( Responses[NPS Score] ) ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: 40c0ca98-6167-49cc-ba8d-dd70c72675f0
+
+	/// Share of NPS answers that scored 0 to 6. Lower is better. Also called: detractors, detractor share, % detractors.
+	measure 'Detractors %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[NPS Group] = "Detractor" ), CALCULATE( COUNTROWS( Responses ), NOT ISBLANK( Responses[NPS Score] ) ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: 2ab23205-06f0-412b-8aed-f0d4b4b6f3a8
+
+	/// Net Promoter Score: Promoters % less Detractors %, times 100. Ranges -100 to 100; higher is better, above 0 means more promoters than detractors. Also called: net promoter score, recommend score, loyalty, likelihood to recommend.
+	measure NPS = ( [Promoters %] - [Detractors %] ) * 100
+		formatString: 0
+		displayFolder: Survey
+		lineageTag: e726b388-6482-4909-861d-4a57f5dc07d5
+
+	/// Number of questions answered (rows in Answers), comments included. Also called: answers, number of answers.
+	measure 'Answer Count' = COUNTROWS( Answers )
+		formatString: #,0
+		displayFolder: Survey
+		lineageTag: 348a999e-6ec5-4925-8ea5-5278014a1a41
+
+	/// Average of the 1 to 5 answers (Rating, Agreement and Ease questions). 1 to 5, higher is better. Also called: average rating, mean score, avg score.
+	measure 'Average Score' = CALCULATE( AVERAGE( Answers[Score] ), Questions[Scale] = "1 to 5" )
+		formatString: 0.00
+		displayFolder: Survey
+		lineageTag: 7dc7784d-9292-458c-8079-36e3aeba6f41
+
+	/// Share of 1 to 5 answers that were a 4 or 5 (Good, Agree, Easy or better). Also called positive answers. Higher is better. Also called: top 2 box, T2B, positive answers, favorable %, positive %.
+	measure 'Top 2 Box %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5", Answers[Score] >= 4 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5" ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: a230756c-214f-440a-ac59-9c222ca31e1f
+
+	/// Share of 1 to 5 answers that were a 1 or 2. Lower is better. Also called: bottom 2 box, B2B, negative answers, unfavorable %.
+	measure 'Bottom 2 Box %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5", Answers[Score] <= 2 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "1 to 5" ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: fa446186-b8b5-470a-96bd-dc972dca5b47
+
+	/// Share of Yes/No answers that were Yes (the In stock question). Higher is better. Also called: yes rate, in stock %.
+	measure 'Yes %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "Yes/No", Answers[Score] = 1 ), CALCULATE( COUNTROWS( Answers ), Questions[Scale] = "Yes/No" ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: 95995114-ed23-46ff-9ea7-bdd673a522ee
+
+	/// Number of comments left on the free-text question. Also called: comments, number of comments, verbatims.
+	measure 'Comment Count' = CALCULATE( COUNTROWS( Answers ), Questions[Question Type] = "Comment" )
+		formatString: #,0
+		displayFolder: Survey
+		lineageTag: 2f33178e-7b2b-4ce5-8572-fe8ccd0864cc
+
+	/// Share of comments with a negative tone. Lower is better. Also called: negative comments, negative sentiment, complaint rate.
+	measure 'Negative Comments %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Answers[Sentiment] = "Negative" ), [Comment Count] )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: bd5797b5-b8e0-4209-854e-6600a1a36597
+
+	/// Share of golfers who rated their overall experience Good or Excellent (4 or 5 on the Overall experience question). 0% to 100%, higher is better. Also called: satisfaction, CSAT, overall satisfaction, satisfied customers.
+	measure 'Overall Satisfaction %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Answers[QuestionKey] = 1, Answers[Score] >= 4 ), CALCULATE( COUNTROWS( Answers ), Answers[QuestionKey] = 1 ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: ac971e8f-4068-4bd3-b465-07f5389c2014
+
+	/// Share of NPS answers that scored 7 or 8. Also called: passives, passive share, % passives.
+	measure 'Passives %' = DIVIDE( CALCULATE( COUNTROWS( Responses ), Responses[NPS Group] = "Passive" ), CALCULATE( COUNTROWS( Responses ), NOT ISBLANK( Responses[NPS Score] ) ) )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: b759eccd-9511-4822-abf1-bb5faea41c37
+
+	/// Share of comments with a positive tone. Higher is better. Also called: positive comments, positive sentiment, praise rate.
+	measure 'Positive Comments %' = DIVIDE( CALCULATE( COUNTROWS( Answers ), Answers[Sentiment] = "Positive" ), [Comment Count] )
+		formatString: 0.0%
+		displayFolder: Survey
+		lineageTag: b32d8b83-0a8f-4b62-83fe-c4e4d4eb7ca3
+
+	/// Share of a question's 1 to 5 answers that gave the score in context. Used by the answer-distribution chart. Also called: answer distribution, score share.
+	measure 'Answer Share %' = DIVIDE( [Answer Count], CALCULATE( [Answer Count], REMOVEFILTERS( 'Score Band' ) ) )
+		formatString: 0%
+		displayFolder: Survey
+		lineageTag: eb3cb3cf-a0aa-4dc4-b5ca-b0ebaeb07efc
+
+	/// End of the last completed month in the data. Every period and the 12-month charts are anchored here. Also called: as of, reporting date, data through.
+	measure 'As Of Date' = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+		formatString: mmm d, yyyy
+		displayFolder: Date window
+		lineageTag: 2efef224-a56d-4709-a866-53d2b63a211c
+
+	/// First day of the selected period. Also called: period start, start date.
+	measure 'Window Start' =
+			VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+			VAR __PeriodKey = SELECTEDVALUE ( Period[Key], "LCM" )
+			VAR __LastQuarterEnd = EOMONTH ( __AsOfDate, - MOD ( MONTH ( __AsOfDate ), 3 ) )
+			VAR __PeriodStart =
+			    SWITCH (
+			        __PeriodKey,
+			        "LCM", EOMONTH ( __AsOfDate, -1 ) + 1,
+			        "LM", EOMONTH ( __AsOfDate, -2 ) + 1,
+			        "LCQ", EOMONTH ( __LastQuarterEnd, -3 ) + 1,
+			        "L3M", EOMONTH ( __AsOfDate, -3 ) + 1,
+			        "YTD", DATE ( YEAR ( __AsOfDate ), 1, 1 ),
+			        "L12M", EOMONTH ( __AsOfDate, -12 ) + 1
+			    )
+			VAR __PeriodEnd =
+			    SWITCH (
+			        __PeriodKey,
+			        "LM", EOMONTH ( __AsOfDate, -1 ),
+			        "LCQ", __LastQuarterEnd,
+			        __AsOfDate
+			    )
+			VAR __CompareStart = EDATE ( __PeriodStart, -12 )
+			VAR __CompareEnd = EOMONTH ( __PeriodEnd, -12 )
+			VAR __MonthsBack = SWITCH ( __PeriodKey, "LCM", 1, "LM", 1, "LCQ", 3, "L3M", 3, 0 )
+			VAR __ContextStart =
+			    SWITCH (
+			        TRUE (),
+			        __MonthsBack > 0, EDATE ( __PeriodStart, - __MonthsBack ),
+			        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 1, 1 )
+			    )
+			VAR __ContextEnd =
+			    SWITCH (
+			        TRUE (),
+			        __MonthsBack > 0, __PeriodStart - 1,
+			        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 12, 31 )
+			    )
+			RETURN
+			    __PeriodStart
+		formatString: mmm d, yyyy
+		displayFolder: Date window
+		lineageTag: 0bc54464-ede9-4675-836b-d63e68359079
+
+	/// The selected period, its dates and its response count, for the line under the page header.
+	measure 'Window Label' =
+			VAR __PeriodStart = [Window Start]
+			VAR __PeriodEnd = [Window End]
+			VAR __DateRangeText = IF ( __PeriodStart = __PeriodEnd, FORMAT ( __PeriodStart, "mmm d, yyyy" ), FORMAT ( __PeriodStart, "mmm d" ) & IF ( YEAR ( __PeriodStart ) <> YEAR ( __PeriodEnd ), FORMAT ( __PeriodStart, ", yyyy" ) ) & " – " & FORMAT ( __PeriodEnd, "mmm d, yyyy" ) )
+			RETURN
+			    [Window Name] & ":  " & __DateRangeText & "   ·   " & FORMAT ( [Responses (Window)], "#,0" ) & " responses"
+		displayFolder: Date window
+		lineageTag: b515408a-6187-4860-8004-5d85ff22fd10
+
+	/// Subtitle for the 12-month charts. Helper for a visual, not for analysis.
+	measure 'Trend Subtitle' =
+			VAR __FrameStart = EOMONTH ( [As Of Date], -12 ) + 1
+			RETURN
+			    "12 months, " & FORMAT ( __FrameStart, "mmm yyyy" ) & " – " & FORMAT ( [As Of Date], "mmm yyyy" ) & ".  Navy: months in the selected period (" & [Window Name] & ")."
+		displayFolder: Date window
+		lineageTag: 3acbb72f-4c68-4315-a9b7-41832be1fadf
+
+	/// Visual filter for the 12-month charts: 1 for the 12 months ending with the last completed month. Helper for a visual, not for analysis.
+	measure 'In Trend Frame' =
+			VAR __FrameStart = EOMONTH ( [As Of Date], -12 ) + 1
+			VAR __FrameEnd = EOMONTH ( [As Of Date], 0 )
+			RETURN
+			    IF ( MIN ( 'Date'[Date] ) >= __FrameStart && MAX ( 'Date'[Date] ) <= __FrameEnd, 1, 0 )
+		formatString: 0
+		displayFolder: Date window
+		lineageTag: e6156de8-4b5f-429a-9cde-d5e265261100
+
+	/// 1 when the month in context has any days in the selected period.
+	measure 'In Window' =
+			VAR __WindowStart = [Window Start]
+			VAR __WindowEnd = [Window End]
+			RETURN
+			    IF ( MAX ( 'Date'[Date] ) >= __WindowStart && MIN ( 'Date'[Date] ) <= __WindowEnd, 1, 0 )
+		formatString: 0
+		displayFolder: Date window
+		lineageTag: 0131a394-e554-4dd5-b29a-e3930557f630
+
+	/// Column color on the 12-month charts: navy for months in the selected period, light grey otherwise. Helper for a visual, not for analysis.
+	measure 'Trend Bar Color' = IF ( [In Window] = 1, "#01305C", "#C9D3DE" )
+		displayFolder: Date window
+		lineageTag: a29f64c0-c0df-4f72-bf81-815af592f117
+
+	/// Data label color on the 12-month charts, matching Trend Bar Color. Helper for a visual, not for analysis.
+	measure 'Trend Label Color' = IF ( [In Window] = 1, "#01305C", "#8295A7" )
+		displayFolder: Date window
+		lineageTag: c20ea0b4-0146-46de-8b43-04d191abdd1b
+
+	/// Net Promoter Score. In the selected period (Period buttons). -100 to 100, higher is better. Also called: net promoter score this period, NPS this period, net promoter score, NPS, recommend score, loyalty score.
+	measure 'NPS (Window)' = CALCULATE ( [NPS], 'Time Window'[Window] = "Selected window" )
+		formatString: 0
+		displayFolder: KPI cards
+		lineageTag: 4257149c-06a4-4f2b-8bdd-cd39791ba0c9
+
+	/// Net Promoter Score. In the comparison period: the same months a year earlier (the 12 months before for Last 12M). Also called: net promoter score last year, NPS last year.
+	measure 'NPS (Prior)' = CALCULATE ( [NPS], 'Time Window'[Window] = "Comparison window" )
+		formatString: 0
+		displayFolder: KPI cards
+		lineageTag: 330b08ef-1393-4132-aeff-df9dca69fc98
+
+	/// Net Promoter Score: selected period less the comparison period, in points. Positive is better. Also called: net promoter score change, NPS change, vs last year, year over year change.
+	measure 'NPS Change' = [NPS (Window)] - [NPS (Prior)]
+		formatString: 0.0
+		displayFolder: KPI cards
+		lineageTag: b7837c20-f8d2-4d55-bd9b-636843b71ce4
+
+	/// Card text for the NPS change, with an arrow, such as "▲ 2.7 pp vs same month last year". Grey note when there are too few responses. Helper for a visual, not for analysis.
+	measure 'NPS Change Label' =
+			VAR __Change = [NPS Change]
+			RETURN
+			    IF (
+			        ISBLANK ( __Change ),
+			        "No data to compare",
+			        IF (
+			            [Too Few Responses] = 1,
+			            "◆ " & FORMAT ( [Responses (Window)], "#,0" ) & " responses: too few to compare",
+			            IF ( ABS ( __Change ) < 1, "◆ ", IF ( __Change > 0, "▲ ", "▼ " ) ) & FORMAT ( ABS ( __Change ), "0.0" ) & " pts" & " vs " & [Compare Name]
+			        )
+			    )
+		displayFolder: KPI cards
+		lineageTag: c0c07671-217d-4ae3-b61f-2282f6ce5144
+
+	/// Font color for the NPS change: green better, amber about the same, red worse, grey when there are too few responses. Helper for a visual, not for analysis.
+	measure 'NPS Change Color' =
+			VAR __Change = [NPS Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || [Too Few Responses] = 1, "#6B7A90", ABS ( __Change ) < 1, "#9C5700", __Change > 0, "#006100", "#9C0006" )
+		displayFolder: KPI cards
+		lineageTag: a61bdb81-b25a-4246-b541-6738ace179de
+
+	/// Overall satisfaction: share of golfers who rated their overall experience Good or Excellent (4 or 5 out of 5). In the selected period (Period buttons). 0% to 100%, higher is better. Also called: satisfaction this period, CSAT this period, satisfaction, CSAT, overall satisfaction, happy customers.
+	measure 'Satisfaction (Window)' = CALCULATE ( [Overall Satisfaction %], 'Time Window'[Window] = "Selected window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: f83abc80-2ad4-493c-b15d-b5126c69dd65
+
+	/// Overall satisfaction: share of golfers who rated their overall experience Good or Excellent (4 or 5 out of 5). In the comparison period: the same months a year earlier (the 12 months before for Last 12M). Also called: satisfaction last year, CSAT last year.
+	measure 'Satisfaction (Prior)' = CALCULATE ( [Overall Satisfaction %], 'Time Window'[Window] = "Comparison window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 5657654d-6a52-42c8-9802-15b6f2aaca91
+
+	/// Overall satisfaction: share of golfers who rated their overall experience Good or Excellent (4 or 5 out of 5): selected period less the comparison period, in percentage points. Positive is better. Also called: satisfaction change, CSAT change, vs last year, year over year change.
+	measure 'Satisfaction Change' = [Satisfaction (Window)] - [Satisfaction (Prior)]
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 6b8244b4-2bed-44a5-8dc4-66eb79596144
+
+	/// Card text for the Satisfaction change, with an arrow, such as "▲ 2.7 pp vs same month last year". Grey note when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Satisfaction Change Label' =
+			VAR __Change = [Satisfaction Change]
+			RETURN
+			    IF (
+			        ISBLANK ( __Change ),
+			        "No data to compare",
+			        IF (
+			            [Too Few Responses] = 1,
+			            "◆ " & FORMAT ( [Responses (Window)], "#,0" ) & " responses: too few to compare",
+			            IF ( ABS ( __Change ) < 0.005, "◆ ", IF ( __Change > 0, "▲ ", "▼ " ) ) & FORMAT ( ABS ( __Change ) * 100, "0.0" ) & " pp" & " vs " & [Compare Name]
+			        )
+			    )
+		displayFolder: KPI cards
+		lineageTag: a882750e-c560-4071-81f8-0edf4f8a9bea
+
+	/// Font color for the Satisfaction change: green better, amber about the same, red worse, grey when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Satisfaction Change Color' =
+			VAR __Change = [Satisfaction Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || [Too Few Responses] = 1, "#6B7A90", ABS ( __Change ) < 0.005, "#9C5700", __Change > 0, "#006100", "#9C0006" )
+		displayFolder: KPI cards
+		lineageTag: 0d41b763-e5dd-47d8-a510-f9ea3fd21648
+
+	/// Number of surveys sent back. In the selected period (Period buttons). a count, higher means more feedback. Also called: survey count this period, number of responses this period, survey count, number of responses, response volume, surveys.
+	measure 'Responses (Window)' = CALCULATE ( [Response Count], 'Time Window'[Window] = "Selected window" )
+		formatString: #,0
+		displayFolder: KPI cards
+		lineageTag: 94adbdca-7b73-41fb-a8a0-5fd7d3d64b87
+
+	/// Number of surveys sent back. In the comparison period: the same months a year earlier (the 12 months before for Last 12M). Also called: survey count last year, number of responses last year.
+	measure 'Responses (Prior)' = CALCULATE ( [Response Count], 'Time Window'[Window] = "Comparison window" )
+		formatString: #,0
+		displayFolder: KPI cards
+		lineageTag: c6a1867b-769a-49b8-9c43-fe38f83eaa91
+
+	/// Number of surveys sent back: selected period less the comparison period, in % change. Also called: survey count change, number of responses change, vs last year, year over year change.
+	measure 'Responses Change' = DIVIDE ( [Responses (Window)] - [Responses (Prior)], [Responses (Prior)] )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: bdffc649-1c79-4ee8-827c-2922c9635a21
+
+	/// Card text for the Responses change, with an arrow, such as "▲ 2.7 pp vs same month last year". Grey note when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Responses Change Label' =
+			VAR __Change = [Responses Change]
+			RETURN
+			    IF (
+			        ISBLANK ( __Change ),
+			        "No data to compare",
+			        IF (
+			            [Too Few Responses] = 1,
+			            "◆ " & FORMAT ( [Responses (Window)], "#,0" ) & " responses: too few to compare",
+			            IF ( ABS ( __Change ) < 0.02, "◆ ", IF ( __Change > 0, "▲ ", "▼ " ) ) & FORMAT ( ABS ( __Change ), "0.0%" ) & " vs " & [Compare Name]
+			        )
+			    )
+		displayFolder: KPI cards
+		lineageTag: 4362a52b-a5f5-4a0c-9980-ec23205c9469
+
+	/// Font color for the Responses change: green better, amber about the same, red worse, grey when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Responses Change Color' =
+			VAR __Change = [Responses Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || [Too Few Responses] = 1, "#6B7A90", ABS ( __Change ) < 0.02, "#9C5700", __Change > 0, "#006100", "#9C0006" )
+		displayFolder: KPI cards
+		lineageTag: 2402c13f-9409-4dde-b2d5-8aa600b6e7e2
+
+	/// Completion rate: share of responses that reached the last question. In the selected period (Period buttons). 0% to 100%, higher is better. Also called: completion rate this period, finish rate this period, completion rate, finish rate, survey completion.
+	measure 'Completion (Window)' = CALCULATE ( [Completion Rate %], 'Time Window'[Window] = "Selected window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: d03917fc-9427-4992-977c-7f9028e143c1
+
+	/// Completion rate: share of responses that reached the last question. In the comparison period: the same months a year earlier (the 12 months before for Last 12M). Also called: completion rate last year, finish rate last year.
+	measure 'Completion (Prior)' = CALCULATE ( [Completion Rate %], 'Time Window'[Window] = "Comparison window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: bb0a2de1-d53a-42fb-8b27-8ac618d077a7
+
+	/// Completion rate: share of responses that reached the last question: selected period less the comparison period, in percentage points. Positive is better. Also called: completion rate change, finish rate change, vs last year, year over year change.
+	measure 'Completion Change' = [Completion (Window)] - [Completion (Prior)]
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 8f36acbf-2b7f-4c5e-b8ec-dd3f9ac9405b
+
+	/// Card text for the Completion change, with an arrow, such as "▲ 2.7 pp vs same month last year". Grey note when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Completion Change Label' =
+			VAR __Change = [Completion Change]
+			RETURN
+			    IF (
+			        ISBLANK ( __Change ),
+			        "No data to compare",
+			        IF (
+			            [Too Few Responses] = 1,
+			            "◆ " & FORMAT ( [Responses (Window)], "#,0" ) & " responses: too few to compare",
+			            IF ( ABS ( __Change ) < 0.005, "◆ ", IF ( __Change > 0, "▲ ", "▼ " ) ) & FORMAT ( ABS ( __Change ) * 100, "0.0" ) & " pp" & " vs " & [Compare Name]
+			        )
+			    )
+		displayFolder: KPI cards
+		lineageTag: 06e36b68-003c-415a-8f14-0d4c0286de96
+
+	/// Font color for the Completion change: green better, amber about the same, red worse, grey when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Completion Change Color' =
+			VAR __Change = [Completion Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || [Too Few Responses] = 1, "#6B7A90", ABS ( __Change ) < 0.005, "#9C5700", __Change > 0, "#006100", "#9C0006" )
+		displayFolder: KPI cards
+		lineageTag: f5a86475-01b0-4241-a01c-c0bce3e065f9
+
+	/// Share of comments with a negative tone. In the selected period (Period buttons). 0% to 100%, lower is better. Also called: negative comments this period, complaints rate this period, negative comments, complaints rate, negative feedback, negative sentiment.
+	measure 'Negative Comments (Window)' = CALCULATE ( [Negative Comments %], 'Time Window'[Window] = "Selected window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: e3a37e5b-faf2-42d3-88de-f6355eb2f958
+
+	/// Share of comments with a negative tone. In the comparison period: the same months a year earlier (the 12 months before for Last 12M). Also called: negative comments last year, complaints rate last year.
+	measure 'Negative Comments (Prior)' = CALCULATE ( [Negative Comments %], 'Time Window'[Window] = "Comparison window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 815c8eab-dcdf-48de-9d78-e49afd38adaa
+
+	/// Share of comments with a negative tone: selected period less the comparison period, in percentage points. Negative is better. Also called: negative comments change, complaints rate change, vs last year, year over year change.
+	measure 'Negative Comments Change' = [Negative Comments (Window)] - [Negative Comments (Prior)]
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 864e06c9-715f-4c78-8b84-0ee281319031
+
+	/// Card text for the Negative Comments change, with an arrow, such as "▲ 2.7 pp vs same month last year". Grey note when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Negative Comments Change Label' =
+			VAR __Change = [Negative Comments Change]
+			RETURN
+			    IF (
+			        ISBLANK ( __Change ),
+			        "No data to compare",
+			        IF (
+			            [Too Few Responses] = 1,
+			            "◆ " & FORMAT ( [Responses (Window)], "#,0" ) & " responses: too few to compare",
+			            IF ( ABS ( __Change ) < 0.005, "◆ ", IF ( __Change > 0, "▲ ", "▼ " ) ) & FORMAT ( ABS ( __Change ) * 100, "0.0" ) & " pp" & " vs " & [Compare Name]
+			        )
+			    )
+		displayFolder: KPI cards
+		lineageTag: e03e4392-d53a-4ed6-83cf-fbb46c97df9d
+
+	/// Font color for the Negative Comments change: green better, amber about the same, red worse, grey when there are too few responses. Helper for a visual, not for analysis.
+	measure 'Negative Comments Change Color' =
+			VAR __Change = [Negative Comments Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || [Too Few Responses] = 1, "#6B7A90", ABS ( __Change ) < 0.005, "#9C5700", __Change < 0, "#006100", "#9C0006" )
+		displayFolder: KPI cards
+		lineageTag: b105a4e7-a36c-4283-b83e-21fa49732add
+
+	/// Top 2 Box % (share of 1 to 5 answers that were a 4 or 5). In the selected period (Period buttons). Also called: positive answers, top 2 box this period.
+	measure 'Top 2 Box (Window)' = CALCULATE ( [Top 2 Box %], 'Time Window'[Window] = "Selected window" )
+		formatString: 0.0%
+		displayFolder: Questions
+		lineageTag: 90753076-b061-4cbc-9601-80db51704e2d
+
+	/// Average 1 to 5 score. In the selected period (Period buttons). Also called: average rating this period.
+	measure 'Average Score (Window)' = CALCULATE ( [Average Score], 'Time Window'[Window] = "Selected window" )
+		formatString: 0.00
+		displayFolder: Questions
+		lineageTag: c8595bdc-9dea-492d-9680-a56dfecb3952
+
+	/// Top 2 Box % in the selected period less the comparison period (same months a year earlier), in percentage points. Positive is better. Also called: vs prior, top 2 box change, change in positive answers.
+	measure 'Top 2 Box Change' = [Top 2 Box (Window)] - CALCULATE ( [Top 2 Box %], 'Time Window'[Window] = "Comparison window" )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Questions
+		lineageTag: f0e66c0e-748f-4334-8d88-729b81ff8f8b
+
+	/// Font color for the scorecard's vs prior column: green better, amber about the same, red worse. Helper for a visual, not for analysis.
+	measure 'Top 2 Box Change Color' =
+			VAR __Change = [Top 2 Box Change]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( __Change ) || ABS ( __Change ) < 0.01, "#9C5700", __Change > 0, "#006100", "#9C0006" )
+		displayFolder: Questions
+		lineageTag: 30a776b1-b4a8-4d16-8ed1-b580201855d5
+
+	/// Number of answers. In the selected period (Period buttons).
+	measure 'Answers (Window)' = CALCULATE ( [Answer Count], 'Time Window'[Window] = "Selected window" )
+		formatString: #,0
+		displayFolder: Questions
+		lineageTag: 43a1ba3b-a958-4ff7-a918-3010746fe35a
+
+	/// Empty bar whose label sits above each real bar (Chart Patterns, labels above bars). Helper for a visual, not for analysis.
+	measure 'Top 2 Box Label Spacer' = IF ( ISBLANK ( [Top 2 Box (Window)] ), BLANK (), 0 )
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: 3070bbe0-d6fa-4487-8ec6-2bb1dc0c4b05
+
+	/// Question short name for the label above each bar. Helper for a visual, not for analysis.
+	measure 'Selected Question' = SELECTEDVALUE ( Questions[Short Name] )
+		displayFolder: Chart patterns
+		lineageTag: 3c6f8717-e776-4d2b-b8f4-05f8d0842846
+
+	/// Answers and average score, shown next to the question name. Helper for a visual, not for analysis.
+	measure 'Top 2 Box Answers Label' = "n = " & FORMAT ( [Answers (Window)], "#,0" ) & "  ·  avg " & FORMAT ( [Average Score (Window)], "0.00" )
+		displayFolder: Chart patterns
+		lineageTag: e19d01bd-ef29-46a7-b040-8c67357d1666
+
+	/// Each visit type's share of all responses in the selected period. Also called: share of responses, mix, percent of total.
+	measure 'Responses % of Total' = DIVIDE ( [Responses (Window)], CALCULATE ( [Responses (Window)], REMOVEFILTERS ( Responses[Visit Type] ) ) )
+		formatString: 0%
+		displayFolder: Chart patterns
+		lineageTag: 232beb4e-6327-4be4-9ba2-45fe74c9fb29
+
+	/// Height of the % label on the bubbles chart (Chart Patterns, bubbles). Helper for a visual, not for analysis.
+	measure 'Responses Bubble Label' =
+			VAR __LargestVisitTypeCount = MAXX ( ALLSELECTED ( Responses[Visit Type] ), [Responses (Window)] )
+			RETURN
+			    IF ( NOT ISBLANK ( [Responses (Window)] ), __LargestVisitTypeCount * 1.6 )
+		formatString: #,0
+		displayFolder: Chart patterns
+		lineageTag: 081f44e3-2893-4fb3-8d3d-59824f7f7c7b
+
+	/// Height of the bubble on the bubbles chart (Chart Patterns, bubbles). Helper for a visual, not for analysis.
+	measure 'Responses Bubble Position' =
+			VAR __LargestVisitTypeCount = MAXX ( ALLSELECTED ( Responses[Visit Type] ), [Responses (Window)] )
+			RETURN
+			    IF ( NOT ISBLANK ( [Responses (Window)] ), __LargestVisitTypeCount * 1.7 )
+		formatString: #,0
+		displayFolder: Chart patterns
+		lineageTag: 5f6580e7-3cdb-489d-a4d5-cc0b542a3990
+
+	/// Y-axis maximum that leaves room for the bubbles. Helper for a visual, not for analysis.
+	measure 'Responses Bubble Axis Max' =
+			VAR __LargestVisitTypeCount = MAXX ( ALLSELECTED ( Responses[Visit Type] ), [Responses (Window)] )
+			RETURN
+			    __LargestVisitTypeCount * 2.2
+		formatString: #,0
+		displayFolder: Chart patterns
+		lineageTag: 4ab577ed-88ea-4d90-bc64-d0789bdd3db3
+
+	/// NPS for the visit type, shown in the tooltip.
+	measure 'NPS by Visit Type Label' = "NPS " & FORMAT ( [NPS (Window)], "0" )
+		displayFolder: Chart patterns
+		lineageTag: 2f0a559f-a6c3-4c4b-9a42-142af82c8702
+
+	/// Rank of the store by overall satisfaction in the selected period, 1 = best, no ties. Also called: store ranking, rank.
+	measure 'Store Rank' =
+			IF (
+			    ISBLANK ( [Satisfaction (Window)] ) || NOT HASONEVALUE ( Stores[Store] ),
+			    BLANK (),
+			    RANK (
+			        ALL ( Stores[Store] ),
+			        ORDERBY ( [Satisfaction (Window)], DESC, Stores[Store], ASC )
+			    )
+			)
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: 6faf8ba1-90f1-468b-ac14-f8c0a2fe9738
+
+	/// The #rank badge text, such as #1. Helper for a visual, not for analysis.
+	measure 'Store Rank Label' =
+			VAR __StoreRank = [Store Rank]
+			RETURN
+			    IF ( ISBLANK ( __StoreRank ), BLANK (), "#" & FORMAT ( __StoreRank, "#,0" ) )
+		displayFolder: Chart patterns
+		lineageTag: 19ddd911-c668-43b5-90b5-795d34bc3ddd
+
+	/// X-axis maximum, the same on every page, with room for the value label. Helper for a visual, not for analysis.
+	measure 'Store Page Axis Max' = CALCULATE ( MAXX ( VALUES ( Stores[Store] ), [Satisfaction (Window)] ), REMOVEFILTERS ( Stores ) ) * 1.05
+		formatString: 0.0%
+		displayFolder: Chart patterns
+		lineageTag: 17d4cb90-ea5f-406f-a7aa-579c48ecdb2a
+
+	/// Invisible bar just past each store bar that can carry its value label. Helper for a visual, not for analysis.
+	measure 'Store Label Carrier' = IF ( ISBLANK ( [Satisfaction (Window)] ), BLANK (), 0.5 * CALCULATE ( MAXX ( VALUES ( Stores[Store] ), [Satisfaction (Window)] ), REMOVEFILTERS ( Stores ) ) )
+		formatString: 0.0%
+		displayFolder: Chart patterns
+		lineageTag: b1352d6e-3bcc-40c6-9991-4323c0a10a49
+
+	/// X-axis minimum that leaves room for the rank badge. Helper for a visual, not for analysis.
+	measure 'Store Page Axis Min' = -0.2 * [Store Page Axis Max]
+		formatString: 0.0%
+		displayFolder: Chart patterns
+		lineageTag: a96cc76c-ccb4-4b11-b613-7493835fa430
+
+	/// Hidden bar that carries the #rank label. Helper for a visual, not for analysis.
+	measure 'Store Rank Badge' = IF ( ISBLANK ( [Satisfaction (Window)] ), BLANK (), -0.15 * [Store Page Axis Max] )
+		formatString: 0.0%
+		displayFolder: Chart patterns
+		lineageTag: d43205de-4d9e-432a-a7b8-344ea6d3d7ae
+
+	/// Stores per page picked on the per-page slicer (default 6). Helper for a visual, not for analysis.
+	measure 'Items per Page Value' = SELECTEDVALUE ( 'Items per Page'[Items per Page], 6 )
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: a2699a67-9e1d-49e8-a96f-735dfeaec44b
+
+	/// Page picked on the page slicer (default 1). Helper for a visual, not for analysis.
+	measure 'Page Number Value' = SELECTEDVALUE ( 'Page Number'[Page Number], 1 )
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: 2882dfca-a483-4c5b-8e9a-6f5889ffd50d
+
+	/// Visual filter: 1 for stores on the chosen page. Helper for a visual, not for analysis.
+	measure 'Store Item Filter' =
+			VAR __PageNumber = [Page Number Value]
+			VAR __ItemsPerPage = [Items per Page Value]
+			VAR __StoreRank = [Store Rank]
+			RETURN
+			    IF ( ISBLANK ( [Satisfaction (Window)] ), 0,
+			        IF ( __StoreRank > ( __PageNumber - 1 ) * __ItemsPerPage && __StoreRank <= __PageNumber * __ItemsPerPage, 1, 0 )
+			    )
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: 25981a71-ba58-4295-a4cf-450a70c0b3a0
+
+	/// Visual filter for the page slicer: 1 for pages that have stores. Helper for a visual, not for analysis.
+	measure 'Store Page Filter' =
+			VAR __RankedStoreCount =
+			    COUNTROWS ( FILTER ( ALL ( Stores[Store] ), NOT ISBLANK ( [Satisfaction (Window)] ) ) )
+			VAR __PageCount = ROUNDUP ( DIVIDE ( __RankedStoreCount, [Items per Page Value] ), 0 )
+			RETURN
+			    IF ( SELECTEDVALUE ( 'Page Number'[Page Number] ) <= __PageCount, 1, 0 )
+		formatString: 0
+		displayFolder: Chart patterns
+		lineageTag: ae41dc06-32fb-45d3-962f-71919d0019bc
+
+	/// Subtitle for the ranked store chart with the all-store figure. Helper for a visual, not for analysis.
+	measure 'Store Page Subtitle' =
+			VAR __AllStoresSatisfaction = CALCULATE ( [Satisfaction (Window)], REMOVEFILTERS ( Stores[Store] ) )
+			RETURN
+			    "Overall satisfaction, " & [Window Name] & ".  All stores: " & FORMAT ( __AllStoresSatisfaction, "0.0%" )
+		displayFolder: Chart patterns
+		lineageTag: 04c85833-dd71-4bb2-9289-121c44d03a83
+
+	/// The comment text, for the comments table. Also called: comment, verbatim.
+	measure 'Comment Text' = SELECTEDVALUE ( Answers[Answer] )
+		displayFolder: Comments
+		lineageTag: 6534d154-1325-485e-8378-754150b6b231
+
+	/// Number of comments. In the selected period (Period buttons). Also called: comments this period.
+	measure 'Comments (Window)' = CALCULATE ( [Comment Count], 'Time Window'[Window] = "Selected window" )
+		formatString: #,0
+		displayFolder: Comments
+		lineageTag: 8179ed32-7ccb-4981-955a-0fbf05158291
+
+	/// Text for the header: the last survey response date in the data. Also called: data through, last updated.
+	measure 'Data As Of' = "Survey data through " & FORMAT ( CALCULATE ( MAX ( Responses[Response Date] ), REMOVEFILTERS () ), "mmm d, yyyy" )
+		displayFolder: Header
+		lineageTag: a76d6214-a172-4674-9263-0283a57ad648
+
+	/// The selected period in words, such as Last completed month. Also called: period name.
+	measure 'Window Name' = SELECTEDVALUE ( Period[Window Name], "Last completed month" )
+		displayFolder: Date window
+		lineageTag: 770e007d-c7fb-4cf6-8c82-00da2402a0e8
+
+	/// Card text for the NPS comparison and context values on one line, such as "Last year: 57.3% · Sep: 58.0%". Helper for a visual, not for analysis.
+	measure 'NPS Context Label' =
+			VAR __NumberFormat = "0"
+			VAR __CompareText = [Compare Short] & ": " & IF ( ISBLANK ( [NPS (Prior)] ), "–", FORMAT ( [NPS (Prior)], __NumberFormat ) )
+			VAR __ContextText = IF ( [Context Short] <> "", "  ·  " & [Context Short] & ": " & IF ( ISBLANK ( [NPS (Context)] ), "–", FORMAT ( [NPS (Context)], __NumberFormat ) ) )
+			RETURN
+			    __CompareText & __ContextText
+		displayFolder: KPI cards
+		lineageTag: 203c5c4a-fb94-40dc-9d65-8de89a32c8c8
+
+	/// Card text for the Satisfaction comparison and context values on one line, such as "Last year: 57.3% · Sep: 58.0%". Helper for a visual, not for analysis.
+	measure 'Satisfaction Context Label' =
+			VAR __NumberFormat = "0.0%"
+			VAR __CompareText = [Compare Short] & ": " & IF ( ISBLANK ( [Satisfaction (Prior)] ), "–", FORMAT ( [Satisfaction (Prior)], __NumberFormat ) )
+			VAR __ContextText = IF ( [Context Short] <> "", "  ·  " & [Context Short] & ": " & IF ( ISBLANK ( [Satisfaction (Context)] ), "–", FORMAT ( [Satisfaction (Context)], __NumberFormat ) ) )
+			RETURN
+			    __CompareText & __ContextText
+		displayFolder: KPI cards
+		lineageTag: 72c7d6f4-d6f9-4134-8c46-9f82e7068819
+
+	/// Card text for the Responses comparison and context values on one line, such as "Last year: 57.3% · Sep: 58.0%". Helper for a visual, not for analysis.
+	measure 'Responses Context Label' =
+			VAR __NumberFormat = "#,0"
+			VAR __CompareText = [Compare Short] & ": " & IF ( ISBLANK ( [Responses (Prior)] ), "–", FORMAT ( [Responses (Prior)], __NumberFormat ) )
+			VAR __ContextText = IF ( [Context Short] <> "", "  ·  " & [Context Short] & ": " & IF ( ISBLANK ( [Responses (Context)] ), "–", FORMAT ( [Responses (Context)], __NumberFormat ) ) )
+			RETURN
+			    __CompareText & __ContextText
+		displayFolder: KPI cards
+		lineageTag: 09324d7a-bd25-4c16-8a5a-8daf936aa78f
+
+	/// Card text for the Completion comparison and context values on one line, such as "Last year: 57.3% · Sep: 58.0%". Helper for a visual, not for analysis.
+	measure 'Completion Context Label' =
+			VAR __NumberFormat = "0.0%"
+			VAR __CompareText = [Compare Short] & ": " & IF ( ISBLANK ( [Completion (Prior)] ), "–", FORMAT ( [Completion (Prior)], __NumberFormat ) )
+			VAR __ContextText = IF ( [Context Short] <> "", "  ·  " & [Context Short] & ": " & IF ( ISBLANK ( [Completion (Context)] ), "–", FORMAT ( [Completion (Context)], __NumberFormat ) ) )
+			RETURN
+			    __CompareText & __ContextText
+		displayFolder: KPI cards
+		lineageTag: 57f1e447-055e-4d54-a5f6-52c80e3135f2
+
+	/// Card text for the Negative Comments comparison and context values on one line, such as "Last year: 57.3% · Sep: 58.0%". Helper for a visual, not for analysis.
+	measure 'Negative Comments Context Label' =
+			VAR __NumberFormat = "0.0%"
+			VAR __CompareText = [Compare Short] & ": " & IF ( ISBLANK ( [Negative Comments (Prior)] ), "–", FORMAT ( [Negative Comments (Prior)], __NumberFormat ) )
+			VAR __ContextText = IF ( [Context Short] <> "", "  ·  " & [Context Short] & ": " & IF ( ISBLANK ( [Negative Comments (Context)] ), "–", FORMAT ( [Negative Comments (Context)], __NumberFormat ) ) )
+			RETURN
+			    __CompareText & __ContextText
+		displayFolder: KPI cards
+		lineageTag: 433f985d-3ff6-4a1b-9d52-08b8eb1ae63d
+
+	/// Overall satisfaction formatted for the label on each store bar. Helper for a visual, not for analysis.
+	measure 'Store Satisfaction Label' = FORMAT ( [Satisfaction (Window)], "0.0%" )
+		displayFolder: Chart patterns
+		lineageTag: 4e99207f-10c0-4882-8ca7-dd3fa587124c
+
+	/// Last day of the selected period. Also called: period end, end date.
+	measure 'Window End' =
+			VAR __AsOfDate = EOMONTH ( MAX ( 'Report Dates'[Date] ) + 1, -1 )
+			VAR __PeriodKey = SELECTEDVALUE ( Period[Key], "LCM" )
+			VAR __LastQuarterEnd = EOMONTH ( __AsOfDate, - MOD ( MONTH ( __AsOfDate ), 3 ) )
+			VAR __PeriodStart =
+			    SWITCH (
+			        __PeriodKey,
+			        "LCM", EOMONTH ( __AsOfDate, -1 ) + 1,
+			        "LM", EOMONTH ( __AsOfDate, -2 ) + 1,
+			        "LCQ", EOMONTH ( __LastQuarterEnd, -3 ) + 1,
+			        "L3M", EOMONTH ( __AsOfDate, -3 ) + 1,
+			        "YTD", DATE ( YEAR ( __AsOfDate ), 1, 1 ),
+			        "L12M", EOMONTH ( __AsOfDate, -12 ) + 1
+			    )
+			VAR __PeriodEnd =
+			    SWITCH (
+			        __PeriodKey,
+			        "LM", EOMONTH ( __AsOfDate, -1 ),
+			        "LCQ", __LastQuarterEnd,
+			        __AsOfDate
+			    )
+			VAR __CompareStart = EDATE ( __PeriodStart, -12 )
+			VAR __CompareEnd = EOMONTH ( __PeriodEnd, -12 )
+			VAR __MonthsBack = SWITCH ( __PeriodKey, "LCM", 1, "LM", 1, "LCQ", 3, "L3M", 3, 0 )
+			VAR __ContextStart =
+			    SWITCH (
+			        TRUE (),
+			        __MonthsBack > 0, EDATE ( __PeriodStart, - __MonthsBack ),
+			        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 1, 1 )
+			    )
+			VAR __ContextEnd =
+			    SWITCH (
+			        TRUE (),
+			        __MonthsBack > 0, __PeriodStart - 1,
+			        __PeriodKey = "YTD", DATE ( YEAR ( __AsOfDate ) - 1, 12, 31 )
+			    )
+			RETURN
+			    __PeriodEnd
+		formatString: mmm d, yyyy
+		displayFolder: Date window
+		lineageTag: 0ddbd824-0cee-41cb-b804-956ea9a59585
+
+	/// What the change on the cards is measured against, in words, such as same month last year.
+	measure 'Compare Name' = SELECTEDVALUE ( Period[Compare Name], "same month last year" )
+		displayFolder: Date window
+		lineageTag: a2c93cba-92c7-410b-ac92-af8ee07114b5
+
+	/// Short name of the comparison period for the cards' second line: Last year, or Prior 12M for Last 12M.
+	measure 'Compare Short' = SELECTEDVALUE ( Period[Compare Short], "Last year" )
+		displayFolder: Date window
+		lineageTag: 7909764c-727f-474b-ae1b-1cb220dd08d7
+
+	/// Short name of the context period on the cards' second line: the month before (such as Sep), the quarter before (such as Q2), Prior 3M, or All plus last year (YTD). Blank for Last 12M.
+	measure 'Context Short' =
+			VAR __PeriodStart = [Window Start]
+			RETURN
+			    SWITCH ( SELECTEDVALUE ( Period[Key], "LCM" ), "LCM", FORMAT ( __PeriodStart - 1, "mmm" ), "LM", FORMAT ( __PeriodStart - 1, "mmm" ), "LCQ", "Q" & ROUNDUP ( MONTH ( __PeriodStart - 1 ) / 3, 0 ), "L3M", "Prior 3M", "YTD", "All " & ( YEAR ( __PeriodStart ) - 1 ), "" )
+		displayFolder: Date window
+		lineageTag: 8dbd2f05-f33d-460e-8a48-2e1ccee95ec7
+
+	/// Fewest responses a period and its comparison need before a change is colored better or worse (100). Also called: minimum sample, sample size threshold.
+	measure 'Min Responses' = 100
+		formatString: 0
+		displayFolder: Date window
+		lineageTag: 84e97e75-2386-4bcc-8329-4d3f507aed2e
+
+	/// 1 when the selected period or its comparison has fewer than Min Responses responses, so the change is shown in grey. Also called: low sample flag.
+	measure 'Too Few Responses' = IF ( [Responses (Window)] < [Min Responses] || [Responses (Prior)] < [Min Responses], 1, 0 )
+		formatString: 0
+		displayFolder: Date window
+		lineageTag: a1965f54-cdd7-4078-8b92-82bf560d6253
+
+	/// Net Promoter Score. In the context period shown on the cards' second line (the month, quarter or 3 months before, or all of last year for YTD).
+	measure 'NPS (Context)' = CALCULATE ( [NPS], 'Time Window'[Window] = "Context window" )
+		formatString: 0
+		displayFolder: KPI cards
+		lineageTag: a8535c74-1909-4e8f-bb89-f8bbb7fc8496
+
+	/// Overall satisfaction: share of golfers who rated their overall experience Good or Excellent (4 or 5 out of 5). In the context period shown on the cards' second line (the month, quarter or 3 months before, or all of last year for YTD).
+	measure 'Satisfaction (Context)' = CALCULATE ( [Overall Satisfaction %], 'Time Window'[Window] = "Context window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: e64be45b-0e7f-4a88-b2b5-5a0fc6d19f3e
+
+	/// Number of surveys sent back. In the context period shown on the cards' second line (the month, quarter or 3 months before, or all of last year for YTD).
+	measure 'Responses (Context)' = CALCULATE ( [Response Count], 'Time Window'[Window] = "Context window" )
+		formatString: #,0
+		displayFolder: KPI cards
+		lineageTag: 8d71f0ea-25f4-48e6-a56f-63e5f24fd1ac
+
+	/// Completion rate: share of responses that reached the last question. In the context period shown on the cards' second line (the month, quarter or 3 months before, or all of last year for YTD).
+	measure 'Completion (Context)' = CALCULATE ( [Completion Rate %], 'Time Window'[Window] = "Context window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 6fc591de-0e0d-4559-85cc-ca494a3127c3
+
+	/// Share of comments with a negative tone. In the context period shown on the cards' second line (the month, quarter or 3 months before, or all of last year for YTD).
+	measure 'Negative Comments (Context)' = CALCULATE ( [Negative Comments %], 'Time Window'[Window] = "Context window" )
+		formatString: 0.0%
+		displayFolder: KPI cards
+		lineageTag: 822c91b5-aa50-4e19-9d1e-bb3528bbf39d
+
+	/// Placeholder column that keeps the measures table valid. Not for use.
+	column Value
+		dataType: int64
+		isHidden
+		lineageTag: 1e0a4b44-ec16-4607-bb92-4b8fc0a2c1ce
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition _Measures = calculated
+		mode: import
+		source = { 1 }
+

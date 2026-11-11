@@ -1,0 +1,24 @@
+relationship afd95c8c-4577-46b4-aacc-26f029f40bd2
+	fromColumn: Responses.RespondentKey
+	toColumn: Respondents.RespondentKey
+
+relationship 09f14270-1392-4db4-a2c7-cb768ac23922
+	fromColumn: Answers.ResponseKey
+	toColumn: Responses.ResponseKey
+
+relationship 80451f01-7c5c-44b4-ae49-f4d385c77512
+	fromColumn: Answers.QuestionKey
+	toColumn: Questions.QuestionKey
+
+relationship f91ba8f2-7bdf-507f-9b3d-564f24cdbbe3
+	fromColumn: Responses.StoreKey
+	toColumn: Stores.StoreKey
+
+relationship 0b4d0673-467a-55c9-b5a6-4e042d42f25b
+	fromColumn: Answers.Score
+	toColumn: 'Score Band'.Score
+
+relationship e3ef8a2a-7b81-46d4-a3ed-c58a8aaa55d6
+	fromColumn: Responses.'Response Date'
+	toColumn: Date.Date
+
