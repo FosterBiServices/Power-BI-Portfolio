@@ -1,0 +1,12 @@
+ProjectKey,Project,Project Type,LocationKey,Approved Budget,Start Date,Planned Completion,Actual Completion,Annual Benefit
+CP-01,Website Replatform,Technology,13,650000,2024-01-01,2024-09-30,2024-10-31,380000
+CP-02,Store Fixtures Refresh,Maintenance,15,420000,2024-03-01,2024-11-30,2024-11-30,0
+CP-03,Fitting Studios (3 stores),Growth,15,540000,2025-01-01,2025-08-31,2025-08-31,260000
+CP-04,Simulator Bays Phase 1,Growth,15,1600000,2025-07-01,2026-03-31,2026-03-31,720000
+CP-05,POS & ERP Upgrade,Technology,15,1200000,2025-10-01,2026-08-31,,310000
+CP-06,Store 04 Remodel,Growth,4,900000,2026-02-01,2026-07-31,2026-08-31,190000
+CP-07,E-commerce DC Automation,Growth,13,750000,2026-05-01,2026-12-31,,240000
+CP-08,HVAC & Roof Replacements,Maintenance,15,380000,2026-01-01,2026-10-31,2026-09-30,0
+CP-09,Delivery Van Fleet,Maintenance,14,260000,2026-04-01,2026-06-30,2026-06-30,0
+CP-10,Simulator Bays Phase 2,Growth,15,1400000,2027-03-01,2027-10-31,,600000
+CP-11,Maintenance Capex (ongoing),Maintenance,15,0,2023-01-01,2027-12-31,,0

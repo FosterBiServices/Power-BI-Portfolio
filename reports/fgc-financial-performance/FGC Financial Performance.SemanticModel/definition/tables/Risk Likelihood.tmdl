@@ -1,0 +1,44 @@
+/// Columns of the risk heat map: likelihood 1 (rare) to 5 (almost certain).
+table 'Risk Likelihood'
+	lineageTag: 10106ff4-5aa6-5d10-b74a-a6b6994eb1de
+
+	/// Likelihood level.
+	column 'Likelihood Label'
+		dataType: string
+		lineageTag: 38fccc53-0590-50f9-a8aa-25f5bf265ab0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Likelihood Label]
+		sortByColumn: Likelihood
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Likelihood 1 to 5.
+	column Likelihood
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 1bac1640-4a77-5595-8665-6097b37d926a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Likelihood]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Risk Likelihood' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Likelihood Label", STRING,
+				    "Likelihood", INTEGER,
+				    {
+				        { "Rare", 1 },
+				        { "Unlikely", 2 },
+				        { "Possible", 3 },
+				        { "Likely", 4 },
+				        { "Certain", 5 }
+				    }
+				)
+
+	annotation PBI_Id = ed0caa94d1ac51b3b5a5a9a6fea618e5
+

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "p01_summary",
+    "p02_trends",
+    "p03_pl",
+    "p04_revenue",
+    "p05_customers",
+    "p06_labor",
+    "p07_balance",
+    "p08_cash",
+    "p09_capex",
+    "p10_risks",
+    "p11_about"
+  ],
+  "activePageName": "p01_summary"
+}

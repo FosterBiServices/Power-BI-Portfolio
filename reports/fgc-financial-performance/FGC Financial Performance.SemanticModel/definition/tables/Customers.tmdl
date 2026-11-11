@@ -1,0 +1,109 @@
+/// Commercial accounts (golf clubs, resorts, courses, universities, corporate buyers) plus the two consumer groups.
+table Customers
+	lineageTag: 8f1cac5b-9916-52d5-a140-8d3fa302b226
+
+	/// Key that links to Sales and AR Aging.
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 010cd64b-c3e9-5963-a254-d7f213b088b8
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Account name, or In-Store / E-commerce Shoppers for consumers.
+	column Customer
+		dataType: string
+		lineageTag: fac6f07d-95ef-59f0-9bb5-7091c86efbac
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Commercial or Consumer.
+	column 'Customer Type'
+		dataType: string
+		lineageTag: 8e0c4969-2341-5fa1-96b9-ea14db8d6183
+		summarizeBy: none
+		sourceColumn: Customer Type
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Country Club, Resort, Golf Club, Public Course, University, Corporate, Retail or Online.
+	column Segment
+		dataType: string
+		lineageTag: 8141de5c-df47-5236-9b5b-90408d3dcff5
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Region.
+	column Region
+		dataType: string
+		lineageTag: ac0271c3-dfd6-5480-9eac-1859738c8a8c
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Days the account has to pay (0 for consumers).
+	column 'Payment Terms Days'
+		dataType: int64
+		formatString: 0
+		lineageTag: b10a2008-e8d1-53cd-996a-4168de6b3f98
+		summarizeBy: none
+		sourceColumn: Payment Terms Days
+
+		annotation SummarizationSetBy = Automatic
+
+	/// First year as a customer.
+	column 'Customer Since'
+		dataType: int64
+		formatString: 0
+		lineageTag: 06bc87ca-95d4-574e-bec4-e458dca60bf8
+		summarizeBy: none
+		sourceColumn: Customer Since
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/Customers.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("pZZPT+MwEMW/ipVzkPKXtscFsbASC6jVbg+Ig2kHatWNK8fpim+/tsdJ3JbVxuFEaJJfZ968ee7zcxpHP6qLhRISyGIj9nuQdRRH16Kqmx1IfTkHRRnXFw9UMVFRfZnEWZLMXuLnLI5uLlZip59c/ev9x4qzCs7eTy/1+2miv/9aQq3Ib8o5fJBr0VRK6r+8ebUcy2bmrej0Huj/zI1Lw8syy9MV3dMt1GwN5IoantwLSRWQm4N+vj5nuvv6+obWytHS0tLyONLSVEC+C/kOIcX5LKysiKMr3mgUA74OQS1EozZtl4lllXpqUlRkKeS2HstyPV7quiR73yhyxzgfXVhqYRNP/uDiHoQ0vKI0xSFvGkdPku2A3JoRhg8TWRPLmjnRnoBuyc+mYiu2p7ZhWcMp6ql55WzV33S95la4qeGlSRzdUfkqZLg7lmCKQ5idaNrtwZdYuWVlZjfWVDqr3Qr+RuZQa3VPUd2nqBZCrFqptv6cHUCSOVuHFXQkFcKKdoxXUojtF2Flp/uSHgDb+4zk33AYa4cEx9f7HiUPdYSv+8wSJ31hI63vO2JqO1hDRe51fg5rs4vEvN/JdNaKb40/xA0nGJtfmbb74g97U6j6r8qYo2bqg3xTGw6Krc7WsX/m00FmaZuIVv/hNvUCIsvcUtvsCi7qKHGwqM73eHqEGhUdZv2QFe4LQFbO+IOGeFQUal+2Gz1O+/NgzbT7F81ux8a6/9giTju9AI/aYnYWg1r1Y8dmVzZtTzbTaEjeH20Q9jjrNmhU5PtEzAx96eYQ/mvFsy7aI0/Pzo/h3frhU1haF/p9WvxnmXzH4pGW5059dOu4RLQ8zIy8OGkx2BQ2CvOyTTA8iwZRvGJwifI+8G+lOMDYnwB+fxOnFwJH5j3GdD79TKuAYxsnqD2/YNzmV3DieGlfGKdzoCOO/6NFLF9e/gI=", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "CustomerKey",
+				            "Customer",
+				            "Customer Type",
+				            "Segment",
+				            "Region",
+				            "Payment Terms Days",
+				            "Customer Since"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"CustomerKey", Int64.Type},
+				            {"Customer", type text},
+				            {"Customer Type", type text},
+				            {"Segment", type text},
+				            {"Region", type text},
+				            {"Payment Terms Days", Int64.Type},
+				            {"Customer Since", Int64.Type}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

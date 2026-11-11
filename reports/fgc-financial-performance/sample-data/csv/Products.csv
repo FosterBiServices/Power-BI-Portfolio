@@ -1,0 +1,24 @@
+ProductKey,Product Line,Category,Product Group,List Price
+1,Drivers,Clubs,Hard Goods,520
+2,Fairway Woods,Clubs,Hard Goods,330
+3,Hybrids,Clubs,Hard Goods,270
+4,Iron Sets,Clubs,Hard Goods,1150
+5,Wedges,Clubs,Hard Goods,165
+6,Putters,Clubs,Hard Goods,290
+7,Pre-Owned Clubs,Clubs,Hard Goods,180
+8,Premium Golf Balls,Balls,Hard Goods,52
+9,Value Golf Balls,Balls,Hard Goods,28
+10,Gloves,Accessories & Tech,Hard Goods,24
+11,Golf Bags,Accessories & Tech,Hard Goods,260
+12,Push Carts,Accessories & Tech,Hard Goods,240
+13,Rangefinders & GPS,Accessories & Tech,Hard Goods,330
+14,Training Aids,Accessories & Tech,Hard Goods,45
+15,Headwear & Accessories,Accessories & Tech,Hard Goods,30
+16,Golf Shoes,Footwear & Apparel,Soft Goods,150
+17,Men's Apparel,Footwear & Apparel,Soft Goods,65
+18,Women's Apparel,Footwear & Apparel,Soft Goods,62
+19,Outerwear,Footwear & Apparel,Soft Goods,110
+20,Club Fitting,Services,Services,150
+21,Golf Lessons,Services,Services,95
+22,Simulator Bays,Services,Services,55
+23,Repairs & Regripping,Services,Services,40

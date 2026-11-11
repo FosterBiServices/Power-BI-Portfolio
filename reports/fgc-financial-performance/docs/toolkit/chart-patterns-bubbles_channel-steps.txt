@@ -1,0 +1,113 @@
+STEP
+5
+Build it: Bubbles over the columns
+
+Add the measures first, then build the chart. Test on a copy of your report.
+
+Names aren’t checked without a model. Connect it in Step 1 to check them.
+1. Check the measures first (DAX query view, optional)
+
+Run it after step 2 to see the new measures for each item before you build the chart.
+
+DAX QUERY: TEST
+Copy query
+// Run in DAX query view after applying the script. One row per item.
+EVALUATE
+SUMMARIZECOLUMNS (
+	'Locations'[Channel],
+	"Net Revenue Period", [Net Revenue Period],
+	"Net Revenue Period % of Total", [Net Revenue Period % of Total],
+	"Net Revenue Period Bubble Label", [Net Revenue Period Bubble Label],
+	"Net Revenue Period Bubble Position", [Net Revenue Period Bubble Position],
+	"Net Revenue Period Bubble Axis Max", [Net Revenue Period Bubble Axis Max]
+)
+ORDER BY "Net Revenue Period" DESC
+2. Add them to your model (TMDL view)
+
+In Power BI Desktop, open TMDL view, paste the script into a new tab and select Apply. It adds 5 measures to _Measures.
+
+TMDL SCRIPT
+Copy script
+createOrReplace
+
+	ref table _Measures
+
+		measure 'Net Revenue Period % of Total' = DIVIDE ( [Net Revenue Period], CALCULATE ( [Net Revenue Period], REMOVEFILTERS ( 'Locations'[Channel] ) ) )
+			formatString: 0.0%
+			displayFolder: Chart Patterns
+
+		measure 'Net Revenue Period Bubble Label' =
+				VAR _max = MAXX ( ALLSELECTED ( 'Locations'[Channel] ), [Net Revenue Period] )
+				RETURN
+					IF ( NOT ISBLANK ( [Net Revenue Period] ), _max * 1.6 )
+			displayFolder: Chart Patterns
+
+		measure 'Net Revenue Period Bubble Position' =
+				VAR _max = MAXX ( ALLSELECTED ( 'Locations'[Channel] ), [Net Revenue Period] )
+				RETURN
+					IF ( NOT ISBLANK ( [Net Revenue Period] ), _max * 1.7 )
+			displayFolder: Chart Patterns
+
+		measure 'Net Revenue Period Bubble Axis Max' =
+				VAR _max = MAXX ( ALLSELECTED ( 'Locations'[Channel] ), [Net Revenue Period] )
+				RETURN
+					_max * 2.2
+			displayFolder: Chart Patterns
+
+		measure 'Net Revenue Period Subtitle' =
+				VAR _value = CALCULATE ( [Net Revenue Period], REMOVEFILTERS ( 'Locations'[Channel] ) )
+				RETURN
+				"Net Revenue Period (all channel): " & FORMAT ( _value, "\$#,0" )
+			displayFolder: Chart Patterns
+
+3. Update your report theme (required for this pattern)
+This chart needs a change to your report theme. Power BI’s default marker is too small to hold a label, so without this step the bubbles show as small dots. The size is set in the theme, so this changes only line and clustered column charts.
+In Power BI Desktop, select View > Themes (the dropdown arrow) > Save current theme, and save the .json file.
+Select Open your theme file below and pick that file. Open your theme file
+Check the bubble size in Step 4 (now 30), then select Download updated theme The page adds the marker size and keeps everything else in your file.
+In Power BI Desktop, select View > Themes > Browse for themes and pick the downloaded file.
+
+Made your theme in Theme Builder? Set Combo chart bubble size in its Step 2, download it again and import that instead.
+
+Prefer to edit the theme file yourself?
+
+Don’t set a marker size on the chart in the Format pane afterwards: a size set on the chart overrides the theme. If you import a different theme later, do this again.
+
+4. Build the chart in Power BI
+
+Names in the Format pane can differ a little between Power BI versions. Format settings are under Format your visual (the paintbrush) > Visual.
+
+Add the chart
+Add a Line and clustered column chart. Put 'Locations'[Channel] on the X-axis, [Net Revenue Period] on Column y-axis. Then on the Line y-axis place [Net Revenue Period Bubble Position] and [Net Revenue Period Bubble Label].
+Sort it by Net Revenue Period, descending.
+Format it
+Y-axis: off. In Y-axis > Range, select fx next to Maximum, Format style Field value, and pick [Net Revenue Period Bubble Axis Max]. This leaves room above the columns.
+Secondary y-axis: off, so the bubbles use the same scale as the columns.
+Legend: off. Columns > Color: #01305C.
+Lines: for both Net Revenue Period Bubble Position and Net Revenue Period Bubble Label, turn the line off (only markers show).
+Markers: on. In Apply settings to, pick each series in turn:
+Net Revenue Period Bubble Position: Show for this series on, shape circle, color #CCD6DE.
+Net Revenue Period Bubble Label: Show for this series off.
+Leave the marker size alone: the theme sets it (below).
+Data labels: on. In Apply settings to, pick each series in turn:
+Net Revenue Period: position Outside end, color #404040.
+Net Revenue Period Bubble Position: Show for this series off.
+Net Revenue Period Bubble Label: Show for this series on, position Above, size 9. In Value, set Field to [Net Revenue Period % of Total] (the % of total), color #404040. The % lands in the bubble.
+Title: your title. Subtitle: on, fx > Field value > [Net Revenue Period Subtitle].
+Add the stems
+Open the Analytics pane (the magnifying glass) > Error bars > series Net Revenue Period: turn it on.
+In Options, set Upper bound to [Net Revenue Period Bubble Position] and leave Lower bound empty. Set Relationship to measure to Absolute, not Relative: Net Revenue Period Bubble Position is the height of the bubble, not a distance above the column. (Some versions show Make limits relative to measure instead: turn it off.)
+Bar: on, color #8DA2B6, width 1. Tooltip: off. The stem now runs from the top of each column up to its bubble.
+5. Check it
+The bubbles are round and big enough to hold the %. If they’re small dots, the theme step below isn’t done.
+A thin stem joins each column to its bubble, and no line runs between the bubbles.
+No bubble or label is cut off at the top.
+WHAT NEXT
+KPI Visualizer
+Showing a single number? Choose a KPI card
+Theme Builder
+Set the combo chart bubble size in your theme
+Layout Designer
+Place the chart on a page
+Everything runs in this page. Your fields and choices are saved only in this browser.
+Generated output can be wrong. Check all of it, and test changes on a copy of your model first. Provided as is, without warranty; you use it at your own discretion and risk. Full disclaimer

@@ -1,0 +1,48 @@
+/// Made with the Foster BI Toolkit Field Parameter Builder: the metric picker on the Stores page.
+table 'Store Metric'
+	lineageTag: 7ff5f7eb-8e83-5292-80a1-82342cedd773
+
+	column 'Store Metric'
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Store Metric Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Store Metric Fields'
+
+	column 'Store Metric Fields'
+		dataType: string
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Store Metric Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Store Metric Order'
+		dataType: int64
+		isDataTypeInferred
+		isHidden
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	partition 'Store Metric' = calculated
+		mode: import
+		source =
+				{
+				    ("Net revenue", NAMEOF ( '_Measures'[Store Net Revenue] ), 0),
+				    ("Gross margin %", NAMEOF ( '_Measures'[Gross Margin % Period] ), 1),
+				    ("EBITDA", NAMEOF ( '_Measures'[Store EBITDA] ), 2),
+				    ("Labor % of revenue", NAMEOF ( '_Measures'[Labor % of Revenue Period] ), 3),
+				    ("Revenue per labor hour", NAMEOF ( '_Measures'[Revenue per Labor Hour Period] ), 4),
+				    ("Overtime %", NAMEOF ( '_Measures'[Store Overtime % Period] ), 5),
+				    ("Markdown rate", NAMEOF ( '_Measures'[Markdown Rate Period] ), 6)
+				}

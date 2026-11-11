@@ -1,0 +1,82 @@
+STEP
+5
+Paste Copilot’s reply
+
+The query is read and checked here: brackets and quotes, functions that don’t exist and argument counts, each with _ or [Column] in the right place, step references and order, column names, the type map, parameters, the naming rule and formatting.
+
+Open a reply file
+.txt, .md, .json or Word file from Copilot
+OK
+Type map as given
+
+10 column types with fxApplyTypes, text for any other column.
+
+OK
+Every column name matches
+
+All the columns the query reads are in the list you gave or are created by the query.
+
+OK
+Reads correctly
+
+3 steps; brackets and quotes balance, every function and step reference exists, each is used in the right context, and the query returns its last step.
+
+THE QUERY: PASTE INTO HOME > ADVANCED EDITOR
+powerqueryformatter.com
+Copy query
+let
+    // rows stored in the query as Base64 text of raw-deflate compressed JSON, so no data source is needed
+    Source = Json.Document(
+        Binary.Decompress(Binary.FromText("<base64>", BinaryEncoding.Base64), Compression.Deflate)
+    ),
+    Rows = Table.FromRows(
+        Source,
+        {
+            "Date",
+            "Scenario",
+            "LocationKey",
+            "ProductKey",
+            "CustomerKey",
+            "Units",
+            "Gross Sales",
+            "Discounts",
+            "Net Sales",
+            "Cost of Sales"
+        }
+    ),
+    Typed = fxApplyTypes(
+        Rows,
+        {
+            {"Date", type date},
+            {"Scenario", type text},
+            {"LocationKey", Int64.Type},
+            {"ProductKey", Int64.Type},
+            {"CustomerKey", Int64.Type},
+            {"Units", Int64.Type},
+            {"Gross Sales", Int64.Type},
+            {"Discounts", Int64.Type},
+            {"Net Sales", Int64.Type},
+            {"Cost of Sales", Int64.Type}
+        },
+        [Culture = "en-US"]
+    )
+in
+    Typed
+What each step does
+STEP	FUNCTION	WHAT IT DOES
+Source	Json.Document	decompresses the embedded Base64 text and parses the JSON array of rows.
+Rows	Table.FromRows	turns the rows into a table with the column names in order.
+Typed		sets every column type in one step with the shared type map function, reading dates and numbers as en-US.
+Didn’t work in Power BI Desktop?
+
+Paste the error Power Query shows (the message in the yellow bar, or click Error in a cell to see it), or say what’s wrong. The page writes a short prompt that asks Copilot to fix only that and keep the rest of the query. Paste Copilot’s answer into the reply box above, in place of the old one, and the checks run again.
+
+Nothing to fix from the checks. If Desktop shows an error or the result is wrong, describe it above and a fix prompt appears.
+Send it to Copilot as a file (for long prompts)
+WHAT NEXT
+Power Query Explainer
+Comment or clean up a query you already have
+Date Table Generator
+Add a date table
+Everything runs in this page. Your entries are saved only in this browser.
+Generated output can be wrong. Check all of it, and test changes on a copy of your model first. Provided as is, without warranty; you use it at your own discretion and risk. Full disclaimer

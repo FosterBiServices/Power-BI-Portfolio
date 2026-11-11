@@ -1,0 +1,47 @@
+/// Steps of the EBITDA variance bridge (actual vs budget).
+table 'EBITDA Bridge'
+	lineageTag: fa784859-7896-55c1-8941-27cd58b1b0ae
+
+	/// Driver of the EBITDA variance.
+	column Step
+		dataType: string
+		lineageTag: 7176c338-4c0a-55ed-bd36-e1251f4eaab4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step]
+		sortByColumn: 'Step Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Step Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 84e2bb87-db7d-593f-a216-3d7b75182065
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'EBITDA Bridge' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Step", STRING,
+				    "Step Order", INTEGER,
+				    {
+				        { "Sales volume & mix", 1 },
+				        { "Markdowns", 2 },
+				        { "Product cost & price", 3 },
+				        { "Freight & obsolescence", 4 },
+				        { "Labor", 5 },
+				        { "Marketing", 6 },
+				        { "Technology & admin", 7 },
+				        { "Occupancy", 8 }
+				    }
+				)
+
+	annotation PBI_Id = 6f76ea6aa3d65efea8264ae3b478c134
+

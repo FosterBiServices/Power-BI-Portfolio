@@ -1,0 +1,81 @@
+/// Rows of the balance sheet: each line and subtotal, with the accounts it adds up.
+table 'Balance Sheet Layout'
+	lineageTag: b26e9ce9-ad6d-55c9-82a3-55025240738e
+
+	/// Balance sheet line.
+	column Line
+		dataType: string
+		lineageTag: e75c16f7-0bb1-5e07-acb9-696462ee0027
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line]
+		sortByColumn: 'Line Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Line Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: a3137f74-634f-5615-8812-b2fd7e59446b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Line or Subtotal.
+	column Kind
+		dataType: string
+		isHidden
+		lineageTag: 68588e88-062c-58d0-9b91-1b8a804522e8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Kind]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Account numbers the line adds up, separated by |.
+	column Accounts
+		dataType: string
+		isHidden
+		lineageTag: cb43ba34-0c1b-5c6c-921c-77c22db0b433
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Accounts]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Balance Sheet Layout' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Line", STRING,
+				    "Line Order", INTEGER,
+				    "Kind", STRING,
+				    "Accounts", STRING,
+				    {
+				        { "Cash", 1, "Line", "1010" },
+				        { "Accounts Receivable", 2, "Line", "1100" },
+				        { "Inventory", 3, "Line", "1200" },
+				        { "Prepaid & Other", 4, "Line", "1300" },
+				        { "Total Current Assets", 5, "Subtotal", "1010|1100|1200|1300" },
+				        { "Property & Equipment, Net", 6, "Line", "1500|1510" },
+				        { "Total Assets", 7, "Subtotal", "1010|1100|1200|1300|1500|1510" },
+				        { "Accounts Payable", 8, "Line", "2010" },
+				        { "Accrued Liabilities", 9, "Line", "2100" },
+				        { "Gift Cards & Deferred Revenue", 10, "Line", "2200" },
+				        { "Total Current Liabilities", 11, "Subtotal", "2010|2100|2200" },
+				        { "Revolving Credit Facility", 12, "Line", "2300" },
+				        { "Term Loan", 13, "Line", "2400" },
+				        { "Total Liabilities", 14, "Subtotal", "2010|2100|2200|2300|2400" },
+				        { "Paid-In Capital", 15, "Line", "3010" },
+				        { "Retained Earnings", 16, "Line", "3020" },
+				        { "Total Equity", 17, "Subtotal", "3010|3020" },
+				        { "Total Liabilities & Equity", 18, "Subtotal", "2010|2100|2200|2300|2400|3010|3020" }
+				    }
+				)
+
+	annotation PBI_Id = 844db943aafe5f06abeb6a9d44557e70
+

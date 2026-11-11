@@ -1,0 +1,101 @@
+You are an expert in Power Query M. Write one Power Query query for Power BI that does what is asked below.
+The query must work first time, be easy for another developer to maintain, and be as short as it can be while still doing everything asked. Leave out anything that isn’t asked for.
+
+TASK (the user’s request: all the query has to do)
+Load the Sales rows that are stored in the query itself as Base64 text of raw-deflate compressed JSON (an array of rows, no header). Decompress and parse it, name the columns in the order given, then set every column type with the type map. Culture en-US. No other cleaning: the data is already clean.
+
+STARTING POINT
+Source: Something else.
+Details: Embedded text: Binary.FromText(<base64>, BinaryEncoding.Base64), Compression.Deflate, Json.Document
+
+CONTEXT (facts about the data, not things to do)
+
+COLUMNS AVAILABLE AT THE START (exact names; types are from the data where known)
+- Date (date)
+- Scenario (text)
+- LocationKey (whole number)
+- ProductKey (whole number)
+- CustomerKey (whole number)
+- Units (whole number)
+- Gross Sales (whole number)
+- Discounts (whole number)
+- Net Sales (whole number)
+- Cost of Sales (whole number)
+
+FUNCTIONS THAT ALREADY EXIST (queries in this file: call them by name)
+- fxApplyTypes(InputTable as table, TypePairs as list, optional Options as record) as table: Sets column types from {column, type} pairs in one step; pairs for missing columns are skipped; every other column is text (Options: DefaultType, null leaves them as they are; Culture).
+
+RULES
+It must work:
+- Use only the column names listed above (exact spelling and case) and columns the query itself creates. If you need a column that isn’t listed, don’t guess: say so under QUESTIONS.
+- Each step builds on an earlier step, and the query returns its last step after "in".
+- Clean and type the data with these steps. They are required (the user asked for them), so add them even if the TASK doesn’t mention them. Put them right after the step where the column names are final (after promoting headers or renaming), replace PromotedHeaders with that step’s name, and keep them as they are otherwise: the steps, their order, the column lists, the type pairs and the options. Every later step builds on ChangeTypes. Change one only if the TASK says so. Give each newly created column its type in the fourth argument of Table.AddColumn.
+```
+    ChangeTypes = fxApplyTypes(
+        PromotedHeaders,
+        {
+            {"Date", type date},
+            {"Scenario", type text},
+            {"LocationKey", Int64.Type},
+            {"ProductKey", Int64.Type},
+            {"CustomerKey", Int64.Type},
+            {"Units", Int64.Type},
+            {"Gross Sales", Int64.Type},
+            {"Discounts", Int64.Type},
+            {"Net Sales", Int64.Type},
+            {"Cost of Sales", Int64.Type}
+        }
+    )
+```
+- Call the functions under FUNCTIONS THAT ALREADY EXIST by name with the arguments shown. Don’t copy their code into the query or write your own version of them. Use one wherever it does what the TASK needs. Give column names as a list of text in double quotes with no square brackets, for example {"Date", "Scenario"}, not {"[Date]", "[Scenario]"}. A name these functions don’t find is skipped without an error, so a wrong name silently does nothing.
+- Use each correctly for where it is evaluated. In value transformations such as Table.TransformColumns, pass the current value with _, for example {"Scenario", each Text.Upper(_), type text}. In row-context expressions such as Table.AddColumn and Table.SelectRows, refer to columns by name, for example each [Date].
+- Handle nulls and errors only where the request says to expect them. Don’t wrap everything in try … otherwise.
+- Don’t type a server, database, file path or URL into the query. Use an existing parameter, or add a new parameter under PARAMETERS and use its name.
+It must be easy to maintain:
+- Name every step with a single descriptive word, no spaces and no #"..." quoting (PascalCase when it needs two words, for example Source, Filtered, Typed, RecentOrders). Say what the step achieves, not which button made it. Don’t name a step after a function library (Table, List, Text, Number, Date, DateTime, Duration, Time, Record, Value, Type), for example WithDuration, not Duration.
+- If the TASK names columns to remove, remove them in one Table.RemoveColumns with MissingField.Ignore as the third argument, so a column that is already gone doesn’t break the refresh. If the TASK says which columns to keep, use Table.SelectColumns with an explicit list. Do not add a column step unless the TASK changes the columns.
+- Refer to columns by name, never by position.
+- Add a short // comment on the line above a step only when why it’s there isn’t obvious from its name and code. No comments that repeat the code.
+It must be short:
+- One step per kind of change the TASK needs: all row conditions in one Table.SelectRows, all renames in one Table.RenameColumns, all type changes in one Table.TransformColumnTypes.
+- No automatic "Changed Type" or leftover steps, no sort unless asked (row order isn’t kept in the model), no index or buffer steps unless they are needed and explained in a comment.
+- When the TASK filters rows or limits columns, do it as early as possible.
+Formatting (the style of powerqueryformatter.com):
+- "let" and "in" on their own lines at the left margin. Each step on its own line, indented 4 spaces, ending with a comma except the last. The step name after "in" indented 4 spaces.
+- If a function call doesn’t fit in about 100 characters, put each argument on its own line indented 4 more spaces, with the closing ) on its own line at the indentation of the line that opened it.
+- Lists { } and records [ ] that don’t fit on one line: one item per line, the same way. Column-and-type pairs one per line: {"Column", type text}.
+- One space after commas and around = and operators. Spaces only, no tabs, no trailing spaces.
+
+FINAL VALIDATION
+Before producing the answer, silently validate the final M query:
+- It is syntactically valid Power Query M.
+- Every function has the required arguments.
+- Every each expression uses the correct context: _ for the current value or [Column] for row context.
+- All parentheses (), braces {}, brackets [], quotes, and commas are correctly paired and positioned.
+- Every step references an existing earlier step.
+- The in expression returns the final step.
+- No step was added solely because it appeared in an example or rule when the TASK did not require that operation.
+- No columns, types, values, paths, URLs, parameters, or business rules were invented.
+- The query performs everything in TASK and nothing beyond TASK.
+- Every function called by name is a Power Query function or is listed under FUNCTIONS THAT ALREADY EXIST.
+If any check fails, correct the query before replying. Do not report an unvalidated query.
+
+REPLY FORMAT (a template: replace the placeholder lines with your answer)
+Reply with these blocks only, nothing before or after them:
+@@@ QUERY @@@
+let
+    ...
+in
+    LastStep
+@@@ END @@@
+@@@ STEPS @@@
+StepName: one short sentence on what the step does and why
+(one line per step, in order)
+@@@ END @@@
+@@@ PARAMETERS @@@
+Name | Type | Value
+(only parameters that must be created; leave the block empty if none)
+@@@ END @@@
+@@@ QUESTIONS @@@
+Anything you had to assume, or need to know to finish the query. Leave empty if none.
+@@@ END @@@

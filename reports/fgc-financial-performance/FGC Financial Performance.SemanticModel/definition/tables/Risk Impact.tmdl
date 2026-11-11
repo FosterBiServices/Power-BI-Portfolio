@@ -1,0 +1,57 @@
+/// Rows of the risk heat map: impact 5 (severe) at the top to 1 (low).
+table 'Risk Impact'
+	lineageTag: b4d49ff7-9938-566b-aa64-3b1e8bdae2fd
+
+	/// Impact level.
+	column 'Impact Label'
+		dataType: string
+		lineageTag: 08e4a31d-ba8a-5268-a064-f27575001270
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Impact Label]
+		sortByColumn: 'Impact Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Impact 1 to 5.
+	column Impact
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 74312039-07c4-5307-9f06-0af588eeb1a5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Impact]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Sort, severe first.
+	column 'Impact Sort'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: e4e84345-0fb0-5c07-8b5f-c75b90a64232
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Impact Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Risk Impact' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Impact Label", STRING,
+				    "Impact", INTEGER,
+				    "Impact Sort", INTEGER,
+				    {
+				        { "5 Severe", 5, 1 },
+				        { "4 Major", 4, 2 },
+				        { "3 Moderate", 3, 3 },
+				        { "2 Minor", 2, 4 },
+				        { "1 Low", 1, 5 }
+				    }
+				)
+
+	annotation PBI_Id = d569434947605f7ea08843f5c412080e
+

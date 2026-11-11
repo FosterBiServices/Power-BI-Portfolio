@@ -1,0 +1,5 @@
+role 'Region West'
+	modelPermission: read
+
+	tablePermission Locations = 'Locations'[Region] IN { "West" }
+

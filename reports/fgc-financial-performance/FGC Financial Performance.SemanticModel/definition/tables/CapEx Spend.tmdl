@@ -1,0 +1,76 @@
+/// Monthly capital spend by project, for Actual, Budget and Forecast.
+table 'CapEx Spend'
+	lineageTag: bbc4d576-f27d-567c-834e-806c13103d09
+
+	/// Month end. Links to Date.
+	column 'Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 3945e3f3-c22c-5538-9a09-0073e18c4eee
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Actual, Budget or Forecast.
+	column Scenario
+		dataType: string
+		isHidden
+		lineageTag: 5b75e2dc-e4e4-5b58-9d75-d55059ae6a98
+		summarizeBy: none
+		sourceColumn: Scenario
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Links to CapEx Projects.
+	column ProjectKey
+		dataType: string
+		isHidden
+		lineageTag: c2f1ed99-cfd0-57d2-87e8-658a0d37a42f
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Capital spend.
+	column Amount
+		dataType: double
+		formatString: #,0
+		lineageTag: 1970b4eb-e840-5bcd-b10d-91e52e6d403b
+		summarizeBy: sum
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'CapEx Spend' = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/CapEx Spend.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("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", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "Date",
+				            "Scenario",
+				            "ProjectKey",
+				            "Amount"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"Date", type date},
+				            {"Scenario", type text},
+				            {"ProjectKey", type text},
+				            {"Amount", type number}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,56 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["_Measures","Date","Scenario","Period","Sales","General Ledger","Labor","Cash Flow","AR Aging","Inventory","CapEx Spend","Locations","Products","Customers","Accounts","CapEx Projects","Cash Flow Lines","Aging Buckets","P&L Layout","Balance Sheet Layout","Cash Flow Layout","Revenue Bridge","EBITDA Bridge","Cash Bridge","Scorecard","Insights","Risk Register","Risk Impact","Risk Likelihood","Items per Page","Page Number","Store Metric"]
+
+annotation PBI_ProTooling = ["DevMode","TMDLView_Desktop"]
+
+ref table _Measures
+ref table 'Date'
+ref table Scenario
+ref table Period
+ref table Sales
+ref table 'General Ledger'
+ref table Labor
+ref table 'Cash Flow'
+ref table 'AR Aging'
+ref table Inventory
+ref table 'CapEx Spend'
+ref table Locations
+ref table Products
+ref table Customers
+ref table Accounts
+ref table 'CapEx Projects'
+ref table 'Cash Flow Lines'
+ref table 'Aging Buckets'
+ref table 'P&L Layout'
+ref table 'Balance Sheet Layout'
+ref table 'Cash Flow Layout'
+ref table 'Revenue Bridge'
+ref table 'EBITDA Bridge'
+ref table 'Cash Bridge'
+ref table Scorecard
+ref table Insights
+ref table 'Risk Register'
+ref table 'Risk Impact'
+ref table 'Risk Likelihood'
+ref table 'Items per Page'
+ref table 'Page Number'
+ref table 'Store Metric'
+
+ref role 'Region North'
+ref role 'Region South'
+ref role 'Region East'
+ref role 'Region West'
+ref role 'Region Central'
+ref role 'Commercial Team'
+
+ref cultureInfo en-US

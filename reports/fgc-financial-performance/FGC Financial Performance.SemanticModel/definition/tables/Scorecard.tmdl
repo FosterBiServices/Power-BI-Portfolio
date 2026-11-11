@@ -1,0 +1,73 @@
+/// The KPIs on the executive scorecard, in order, grouped by theme.
+table Scorecard
+	lineageTag: d2f0d9b0-fe36-5d2e-a0a7-bc7cc4440289
+
+	/// KPI name.
+	column KPI
+		dataType: string
+		lineageTag: dc0f4742-b644-545b-b143-11b09bcfe948
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [KPI]
+		sortByColumn: 'KPI Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'KPI Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 43695986-d379-5efd-b237-47fba0ba8121
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [KPI Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Growth, Profitability, Efficiency or Cash & Balance Sheet.
+	column Theme
+		dataType: string
+		lineageTag: 48599014-dd77-59a6-91c6-5a0758753bee
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Theme]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// What the KPI is compared with.
+	column 'Target Basis'
+		dataType: string
+		lineageTag: 6549aa55-691b-541d-97ac-06c813dc3ae3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Target Basis]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Scorecard = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "KPI", STRING,
+				    "KPI Order", INTEGER,
+				    "Theme", STRING,
+				    "Target Basis", STRING,
+				    {
+				        { "Net revenue", 1, "Growth", "Budget" },
+				        { "Gross margin %", 2, "Profitability", "Budget" },
+				        { "EBITDA", 3, "Profitability", "Budget" },
+				        { "EBITDA margin %", 4, "Profitability", "Budget" },
+				        { "Labor % of revenue", 5, "Efficiency", "Budget" },
+				        { "Revenue per labor hour", 6, "Efficiency", "Budget" },
+				        { "Markdown rate", 7, "Efficiency", "Budget" },
+				        { "Operating cash flow", 8, "Cash & Balance Sheet", "Budget" },
+				        { "Commercial DSO (days)", 9, "Cash & Balance Sheet", "Budget" },
+				        { "Days inventory (DIO)", 10, "Cash & Balance Sheet", "Budget" },
+				        { "Liquidity", 11, "Cash & Balance Sheet", "Covenant floor $7.5M" },
+				        { "Top-5 customer share", 12, "Growth", "Policy limit 45%" }
+				    }
+				)
+
+	annotation PBI_Id = 7bf9b4a6c99855558c99f7d13b419a08
+

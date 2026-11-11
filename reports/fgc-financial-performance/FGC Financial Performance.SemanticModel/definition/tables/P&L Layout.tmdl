@@ -1,0 +1,94 @@
+/// Rows of the income statement: each line, subtotal and margin, with the accounts it adds up.
+table 'P&L Layout'
+	lineageTag: b12c62c9-175b-564d-a10b-c48cb0667a20
+
+	/// Income statement line.
+	column Line
+		dataType: string
+		lineageTag: c0eed0b2-4383-55d4-a1fa-e7986b9d5740
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line]
+		sortByColumn: 'Line Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Line Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 27d0348a-9f27-5100-8e58-a99adc134df7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Line, Subtotal or Ratio.
+	column Kind
+		dataType: string
+		isHidden
+		lineageTag: 6d7130b3-ad46-546f-833d-6d677c7f86ea
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Kind]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Account numbers the line adds up, separated by |.
+	column Accounts
+		dataType: string
+		isHidden
+		lineageTag: 21845c87-5eb2-509e-be0a-3a103a221832
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Accounts]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// For margin rows: the accounts of the denominator (net revenue).
+	column Denominator
+		dataType: string
+		isHidden
+		lineageTag: 2698e601-1c87-5577-bd43-db2c9a9187fc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Denominator]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'P&L Layout' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Line", STRING,
+				    "Line Order", INTEGER,
+				    "Kind", STRING,
+				    "Accounts", STRING,
+				    "Denominator", STRING,
+				    {
+				        { "Gross Sales", 1, "Line", "4010|4020|4030|4040", "" },
+				        { "Discounts & Markdowns", 2, "Line", "4090", "" },
+				        { "Net Revenue", 3, "Subtotal", "4010|4020|4030|4040|4090", "" },
+				        { "Product Cost", 4, "Line", "5010", "" },
+				        { "Freight & Fulfillment", 5, "Line", "5020", "" },
+				        { "Shrink & Obsolescence", 6, "Line", "5030", "" },
+				        { "Service Delivery Cost", 7, "Line", "5040", "" },
+				        { "Gross Margin", 8, "Subtotal", "4010|4020|4030|4040|4090|5010|5020|5030|5040", "" },
+				        { "Gross Margin %", 9, "Ratio", "4010|4020|4030|4040|4090|5010|5020|5030|5040", "4010|4020|4030|4040|4090" },
+				        { "Labor", 10, "Line", "6010|6020|6030|6040", "" },
+				        { "Occupancy", 11, "Line", "6100|6110", "" },
+				        { "Marketing", 12, "Line", "6200", "" },
+				        { "Technology & Admin", 13, "Line", "6300|6400|6500", "" },
+				        { "EBITDA", 14, "Subtotal", "4010|4020|4030|4040|4090|5010|5020|5030|5040|6010|6020|6030|6040|6100|6110|6200|6300|6400|6500", "" },
+				        { "EBITDA Margin %", 15, "Ratio", "4010|4020|4030|4040|4090|5010|5020|5030|5040|6010|6020|6030|6040|6100|6110|6200|6300|6400|6500", "4010|4020|4030|4040|4090" },
+				        { "Depreciation & Amortization", 16, "Line", "7010", "" },
+				        { "Interest Expense", 17, "Line", "8010", "" },
+				        { "Income Tax", 18, "Line", "8020", "" },
+				        { "Net Income", 19, "Subtotal", "4010|4020|4030|4040|4090|5010|5020|5030|5040|6010|6020|6030|6040|6100|6110|6200|6300|6400|6500|7010|8010|8020", "" }
+				    }
+				)
+
+	annotation PBI_Id = 69ad217a3a985275a87ea8b85081512c
+

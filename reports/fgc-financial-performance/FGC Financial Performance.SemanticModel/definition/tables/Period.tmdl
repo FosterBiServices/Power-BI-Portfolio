@@ -1,0 +1,55 @@
+/// Disconnected table behind the Period buttons. Every window ends with the last month of actuals.
+table Period
+	lineageTag: ad376c91-6793-518c-8a2a-1d4a807e6f8e
+
+	/// Month, QTD, YTD or Last 12M.
+	column Period
+		dataType: string
+		lineageTag: c10e1154-6a9f-5d15-98e8-c7fcc8cea226
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period]
+		sortByColumn: 'Period Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Button order.
+	column 'Period Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2bf40ea5-caf9-50ff-8e8a-9f0270f9565c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The period in words.
+	column 'Period Name'
+		dataType: string
+		isHidden
+		lineageTag: e473b1d2-c298-59cb-b2db-57a5fa99a9ce
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Period = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Period", STRING,
+				    "Period Order", INTEGER,
+				    "Period Name", STRING,
+				    {
+				        { "Month", 1, "Month" },
+				        { "QTD", 2, "Quarter to date" },
+				        { "YTD", 3, "Year to date" },
+				        { "Last 12M", 4, "Last 12 months" }
+				    }
+				)
+
+	annotation PBI_Id = a9a96db4fec855fc97116bcb9db391ba
+

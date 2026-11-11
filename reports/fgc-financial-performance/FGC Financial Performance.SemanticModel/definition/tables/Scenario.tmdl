@@ -1,0 +1,42 @@
+/// Actual, Budget or Forecast. Filters every fact table.
+table Scenario
+	lineageTag: 2292ca71-42f5-5cfa-8d81-b75ac904278c
+
+	/// Actual, Budget or Forecast.
+	column Scenario
+		dataType: string
+		lineageTag: 98b97615-70d9-5085-8a0c-b306d3193267
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scenario]
+		sortByColumn: 'Scenario Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Sort order.
+	column 'Scenario Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 6844d705-b1ba-59b2-bc93-9d8e0a8f3077
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Scenario Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Scenario = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Scenario", STRING,
+				    "Scenario Order", INTEGER,
+				    {
+				        { "Actual", 1 },
+				        { "Budget", 2 },
+				        { "Forecast", 3 }
+				    }
+				)
+
+	annotation PBI_Id = 93a9212f748659428c48656d5acbf599
+

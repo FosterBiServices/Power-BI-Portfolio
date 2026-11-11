@@ -1,0 +1,73 @@
+/// Cash flow lines with their section and order.
+table 'Cash Flow Lines'
+	lineageTag: e0d4b569-92ed-5b84-a608-da336ec8e7ba
+
+	/// Cash flow line.
+	column 'Cash Flow Line'
+		dataType: string
+		lineageTag: 29b332cc-f271-5f91-b526-ea49039155af
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Cash Flow Line]
+		sortByColumn: 'Line Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Operating, Investing or Financing.
+	column Section
+		dataType: string
+		lineageTag: 46ff089f-d0b3-5fb4-ad10-04e0ba400623
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Section]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Group used by the cash bridge: Net Income, Depreciation & Amortization, Working Capital, Capital Expenditures, Debt, Distributions.
+	column 'Bridge Group'
+		dataType: string
+		lineageTag: 23539dad-8107-54cc-93b6-dc181fe4c69e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Bridge Group]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order on the statement.
+	column 'Line Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2005232c-a032-5092-92d4-15147778fdeb
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cash Flow Lines' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Cash Flow Line", STRING,
+				    "Section", STRING,
+				    "Bridge Group", STRING,
+				    "Line Order", INTEGER,
+				    {
+				        { "Net Income", "Operating", "Net Income", 1 },
+				        { "Depreciation & Amortization", "Operating", "Depreciation & Amortization", 2 },
+				        { "Change in Receivables", "Operating", "Working Capital", 3 },
+				        { "Change in Inventory", "Operating", "Working Capital", 4 },
+				        { "Change in Prepaid & Other", "Operating", "Working Capital", 5 },
+				        { "Change in Payables", "Operating", "Working Capital", 6 },
+				        { "Change in Accrued Liabilities", "Operating", "Working Capital", 7 },
+				        { "Change in Gift Cards & Deferred Revenue", "Operating", "Working Capital", 8 },
+				        { "Capital Expenditures", "Investing", "Capital Expenditures", 9 },
+				        { "Revolver Draws (Repayments)", "Financing", "Debt", 10 },
+				        { "Term Loan Repayments", "Financing", "Debt", 11 },
+				        { "Distributions to Owners", "Financing", "Distributions", 12 }
+				    }
+				)
+
+	annotation PBI_Id = 6d9ea765f9ae5426910c7f75c5053a3e
+

@@ -1,0 +1,78 @@
+STEP
+5
+Build it: Labels above the bars
+
+Add the measures first, then build the chart. Test on a copy of your report.
+
+Names aren’t checked without a model. Connect it in Step 1 to check them.
+1. Check the measures first (DAX query view, optional)
+
+Run it after step 2 to see the new measures for each item before you build the chart.
+
+DAX QUERY: TEST
+Copy query
+// Run in DAX query view after applying the script. One row per item.
+EVALUATE
+SUMMARIZECOLUMNS (
+	'Products'[Category],
+	"Product Margin Period", [Product Margin Period],
+	"Product Margin Period Label Spacer", [Product Margin Period Label Spacer],
+	"Selected Category", [Selected Category],
+	"Product Margin Period % of Total", [Product Margin Period % of Total]
+)
+ORDER BY "Product Margin Period" DESC
+2. Add them to your model (TMDL view)
+
+In Power BI Desktop, open TMDL view, paste the script into a new tab and select Apply. It adds 4 measures to _Measures.
+
+TMDL SCRIPT
+Copy script
+createOrReplace
+
+	ref table _Measures
+
+		measure 'Product Margin Period Label Spacer' = IF ( ISBLANK ( [Product Margin Period] ), BLANK (), 0 )
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Selected Category' = SELECTEDVALUE ( 'Products'[Category] )
+			displayFolder: Chart Patterns
+
+		measure 'Product Margin Period % of Total' = DIVIDE ( [Product Margin Period], CALCULATE ( [Product Margin Period], ALLSELECTED ( 'Products'[Category] ) ) )
+			formatString: 0.0%
+			displayFolder: Chart Patterns
+
+		measure 'Product Margin Period Subtitle' =
+				VAR _value = [Product Margin Period]
+				RETURN
+				"Product Margin Period: " & FORMAT ( _value, "\$#,0" )
+			displayFolder: Chart Patterns
+
+3. Build the chart in Power BI
+
+Names in the Format pane can differ a little between Power BI versions. Format settings are under Format your visual (the paintbrush) > Visual.
+
+Add the chart
+Add a Clustered bar chart. Put 'Products'[Category] on the Y-axis and, in this order, [Product Margin Period Label Spacer] then [Product Margin Period] on the X-axis.
+Sort it by Product Margin Period, descending (the ... menu on the visual > Sort axis).
+Format it
+Y-axis: off. X-axis: off. Legend: off.
+Bars > Layout: set Space between series to 25 and Space between categories to 25.
+Data labels: on.
+In Data labels, set Apply settings to to Product Margin Period: Position Outside end, Value color #404040, Italic on, Background off. The value sits just past the end of the bar.
+Set Apply settings to to Product Margin Period Label Spacer. In Value, set Field to [Selected Category]. Turn Detail on and set its Field to [Product Margin Period % of Total]. The spacer is an empty bar in the slot above each real bar, so its label sits on its own line above the bar.
+Title: your title. Subtitle: on, then select fx, Format style Field value, and pick [Product Margin Period Subtitle].
+Bars > Color: #01305C for Product Margin Period.
+4. Check it
+Each bar has its value in italics past its end, and the name and % sit on a line above the bar.
+No second bar is visible next to each bar.
+The % values add up to 100% across the bars.
+WHAT NEXT
+KPI Visualizer
+Showing a single number? Choose a KPI card
+Theme Builder
+Set the combo chart bubble size in your theme
+Layout Designer
+Place the chart on a page
+Everything runs in this page. Your fields and choices are saved only in this browser.
+Generated output can be wrong. Check all of it, and test changes on a copy of your model first. Provided as is, without warranty; you use it at your own discretion and risk. Full disclaimer

@@ -1,0 +1,43 @@
+CustomerKey,Customer,Customer Type,Segment,Region,Payment Terms Days,Customer Since
+1,In-Store Shoppers,Consumer,Retail,National,0,2009
+2,E-commerce Shoppers,Consumer,Online,National,0,2016
+101,Crest Valley Country Club,Commercial,Country Club,Central,60,2022
+102,Lakeside Bay Corporate Events,Commercial,Corporate,East,60,2015
+103,Stone Forge Country Club,Commercial,Country Club,East,60,2012
+104,Blue Field Country Club,Commercial,Country Club,South,60,2020
+105,Iron Works Country Club,Commercial,Country Club,South,60,2015
+106,Bright Hill Country Club,Commercial,Country Club,South,60,2021
+107,Lakeside Works Country Club,Commercial,Country Club,North,45,2011
+108,Prime Gate Corporate Events,Commercial,Corporate,East,45,2017
+109,Iron Peak Municipal Course,Commercial,Public Course,South,30,2018
+110,Harbor Forge Country Club,Commercial,Country Club,West,30,2010
+111,Crest Forge Country Club,Commercial,Country Club,West,30,2013
+112,Cedar Field Golf Resort,Commercial,Resort,East,30,2017
+113,River Ridge Country Club,Commercial,Country Club,South,30,2017
+114,Prime Brook Country Club,Commercial,Country Club,South,30,2017
+115,Harbor Wave Golf Club,Commercial,Golf Club,South,45,2008
+116,Bright Forge Municipal Course,Commercial,Public Course,West,30,2019
+117,Harbor Works Country Club,Commercial,Country Club,North,30,2010
+118,Golden Line Golf Club,Commercial,Golf Club,Central,30,2021
+119,Prime Peak Golf Resort,Commercial,Resort,Central,30,2022
+120,Swift Wave University Athletics,Commercial,University,South,30,2017
+121,Blue Forge Golf Resort,Commercial,Resort,East,45,2011
+122,Iron Hill University Athletics,Commercial,University,North,45,2017
+123,River Bay Country Club,Commercial,Country Club,South,45,2009
+124,Northern Brook Golf Club,Commercial,Golf Club,North,45,2012
+125,Cedar Wave University Athletics,Commercial,University,North,45,2011
+126,Summit Forge Municipal Course,Commercial,Public Course,Central,30,2017
+127,Oak Hill Golf Club,Commercial,Golf Club,East,30,2013
+128,Iron Wave Corporate Events,Commercial,Corporate,North,30,2011
+129,Golden Peak Municipal Course,Commercial,Public Course,North,30,2008
+130,Cedar Valley Country Club,Commercial,Country Club,East,45,2009
+131,Harbor Forge Corporate Events,Commercial,Corporate,West,30,2014
+132,Cedar Line Golf Resort,Commercial,Resort,South,45,2018
+133,Iron Brook Municipal Course,Commercial,Public Course,West,45,2022
+134,Harbor Forge Golf Club,Commercial,Golf Club,East,30,2010
+135,Prime Ridge Golf Club,Commercial,Golf Club,West,45,2012
+136,Bright Grove Municipal Course,Commercial,Public Course,South,45,2022
+137,Iron Grove Country Club,Commercial,Country Club,North,30,2021
+138,Harbor Forge Golf Resort,Commercial,Resort,East,30,2018
+139,Silver Brook Golf Club,Commercial,Golf Club,North,30,2022
+140,Clear Ridge Country Club,Commercial,Country Club,North,30,2015

@@ -1,0 +1,86 @@
+/// Product lines and services, with category and group.
+table Products
+	lineageTag: c7f68ea7-cf14-5b17-8800-c6e685a1b0d9
+
+	/// Key that links to Sales and Inventory.
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 3369f6fa-0b4f-5bc2-88a5-566d378c90e2
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Product line or service.
+	column 'Product Line'
+		dataType: string
+		lineageTag: b9bcbf8c-ab57-5d1b-b70a-6f83071e54f5
+		summarizeBy: none
+		sourceColumn: Product Line
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Clubs, Balls, Accessories & Tech, Footwear & Apparel or Services.
+	column Category
+		dataType: string
+		lineageTag: e026cd53-dbfe-5cb8-8514-52dbd4c242b6
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Hard Goods, Soft Goods or Services.
+	column 'Product Group'
+		dataType: string
+		lineageTag: dde9a266-5429-57dc-a399-f664c61c81a7
+		summarizeBy: none
+		sourceColumn: Product Group
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Typical list price in 2023.
+	column 'List Price'
+		dataType: double
+		formatString: $#,0
+		lineageTag: 92b5c7d6-7943-5a53-adf2-626ac617a403
+		summarizeBy: none
+		sourceColumn: List Price
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/Products.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("lZRNb8IwDIb/SpTDdskkUigfR7YJNmkTiKJxQDtk1JRIpanSFMS/n53CxiY6ulNa63nt2H7b5VIK/mj1DmzBBX9Iyw86n5SN2diYGF/CoPUuloHgI6XtXh3YoopfhNttgtsYPHxYXYsFPcI6gj9bk7EIXB0oZUhkKPgC4gRqsW6IVFfwaelcfSvBgJL1ELNwN9lnELMTdjFrn/C+x7e63GI8XbN7laZEns6fs0LBQPA3lZZwHQ/6iMuW4OPU7Hxzw9UKisJYDQW7YXNYbX5LOiTBpR2TJ81UXepEBjSgYsMelHUNq3kd7nOmsgTWOotxusiOp1ETfWUHiYueW6UznSVsWLniqrRDG5W4+CdQ8R6URexM1Ki6L949ziraGC8bGeNO+fJcWUgxGJm1+1q7t5xEm7xCdlucUVel3oYSHbMw239ryTsSzTMp0cKENrqs9F9nq3IwG2nncMoEgd3ple/4+7FqLTjZ54XmlxV19IC6CdA0kd6WqXLGouEOtXjocfIK5PiroKXMILE6z/+4ERrs/RM=", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "ProductKey",
+				            "Product Line",
+				            "Category",
+				            "Product Group",
+				            "List Price"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"ProductKey", Int64.Type},
+				            {"Product Line", type text},
+				            {"Category", type text},
+				            {"Product Group", type text},
+				            {"List Price", type number}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

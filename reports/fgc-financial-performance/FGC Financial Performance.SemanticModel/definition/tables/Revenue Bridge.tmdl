@@ -1,0 +1,43 @@
+/// Steps of the revenue variance bridge (actual vs budget).
+table 'Revenue Bridge'
+	lineageTag: cbef8e5e-4f05-5785-8e22-da98abeab0bc
+
+	/// Volume, Mix, Price or Markdowns.
+	column Step
+		dataType: string
+		lineageTag: 2dff9e9b-11c1-507f-a65a-df02a082685f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step]
+		sortByColumn: 'Step Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Step Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 50befa38-1625-5336-a20c-aab52534013b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Revenue Bridge' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Step", STRING,
+				    "Step Order", INTEGER,
+				    {
+				        { "Volume", 1 },
+				        { "Mix", 2 },
+				        { "Price", 3 },
+				        { "Markdowns", 4 }
+				    }
+				)
+
+	annotation PBI_Id = 51a745a640c555f0b0b83f4134d08e6d
+

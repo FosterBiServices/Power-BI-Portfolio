@@ -1,0 +1,55 @@
+/// Receivables aging buckets in order.
+table 'Aging Buckets'
+	lineageTag: 0602be7a-1361-5605-aac8-eee79e5916c1
+
+	/// Days past due.
+	column 'Aging Bucket'
+		dataType: string
+		lineageTag: 194cf746-d436-5ebb-8eb7-4ec2fadee143
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Aging Bucket]
+		sortByColumn: 'Bucket Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Bucket Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 81b44b35-e421-5710-83b9-9263e7424e58
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Bucket Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Yes for 61-90 and 90+ days.
+	column 'Is Overdue 60+'
+		dataType: string
+		lineageTag: 1b524ec6-9d34-5fb2-8272-6c46a32293d0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Overdue 60+]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Aging Buckets' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Aging Bucket", STRING,
+				    "Bucket Order", INTEGER,
+				    "Is Overdue 60+", STRING,
+				    {
+				        { "Current", 1, "No" },
+				        { "1-30 Days", 2, "No" },
+				        { "31-60 Days", 3, "No" },
+				        { "61-90 Days", 4, "Yes" },
+				        { "90+ Days", 5, "Yes" }
+				    }
+				)
+
+	annotation PBI_Id = c626c08865bf5dd888e751032285ea22
+

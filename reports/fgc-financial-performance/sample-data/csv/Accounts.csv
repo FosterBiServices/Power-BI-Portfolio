@@ -1,0 +1,36 @@
+AccountKey,Account,Line,Section,Statement,Sign
+4010,Store Product Sales,Gross Sales,Revenue,Income Statement,1
+4020,E-commerce Sales,Gross Sales,Revenue,Income Statement,1
+4030,Commercial Sales,Gross Sales,Revenue,Income Statement,1
+4040,Services Revenue,Gross Sales,Revenue,Income Statement,1
+4090,Discounts & Markdowns,Discounts & Markdowns,Revenue,Income Statement,-1
+5010,Product Cost,Cost of Sales,Cost of Sales,Income Statement,-1
+5020,Freight & Fulfillment,Cost of Sales,Cost of Sales,Income Statement,-1
+5030,Shrink & Obsolescence,Cost of Sales,Cost of Sales,Income Statement,-1
+5040,Service Delivery Cost,Cost of Sales,Cost of Sales,Income Statement,-1
+6010,Store & Fulfillment Labor,Labor,Operating Expenses,Income Statement,-1
+6020,Fitting & Instruction Labor,Labor,Operating Expenses,Income Statement,-1
+6030,Corporate & Account Salaries,Labor,Operating Expenses,Income Statement,-1
+6040,Benefits & Payroll Taxes,Labor,Operating Expenses,Income Statement,-1
+6100,Rent & Occupancy,Occupancy,Operating Expenses,Income Statement,-1
+6110,Utilities,Occupancy,Operating Expenses,Income Statement,-1
+6200,Marketing,Marketing,Operating Expenses,Income Statement,-1
+6300,Technology,Technology & Admin,Operating Expenses,Income Statement,-1
+6400,Card & Payment Fees,Technology & Admin,Operating Expenses,Income Statement,-1
+6500,Other G&A,Technology & Admin,Operating Expenses,Income Statement,-1
+7010,Depreciation & Amortization,Depreciation & Amortization,Below EBITDA,Income Statement,-1
+8010,Interest Expense,Interest,Below EBITDA,Income Statement,-1
+8020,Income Tax,Income Tax,Below EBITDA,Income Statement,-1
+1010,Cash,Cash,Current Assets,Balance Sheet,1
+1100,Accounts Receivable,Accounts Receivable,Current Assets,Balance Sheet,1
+1200,Inventory,Inventory,Current Assets,Balance Sheet,1
+1300,Prepaid & Other,Prepaid & Other,Current Assets,Balance Sheet,1
+1500,Property & Equipment,"Property & Equipment, Net",Long-Term Assets,Balance Sheet,1
+1510,Accumulated Depreciation,"Property & Equipment, Net",Long-Term Assets,Balance Sheet,-1
+2010,Accounts Payable,Accounts Payable,Current Liabilities,Balance Sheet,1
+2100,Accrued Liabilities,Accrued Liabilities,Current Liabilities,Balance Sheet,1
+2200,Gift Cards & Deferred Revenue,Gift Cards & Deferred Revenue,Current Liabilities,Balance Sheet,1
+2300,Revolving Credit Facility,Revolving Credit Facility,Debt,Balance Sheet,1
+2400,Term Loan,Term Loan,Debt,Balance Sheet,1
+3010,Paid-In Capital,Paid-In Capital,Equity,Balance Sheet,1
+3020,Retained Earnings,Retained Earnings,Equity,Balance Sheet,1

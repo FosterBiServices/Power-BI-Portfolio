@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "FGC Financial Performance"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6b0f4a7e-9a3c-4c1e-9d8b-2f1a7c5e3d40"
+  }
+}

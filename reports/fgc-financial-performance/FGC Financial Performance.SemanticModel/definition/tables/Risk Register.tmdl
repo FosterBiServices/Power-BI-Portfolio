@@ -1,0 +1,140 @@
+/// The risk register: each risk with its owner, impact (1-5), key risk indicator and thresholds. Likelihood and status come from the indicator.
+table 'Risk Register'
+	lineageTag: f748db95-0ca1-5791-a414-eca38de3574b
+
+	/// R1 to R8.
+	column 'Risk ID'
+		dataType: string
+		lineageTag: 607476b5-9a25-5285-a344-ea2b27fb5f07
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Risk ID]
+		sortByColumn: 'Risk Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Risk Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: ff46927d-667a-525f-a4f1-4a1785c9bcde
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Risk Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// The risk.
+	column Risk
+		dataType: string
+		lineageTag: 415104f4-148f-5039-929b-00fe85e8eb2b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Risk]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Who owns it.
+	column Owner
+		dataType: string
+		lineageTag: 00fd2b32-c579-5be8-8e1e-07ebd8ff8115
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Owner]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Financial impact if it happens, 1 (low) to 5 (severe).
+	column Impact
+		dataType: int64
+		formatString: 0
+		lineageTag: 7b595c54-a8c7-5f8f-b838-9c126c893574
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Impact]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Key risk indicator.
+	column Indicator
+		dataType: string
+		lineageTag: 535547e2-b329-5f91-9110-8ba3be23e43d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Indicator]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicator value where the risk turns amber.
+	column 'Amber At'
+		dataType: double
+		isHidden
+		lineageTag: 4cfdfc41-fa42-5e9e-a2a4-9fc2bc0e0d1f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Amber At]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Indicator value where the risk turns red.
+	column 'Red At'
+		dataType: double
+		isHidden
+		lineageTag: b245a203-6a61-54f8-a174-40d0564bf6f2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Red At]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// 1 when a higher indicator is worse.
+	column 'Higher Is Worse'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: e090e0dd-7432-55cf-b18a-e78f8032b152
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Higher Is Worse]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Mitigation.
+	column Response
+		dataType: string
+		lineageTag: 2699dd88-dedf-53d8-b765-aa996eab0508
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Response]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Risk Register' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Risk ID", STRING,
+				    "Risk Order", INTEGER,
+				    "Risk", STRING,
+				    "Owner", STRING,
+				    "Impact", INTEGER,
+				    "Indicator", STRING,
+				    "Amber At", DOUBLE,
+				    "Red At", DOUBLE,
+				    "Higher Is Worse", INTEGER,
+				    "Response", STRING,
+				    {
+				        { "R1", 1, "Liquidity squeeze in the 2027 pre-season build", "CFO", 5, "Lowest forecast liquidity, next 6 months", 9000000, 7500000, 0, "Cut Q1 apparel buys, collect overdue AR, hold Phase 2 bays" },
+				        { "R2", 2, "Commercial customer concentration", "VP Commercial", 3, "Top-5 share of commercial revenue", 0.4, 0.45, 1, "Account plans for the top 10; add 8 new clubs" },
+				        { "R3", 3, "Slow-paying commercial accounts", "Controller", 3, "Commercial DSO (days)", 60, 70, 1, "Weekly collections calls; credit hold at 90 days" },
+				        { "R4", 4, "Aged apparel inventory", "Merchandising", 4, "Inventory aged 180+ days, % of total", 0.1, 0.14, 1, "Clearance event and vendor returns" },
+				        { "R5", 5, "Markdowns eroding gross margin", "Merchandising", 4, "Markdown rate, % of gross sales", 0.072, 0.08, 1, "Smaller, later apparel buys; markdown cadence" },
+				        { "R6", 6, "Overtime and staffing gaps in stores", "Store Ops", 2, "Store overtime, % of hours", 0.04, 0.06, 1, "Fill open roles at Stores 07 and 11" },
+				        { "R7", 7, "POS & ERP project overrun", "CIO", 3, "Forecast cost over approved budget", 0.05, 0.15, 1, "Freeze scope; phase 2 needs a new business case" },
+				        { "R8", 8, "E-commerce freight cost inflation", "VP E-commerce", 2, "Freight, % of e-commerce revenue", 0.095, 0.1, 1, "Re-bid carriers; free-shipping threshold to $99" }
+				    }
+				)
+
+	annotation PBI_Id = a10892c49bce54dc8b04b310a8144ae8
+

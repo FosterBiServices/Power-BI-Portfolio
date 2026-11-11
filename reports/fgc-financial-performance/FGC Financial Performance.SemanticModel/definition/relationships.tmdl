@@ -1,0 +1,103 @@
+relationship 853d3168-8d37-55c1-bee2-133637246588
+	fromColumn: Sales.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship c61f0eed-161b-53a3-8849-772788e26d1f
+	fromColumn: Sales.Scenario
+	toColumn: Scenario.Scenario
+
+relationship 3f9b674a-5c04-5d06-a18d-f3a980e0f6d4
+	fromColumn: Sales.LocationKey
+	toColumn: Locations.LocationKey
+
+relationship 9e798935-32a7-5126-a387-bfa1ec66ca50
+	fromColumn: Sales.ProductKey
+	toColumn: Products.ProductKey
+
+relationship 127d634f-bb1c-51df-bd23-aa76b033fa4c
+	fromColumn: Sales.CustomerKey
+	toColumn: Customers.CustomerKey
+
+relationship 6cc5dc60-55e5-570b-b011-1597f8c416ed
+	fromColumn: Labor.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship 28d0aee5-0bb6-55ce-b40d-9cdce2ca657b
+	fromColumn: Labor.Scenario
+	toColumn: Scenario.Scenario
+
+relationship 3f36091a-a7d3-5b28-80a6-6ef0df8b65ff
+	fromColumn: Labor.LocationKey
+	toColumn: Locations.LocationKey
+
+relationship e23a9dff-9ff3-5e70-831b-9d659ee8064e
+	fromColumn: 'General Ledger'.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship 7b40ae17-5c8c-50fa-afcd-e202a96e8bb7
+	fromColumn: 'General Ledger'.Scenario
+	toColumn: Scenario.Scenario
+
+relationship 8c001826-1c2b-5d87-9255-14890597ae96
+	fromColumn: 'General Ledger'.LocationKey
+	toColumn: Locations.LocationKey
+
+relationship d1e16f9b-c533-5543-9f03-66161e41aa91
+	fromColumn: 'General Ledger'.AccountKey
+	toColumn: Accounts.AccountKey
+
+relationship 820129a0-bfe5-59e3-b1e4-4f1b02d85ff8
+	fromColumn: 'Cash Flow'.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship ba834fdb-8f9a-5085-84bf-0ea07eadb741
+	fromColumn: 'Cash Flow'.Scenario
+	toColumn: Scenario.Scenario
+
+relationship 9e883c26-2006-5643-8f51-691d3a01053b
+	fromColumn: 'Cash Flow'.'Cash Flow Line'
+	toColumn: 'Cash Flow Lines'.'Cash Flow Line'
+
+relationship 7e3c250c-fc55-5dee-975d-fadff0ea7e7d
+	fromColumn: 'AR Aging'.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship 7ff2d913-ffad-500c-8084-c1165f229ce5
+	fromColumn: 'AR Aging'.Scenario
+	toColumn: Scenario.Scenario
+
+relationship dbfb35a9-74d1-5c4a-94f9-78e48fa4bd0e
+	fromColumn: 'AR Aging'.CustomerKey
+	toColumn: Customers.CustomerKey
+
+relationship 1e13323e-0673-5105-931e-8e3313a69e8a
+	fromColumn: 'AR Aging'.'Aging Bucket'
+	toColumn: 'Aging Buckets'.'Aging Bucket'
+
+relationship 63e269b6-c66a-5816-bf08-b73bbefdf65f
+	fromColumn: Inventory.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship 472a3745-2d58-5e2e-8cbb-b21afe73785a
+	fromColumn: Inventory.Scenario
+	toColumn: Scenario.Scenario
+
+relationship 2deae431-13d4-5623-836c-5d533b0c5356
+	fromColumn: Inventory.ProductKey
+	toColumn: Products.ProductKey
+
+relationship 56928b43-27e9-5038-afd0-8411ea4aec80
+	fromColumn: 'CapEx Spend'.'Date'
+	toColumn: 'Date'.'Date'
+
+relationship 66f56740-b944-509f-95d7-f5a04f1f4b5c
+	fromColumn: 'CapEx Spend'.Scenario
+	toColumn: Scenario.Scenario
+
+relationship f4f3e7b2-24b8-5f0b-8d54-7dfeaf66e293
+	fromColumn: 'CapEx Spend'.ProjectKey
+	toColumn: 'CapEx Projects'.ProjectKey
+
+relationship 6aac93ad-0f8c-5021-b479-ef7885ed9c42
+	fromColumn: 'CapEx Projects'.LocationKey
+	toColumn: Locations.LocationKey

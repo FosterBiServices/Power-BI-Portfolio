@@ -1,0 +1,135 @@
+/// Capital projects with their approved budget, dates and the yearly benefit the business case expects.
+table 'CapEx Projects'
+	lineageTag: 74f5e5c5-d9e1-5714-bdd9-1afeddd7de3b
+
+	/// Project ID, CP-01 to CP-11. Links to CapEx Spend.
+	column ProjectKey
+		isHidden
+		dataType: string
+		lineageTag: a0bdce6b-bb67-51bd-bcae-aa3206349155
+		summarizeBy: none
+		sourceColumn: ProjectKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Project name.
+	column Project
+		dataType: string
+		lineageTag: b27768fb-759b-5197-b5ff-89d066717def
+		summarizeBy: none
+		sourceColumn: Project
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Growth, Technology or Maintenance.
+	column 'Project Type'
+		dataType: string
+		lineageTag: 7f5fce20-03c1-5760-b942-0f3c6768d6f6
+		summarizeBy: none
+		sourceColumn: Project Type
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Links to Locations.
+	column LocationKey
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: d3b45566-6b0e-598f-be6b-2988e353ff4a
+		summarizeBy: none
+		sourceColumn: LocationKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Budget approved for the project.
+	column 'Approved Budget'
+		dataType: double
+		formatString: $#,0
+		lineageTag: e25afadd-9ce2-5fae-9d51-e98271d09d14
+		summarizeBy: sum
+		sourceColumn: Approved Budget
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Month the project started.
+	column 'Start Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 11302b90-ce4d-50be-8b68-cb2cec032575
+		summarizeBy: none
+		sourceColumn: Start Date
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Planned completion month.
+	column 'Planned Completion'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 779ab21e-c99d-5d28-9566-8e982718a90c
+		summarizeBy: none
+		sourceColumn: Planned Completion
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Month it was completed (blank if open).
+	column 'Actual Completion'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 4941c5ce-ea1c-5bfe-8d35-08f3f811e087
+		summarizeBy: none
+		sourceColumn: Actual Completion
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Yearly EBITDA benefit in the business case.
+	column 'Annual Benefit'
+		dataType: double
+		formatString: $#,0
+		lineageTag: f19724ba-9407-5e14-b96e-d92ac9e190c5
+		summarizeBy: sum
+		sourceColumn: Annual Benefit
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'CapEx Projects' = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/CapEx Projects.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("dZNNb5tAEIb/yopDlUhrif0AzDF14vZSxbLb9BD5QPDYXgl2LViS+N9n7C14cBMuaJjd95mPl+fnaLaYxCLi0V94aY0HtoRDVfita2r8+BvKvXWV2x0jLhRPkxgfHslYarwVLoYgn6i4D0Q8UZhR09PpNQ8MidmVdw2wuXn3XQMtorb42mPiV2GsB1vYEhCUcC0pSBGQEBQUgoGhMDE33hu7YyvfbYxr2Y1i7Qnb3mLyR+Pe/P6MSPSASGgvGEzP5Y8CmdJe9KkXU3c4KNew78WxZYt90QITY4Y43xog2QBJT02p6yCTFJJgdvG4Yt/Yw3LB/hx2TbGB650gQ1IGjp4wQu22qyquBNVOh2XEGtdQuw1UpHTN84so6kgqmtHCA0HkVDzD7MOkdHUNTQnsfsbuOu/qwhtn6XwUzxJKSQhFyEvpUlP1KR75+XQ3w7ksndsGv5ZQg/XtJ04KJuwRgiJi2kg+dlKOiXuozCs0R/ZUWDavAPx/+vqfMXoVTQeVDk4dgl5fxF85SF45SF8WkdE/IevrP48o+KwXF+M62aw4wDu7cXbn8M+4/WRKAaDogLLRDuL1+gM=", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "ProjectKey",
+				            "Project",
+				            "Project Type",
+				            "LocationKey",
+				            "Approved Budget",
+				            "Start Date",
+				            "Planned Completion",
+				            "Actual Completion",
+				            "Annual Benefit"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"ProjectKey", type text},
+				            {"Project", type text},
+				            {"Project Type", type text},
+				            {"LocationKey", Int64.Type},
+				            {"Approved Budget", type number},
+				            {"Start Date", type date},
+				            {"Planned Completion", type date},
+				            {"Actual Completion", type date},
+				            {"Annual Benefit", type number}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

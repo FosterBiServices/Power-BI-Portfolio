@@ -1,0 +1,255 @@
+/// Calendar from the Foster BI Toolkit Date Table Generator: one row per day, 2023 to 2027, US holidays, marked as the date table. Fact tables are dated at month end.
+table Date
+	lineageTag: fcf135ac-87ad-5c5b-9db9-61ce2d49ba04
+	dataCategory: Time
+
+	column Date
+		lineageTag: 7b581bf8-f41b-5d6d-bb4b-bbe331a31369
+		dataType: dateTime
+		isDataTypeInferred
+		isKey
+		formatString: Short Date
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+	column Year
+		lineageTag: bcd0471d-8d0f-5838-810e-12aa6e2d9493
+		dataType: int64
+		isDataTypeInferred
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+	column Quarter
+		lineageTag: d77c3212-9901-5523-a5c5-1785a628ee54
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+	column 'Year Quarter'
+		lineageTag: 2f2feaf1-f6eb-578f-9acb-75073f723d2e
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter]
+
+	column 'Month Number'
+		lineageTag: a7dc9074-ff91-5de9-94c2-8e0115487de3
+		dataType: int64
+		isDataTypeInferred
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+	column 'Month Name'
+		lineageTag: b393c216-11fb-5e1b-b3f4-9f12c802f2e5
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+	column 'Month Short'
+		lineageTag: 1af2b7c9-5963-5b18-b291-8c75496ce760
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Short]
+		sortByColumn: 'Month Number'
+
+	column 'Year Month'
+		lineageTag: a68068ac-c8d2-5da9-a433-3eb5c9fde60d
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month]
+		sortByColumn: 'Month Sort'
+
+	column 'Month Sort'
+		lineageTag: 248c368c-c652-546e-9590-c64783104198
+		dataType: int64
+		isDataTypeInferred
+		formatString: 0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Sort]
+
+	column 'Month Start'
+		lineageTag: b60b87fc-a434-54cd-8633-29edacec1f8f
+		dataType: dateTime
+		isDataTypeInferred
+		formatString: mmm yy
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Start]
+
+	column 'Month End'
+		lineageTag: d731e5e5-32af-57c4-8f76-ccfc4eea17e2
+		dataType: dateTime
+		isDataTypeInferred
+		formatString: Short Date
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month End]
+
+	column 'Fiscal Year'
+		lineageTag: 1c666ed2-a6aa-5915-bbca-7b3e1ef6b957
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fiscal Year]
+
+	column 'Is Weekend'
+		lineageTag: ee8c327a-f228-589a-b786-011169e27823
+		dataType: boolean
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Weekend]
+
+	column 'Is Holiday'
+		lineageTag: 407ea8e9-3634-51a5-b463-6893ac6e4f37
+		dataType: boolean
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Holiday]
+
+	column 'Holiday Name'
+		lineageTag: 56d0df52-15d4-5d6f-a5fc-807c1cfaa080
+		dataType: string
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Holiday Name]
+
+	column 'Is Working Day'
+		lineageTag: d3c846da-15a4-524a-9011-41b67389a77d
+		dataType: boolean
+		isDataTypeInferred
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Working Day]
+
+	/// Month and two-digit year, such as Oct 26. Chart axis label.
+	column 'Month Label' = FORMAT( 'Date'[Date], "mmm yy" )
+		dataType: string
+		lineageTag: 0c4a24c1-177d-5dc3-91ca-a8070270703c
+		summarizeBy: none
+		sortByColumn: 'Month Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Months after the last month of actuals: 0 is that month, -1 the month before, 1 the first forecast month.
+	column 'Month Offset' =
+			VAR _AsOf = MAXX( FILTER( ALL( Sales[Date], Sales[Scenario] ), Sales[Scenario] = "Actual" ), Sales[Date] )
+			RETURN ( YEAR( 'Date'[Date] ) - YEAR( _AsOf ) ) * 12 + MONTH( 'Date'[Date] ) - MONTH( _AsOf )
+		dataType: int64
+		formatString: 0
+		lineageTag: 4bd75d54-e5ec-5a4b-a45a-cf334e8e7a71
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Years after the year of the last month of actuals: 0 is this year, -1 last year, 1 next year.
+	column 'Year Offset' =
+			VAR _AsOf = MAXX( FILTER( ALL( Sales[Date], Sales[Scenario] ), Sales[Scenario] = "Actual" ), Sales[Date] )
+			RETURN YEAR( 'Date'[Date] ) - YEAR( _AsOf )
+		dataType: int64
+		formatString: 0
+		lineageTag: d20af785-8962-5855-8464-637d0859f422
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Actual for months up to the last month of actuals, Forecast after.
+	column 'Actual or Forecast' = IF( 'Date'[Month Offset] <= 0, "Actual", "Forecast" )
+		dataType: string
+		lineageTag: 2e911334-b574-50e0-878a-31fbce866a7e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source =
+			// Date table: 2023-01-01 to 2027-12-31
+			// Made with the Date Table Generator. Fiscal year starts in January.
+			VAR _start = DATE ( 2023, 1, 1 )
+			VAR _end = DATE ( 2027, 12, 31 )
+			// Holidays: worked out from rules for every year in the range, so they keep up as the dates move
+			VAR _holidays =
+			    SELECTCOLUMNS (
+			            FILTER (
+			                GENERATE (
+			                    GENERATESERIES ( YEAR ( _start ) - 1, YEAR ( _end ) + 1, 1 ),
+			                    VAR _hy = [Value]
+			                    RETURN
+			                        UNION (
+			                            ROW ( "HolidayDate", DATE ( _hy, 1, 1 ), "HolidayName", "New Year's Day", "Seq", _hy * 100 + 1 ),
+			                            ROW ( "HolidayDate", SWITCH ( WEEKDAY ( DATE ( _hy, 1, 1 ), 1 ), 7, DATE ( _hy, 1, 1 ) - 1, 1, DATE ( _hy, 1, 1 ) + 1 ), "HolidayName", "New Year's Day (observed)", "Seq", _hy * 100 + 2 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 1, 1 ) + MOD ( 2 - WEEKDAY ( DATE ( _hy, 1, 1 ), 1 ) + 7, 7 ) + 14, "HolidayName", "Martin Luther King Jr. Day", "Seq", _hy * 100 + 3 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 2, 1 ) + MOD ( 2 - WEEKDAY ( DATE ( _hy, 2, 1 ), 1 ) + 7, 7 ) + 14, "HolidayName", "Presidents' Day", "Seq", _hy * 100 + 4 ),
+			                            ROW ( "HolidayDate", EOMONTH ( DATE ( _hy, 5, 1 ), 0 ) - MOD ( WEEKDAY ( EOMONTH ( DATE ( _hy, 5, 1 ), 0 ), 1 ) - 2 + 7, 7 ), "HolidayName", "Memorial Day", "Seq", _hy * 100 + 5 ),
+			                            ROW ( "HolidayDate", IF ( _hy >= 2021, DATE ( _hy, 6, 19 ) ), "HolidayName", "Juneteenth", "Seq", _hy * 100 + 6 ),
+			                            ROW ( "HolidayDate", IF ( _hy >= 2021, SWITCH ( WEEKDAY ( DATE ( _hy, 6, 19 ), 1 ), 7, DATE ( _hy, 6, 19 ) - 1, 1, DATE ( _hy, 6, 19 ) + 1 ) ), "HolidayName", "Juneteenth (observed)", "Seq", _hy * 100 + 7 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 7, 4 ), "HolidayName", "Independence Day", "Seq", _hy * 100 + 8 ),
+			                            ROW ( "HolidayDate", SWITCH ( WEEKDAY ( DATE ( _hy, 7, 4 ), 1 ), 7, DATE ( _hy, 7, 4 ) - 1, 1, DATE ( _hy, 7, 4 ) + 1 ), "HolidayName", "Independence Day (observed)", "Seq", _hy * 100 + 9 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 9, 1 ) + MOD ( 2 - WEEKDAY ( DATE ( _hy, 9, 1 ), 1 ) + 7, 7 ), "HolidayName", "Labor Day", "Seq", _hy * 100 + 10 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 10, 1 ) + MOD ( 2 - WEEKDAY ( DATE ( _hy, 10, 1 ), 1 ) + 7, 7 ) + 7, "HolidayName", "Columbus Day", "Seq", _hy * 100 + 11 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 11, 11 ), "HolidayName", "Veterans Day", "Seq", _hy * 100 + 12 ),
+			                            ROW ( "HolidayDate", SWITCH ( WEEKDAY ( DATE ( _hy, 11, 11 ), 1 ), 7, DATE ( _hy, 11, 11 ) - 1, 1, DATE ( _hy, 11, 11 ) + 1 ), "HolidayName", "Veterans Day (observed)", "Seq", _hy * 100 + 13 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 11, 1 ) + MOD ( 5 - WEEKDAY ( DATE ( _hy, 11, 1 ), 1 ) + 7, 7 ) + 21, "HolidayName", "Thanksgiving Day", "Seq", _hy * 100 + 14 ),
+			                            ROW ( "HolidayDate", DATE ( _hy, 12, 25 ), "HolidayName", "Christmas Day", "Seq", _hy * 100 + 15 ),
+			                            ROW ( "HolidayDate", SWITCH ( WEEKDAY ( DATE ( _hy, 12, 25 ), 1 ), 7, DATE ( _hy, 12, 25 ) - 1, 1, DATE ( _hy, 12, 25 ) + 1 ), "HolidayName", "Christmas Day (observed)", "Seq", _hy * 100 + 16 )
+			                        )
+			                ),
+			                NOT ISBLANK ( [HolidayDate] )
+			            ),
+			            "HolidayDate", [HolidayDate],
+			            "HolidayName", [HolidayName],
+			            "Seq", [Seq]
+			        )
+			RETURN
+			    GENERATE (
+			        CALENDAR ( _start, _end ),
+			        VAR _d = [Date]
+			        VAR _y = YEAR ( _d )
+			        VAR _m = MONTH ( _d )
+			        VAR _q = QUARTER ( _d )
+			        VAR _dow = WEEKDAY ( _d, 2 )
+			        VAR _fsy = _y - IF ( _m < 1, 1, 0 )
+			        VAR _fy = _fsy
+			        VAR _fm = MOD ( _m - 1 + 12, 12 ) + 1
+			        VAR _fq = QUOTIENT ( _fm - 1, 3 ) + 1
+			        VAR _weekend = WEEKDAY ( _d, 1 ) IN { 1, 7 }
+			        VAR _hol = CONCATENATEX ( FILTER ( _holidays, [HolidayDate] = _d ), [HolidayName], " / ", [Seq], ASC )
+			        RETURN
+			            ROW (
+			                "Year", _y,
+			                "Quarter", "Q" & _q,
+			                "Year Quarter", _y & " Q" & _q,
+			                "Month Number", _m,
+			                "Month Name", FORMAT ( _d, "mmmm" ),
+			                "Month Short", FORMAT ( _d, "mmm" ),
+			                "Year Month", FORMAT ( _d, "mmm yyyy" ),
+			                "Month Sort", _y * 12 + _m,
+			                "Month Start", DATE ( _y, _m, 1 ),
+			                "Month End", EOMONTH ( _d, 0 ),
+			                "Fiscal Year", "FY" & _fy,
+			                "Is Weekend", _weekend,
+			                "Is Holiday", NOT ISBLANK ( _hol ),
+			                "Holiday Name", _hol,
+			                "Is Working Day", NOT _weekend && ISBLANK ( _hol )
+			            )
+			    )

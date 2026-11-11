@@ -1,0 +1,154 @@
+STEP
+5
+Build it: Top N per page
+
+Add the measures first, then build the chart. Test on a copy of your report.
+
+Names aren’t checked without a model. Connect it in Step 1 to check them.
+1. Check the measures first (DAX query view, optional)
+
+Run it after step 2 to see the new measures for each item before you build the chart.
+
+DAX QUERY: TEST
+Copy query
+// Run in DAX query view after applying the script. One row per item. Rank should run 1, 2, 3 with no repeats or gaps.
+EVALUATE
+SUMMARIZECOLUMNS (
+	'Customers'[Customer],
+	"Commercial Revenue Period", [Commercial Revenue Period],
+	"Customer Rank", [Customer Rank],
+	"Customer Rank Label", [Customer Rank Label],
+	"Commercial Revenue Period Rank Badge", [Commercial Revenue Period Rank Badge],
+	"Commercial Revenue Period Page Axis Max", [Commercial Revenue Period Page Axis Max],
+	"Commercial Revenue Period Page Axis Min", [Commercial Revenue Period Page Axis Min]
+)
+ORDER BY "Commercial Revenue Period" DESC
+2. Add them to your model (TMDL view)
+
+In Power BI Desktop, open TMDL view, paste the script into a new tab and select Apply. It adds 6 measures to _Measures and the Items per Page and Page Number tables.
+
+TMDL SCRIPT
+Copy script
+createOrReplace
+
+	ref table _Measures
+
+		measure 'Customer Rank' =
+				IF (
+					ISBLANK ( [Commercial Revenue Period] ) || NOT HASONEVALUE ( 'Customers'[Customer] ),
+					BLANK (),
+					RANK (
+						ALL ( 'Customers'[Customer] ),
+						ORDERBY ( [Commercial Revenue Period], DESC, 'Customers'[Customer], ASC )
+					)
+				)
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Customer Rank Label' =
+				VAR _rank = [Customer Rank]
+				RETURN
+					IF ( ISBLANK ( _rank ), BLANK (), "#" & FORMAT ( _rank, "#,0" ) )
+			displayFolder: Chart Patterns
+
+		measure 'Commercial Revenue Period Page Axis Max' = CALCULATE ( MAXX ( VALUES ( 'Customers'[Customer] ), [Commercial Revenue Period] ), REMOVEFILTERS ( 'Customers' ) ) * 1.15
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Commercial Revenue Period Page Axis Min' = -0.2 * [Commercial Revenue Period Page Axis Max]
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Commercial Revenue Period Rank Badge' = IF ( ISBLANK ( [Commercial Revenue Period] ), BLANK (), -0.15 * [Commercial Revenue Period Page Axis Max] )
+			displayFolder: Chart Patterns
+
+		measure 'Commercial Revenue Period Page Subtitle' =
+				VAR _all = CALCULATE ( [Commercial Revenue Period], REMOVEFILTERS ( 'Customers'[Customer] ) )
+				RETURN
+					"Shown: " & FORMAT ( [Commercial Revenue Period], "\$#,0" ) & " | All: " & FORMAT ( _all, "\$#,0" )
+			displayFolder: Chart Patterns
+
+	table 'Items per Page'
+		measure 'Items per Page Value' = SELECTEDVALUE ( 'Items per Page'[Items per Page], 10 )
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Item Filter' =
+				VAR _page = [Page Number Value]
+				VAR _items = [Items per Page Value]
+				VAR _rank = [Customer Rank]
+				RETURN
+					IF ( ISBLANK ( [Commercial Revenue Period] ), 0,
+						IF ( _rank > ( _page - 1 ) * _items && _rank <= _page * _items, 1, 0 )
+					)
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		column 'Items per Page'
+			dataType: int64
+			formatString: 0
+			summarizeBy: none
+			sourceColumn: [Value]
+
+		partition 'Items per Page' = calculated
+			mode: import
+			source = GENERATESERIES ( 1, 20, 1 )
+
+	table 'Page Number'
+		measure 'Page Number Value' = SELECTEDVALUE ( 'Page Number'[Page Number], 1 )
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		measure 'Page Filter' =
+				VAR _count =
+					COUNTROWS ( FILTER ( ALL ( 'Customers'[Customer] ), NOT ISBLANK ( [Commercial Revenue Period] ) ) )
+				VAR _pages = ROUNDUP ( DIVIDE ( _count, [Items per Page Value] ), 0 )
+				RETURN
+					IF ( SELECTEDVALUE ( 'Page Number'[Page Number] ) <= _pages, 1, 0 )
+			formatString: 0
+			displayFolder: Chart Patterns
+
+		column 'Page Number'
+			dataType: int64
+			formatString: 0
+			summarizeBy: none
+			sourceColumn: [Value]
+
+		partition 'Page Number' = calculated
+			mode: import
+			source = GENERATESERIES ( 1, 10, 1 )
+
+3. Build the chart in Power BI
+
+Names in the Format pane can differ a little between Power BI versions. Format settings are under Format your visual (the paintbrush) > Visual.
+
+Add the chart
+Add a Stacked bar chart. Put 'Customers'[Customer] on the Y-axis and, in this order, [Commercial Revenue Period Rank Badge] then [Commercial Revenue Period] on the X-axis.
+Sort it by Customer Rank, ascending (add [Customer Rank] to Tooltips first if it isn’t in the sort list), or by Commercial Revenue Period, descending.
+In the Filters pane, drag [Item Filter] to Filters on this visual, choose is 1, and select Apply filter.
+Format it
+X-axis: off. In X-axis > Range, select fx next to Minimum and pick [Commercial Revenue Period Page Axis Min], and next to Maximum pick [Commercial Revenue Period Page Axis Max] (Format style Field value). Bars then keep the same scale on every page.
+Legend: off. Total labels: off.
+Bars > Color: Commercial Revenue Period Rank Badge #FFFFFF (or your visual background), Commercial Revenue Period #01305C.
+Data labels: on. For Commercial Revenue Period Rank Badge: in Value, set Field to [Customer Rank Label], color #404040. That’s the #rank badge.
+For Commercial Revenue Period: position Inside end, color #252423, size 8, Background on with color #F5A800 and transparency 0. That’s the value badge.
+Title: your title. Subtitle: on, fx > Field value > [Commercial Revenue Period Page Subtitle].
+Add the slicers
+Add a Slicer with 'Items per Page'[Items per Page]. In Slicer settings, set Style to Single value. Turn the slider off and the header off. Put a text box next to it: Items per page:.
+Add a second Slicer with 'Page Number'[Page Number]. In Slicer settings, set Style to Tile (horizontal), turn Single select on and Show "Select all" off. Header off.
+With the page slicer selected, drag [Page Filter] to Filters on this visual, choose is 1, and apply. Only pages that have items show.
+Select page 1 in it. Optional: select the chart and both slicers and group them (Format > Group).
+4. Check it
+The chart shows 10 bars, ranked, each with a #rank badge and a value badge.
+Changing items per page changes the bars and the number of pages.
+On the last page, the bars are shorter than on page 1. If every page fills the chart edge to edge, the X-axis range isn’t using Commercial Revenue Period Page Axis Min and Commercial Revenue Period Page Axis Max.
+The page slicer offers no empty pages.
+WHAT NEXT
+KPI Visualizer
+Showing a single number? Choose a KPI card
+Theme Builder
+Set the combo chart bubble size in your theme
+Layout Designer
+Place the chart on a page
+Everything runs in this page. Your fields and choices are saved only in this browser.
+Generated output can be wrong. Check all of it, and test changes on a copy of your model first. Provided as is, without warranty; you use it at your own discretion and risk. Full disclaimer

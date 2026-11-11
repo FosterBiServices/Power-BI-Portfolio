@@ -1,0 +1,5 @@
+role 'Commercial Team'
+	modelPermission: read
+
+	tablePermission Customers = 'Customers'[Customer Type] IN { "Commercial" }
+

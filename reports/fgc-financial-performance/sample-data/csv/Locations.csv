@@ -1,0 +1,16 @@
+LocationKey,Location,Location Type,Channel,City,Region,Format,Square Feet,Has Simulator Bays,Year Opened
+1,Store 01 Dayton,Store,Stores,Dayton,West,Street,12500,Yes,2012
+2,Store 02 Glendale,Store,Stores,Glendale,Central,Street,12300,No,2015
+3,Store 03 Madison,Store,Stores,Madison,North,Street,14000,Yes,2010
+4,Store 04 Madison,Store,Stores,Madison,North,Street,12700,No,2018
+5,Store 05 Riverton,Store,Stores,Riverton,South,Street,12500,Yes,2009
+6,Store 06 Fairview,Store,Stores,Fairview,West,Mall,10300,No,2019
+7,Store 07 Arlington,Store,Stores,Arlington,Central,Mall,9500,No,2019
+8,Store 08 Dover,Store,Stores,Dover,North,Outlet,8200,No,2014
+9,Store 09 Dayton,Store,Stores,Dayton,West,Mall,12500,No,2016
+10,Store 10 Madison,Store,Stores,Madison,North,Street,13800,Yes,2012
+11,Store 11 Dover,Store,Stores,Dover,North,Outlet,9400,No,2019
+12,Store 12 Oxford,Store,Stores,Oxford,Central,Street,14800,No,2012
+13,E-commerce,E-commerce,E-commerce,Dayton,National,Online,60000,No,2016
+14,Commercial Accounts,Commercial,Commercial,Dayton,National,B2B,0,No,2012
+15,Corporate,Corporate,Corporate,Dayton,National,Office,18000,No,2009

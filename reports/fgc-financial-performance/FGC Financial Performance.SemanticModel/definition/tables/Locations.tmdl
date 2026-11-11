@@ -1,0 +1,142 @@
+/// Stores, the e-commerce site, the commercial accounts team and corporate: where revenue and cost are booked.
+table Locations
+	lineageTag: 6697c195-5aca-5f8f-be14-87fd08524797
+
+	/// Key that links to Sales, Labor and General Ledger.
+	column LocationKey
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 8d2f9acb-a7c7-5280-9e89-9ec210494106
+		summarizeBy: none
+		sourceColumn: LocationKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Store 01 Dayton to Store 12 Oxford, E-commerce, Commercial Accounts or Corporate.
+	column Location
+		dataType: string
+		lineageTag: ad24a113-5d87-5ee6-a7d3-f83f93ebc04f
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Store, E-commerce, Commercial or Corporate.
+	column 'Location Type'
+		dataType: string
+		lineageTag: ac0a5138-942a-5772-8970-178e2b7be021
+		summarizeBy: none
+		sourceColumn: Location Type
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Sales channel: Stores, E-commerce, Commercial or Corporate.
+	column Channel
+		dataType: string
+		lineageTag: 0001121c-c719-530c-9be5-561a6f3d4b05
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	/// City.
+	column City
+		dataType: string
+		lineageTag: b52b7c70-3a8b-5a96-9d08-b3ec012e80af
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Region (National for non-store locations).
+	column Region
+		dataType: string
+		lineageTag: 1d8acaf6-1860-5b16-8ce9-1626a7d9e0c7
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Store format: Street, Mall or Outlet.
+	column Format
+		dataType: string
+		lineageTag: e3fe86c3-77e1-582a-845c-fed0666aab5b
+		summarizeBy: none
+		sourceColumn: Format
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Selling space.
+	column 'Square Feet'
+		dataType: int64
+		formatString: #,0
+		lineageTag: 02ed594d-f852-536e-aa88-09c5a9b39ddc
+		summarizeBy: none
+		sourceColumn: Square Feet
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Yes where Simulator Bays Phase 1 added bays.
+	column 'Has Simulator Bays'
+		dataType: string
+		lineageTag: 1675dbe7-3b74-54b2-80a7-384bf5c44d5d
+		summarizeBy: none
+		sourceColumn: Has Simulator Bays
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Year the location opened.
+	column 'Year Opened'
+		dataType: int64
+		formatString: 0
+		lineageTag: b0c579b2-7f65-5912-9177-f030b3b081ee
+		summarizeBy: none
+		sourceColumn: Year Opened
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Locations = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/Locations.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("nZQ7b8MgFIX/CvLsSoAfscc82k5JpHaoqigDcnCL5EBFSNr++14ch1CEh2QycMzncw9cbzYkTV6N0hxhghbs1yiZDCuX5wEGTnnjB9MLmnMYEFpgnCbv9iWKCd2mG+qAFD13XO5Yx2NIT5tzaTTr/nEzy12pHlsANnPYDC3ZThziRq/SSmnz6SNz7FvFwMwdM7+TSSeezQqQhUMW6EWcuB4J1NfUMYD6meIaqKWjluiJCX0S/DtG9bThoJasg1wJ9uO0xIkjTtBUd0J+jBj1xes5nbF1EVArR63QQkGF0bs0CJcw10fT2bor6tFyoNWOVt9wNYeKqe+tBBrBFxzBd552VoWXnbj2IeT2ius8yI+45iEUrX9apXcxnlMijZNXHrO3CJ3z+NCo/Z7rxmLGJy7KFTNCyR68lnD+IJYYh4FC+8zPmwXr0LRp1FEa6++6Gk5iX5jRWZIGngu7T38pzUz/gxgZRw23rbDVkMozDF20/QM=", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "LocationKey",
+				            "Location",
+				            "Location Type",
+				            "Channel",
+				            "City",
+				            "Region",
+				            "Format",
+				            "Square Feet",
+				            "Has Simulator Bays",
+				            "Year Opened"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"LocationKey", Int64.Type},
+				            {"Location", type text},
+				            {"Location Type", type text},
+				            {"Channel", type text},
+				            {"City", type text},
+				            {"Region", type text},
+				            {"Format", type text},
+				            {"Square Feet", Int64.Type},
+				            {"Has Simulator Bays", type text},
+				            {"Year Opened", Int64.Type}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

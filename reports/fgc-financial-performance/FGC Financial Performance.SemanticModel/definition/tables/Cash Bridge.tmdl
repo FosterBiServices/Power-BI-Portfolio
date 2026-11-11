@@ -1,0 +1,49 @@
+/// Steps of the cash bridge from opening to closing cash.
+table 'Cash Bridge'
+	lineageTag: 7474f0b7-0362-592a-ab31-918cef4acf43
+
+	/// Opening cash, then each source and use of cash.
+	column Step
+		dataType: string
+		lineageTag: 9096e0fc-26d4-557d-a8a7-d3211e6808c2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step]
+		sortByColumn: 'Step Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Step Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 8c7d1f8d-49f0-53d8-b1d4-8c0f858c8bd1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Step Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cash Bridge' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Step", STRING,
+				    "Step Order", INTEGER,
+				    {
+				        { "Opening cash", 1 },
+				        { "Net income", 2 },
+				        { "D&A (non-cash)", 3 },
+				        { "Receivables", 4 },
+				        { "Inventory", 5 },
+				        { "Payables", 6 },
+				        { "Other working capital", 7 },
+				        { "CapEx", 8 },
+				        { "Debt, net", 9 },
+				        { "Distributions", 10 }
+				    }
+				)
+
+	annotation PBI_Id = 8433b5d2b1755204ab7302b11e0743b5
+

@@ -1,0 +1,29 @@
+/// Made with the Foster BI Toolkit Chart Patterns page (Top N per page).
+table 'Items per Page'
+	lineageTag: 3eb68745-a57f-589d-a20d-737be54d6fcb
+	/// Number of accounts shown on each page of the ranked accounts chart, from the Items per Page slicer; 10 when nothing is picked.
+	measure 'Items per Page Value' = SELECTEDVALUE ( 'Items per Page'[Items per Page], 10 )
+		formatString: 0
+		displayFolder: Chart Patterns
+
+	/// Visual filter for the ranked accounts chart: 1 when the account's revenue rank falls on the selected page, 0 otherwise or when the account has no commercial revenue.
+	measure 'Item Filter' =
+			VAR _page = [Page Number Value]
+			VAR _items = [Items per Page Value]
+			VAR _rank = [Customer Rank]
+			RETURN
+				IF ( ISBLANK ( [Commercial Revenue Period] ), 0,
+					IF ( _rank > ( _page - 1 ) * _items && _rank <= _page * _items, 1, 0 )
+				)
+		formatString: 0
+		displayFolder: Chart Patterns
+
+	column 'Items per Page'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: [Value]
+
+	partition 'Items per Page' = calculated
+		mode: import
+		source = GENERATESERIES ( 1, 20, 1 )

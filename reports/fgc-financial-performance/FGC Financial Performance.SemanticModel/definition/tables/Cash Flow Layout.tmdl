@@ -1,0 +1,79 @@
+/// Rows of the cash flow statement: each line and subtotal, with the cash flow lines it adds up.
+table 'Cash Flow Layout'
+	lineageTag: abb54732-a1d8-5e73-9f77-73776ba2739f
+
+	/// Cash flow statement line.
+	column Line
+		dataType: string
+		lineageTag: 8a6d0b5b-2cd7-5a83-b68a-b99c3dde6998
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line]
+		sortByColumn: 'Line Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order.
+	column 'Line Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2de4b01d-7f40-50c5-8e34-7c07f599f3d5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Line Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Line, Subtotal, Opening or Closing.
+	column Kind
+		dataType: string
+		isHidden
+		lineageTag: 20a78f11-43fc-5048-8024-255c9eabd8ef
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Kind]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Cash flow lines it adds up, separated by |.
+	column Lines
+		dataType: string
+		isHidden
+		lineageTag: e7e72ca0-faf6-5081-9dd1-ee0bdf21de4a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Lines]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cash Flow Layout' = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Line", STRING,
+				    "Line Order", INTEGER,
+				    "Kind", STRING,
+				    "Lines", STRING,
+				    {
+				        { "Net Income", 1, "Line", "Net Income" },
+				        { "Depreciation & Amortization", 2, "Line", "Depreciation & Amortization" },
+				        { "Change in Receivables", 3, "Line", "Change in Receivables" },
+				        { "Change in Inventory", 4, "Line", "Change in Inventory" },
+				        { "Change in Payables", 5, "Line", "Change in Payables" },
+				        { "Change in Other Working Capital", 6, "Line", "Change in Prepaid & Other|Change in Accrued Liabilities|Change in Gift Cards & Deferred Revenue" },
+				        { "Cash from Operations", 7, "Subtotal", "Net Income|Depreciation & Amortization|Change in Receivables|Change in Inventory|Change in Payables|Change in Prepaid & Other|Change in Accrued Liabilities|Change in Gift Cards & Deferred Revenue" },
+				        { "Capital Expenditures", 8, "Line", "Capital Expenditures" },
+				        { "Free Cash Flow", 9, "Subtotal", "Net Income|Depreciation & Amortization|Change in Receivables|Change in Inventory|Change in Payables|Change in Prepaid & Other|Change in Accrued Liabilities|Change in Gift Cards & Deferred Revenue|Capital Expenditures" },
+				        { "Revolver Draws (Repayments)", 10, "Line", "Revolver Draws (Repayments)" },
+				        { "Term Loan Repayments", 11, "Line", "Term Loan Repayments" },
+				        { "Distributions to Owners", 12, "Line", "Distributions to Owners" },
+				        { "Cash from Financing", 13, "Subtotal", "Revolver Draws (Repayments)|Term Loan Repayments|Distributions to Owners" },
+				        { "Net Change in Cash", 14, "Subtotal", "Net Income|Depreciation & Amortization|Change in Receivables|Change in Inventory|Change in Payables|Change in Prepaid & Other|Change in Accrued Liabilities|Change in Gift Cards & Deferred Revenue|Capital Expenditures|Revolver Draws (Repayments)|Term Loan Repayments|Distributions to Owners" },
+				        { "Opening Cash", 15, "Opening", "" },
+				        { "Closing Cash", 16, "Closing", "" }
+				    }
+				)
+
+	annotation PBI_Id = 8ee338f0e68b578ebf51e1407ce05c01
+

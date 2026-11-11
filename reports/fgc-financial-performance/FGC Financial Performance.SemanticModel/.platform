@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "FGC Financial Performance"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "34ccba5b-81b4-51b2-a337-ceb4f6054d53"
+  }
+}

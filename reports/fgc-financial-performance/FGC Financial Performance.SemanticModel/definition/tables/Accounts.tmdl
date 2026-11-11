@@ -1,0 +1,98 @@
+/// Chart of accounts: income statement and balance sheet accounts with their statement line, section and sign.
+table Accounts
+	lineageTag: 33ad9f6d-15b8-5561-8cad-84cde915e9d7
+
+	/// Account number. Links to General Ledger.
+	column AccountKey
+		isHidden
+		dataType: int64
+		formatString: 0
+		lineageTag: a9d66f36-8b1d-5263-9f4d-0a5b97e3ec01
+		summarizeBy: none
+		sourceColumn: AccountKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Account name.
+	column Account
+		dataType: string
+		lineageTag: ec359bfb-093d-55dc-93e8-d76f51ae9a9e
+		summarizeBy: none
+		sourceColumn: Account
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Statement line the account rolls up to.
+	column Line
+		dataType: string
+		lineageTag: 974dea55-c968-57c8-ad3d-849ca057ca91
+		summarizeBy: none
+		sourceColumn: Line
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Statement section: Revenue, Cost of Sales, Operating Expenses, Below EBITDA, assets, liabilities or equity.
+	column Section
+		dataType: string
+		lineageTag: bbdd8ca1-6473-550c-aebd-926fa3d9ed75
+		summarizeBy: none
+		sourceColumn: Section
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Income Statement or Balance Sheet.
+	column Statement
+		dataType: string
+		lineageTag: b2704e3b-0aab-513f-8750-91982eace9c6
+		summarizeBy: none
+		sourceColumn: Statement
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Income statement: 1 for revenue, -1 for costs. Balance sheet: -1 for accumulated depreciation, 1 otherwise.
+	column Sign
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 4031bcf3-5150-57e7-8072-c725d363fd34
+		summarizeBy: none
+		sourceColumn: Sign
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Accounts = m
+		mode: import
+		source =
+				let
+				    // rows from sample-data/csv/Accounts.csv, stored in the query as Base64 text of raw-deflate compressed JSON (no data source needed)
+				    Source = Json.Document(
+				        Binary.Decompress(Binary.FromText("rZbJbiIxEIZfxfIhJ5BoILMc2RIhMUM0kFOUgzEFWHHbPbabhHn6qXKzZpqEZU7trb6u5ffy9NSsJbUKHwXrgD04O81lYCOhwfMKv3fW+23vFyzB5ICtvpE2BTYKIkAKJvBK8lxBUh1JvSrOpeAkXIxpIKZTQJTQF2OaFBe4pZLg2W75uZjviOkqL21ugmc37IdwL1P7asj62PhH1Cphb2PWN/nuWI8TnD7Mzra+ve8fZVHe7xyo+SKgI3e5nimtixWXQ6kKo4VT5gWZw4m3uF6CkXANdK8mrAtaLcGtrgz/y56AD4JnAzGxDg0332EGTgRl5qz3loHxH1NjUlWI629Y3/jgsFbKmiu5hbpdZtGGPG7JKCEKUzgVbS8DU27bYGCmoh4fxMpZrdlYvF0OTWo1UrMhXQ2lzDNh5Iog++2zgFSsx6C0CkWsF5Pq5BptOiALftg+i9Qg0hjkwlht5+TIrkMFmqbKnMtsErMj3LSoRNTjHUST6+G3BB+GBTh2f9P6H8ivcRN1IXOAZ25UOYJS64L6E7v8s9k2aPvKeu3+uNs6/p9v8T99E8AB7u61Y3w3dAapXttOosb5u85plCT60xF+wXef3DkqV8t7CJSzNu5MQ/fZAmB9LSRxY6y3Lt0uEtRSTDSFUj56EjVqum/w8sDjbMUP2ycRopYfHGRCkfSiSHjZyEm024JmUUmBpNX7natsfbGUDVfYT7LlA2vm1TG49BN8UiQxT3ONdZmyfYld/YtY4Hot2S8UbsX3VdoNbVIyUGKyO6BKHK9vqu9ydPpwefno6egogXs1w1cBnh50kHdhBmg93X/DfDJ/+u8axQG/tHpJJ0UHOQpPKiHJbMU/nuvCJBzhNoszFcszsMLww/Zxu0bxLkKpVvsGI8xUEJqXjZAgohOllHqMKghlMC894QwGUDzM/h07Tnr+Cw==", BinaryEncoding.Base64), Compression.Deflate)
+				    ),
+				    Rows = Table.FromRows(
+				        Source,
+				        {
+				            "AccountKey",
+				            "Account",
+				            "Line",
+				            "Section",
+				            "Statement",
+				            "Sign"
+				        }
+				    ),
+				    Typed = fxApplyTypes(
+				        Rows,
+				        {
+				            {"AccountKey", Int64.Type},
+				            {"Account", type text},
+				            {"Line", type text},
+				            {"Section", type text},
+				            {"Statement", type text},
+				            {"Sign", Int64.Type}
+				        },
+				        [Culture = "en-US"]
+				    )
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

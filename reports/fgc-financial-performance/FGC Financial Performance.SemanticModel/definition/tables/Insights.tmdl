@@ -1,0 +1,61 @@
+/// The summary statements: what went well, what is a problem and the actions to take. The text is a measure, worked out from the data.
+table Insights
+	lineageTag: 6bc6ecee-f33b-534e-b4a5-07534d83aff0
+
+	/// Went well, Problem or Action.
+	column Section
+		dataType: string
+		lineageTag: 57085bfb-487d-58b6-9a79-0008e3b20072
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Section]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Which statement.
+	column 'Insight Key'
+		dataType: string
+		isHidden
+		lineageTag: 07115912-7e86-556f-8c79-f19590b79e9c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Insight Key]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Order within the section.
+	column 'Insight Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: fc02663a-eee5-5adf-b092-f24201b5d5ce
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Insight Order]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Insights = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "Section", STRING,
+				    "Insight Key", STRING,
+				    "Insight Order", INTEGER,
+				    {
+				        { "Went well", "W1", 1 },
+				        { "Went well", "W3", 2 },
+				        { "Went well", "W4", 3 },
+				        { "Problem", "P1", 1 },
+				        { "Problem", "P2", 2 },
+				        { "Problem", "P3", 3 },
+				        { "Problem", "P4", 4 },
+				        { "Action", "A1", 1 },
+				        { "Action", "A2", 2 },
+				        { "Action", "A3", 3 },
+				        { "Action", "A4", 4 }
+				    }
+				)
+
+	annotation PBI_Id = a332d5e9c1eb5241933289235f9fd34c
+
